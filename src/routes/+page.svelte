@@ -23,6 +23,8 @@
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
   import { hoverPlaces } from '$lib/simulacra/places';
+  import AbsentRow from '$lib/simulacra/AbsentRow.svelte';
+  import { isAbsent, withAbsent } from '$lib/simulacra/groups';
   import RevisitOnDesktop from '$lib/simulacra/RevisitOnDesktop.svelte';
   import { ROBOT_YAW } from '$lib/robot/stage';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
@@ -136,6 +138,9 @@
   const names = $derived(namesOf(e));
   const rerun = $derived(page.rerun);
   const slices = $derived(rerun ? rerun.slices : (page.sim?.slices ?? []));
+  // A narrow window shows all five groups every year, a missing one held in
+  // its place (groups.ts), so the rows below never change in number.
+  const rows = $derived(narrow ? withAbsent(slices) : slices);
   const baseSlices = $derived(new Map((page.sim?.slices ?? []).map((s) => [s.key, s])));
   const reached = $derived(new Set(page.selected.flatMap((k) => page.whatIfs.find((w) => w.key === k)?.slices ?? [])));
   const hasOthers = $derived(slices.some((s) => s.O > 0.005));
@@ -300,10 +305,14 @@
         {#if page.sim?.slices.length}
           <div class="rows">
             {#key page.editEpoch}
-            {#each slices as s (s.key)}
-              <SliceRow slice={s} base={baseSlices.get(s.key)} {colors} {names} rerun={!!rerun} lit={reached.has(s.key)}
-                open={page.openSlice === s.key} editable={page.canEdit}
-                ontoggle={() => page.toggleSlice(s.key)} onedit={(d) => page.editSlice(s.key, d)} />
+            {#each rows as s (s.key)}
+              {#if isAbsent(s)}
+                <AbsentRow absent={s} />
+              {:else}
+                <SliceRow slice={s} base={baseSlices.get(s.key)} {colors} {names} rerun={!!rerun} lit={reached.has(s.key)}
+                  open={page.openSlice === s.key} editable={page.canEdit}
+                  ontoggle={() => page.toggleSlice(s.key)} onedit={(d) => page.editSlice(s.key, d)} />
+              {/if}
             {/each}
             {/key}
           </div>
@@ -512,9 +521,10 @@
     /* Who voted holds its most: its heading and key stay put at the top, its
        groups sit at the foot, so the last group always ends on the same line,
        12px over the robot. A year with fewer or shorter groups changes only
-       the room between the key and the first group. The most: the heading
-       and a two-line key (78px) plus five groups. */
-    .groups { display: flex; flex-direction: column; justify-content: space-between; min-height: calc(78px + 5 * 72px + 4 * 2px); }
+       the room between the key and the first group. Every year has five rows
+       (absent ones held, groups.ts), so the most is measured: 409px, 1980 at
+       360px, over all 60 years. */
+    .groups { display: flex; flex-direction: column; justify-content: space-between; min-height: 410px; }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
   }
