@@ -81,6 +81,10 @@
     if (!box || !spot || e.button !== 0) return;
     const r = spot.getBoundingClientRect();
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+    // A press on something drawn over the robot (the what-if's chips, field
+    // or bubble, moved onto it) is that thing's, not the robot's.
+    const t = e.target instanceof Element ? e.target : null;
+    if (t && !spot.contains(t) && t.closest('button, input, a, label, [role="status"], [role="group"]')) return;
     dragFrom = e.clientX;
     dragged = false;
     e.preventDefault(); // no text selection while turning

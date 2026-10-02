@@ -317,7 +317,13 @@
      the top and the composer to the floor, so a year with more chips or a
      longer line never moves either while the time bar is scrubbed; a long
      bubble grows the column downward, like any message. */
-  .talk { min-width: 0; }
+  /* Over the robot's slot (and the robot) when they're moved onto each other. */
+  .talk { position: relative; z-index: 1; min-width: 0; }
+  /* Phones: each nudged up or down by the page's position sliders (?tune=1). */
+  @media (max-width: 760px) {
+    .talk { transform: translateY(var(--ui-y, 0px)); }
+    .stage .bot { transform: translateY(var(--bot-y, 0px)); }
+  }
   /* Opened (More), the bubble leaves the flow: its slot keeps the folded
      height, so nothing below or around moves, and the bubble grows upward
      from the slot's bottom, over the page above. The bubble's column is the

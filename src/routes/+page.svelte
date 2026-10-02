@@ -61,6 +61,34 @@
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
   const revisit = $derived(REVISIT_ON_DESKTOP && narrow);
+  // Tuning (?tune=1): on phones, where the what-if group and the robot sit,
+  // each nudged up or down, px. Kept in this browser; the defaults are 0.
+  const TUNE_MIN = -2000;
+  const TUNE_MAX = 800;
+  const tuning = new URLSearchParams(location.search).has('tune');
+  function readTune(key: string): number {
+    try {
+      const v = Number(localStorage.getItem(`sa-tune-${key}`));
+      return Number.isFinite(v) ? Math.min(TUNE_MAX, Math.max(TUNE_MIN, v)) : 0;
+    } catch {
+      return 0;
+    }
+  }
+  let uiY = $state(tuning ? readTune('ui') : 0);
+  let botY = $state(tuning ? readTune('bot') : 0);
+  $effect(() => {
+    const ui = uiY;
+    const bot = botY;
+    if (!tuning) return;
+    try {
+      localStorage.setItem('sa-tune-ui', String(ui));
+      localStorage.setItem('sa-tune-bot', String(bot));
+    } catch {
+      // private window: the sliders still work for this visit
+    }
+    // The robot stands on its slot: measure it where it moved to.
+    untrack(() => robot?.measureSoon());
+  });
   // Dragging the time bar: the robot holds still (no restaging) and the
   // election and the groups hold their height while each year loads, so
   // nothing jumps; the robot is placed once more on release.
@@ -195,7 +223,8 @@
 {#if revisit}
   <RevisitOnDesktop />
 {:else}
-<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}
+  style:--ui-y="{uiY}px" style:--bot-y="{botY}px">
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
@@ -273,6 +302,16 @@
 
 {/if}
 
+{#if tuning && narrow}
+  <div class="tune" role="group" aria-label="Positions">
+    <label>What-if <span>{uiY}</span>
+      <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={uiY} /></label>
+    <label>Robot <span>{botY}</span>
+      <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={botY} /></label>
+    <button type="button" onclick={() => { uiY = 0; botY = 0; }}>Reset</button>
+  </div>
+{/if}
+
 <!-- Its own block: toBody moves it, so it must not be the edge of the one above. -->
 {#if !revisit}
 <div class="timebar" class:dark={!page.light} use:toBody>
@@ -307,7 +346,12 @@
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
   }
+  /* Above the robot's layer (RobotStage .robot-host, z 3): where the robot
+     is moved under the what-if, the what-if is drawn over it. The page's
+     content is transparent elsewhere, so the robot shows through. */
   .main {
+    position: relative;
+    z-index: 4;
     max-width: 800px;
     margin: 0 auto;
     padding: 0 24px;
@@ -396,6 +440,29 @@
   .ghost svg { width: 100%; height: auto; display: block; }
   .ghost circle { fill: rgba(0, 0, 0, 0.08); }
   .groups-note { margin: 6px 10px 0; font-size: 13px; color: rgba(0, 0, 0, 0.5); }
+
+  /* ?tune=1 on a phone: the two position sliders, pinned under the toolbar. */
+  .tune {
+    position: fixed;
+    top: 56px;
+    left: 12px;
+    right: 12px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: end;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    font-size: 12px;
+    color: #000;
+  }
+  .tune label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+  .tune span { font-weight: 400; font-variant-numeric: tabular-nums; color: rgba(0, 0, 0, 0.6); }
+  .tune input { width: 100%; }
+  .tune button { height: 30px; padding: 0 10px; border: none; border-radius: 999px; background: #f2f2f7; font: inherit; }
 
   @media (max-width: 760px) {
     /* Phones: no wordmark; its cell stays, so the switch stays centred. */
