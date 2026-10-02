@@ -113,7 +113,7 @@
     font-size: 44px;
     line-height: 1;
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: 0.018em;
     font-variant-numeric: tabular-nums;
   }
   .needed { margin: -2px 0 0; font-size: 12px; color: rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; }

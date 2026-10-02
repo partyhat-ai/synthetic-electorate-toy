@@ -300,6 +300,7 @@ export function say(i: SayInput): Message {
   if (res) return { text: `This is ${y} as it happened. Switch to Rerun to see yours.` };
   return {
     text: `Change one thing about ${y} and I’ll rerun it.`,
-    detail: 'Pick a counterfactual or type your own. Tap a group to meet someone in it.',
+    // The newline breaks on a narrow window only (WhatIf .aside); a wide one reads it as a space.
+    detail: 'Pick a counterfactual or type your own.\nTap a group to meet someone in it.',
   };
 }

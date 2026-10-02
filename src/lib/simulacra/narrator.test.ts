@@ -116,7 +116,7 @@ describe('say', () => {
 
   test('the greeting, a tapped suggestion, then a rerun coming out step by step', () => {
     expect(say(BASE).text).toBe('Change one thing about 1920 and I’ll rerun it.');
-    expect(say(BASE).detail).toBe('Pick a counterfactual or type your own. Tap a group to meet someone in it.');
+    expect(say(BASE).detail).toBe('Pick a counterfactual or type your own.\nTap a group to meet someone in it.');
     expect(say({ ...BASE, toggled: 'league' }).detail).toBe('What people care about, low confidence. Press Rerun to see what happens.');
     const res = served(bundle, ['league']);
     const trace = traceOf(res, '', ['league'], 1920);

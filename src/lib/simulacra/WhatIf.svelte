@@ -345,6 +345,8 @@
     .stage .bot { width: 200px; height: 236px; margin: 0 0 23px; align-self: end; justify-self: center; transform: translateY(var(--bot-y, 0px)); }
     .hold { min-height: 190px; justify-content: flex-end; }
     .composer-room { display: block; height: 82px; }
+    /* A newline in the bubble's aside breaks here (a wide window reads it as a space). */
+    .aside { white-space: pre-line; }
     /* The tail pointed at the robot beside the bubble; it stands behind now. */
     .bubble::after { display: none; }
   }
