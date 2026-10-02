@@ -1,0 +1,51 @@
+{
+  "family": "simulacra-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "runtimePlatform": { "cpuArchitecture": "ARM64", "operatingSystemFamily": "LINUX" },
+  "cpu": "${cpu}",
+  "memory": "${memory}",
+  "executionRoleArn": "${execution_role_arn}",
+  "taskRoleArn": "${task_role_arn}",
+  "volumes": [
+    {
+      "name": "state",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "${efs_id}",
+        "transitEncryption": "ENABLED",
+        "authorizationConfig": { "accessPointId": "${access_point_id}", "iam": "ENABLED" }
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "${image}",
+      "essential": true,
+      "portMappings": [{ "containerPort": 8080, "protocol": "tcp" }],
+      "linuxParameters": { "initProcessEnabled": true },
+      "stopTimeout": 30,
+      "mountPoints": [{ "sourceVolume": "state", "containerPath": "/state" }],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "PORT", "value": "8080" },
+        { "name": "SIMULACRA_LOG", "value": "1" },
+        { "name": "SIMULACRA_AUTORUN", "value": "configs/live-1920.json" },
+        { "name": "SIMULACRA_PYTHON", "value": "/opt/venv/bin/python" },
+        { "name": "SIMULACRA_BUNDLES", "value": "/app/serve/bundles" },
+        { "name": "SIMHARNESS_CACHE", "value": "/state/cache" }
+      ],
+      "secrets": [
+        { "name": "ANTHROPIC_API_KEY", "valueFrom": "${secret_arn}:ANTHROPIC_API_KEY::" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${log_group}",
+          "awslogs-region": "${region}",
+          "awslogs-stream-prefix": "api"
+        }
+      }
+    }
+  ]
+}

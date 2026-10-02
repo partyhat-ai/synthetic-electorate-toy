@@ -1,0 +1,34 @@
+# Build context hygiene: the API image needs serve/, simharness/, extracts/,
+# profiles/, the lockfiles and docker/. Everything else stays out.
+.git
+.github
+node_modules
+.svelte-kit
+build
+dist
+static
+src
+tests
+scripts
+infra
+docs
+*.md
+
+# Mutable state lives on EFS, seeded by the seed task, never baked in.
+runs/
+sessions/
+serve/bundles/
+whatifs/
+configs/
+*.pkl
+
+# Secrets must never enter a layer.
+.env
+.env.*
+**/anthropic.env
+
+__pycache__/
+.pytest_cache/
+.venv/
+*.egg-info/
+.DS_Store
