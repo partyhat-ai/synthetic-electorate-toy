@@ -120,15 +120,20 @@
     font-size: 15px;
     font-weight: 400;
     cursor: pointer;
+    transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3); /* = KindChips .chip */
   }
-  .run:hover { background: #0071eb; }
-  .run:active { background: #0062cc; }
+  /* Hover and press as the chips have them (KindChips): a hairline ring on
+     hover, a press that shrinks it. On blue the ring is light, to show. */
+  @media (hover: hover) {
+    .run:hover:not(:disabled) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45); }
+    .run.rest:hover:not(:disabled) { box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.2); }
+  }
+  .run:active:not(:disabled) { background: #0062cc; transform: scale(0.97); box-shadow: none; }
   .run:disabled { opacity: 0.35; cursor: default; background: var(--tint); }
   /* Nothing new to run: at rest, a gray button (pressing it shows the rerun
      already made). It fills blue again as soon as there's a change. */
   .run.rest { background: var(--fill); color: var(--label); }
-  .run.rest:hover { background: var(--fill-press); }
-  .run.rest:active { background: #d1d1d6; }
+  .run.rest:active:not(:disabled) { background: var(--fill-press); }
   /* Reset: a plain text button in the tint. */
   .reset {
     height: 36px;
@@ -148,4 +153,5 @@
      (as the photos are) and take dark mode's systemBlue. */
   :global(.sa.dark) .run:not(.rest),
   :global(.sa.dark) .reset { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
+  @media (prefers-reduced-motion: reduce) { .run { transition: none; } }
 </style>
