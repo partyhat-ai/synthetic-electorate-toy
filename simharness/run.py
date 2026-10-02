@@ -5,8 +5,9 @@ Stages (each writes into runs/<run id>/ and can be rerun alone):
   plan       sample agents and write every model request (no calls)
   ask        send pending requests through the configured backend
   analyze    paired effects, leakage probes, label swap, bias, audit, quotes
+  publish    every what-if combination → the page's result shape + bundle
   evaluate   pre-registered checks → validation.json (+ EVAL table rows)
-  all        backbone → plan → ask → analyze → evaluate
+  all        backbone → plan → ask → analyze → publish → evaluate
 """
 from __future__ import annotations
 
@@ -20,11 +21,11 @@ from .pipeline import Run
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'evaluate', 'all', 'id'])
+    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'all', 'id'])
     ap.add_argument('--config', default=str(ROOT / 'configs/prototype-1920.json'))
     args = ap.parse_args(argv)
     run = Run(RunConfig.load(args.config))
-    stages = ['backbone', 'plan', 'ask', 'analyze', 'evaluate'] if args.stage == 'all' else [args.stage]
+    stages = ['backbone', 'plan', 'ask', 'analyze', 'evaluate', 'publish'] if args.stage == 'all' else [args.stage]
     for s in stages:
         if s == 'id':
             print(run.id)

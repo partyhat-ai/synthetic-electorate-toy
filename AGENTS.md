@@ -11,6 +11,9 @@ These are gates, not advice. CI enforces every one of them on the head SHA.
 - Parse at the boundary: every server response, `postMessage` payload, `localStorage`
   read and bundle file is parsed once, with zod, where it enters. Types derive from the
   schemas. Inside the boundary, branch on domain values, not `typeof`.
+- Typed outcomes: API calls return `{ kind: 'ok' | 'error' | 'indeterminate' | 'unsupported' }`.
+  `indeterminate` means a write may have landed (poll, don't resubmit). Never return an
+  empty object as a stand-in for failure.
 - No new runtime dependency without a one-line justification in the PR.
 
 ## Tests

@@ -1,11 +1,15 @@
 // Simulacra Americana's connection to the simulation server, under
-// /api/simulacra. The page shows each election as it happened (history.ts)
-// with none of it; the groups of voters, the what-ifs and every rerun come
-// from here, or from the labelled stand-in in sample.ts, which has the
-// same shape.
+// /api/simulacra (pnpm serve in development, proxied by Vite). The page
+// shows each election as it happened (history.ts) with none of it; the
+// groups of voters, the what-ifs and every rerun come from here, or from the
+// labelled stand-in in sample.ts, which has the same shape.
 //
-// Every answer is parsed once here (schemas.ts). A call that fails throws a
-// SimError saying why.
+// Every answer is parsed once here (schemas.ts). Every call returns an
+// Outcome, never throws:
+//   ok            the parsed value
+//   error         the server answered no, was unreachable, or sent something unreadable
+//   indeterminate a write timed out after it may have landed: poll, don't resubmit
+//   unsupported   there is no simulation service (a 404 before any answer)
 import type { z } from 'zod';
 import {
   CancelledSchema,
@@ -23,29 +27,22 @@ export type * from './schemas';
 
 /** Why a call failed. */
 export type ErrorReason =
-  /** No answer: the network. */
+  /** No answer: the network, or a read that timed out. */
   | 'offline'
   /** 401 / 403. */
   | 'auth'
   /** A 404 after the service has answered before. */
   | 'missing'
-  /** A 404 before any answer: there is no simulation service. */
-  | 'unsupported'
   /** Any other non-2xx. */
   | 'failed'
   /** A 2xx whose body isn't the contract. */
   | 'malformed';
 
-export class SimError extends Error {
-  readonly reason: ErrorReason;
-  readonly status: number;
-
-  constructor(reason: ErrorReason, message: string, status = 0) {
-    super(message);
-    this.reason = reason;
-    this.status = status;
-  }
-}
+export type Outcome<T> =
+  | { readonly kind: 'ok'; readonly value: T }
+  | { readonly kind: 'error'; readonly reason: ErrorReason; readonly message: string; readonly status: number }
+  | { readonly kind: 'indeterminate'; readonly message: string }
+  | { readonly kind: 'unsupported'; readonly message: string };
 
 /** Fractions of a group's adults moved by hand (the page's dragged dots); each change sums to 0. */
 export type SliceEdit = Partial<Record<'A' | 'B' | 'O' | 'home' | 'barred', number>>;
@@ -64,11 +61,11 @@ export interface RunAsk {
 export interface SimulacraApi {
   /** True for the made-up stand-in; the page labels it. */
   readonly sample: boolean;
-  election(year: number): Promise<ElectionResponse>;
-  startRun(year: number, ask?: RunAsk): Promise<StartedRun>;
-  run(runId: string): Promise<RunStatus>;
-  stopRun(runId: string): Promise<void>;
-  voter(year: number, slice: string, runId?: string | null): Promise<Voter>;
+  election(year: number): Promise<Outcome<ElectionResponse>>;
+  startRun(year: number, ask?: RunAsk): Promise<Outcome<StartedRun>>;
+  run(runId: string): Promise<Outcome<RunStatus>>;
+  stopRun(runId: string): Promise<Outcome<null>>;
+  voter(year: number, slice: string, runId?: string | null): Promise<Outcome<Voter>>;
 }
 
 export type Fetch = (input: string, init?: RequestInit) => Promise<Response>;
@@ -78,39 +75,70 @@ export interface ApiOptions {
   readonly fetch?: Fetch;
   /** Defaults to the same-origin /api/simulacra. */
   readonly base?: string;
+  /** How long a call waits for an answer, ms. */
+  readonly timeoutMs?: number;
 }
 
 export const DEFAULT_BASE = '/api/simulacra';
+export const DEFAULT_TIMEOUT_MS = 20_000;
+
+const failed = (reason: ErrorReason, message: string, status = 0): Outcome<never> => ({
+  kind: 'error',
+  reason,
+  message,
+  status,
+});
+
+function statusError(status: number): Outcome<never> {
+  if (status === 401 || status === 403) return failed('auth', 'Sign in to rerun elections.', status);
+  return failed('failed', `The simulation server answered ${status}.`, status);
+}
 
 export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
   const doFetch: Fetch = options.fetch ?? ((input, init) => globalThis.fetch(input, init));
   const root = options.base ?? DEFAULT_BASE;
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   // A 404 before the service has ever answered means there's no service.
   let answered = false;
 
-  async function call<S extends z.ZodType>(path: string, schema: S, body?: unknown): Promise<z.output<S>> {
-    const init: RequestInit | undefined =
-      body === undefined ? undefined : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+  async function call<S extends z.ZodType>(path: string, schema: S, body?: unknown): Promise<Outcome<z.output<S>>> {
+    const write = body !== undefined;
+    const abort = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      abort.abort();
+    }, timeoutMs);
+    const init: RequestInit = write
+      ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: abort.signal }
+      : { signal: abort.signal };
     let res: Response;
-    try {
-      res = await doFetch(root + path, init);
-    } catch {
-      throw new SimError('offline', 'Can’t reach the simulation server.');
-    }
-    if (res.status === 404 && !answered) throw new SimError('unsupported', 'This server has no simulation service yet.', 404);
-    if (res.status === 404) throw new SimError('missing', 'Not found.', 404);
-    if (res.status === 401 || res.status === 403) throw new SimError('auth', 'Sign in to rerun elections.', res.status);
-    if (!res.ok) throw new SimError('failed', `The simulation server answered ${res.status}.`, res.status);
-    answered = true;
     let json: unknown;
     try {
-      json = await res.json();
+      res = await doFetch(root + path, init);
+      if (res.status === 404 && !answered) {
+        return { kind: 'unsupported', message: 'This server has no simulation service yet.' };
+      }
+      if (res.status === 404) return failed('missing', 'Not found.', 404);
+      if (!res.ok) return statusError(res.status);
+      answered = true;
+      try {
+        json = await res.json();
+      } catch {
+        if (timedOut && write) return { kind: 'indeterminate', message: 'The simulation server stopped answering mid-reply.' };
+        if (timedOut) return failed('offline', 'The simulation server stopped answering.', res.status);
+        return failed('malformed', 'The simulation server sent an unreadable answer.', res.status);
+      }
     } catch {
-      throw new SimError('malformed', 'The simulation server sent an unreadable answer.', res.status);
+      // The write may have reached the server before the wait ran out.
+      if (timedOut && write) return { kind: 'indeterminate', message: 'The simulation server didn’t answer in time.' };
+      return failed('offline', 'Can’t reach the simulation server.');
+    } finally {
+      clearTimeout(timer);
     }
     const parsed = schema.safeParse(json);
-    if (!parsed.success) throw new SimError('malformed', 'The simulation server sent an answer this page can’t read.', res.status);
-    return parsed.data;
+    if (!parsed.success) return failed('malformed', 'The simulation server sent an answer this page can’t read.', res.status);
+    return { kind: 'ok', value: parsed.data };
   }
 
   const id = encodeURIComponent;
@@ -121,7 +149,8 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
       call('/runs', StartedRunSchema, { year, whatIfs, text, edits }),
     run: (runId) => call(`/runs/${id(runId)}`, RunStatusSchema),
     stopRun: async (runId) => {
-      await call(`/runs/${id(runId)}/cancel`, CancelledSchema, {});
+      const out = await call(`/runs/${id(runId)}/cancel`, CancelledSchema, {});
+      return out.kind === 'ok' ? { kind: 'ok', value: null } : out;
     },
     voter: (year, slice, runId) =>
       call(`/elections/${year}/voters/${id(slice)}${runId ? `?run=${id(runId)}` : ''}`, VoterSchema),

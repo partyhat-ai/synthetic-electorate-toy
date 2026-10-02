@@ -13,8 +13,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-# The repo root: configs/, extracts/ and runs/ all sit next to the simharness
-# package.
+# The repo root: configs/, extracts/, runs/ and serve/bundles/
+# all sit next to the simharness package.
 ROOT = HERE.parent
 RUNS = ROOT / 'runs'
 

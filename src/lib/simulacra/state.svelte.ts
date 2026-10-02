@@ -1,25 +1,25 @@
-// The page's state, reactive: the year on show with its groups and what-ifs
-// the server sent (sim), the chosen what-ifs, the dragged dots (edits) and
-// the rerun on show (result); the view (kept in the URL with the year); and
-// the run in hand. The pure parts are state.ts.
+// The page's state, reactive: per year, the groups and what-ifs the server
+// sent (sims), the chosen what-ifs, the dragged dots (edits) and the rerun on
+// show (results); the year and view (kept in the URL); and the run in hand.
+// The pure parts are state.ts; reruns are runs.ts.
 import { SvelteMap } from 'svelte/reactivity';
-import { type Edits, type SimulacraApi, SimError, type SliceEdit } from './api';
+import type { Edits, SimulacraApi, SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
-import type { RunResult, RunStatus, Voter } from './schemas';
-import { addEdit, electionFor, isDirty, type Server, type ShownRun, type Sim, toggled, urlForYear, type View } from './state';
-
-/** The run on show while it works. `id` is null until the server has started it. */
-export interface ActiveRun {
-  readonly id: string | null;
-  readonly year: number;
-  /** States counted so far, of `total`. */
-  readonly done: number;
-  readonly total: number;
-  /** The typed words, trimmed. */
-  readonly text: string;
-  /** The chosen what-ifs' labels. */
-  readonly labels: readonly string[];
-}
+import { traceOf } from './narrator';
+import { type ActiveRun, createRunner, type Finished, type Runner } from './runs';
+import type { Voter } from './schemas';
+import {
+  addEdit,
+  askOf,
+  electionFor,
+  isDirty,
+  type Server,
+  type ShownRun,
+  type Sim,
+  toggled,
+  urlForYear,
+  type View,
+} from './state';
 
 export interface PageStateOptions {
   readonly api: SimulacraApi;
@@ -28,13 +28,10 @@ export interface PageStateOptions {
   readonly replaceUrl?: (url: string) => void;
   /** The page's address now. */
   readonly href?: () => string;
+  /** A rerun finished for the year on show: its steps start coming out. */
+  readonly onFresh?: (steps: number) => void;
   readonly sleep?: (ms: number) => Promise<void>;
 }
-
-/** Poll a run this often, ms. */
-const POLL_MS = 300;
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-const messageOf = (err: unknown, fallback: string) => (err instanceof Error && err.message) || fallback;
 
 export class PageState {
   readonly api: SimulacraApi;
@@ -44,13 +41,11 @@ export class PageState {
   /** Why the year's groups didn't load. */
   simFailed = $state<string | null>(null);
   simLoading = $state(false);
-  /** The year's groups and what-ifs. */
-  sim = $state<Sim | null>(null);
-  chosen = $state<readonly string[]>([]);
-  /** Dots dragged by hand: each group's change in its fractions, summed over drags. */
-  edits = $state<Edits | undefined>(undefined);
-  /** The rerun on show. */
-  result = $state<ShownRun | null>(null);
+  readonly sims = new SvelteMap<number, Sim>();
+  readonly chosen = new SvelteMap<number, readonly string[]>();
+  /** Dots dragged by hand, per year: each group's change in its fractions, summed over drags. */
+  readonly edits = new SvelteMap<number, Edits>();
+  readonly results = new SvelteMap<number, ShownRun>();
   /** Bumped by Reset, so the rows drop any drag in hand. */
   editEpoch = $state(0);
   typed = $state('');
@@ -66,72 +61,92 @@ export class PageState {
   urlReady = false;
 
   readonly election = $derived(electionFor(this.year));
+  readonly sim = $derived(this.sims.get(this.year) ?? null);
   readonly whatIfs = $derived(this.sim?.whatIfs ?? []);
-  readonly selected = $derived(this.chosen);
+  readonly selected = $derived(this.chosen.get(this.year) ?? []);
+  readonly result = $derived(this.results.get(this.year) ?? null);
   /** The rerun on show: the year's result in the Rerun view. */
   readonly rerun = $derived(this.view === 'whatif' ? this.result : null);
   readonly showing = $derived<'history' | 'whatif'>(this.rerun ? 'whatif' : 'history');
   readonly running = $derived(!!this.run && this.run.year === this.year);
   readonly canRun = $derived(this.server === 'online' && !!this.sim && this.whatIfs.length > 0 && !this.running);
   readonly canEdit = $derived(this.server === 'online' && !!this.sim && !this.running && !this.election.unopposed);
-  readonly dirty = $derived(isDirty(this.result, this.selected, this.typed, this.edits));
+  readonly dirty = $derived(isDirty(this.result, this.selected, this.typed, this.edits.get(this.year)));
   readonly voterKey = $derived(this.openSlice ? `${this.year}|${this.openSlice}|${this.rerun?.runId ?? ''}` : null);
   readonly voter = $derived(this.voterKey ? (this.voters.get(this.voterKey) ?? null) : null);
 
+  readonly #runner: Runner;
   readonly #replaceUrl: ((url: string) => void) | undefined;
   readonly #href: () => string;
-  readonly #sleep: (ms: number) => Promise<void>;
-  /** Bumped by each start and stop: a run whose token is stale is dropped. */
-  #token = 0;
+  readonly #onFresh: ((steps: number) => void) | undefined;
 
   constructor(o: PageStateOptions) {
     this.api = o.api;
     this.year = o.year;
     this.#replaceUrl = o.replaceUrl;
     this.#href = o.href ?? (() => location.href);
-    this.#sleep = o.sleep ?? wait;
+    this.#onFresh = o.onFresh;
+    this.#runner = createRunner({
+      api: o.api,
+      ...(o.sleep ? { sleep: o.sleep } : {}),
+      getRun: () => this.run,
+      setRun: (r) => {
+        this.run = r;
+      },
+      finished: (f) => this.#finish(f),
+      failed: (message) => {
+        this.runError = message;
+      },
+    });
   }
 
-  // ── Loading the year's groups and what-ifs ──
+  /** What a rerun of year `y` would send. */
+  askOf(y: number, keys: readonly string[], text: string): string {
+    return askOf(keys, text, this.edits.get(y));
+  }
+
+  // ── Loading an election's groups and what-ifs ──
   async loadSim(y: number): Promise<void> {
+    if (this.sims.has(y)) return;
     this.simFailed = null;
     this.simLoading = true;
-    try {
-      const value = await this.api.election(y);
-      if (y !== this.year) return;
-      this.sim = { slices: value.slices, whatIfs: value.whatIfs };
-      this.server = 'online';
-    } catch (err) {
-      if (y !== this.year) return;
-      const reason = err instanceof SimError ? err.reason : 'failed';
-      if (reason === 'unsupported' || reason === 'offline' || reason === 'auth') this.server = reason;
-      else if (this.server === 'connecting') this.server = 'offline';
-      this.simFailed = messageOf(err, 'Couldn’t load this election’s voters.');
-    } finally {
-      this.simLoading = false;
+    const out = await this.api.election(y);
+    this.simLoading = false;
+    switch (out.kind) {
+      case 'ok':
+        this.sims.set(y, { slices: out.value.slices, whatIfs: out.value.whatIfs });
+        this.server = 'online';
+        return;
+      case 'unsupported':
+        this.server = 'unsupported';
+        break;
+      case 'error':
+        if (out.reason === 'offline' || out.reason === 'auth') this.server = out.reason;
+        else if (this.server === 'connecting') this.server = 'offline';
+        break;
+      case 'indeterminate':
+        if (this.server === 'connecting') this.server = 'offline';
+        break;
+      default:
+        out satisfies never;
     }
+    this.simFailed = out.message || 'Couldn’t load this election’s voters.';
   }
 
   retry(): void {
     this.server = 'connecting';
-    this.sim = null;
+    this.sims.delete(this.year);
     void this.loadSim(this.year);
   }
 
   setYear(y: number): void {
     if (!ELECTION_YEARS.includes(y) || y === this.year) return;
-    this.stop();
     this.year = y;
-    // A new year starts fresh: its groups load, with nothing chosen or rerun.
-    this.sim = null;
-    this.chosen = [];
-    this.edits = undefined;
-    this.result = null;
     this.openSlice = null;
     this.typed = '';
     this.lastToggled = null;
     this.runError = null;
-    this.view = 'history';
+    this.view = this.results.has(y) ? 'whatif' : 'history';
     this.syncUrl();
   }
 
@@ -149,94 +164,66 @@ export class PageState {
 
   // ── What-ifs and reruns ──
   toggle(key: string): void {
-    this.chosen = toggled(this.chosen, key);
-    this.lastToggled = this.chosen.includes(key) ? key : null;
+    const next = toggled(this.chosen.get(this.year) ?? [], key);
+    this.chosen.set(this.year, next);
+    this.lastToggled = next.includes(key) ? key : null;
     this.runError = null;
   }
 
   rerunNow(): void {
     if (!this.canRun) return;
+    // Nothing changed since this year's last rerun: show it again rather than
+    // running (and walking the robot) for the same answer.
+    const r = this.results.get(this.year);
+    if (r && !this.typed.trim() && this.askOf(this.year, this.chosen.get(this.year) ?? [], '') === r.ask) {
+      this.view = 'whatif';
+      this.lastToggled = null;
+      return;
+    }
     void this.startRerun();
   }
 
-  /** A drag on a group's dots: added to the edits, then rerun at once. */
+  /** A drag on a group's dots: added to the year's edits, then rerun at once. */
   editSlice(key: string, d: SliceEdit): void {
     if (!this.canEdit) return;
-    this.edits = addEdit(this.edits, key, d);
+    this.edits.set(this.year, addEdit(this.edits.get(this.year), key, d));
     void this.startRerun();
   }
 
-  async startRerun(): Promise<void> {
-    this.stop();
-    const token = this.#token;
+  startRerun(): Promise<void> {
     const y = this.year;
-    const keys = [...this.chosen];
+    const keys = [...(this.chosen.get(y) ?? [])];
     const labels = keys.flatMap((k) => this.whatIfs.find((w) => w.key === k)?.label ?? []);
     const text = this.typed.trim();
     this.runError = null;
     this.openSlice = null;
-    this.run = { id: null, year: y, done: 0, total: this.election.states.length, text, labels };
-    let id: string;
-    try {
-      ({ id } = await this.api.startRun(y, { whatIfs: keys, text, edits: this.edits ?? {} }));
-    } catch (err) {
-      if (token !== this.#token) return;
-      this.run = null;
-      this.runError = messageOf(err, 'The rerun didn’t start.');
-      return;
-    }
-    if (token !== this.#token || !this.run) return;
-    this.run = { ...this.run, id };
-    for (;;) {
-      await this.#sleep(POLL_MS);
-      if (token !== this.#token) return;
-      let status: RunStatus;
-      try {
-        status = await this.api.run(id);
-      } catch (err) {
-        if (token !== this.#token) return;
-        this.run = null;
-        this.runError = messageOf(err, 'Lost track of the rerun.');
-        return;
-      }
-      if (token !== this.#token || !this.run) return;
-      switch (status.status) {
-        case 'running':
-          this.run = { ...this.run, done: status.done, total: status.total };
-          break;
-        case 'done':
-          this.#finish(id, status.result, keys, text);
-          return;
-        case 'failed':
-          this.run = null;
-          this.runError = status.error || 'The rerun failed.';
-          return;
-        default:
-          status satisfies never;
-      }
-    }
+    const edits = this.edits.get(y) ?? {};
+    return this.#runner.start({ year: y, keys, text, edits, total: this.election.states.length, labels });
   }
 
-  /** Stops the run on show, telling the server. */
   stop(): void {
-    const r = this.run;
-    this.#token += 1;
-    this.run = null;
-    if (r?.id) void this.api.stopRun(r.id).catch(() => undefined);
+    this.#runner.stop();
   }
 
-  #finish(id: string, result: RunResult, keys: readonly string[], text: string): void {
-    this.result = { ...result, runId: id, keys, text, ran: keys };
+  #finish(f: Finished): void {
+    const { year: y, id, result, keys, text } = f;
+    // ask: the page's state right after this run, so pressing Rerun again
+    // with nothing changed just shows this.
+    const trace = traceOf(result, text, keys, y);
+    this.results.set(y, { ...result, runId: id, keys, text, trace, ask: this.askOf(y, keys, ''), ran: keys });
+    if (y === this.year) this.#onFresh?.(trace.length);
     this.run = null;
-    this.typed = '';
-    this.lastToggled = null;
-    this.view = 'whatif';
+    if (y === this.year) {
+      this.typed = '';
+      this.lastToggled = null;
+      this.view = 'whatif';
+    }
   }
 
   reset(): void {
-    this.chosen = [];
-    this.result = null;
-    this.edits = undefined;
+    this.chosen.set(this.year, []);
+    this.results.delete(this.year);
+    this.edits.delete(this.year);
     this.editEpoch += 1;
     this.typed = '';
     this.lastToggled = null;
@@ -256,16 +243,14 @@ export class PageState {
     const slice = this.openSlice;
     if (!key || !slice || this.voters.has(key) || this.voterLoading === key) return;
     this.voterLoading = key;
-    const got = (v: Voter | null) => {
-      this.voters.set(key, v);
+    void this.api.voter(this.year, slice, this.rerun?.runId ?? null).then((out) => {
+      this.voters.set(key, out.kind === 'ok' ? out.value : null);
       if (this.voterLoading === key) this.voterLoading = null;
-    };
-    void this.api.voter(this.year, slice, this.rerun?.runId ?? null).then(got, () => got(null));
+    });
   }
 
   /** Stops the run on show (the page is going away). */
   dispose(): void {
-    this.#token += 1;
     this.run = null;
   }
 }
