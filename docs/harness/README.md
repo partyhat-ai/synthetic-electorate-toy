@@ -10,6 +10,8 @@ documents stay at the root.
 
 Read [`METHOD.md`](../../METHOD.md) first. Then read [`EVAL.md`](../../EVAL.md) (the 1920 prototype's results, failures included).
 
+**[`VALIDITY.md`](../../VALIDITY.md)** takes stock of what the harness can and can't claim: contamination by the language model's knowledge, leakage, historical bias, the held-out checks that exist and the ones that don't, and the next steps in order.
+
 **[`DISCLOSURES.md`](../../DISCLOSURES.md)** is the running log of every known inaccuracy and honesty flag.
 Add to it the moment something is found.
 
