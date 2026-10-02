@@ -217,12 +217,15 @@ function verdict(res: ShownRun, sample: boolean): Message {
   }
   // Typed words the rerun understood: say how they were read.
   const read = res.text ? res.applied.find((a) => !res.keys.includes(a.key)) : undefined;
+  // "the voters I interviewed" is "the voters" (publish.py says that now;
+  // bundles published before then still carry the old words).
+  const summary = res.summary.replaceAll('the voters I interviewed', 'the voters');
   return {
     steps: res.trace.map((t) => ({ text: t, state: 'done' })),
     interview: res.interview ?? null, // shown when the bubble is opened (More)
     sources: sourcesOf(res), // …and what it drew on
     // The steps already say how the words were read.
-    text: `${read && !res.trace.length ? `I read “${res.text}” as ${read.label}. ` : ''}${res.summary}${res.unknown ? ` I left out “${res.unknown}”; I couldn’t model it.` : ''}`,
+    text: `${read && !res.trace.length ? `I read “${res.text}” as ${read.label}. ` : ''}${summary}${res.unknown ? ` I left out “${res.unknown}”; I couldn’t model it.` : ''}`,
     // The summary already names the tier when the server flags it (a built or very-low what-if).
     detail:
       res.confidence && !(res.confidenceLabel && res.summary.includes(res.confidenceLabel)) ? CONFIDENCE[res.confidence] : '',

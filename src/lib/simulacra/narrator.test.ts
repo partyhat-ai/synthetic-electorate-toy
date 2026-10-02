@@ -125,7 +125,8 @@ describe('say', () => {
     expect(working.busy).toBe(true);
     expect(working.steps?.map((s) => s.state)).toEqual(['done', 'doing']);
     const verdict = say({ ...BASE, result: shown, showing: 'whatif' });
-    expect(verdict.text).toBe(res.summary);
+    expect(verdict.text).toBe(res.summary.replaceAll('the voters I interviewed', 'the voters'));
+    expect(verdict.text).toContain('the voters lean');
     expect(verdict.steps).toHaveLength(trace.length);
     expect(say({ ...BASE, result: shown }).text).toBe('This is 1920 as it happened. Switch to Rerun to see yours.');
   });

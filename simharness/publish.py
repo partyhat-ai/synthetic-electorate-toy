@@ -267,7 +267,7 @@ class Publisher:
                     return v[:, 0].sum() / (v[:, 0].sum() + v[:, 1].sum()) * 100
                 shift = r2(world) - r2(base)
                 toward = self.cand[1] if shift < 0 else self.cand[0]
-                parts.append(f'With the treaty settled, the voters I interviewed lean {abs(shift):.1f} points further toward {toward} '
+                parts.append(f'With the treaty settled, the voters lean {abs(shift):.1f} points further toward {toward} '
                              'than the same people did in the world as it was.')
             elif REGISTRY[k].get('generated'):
                 # D34: a reinterpreted change says so before anything else.
@@ -296,7 +296,7 @@ class Publisher:
             d = float((world.adults[p] - base.adults[p]).sum())
             return (f'{serialize.fmt_m(abs(d))} {"more" if d >= 0 else "fewer"} adults live in the country, and those who can vote '
                     f'turn out and choose as their group did in {self.year}.')
-        return (f'In this world, the voters I interviewed lean {abs(r2_1 - r2_0):.1f} points further toward {toward} than the same '
+        return (f'In this world, the voters lean {abs(r2_1 - r2_0):.1f} points further toward {toward} than the same '
                 f'people did in {self.year} as it was.')
 
     def _how(self, combo, summ, evs=None, tier=None):
