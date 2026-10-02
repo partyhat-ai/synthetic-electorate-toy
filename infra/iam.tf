@@ -116,7 +116,14 @@ resource "aws_iam_role_policy" "deploy" {
         Action   = ["ecs:RegisterTaskDefinition", "ecs:DescribeTaskDefinition", "ecs:DescribeServices", "ecs:DescribeTasks", "ecs:ListTasks"]
         Resource = "*"
       },
-      { Sid = "EcsRoll", Effect = "Allow", Action = ["ecs:UpdateService"], Resource = aws_ecs_service.api.id },
+      # The service's ARN is built, not referenced, so this role can exist
+      # (and push the first image) before the service does.
+      {
+        Sid      = "EcsRoll"
+        Effect   = "Allow"
+        Action   = ["ecs:UpdateService"]
+        Resource = "arn:aws:ecs:${local.region}:${local.account_id}:service/${aws_ecs_cluster.main.name}/simulacra-api"
+      },
       {
         Sid       = "PassTaskRoles"
         Effect    = "Allow"

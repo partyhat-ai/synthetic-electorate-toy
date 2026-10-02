@@ -9,6 +9,8 @@ name: Deploy API
 #
 # MANUAL ONLY. A merge never ships.
 #   gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy -f confirm=DEPLOY
+# First image only (stand-up, before the ECS service exists):
+#   ... -f confirm=DEPLOY -f image_only=true
 #
 # Repo variables (from `terraform output`, docs/DEPLOY.md "CI setup"):
 #   AWS_DEPLOY_ROLE_ARN  deploy_role_arn
@@ -21,6 +23,10 @@ on:
         description: Type DEPLOY to roll production
         required: true
         default: ''
+      image_only:
+        description: Build and push the image only (the first image, before the service exists)
+        type: boolean
+        default: false
 
 concurrency:
   group: api-deploy
@@ -106,6 +112,7 @@ jobs:
           provenance: false
 
       - name: Register the task definition and roll the service
+        if: ${{ !inputs.image_only }}
         run: |
           set -euo pipefail
           ARN=$(aws ecs register-task-definition --cli-input-json file://td.json \
@@ -125,6 +132,7 @@ jobs:
           fi
 
       - name: Verify through the load balancer
+        if: ${{ !inputs.image_only }}
         run: |
           set -euo pipefail
           code=$(curl -s -o /dev/null -w '%{http_code}' "$API/healthz")
