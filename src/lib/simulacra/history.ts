@@ -8,12 +8,13 @@
 // Electoral College tables, each election's Wikipedia article); each state's
 // winner, Wikipedia's "List of United States presidential election results by
 // state"; electoral votes by state, the House apportionments plus two (D.C.
-// three). Portraits: Wikimedia Commons, the lead image of each candidate's
-// Wikipedia article, which the portrait links to.
+// three). Portraits: the lead image of each candidate's Wikipedia article,
+// from Wikimedia Commons, mirrored to the assets bucket as portraits/<id>.jpg
+// by scripts/mirror-portraits.py; the portrait links to the article.
+import { assetUrl } from '$lib/robot/assets';
 import { STATES } from './geo';
 import type { Family } from './palette';
 
-const PORTRAITS = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
 // Each candidate's Wikipedia article: their name is its exact title (checked
 // against the Wikipedia API), except where it names a
 // disambiguation page.
@@ -62,7 +63,8 @@ const PARTIES = {
 type PartyCode = keyof typeof PARTIES;
 const PARTY_BY_CODE: ReadonlyMap<string, readonly [string, Family | null]> = new Map(Object.entries(PARTIES));
 
-// [full name, surname, portrait path under PORTRAITS].
+// [full name, surname, Commons thumbnail path (the source scripts/mirror-portraits.py
+// mirrors to portraits/<id>.jpg)].
 const PEOPLE = {
   washington: ["George Washington", "Washington", "b/b6/Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg/330px-Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg"],
   adams: ["John Adams", "Adams", "7/75/John_Adams_Portrait.jpg/330px-John_Adams_Portrait.jpg"],
@@ -389,8 +391,8 @@ const party = (code: string): Pick<Candidate, 'party' | 'partyLabel' | 'family'>
 };
 
 const person = ([id, code, ev, popular]: Ran, key: string): Candidate => {
-  const [name, short, path] = PEOPLE[id];
-  return { key, id, name, short, ...party(code), ev, popular, portrait: PORTRAITS + path, wiki: wikiUrl(id, name) };
+  const [name, short] = PEOPLE[id];
+  return { key, id, name, short, ...party(code), ev, popular, portrait: assetUrl(`portraits/${id}.jpg`), wiki: wikiUrl(id, name) };
 };
 
 const cache = new Map<number, Election>();

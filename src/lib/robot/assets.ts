@@ -1,8 +1,9 @@
-// Where the robot's model and paint textures live (~65 MB, not in the deploy).
-// PUBLIC_ASSET_BASE overrides the default bucket.
+// Where the robot's model, paint textures and the candidates' portraits live
+// (CloudFront over the assets bucket, not the deploy). PUBLIC_ASSET_BASE
+// overrides it.
 import { env } from '$env/dynamic/public';
 
-export const DEFAULT_ASSET_BASE = 'https://partyhat-vaultsync-bucket.s3.us-east-1.amazonaws.com/harness-assets/';
+export const DEFAULT_ASSET_BASE = 'https://assets.simulacraamericana.com/';
 
 /** The base URL with exactly one trailing slash; the default when unset or blank. */
 export function normalizeAssetBase(raw: string | undefined): string {

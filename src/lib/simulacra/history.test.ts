@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { assetUrl } from '$lib/robot/assets';
 import { ELECTION_YEARS, STATE_BY_CODE } from './geo';
 import { electionOf, FEATURED, wikiUrl } from './history';
 
@@ -56,11 +57,11 @@ describe('electionOf', () => {
     for (const y of FEATURED) expect(electionOf(y)).not.toBeNull();
   });
 
-  test('every winner and runner-up has a name and a portrait', () => {
+  test('every winner and runner-up has a name and a portrait on the assets host', () => {
     for (const y of ELECTION_YEARS) {
       for (const c of electionOf(y)?.candidates.slice(0, 2) ?? []) {
         expect(c.name.length, `${y} ${c.key}`).toBeGreaterThan(0);
-        expect(c.portrait, `${y} ${c.key}`).toMatch(/^https:\/\/upload\.wikimedia\.org\//);
+        expect(c.portrait, `${y} ${c.key}`).toBe(assetUrl(`portraits/${c.id}.jpg`));
       }
     }
   });
