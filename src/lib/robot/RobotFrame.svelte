@@ -11,22 +11,26 @@
   //                               See stageInSlot in ./stage.ts.
   //   visible  boolean = true      false hides the frame and stops its render loop.
   //   walking  boolean = false     The robot walks (the page is working) or idles.
+  //   paint    'history' | 'rerun' History is the Americana model's own paint;
+  //                               Rerun the original paint with the stars.
   //   onRobot  (anchors) => void   Called every frame while visible with
   //                               { centerX, feetY } in window CSS px: the
   //                               robot's centre line and the floor under its
   //                               feet. null while it loads or while hidden.
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
+  import type { Paint } from './characters';
   import { type HostMessage, parseFrameMessage, type RobotAnchors, type RobotStage } from './messages';
 
   interface Props {
     stage: RobotStage | null;
     visible?: boolean;
     walking?: boolean;
+    paint: Paint;
     onRobot?: (anchors: RobotAnchors | null) => void;
   }
 
-  let { stage, visible = true, walking = false, onRobot }: Props = $props();
+  let { stage, visible = true, walking = false, paint, onRobot }: Props = $props();
 
   let frame: HTMLIFrameElement | undefined = $state();
   // Bumped on every robot:ready, so a reloaded frame is sent the state again.
@@ -45,6 +49,9 @@
   });
   $effect(() => {
     if (readyCount > 0) post({ type: 'robot:walk', on: walking });
+  });
+  $effect(() => {
+    if (readyCount > 0) post({ type: 'robot:paint', paint });
   });
   $effect(() => {
     if (!visible) onRobot?.(null);

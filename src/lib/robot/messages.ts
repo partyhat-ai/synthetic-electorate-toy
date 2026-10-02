@@ -6,6 +6,7 @@
 //   robot:stage    { stage: RobotStage | null }  where the robot stands (null: the default box)
 //   robot:running  { on }                        draw (true) or stop the render loop (false)
 //   robot:walk     { on }                        walk (working) or idle
+//   robot:paint    { paint: 'history' | 'rerun' }
 // Frame → page
 //   robot:ready                                  the frame is listening; send the state
 //   robot:anchors  { anchors: RobotAnchors | null }  every frame; null while the model loads
@@ -36,10 +37,13 @@ export const RobotAnchorsSchema = z.object({
 });
 export type RobotAnchors = z.infer<typeof RobotAnchorsSchema>;
 
+export const PaintSchema = z.enum(['history', 'rerun']);
+
 export const HostMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('robot:stage'), stage: RobotStageSchema.nullable() }),
   z.object({ type: z.literal('robot:running'), on: z.boolean() }),
   z.object({ type: z.literal('robot:walk'), on: z.boolean() }),
+  z.object({ type: z.literal('robot:paint'), paint: PaintSchema }),
 ]);
 export type HostMessage = z.infer<typeof HostMessageSchema>;
 

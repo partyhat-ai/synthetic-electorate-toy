@@ -2,6 +2,8 @@
 // are the ones the original harness used for the small framed robot, baked in.
 // Paths are relative to ASSET_BASE (assets.ts).
 
+export type Paint = 'history' | 'rerun';
+
 /** Flat lighting values over the scene. Colours are CSS hex strings. */
 export interface Lighting {
   readonly exposure: number;
@@ -25,8 +27,10 @@ export interface IdleBone {
 
 export interface Character {
   readonly id: string;
-  /** The Americana GLB: rig, clips and paint. */
+  /** The Americana GLB: rig, clips and the History paint. */
   readonly model: string;
+  /** The Rerun paint: textures on the model's UVs plus overrides.json. */
+  readonly rerunPaint: { readonly dir: string; readonly version: number };
   /** Lighting over the scene: the original harness look. */
   readonly lighting: Lighting;
   /** Every model is scaled to this height (scene units) and stood on the origin. */
@@ -52,7 +56,8 @@ export interface Character {
 
 export const ATLAS: Character = {
   id: 'atlas-09',
-  model: 'models/atlas-09-americana.glb?v=2',
+  model: 'models/atlas-09-americana.glb?v=3',
+  rerunPaint: { dir: 'models/atlas-09-americana-rerun/', version: 1 },
   lighting: {
     exposure: 1.18,
     environment: 0.45,

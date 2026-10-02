@@ -334,14 +334,14 @@
 </svelte:head>
 <svelte:window onkeydown={onKey} onresize={measureSoon} />
 
-<RobotFrame {stage} visible={stageMode && !!stage} walking={page.running} {onRobot} />
+<RobotFrame {stage} visible={stageMode && !!stage} walking={page.running} paint={page.view === 'whatif' ? 'rerun' : 'history'} {onRobot} />
 
 <div class="sa" class:dark={!page.light} onscroll={measureSoon}>
   <div class="page">
     <header class="top">
       <span class="brand">Simulacra Americana</span>
-      <!-- Always there, always both: the switch sets the look; the numbers
-           are the rerun's once there is one, else history's. -->
+      <!-- Always there, always both: the switch sets the look and the robot's
+           paint; the numbers are the rerun's once there is one, else history's. -->
       <div class="seg" role="radiogroup" aria-label="Show">
         <button type="button" role="radio" aria-checked={page.view !== 'whatif'} class:on={page.view !== 'whatif'} onclick={() => (page.view = 'history')}>History</button>
         <button type="button" role="radio" aria-checked={page.view === 'whatif'} class:on={page.view === 'whatif'} onclick={() => (page.view = 'whatif')}>Rerun</button>

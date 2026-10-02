@@ -25,10 +25,11 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { assetUrl } from './assets';
 import { computeFraming, createFloat, type LensShift, stageRect, viewOffset } from './camera';
-import { ATLAS, type Character } from './characters';
+import { ATLAS, type Character, type Paint } from './characters';
 import { createLighting, REACTOR_POWER } from './lighting';
 import type { RobotAnchors, RobotStage } from './messages';
 import { createMotion, type Motion } from './motion';
+import { createPaintSwitch } from './paint';
 import { easeToward } from './stage';
 
 export interface MountOptions {
@@ -44,6 +45,7 @@ export interface RobotApp {
   /** Start or stop the render loop. Nothing draws or animates while stopped. */
   setRunning(on: boolean): void;
   setWalking(on: boolean): void;
+  setPaint(paint: Paint): void;
   /** Called every frame with the robot's anchors in canvas px, or null while it loads. */
   onAnchors(listener: (anchors: RobotAnchors | null) => void): () => void;
   dispose(): void;
@@ -87,6 +89,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
   const initial = stage();
   const camera = new PerspectiveCamera(character.fov, initial.width / initial.height, 0.1, 400);
   const lights = createLighting(renderer, scene, character.reactorLight);
+  const paint = createPaintSwitch(character, renderer.capabilities.getMaxAnisotropy());
   lights.apply(character.lighting);
 
   const composer = new EffectComposer(renderer);
@@ -190,6 +193,9 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       const name = m.name.toLowerCase();
       if (name.includes('reactor') || name.includes('emission')) emitters.push({ mat: m, intensity: m.emissiveIntensity || 1 });
     }
+    paint.capture(materials);
+    if (paint.current === 'history') paint.preload();
+    else void paint.set(paint.current);
 
     model = root;
     motion = createMotion(root, gltf.animations, character);
@@ -249,6 +255,9 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       walkWanted = on;
       motion?.setWalking(on);
     },
+    setPaint(next) {
+      void paint.set(next);
+    },
     onAnchors(listener) {
       anchorListeners.add(listener);
       return () => anchorListeners.delete(listener);
@@ -261,6 +270,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       anchorListeners.clear();
       motion?.dispose();
       if (model) disposeModel(model);
+      paint.dispose();
       lights.dispose();
       composer.dispose();
       renderer.dispose();
