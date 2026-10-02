@@ -509,11 +509,12 @@
        label up to two lines; the key up to two lines), so nothing below it
        moves with the year. */
     .legend { min-height: 33px; align-content: flex-start; }
-    /* Who voted holds its most and sits at the foot of that room, so its last
-       group always ends on the same line, 12px over the robot; a year with
-       fewer or shorter groups leaves the room above Who voted. The most: the
-       heading and a two-line key (78px) plus five groups. */
-    .groups { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(78px + 5 * 72px + 4 * 2px); }
+    /* Who voted holds its most: its heading and key stay put at the top, its
+       groups sit at the foot, so the last group always ends on the same line,
+       12px over the robot. A year with fewer or shorter groups changes only
+       the room between the key and the first group. The most: the heading
+       and a two-line key (78px) plus five groups. */
+    .groups { display: flex; flex-direction: column; justify-content: space-between; min-height: calc(78px + 5 * 72px + 4 * 2px); }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
   }
