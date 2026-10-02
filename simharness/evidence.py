@@ -273,7 +273,9 @@ EXTRACT_SCHEMA = {
 
 def extract_request(spec: dict, notes: dict, model: str) -> dict:
     table = '\n'.join(f'{s["id"]}: {s["title"]} ({urlparse(s["url"]).hostname}, reliability {s["tier"]})' for s in notes['sources'])
-    role = {'R': 'the Republican nominee (Warren G. Harding)', 'D': 'the Democratic nominee (James M. Cox)'}.get(spec.get('about'))
+    from .profiles import get
+    full = get(spec.get('year', 1920))['full_names']
+    role = {'R': f'the Republican nominee ({full["R"]})', 'D': f'the Democratic nominee ({full["D"]})'}.get(spec.get('about'))
     who = f'\nThe affected candidate: {role}.' if role else '\nThe scenario concerns neither nominee personally: role_direction is "none".'
     user = (f'Scenario: {spec["detail"]}{who}\n\nSources the search returned:\n{table or "(none)"}\n\n'
             f'Research notes:\n{notes["text"] or "(the assistant found nothing)"}')

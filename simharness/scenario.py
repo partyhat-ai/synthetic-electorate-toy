@@ -133,7 +133,8 @@ def compile_request(text: str, registry: dict, cutoff: str, model: str, retry_no
 
 
 def naming_violations(spec: dict) -> list[str]:
-    from .data import NAMES
+    from .profiles import names_re
+    NAMES = names_re(1920)
     texts = list(spec.get('facts', [])) + list(spec.get('nominee_news', [])) + [p['text'] for p in spec.get('add_planks', [])]
     c = spec.get('candidate') or {}
     texts += [c.get('descriptor', '')] + list(c.get('positions', []))

@@ -149,10 +149,10 @@ def urban_share() -> dict:
 NAMES = re.compile(r'\b(Harding|Cox|Coolidge|Roosevelt|Debs|Christensen|Republican|Democrat|G\.\s?O\.\s?P|Wilson)', re.I)
 
 
-def corpus(cutoff: str) -> list[dict]:
+def corpus(cutoff: str, rel: str | None = 'sources/corpus_1920.jsonl', names=NAMES) -> list[dict]:
     rows = []
-    path = CACHE / 'sources/corpus_1920.jsonl'
-    if not path.exists():
+    path = CACHE / rel if rel else None
+    if not path or not path.exists():
         return rows
     for line in path.read_text().splitlines():
         if not line.strip():
@@ -161,18 +161,20 @@ def corpus(cutoff: str) -> list[dict]:
         if it['date'] > cutoff:
             continue
         text = it['excerpt'].strip()
-        it['identifying'] = bool(it.get('mentions_candidates')) or bool(NAMES.search(text))
+        it['identifying'] = bool(it.get('mentions_candidates')) or bool(names.search(text))
         it['text'] = ' '.join(text.split()[:120])
         rows.append(it)
     return rows
 
 
-def platforms() -> dict:
-    path = CACHE / 'context/platforms_1920.json'
+def platforms(rel: str = 'context/platforms_1920.json') -> dict:
+    path = CACHE / rel
     return json.loads(path.read_text()) if path.exists() else {}
 
 
 def load(cfg) -> tuple[Inputs, dict]:
+    from . import profiles
+    prof = profiles.get(cfg.election)
     ret, ev = returns()
     cells = population()
     fr = franchise()
@@ -180,12 +182,13 @@ def load(cfg) -> tuple[Inputs, dict]:
                  closed_1920=fr['closed_1920'], alien_voting=fr['alien_voting'], ev=ev)
     files = ['labels/state_pres_1916_1920_1924.csv', 'population/adults_1920_by_state.csv',
              'population/adults_1910_by_state.csv', 'franchise/state_franchise_1920.csv',
-             'franchise/women_suffrage_pre19th.csv', 'sources/corpus_1920.jsonl', 'context/platforms_1920.json']
+             'franchise/women_suffrage_pre19th.csv', prof['corpus'], prof['platforms']]
     extras = {
         'franchise': fr,
         'urban': urban_share(),
-        'corpus': corpus(cfg.context_cutoff),
-        'platforms': platforms(),
+        'corpus': corpus(cfg.context_cutoff, prof['corpus'], profiles.names_re(cfg.election)),
+        'platforms': platforms(prof['platforms']),
+        'profile': prof,
         'manifest': manifest(files),
     }
     return inp, extras

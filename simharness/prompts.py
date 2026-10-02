@@ -55,6 +55,11 @@ QUESTIONS = [
     'Think about Tuesday\'s presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?',
 ]
 
+def questions(day_phrase: str = 'Tuesday, 2 November') -> list[str]:
+    """The three paraphrases for an election day (1920's are QUESTIONS, unchanged)."""
+    return [q.replace('Tuesday, 2 November', day_phrase) for q in QUESTIONS]
+
+
 PROBE_QUESTION = (
     'Set the person aside. Which year\'s United States presidential election does this brief describe? '
     'Which real candidates stand behind each label? Who won that election? '
@@ -124,8 +129,8 @@ def ballot_block(state_name: str, parties: list[dict], labels: list[str], others
     return lines
 
 
-def brief(persona: dict, world: dict, items: list[dict], ballot: list[str], asof: str) -> str:
-    lines = [f'Date: {long_date(asof)}. The presidential election is on Tuesday, 2 November.', '', 'This person:']
+def brief(persona: dict, world: dict, items: list[dict], ballot: list[str], asof: str, day_phrase: str = 'Tuesday, 2 November') -> str:
+    lines = [f'Date: {long_date(asof)}. The presidential election is on {day_phrase}.', '', 'This person:']
     lines += [f'- {line}' for line in persona['lines']]
     if world.get('facts'):
         lines += ['', 'How things stand:']

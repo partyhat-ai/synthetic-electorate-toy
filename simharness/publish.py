@@ -16,20 +16,12 @@ from .geo import STATE_NAME
 from .whatifs import REGISTRY, apply_effects
 
 CONF = {'franchise': 'high', 'population': 'medium', 'issue': 'low', 'candidate': 'low'}
-NAMES = {'R': 'Harding', 'D': 'Cox', 'O': 'another candidate'}
-SLICE_SOURCES = {
-    'men': '1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns).',
-    'women': '1920 census, women 21+ outside the South; turnout is each state\'s 1920 vote minus the men\'s predicted vote (1916 men\'s turnout × the change in states where women already voted).',
-    'south-white': '1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns.',
-    'black-south': '1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion.',
-    'immigrants': '1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers).',
-}
 KIND_ORDER = ['franchise', 'population', 'issue', 'candidate']
 
 
 class Publisher:
     """The publish stage and the bundle's parts. Needs the attributes and
-    helpers `Run` sets up: cfg, inp, extras, year, cand, dir, id, bulk,
+    helpers `Run` sets up: cfg, inp, extras, prof, year, cand, dir, id, bulk,
     fit(), state_index(), requests() and answers()."""
 
     def publish(self):
@@ -73,7 +65,7 @@ class Publisher:
         return {k: {'ev': v[1]['ev_point'], 'drawsWon': v[1]['draws_won']} for k, v in runs.items()}
 
     def _bundle(self, fit, states, runs, base_sum, base_winner, eff):
-        sources_by_slice = SLICE_SOURCES
+        sources_by_slice = self.prof['slice_sources']
         base_world = runs[''][0]
         base_point = base_sum['point']
         used = sorted({k for key in runs for k in key.split('+') if k})
@@ -156,7 +148,7 @@ class Publisher:
 
     def _lead(self, combo, fit, base, world, summ):
         if not combo:
-            return f'Rerun with nothing changed, 1920 comes out as it did: Harding wins, {serialize.headline_ev(summ)}.'
+            return f'Rerun with nothing changed, {self.year} comes out as it did: {self.cand[0]} wins, {self.prof["ev_label"]}.'
         p = summ['point']
         voted_base = (base.adults[p] * base.can[p] * base.t[p]).sum()
         voted = (world.adults[p] * world.can[p] * world.t[p]).sum()
@@ -284,7 +276,7 @@ class Publisher:
             for p in picks:
                 a = p['agent']
                 x = answers[a['id']]
-                names = {a['label_of'][k]: NAMES[k] for k in a['label_of']}
+                names = {a['label_of'][k]: self.prof['names'][k] for k in a['label_of']}
                 if x['cf_req']['meta'].get('candidate'):
                     names[x['cf_req']['meta']['candidate']['label']] = x['cf_req']['meta']['candidate']['name']
                 srcs = [corpus[i] for i in x['cf']['raw'].get('sources_used', []) if i in corpus] or \
@@ -327,7 +319,7 @@ class Publisher:
         def one(rid, a, lab):
             d = ans[rid]['data']
             n = paired.normalize(d, lab)
-            names = {a['label_of'][k]: NAMES[k] for k in a['label_of']}
+            names = {a['label_of'][k]: self.prof['names'][k] for k in a['label_of']}
             c = reqs[rid]['meta'].get('candidate')
             if c:
                 names[c['label']] = c['name']
@@ -335,7 +327,7 @@ class Publisher:
             return {'choice': choice, 'pVote': d.get('p_vote'),
                     'quote': quotes.deblind(d.get('quote', ''), names), 'reason': quotes.deblind(d.get('reason', ''), names)}
 
-        out = {'questions': prompts.QUESTIONS, 'byWhatIf': {}}
+        out = {'questions': prompts.questions(self.prof['day_phrase']), 'byWhatIf': {}}
         for wk in eff['pairs']:
             rows = []
             for aid, a in agents.items():

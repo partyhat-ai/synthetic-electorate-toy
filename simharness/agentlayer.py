@@ -79,7 +79,11 @@ def items_for(agent: dict, drop_topics=frozenset(), drop_after: str | None = Non
 def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tuple[list, list]:
     ag = cfg.agents
     fr, corpus, platforms = extras['franchise'], [c for c in extras['corpus'] if not c['identifying']], extras['platforms']
+    prof = extras.get('profile') or {'year': 1920, 'descriptors': {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR},
+                                     'label_pool': prompts.LABEL_POOL, 'others_line': prompts.OTHERS_1920,
+                                     'plank_order': ORDER_1920, 'day_phrase': 'Tuesday, 2 November'}
     keys = ['R', 'D']
+    qs = prompts.questions(prof['day_phrase'])
     agents, reqs = [], []
     asof = cfg.context_cutoff  # p1 used '1920-10-30' with items to 1 Nov
     for key in sorted(cohorts):
@@ -91,17 +95,17 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         agents += sample_agents(co, ag.per_cohort, corpus, cfg.seed, extras['urban'])
     for n, a in enumerate(agents):
         rng = random.Random(f'{cfg.seed}:{a["id"]}')
-        label_of, order = prompts.assign_labels(rng, keys)
+        label_of, order = prompts.assign_labels(rng, keys, prof['label_pool'])
         labels = [label_of[p] for p in order]
         a['label_of'] = label_of
         a['paraphrase'] = n % ag.paraphrases
         elig = eligibility_line(a, fr)
         a['eligibility'] = elig
-        q = prompts.QUESTIONS[a['paraphrase']]
+        q = qs[a['paraphrase']]
 
         def parties(drop=frozenset(), swap=False, add=(), news=None):
-            desc = {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR}
-            plank = {p: party_planks(platforms, p, drop) for p in keys}
+            desc = dict(prof['descriptors'])
+            plank = {p: party_planks(platforms, p, drop, order=prof['plank_order']) for p in keys}
             for x in add:  # a compiled what-if's added plank, after the party's own
                 plank[x['party']] = plank[x['party']] + [x['text'].rstrip('.') + '.']
             if swap:
@@ -113,7 +117,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         def request(arm, model, persona_elig, world, items, ballot_parties, disp_labels, system=prompts.SYSTEM,
                     question=q, schema=None, meta=None):
             text = prompts.brief({'lines': persona_lines(a, persona_elig)}, world, items,
-                                 prompts.ballot_block(STATE_NAME.get(a['state'], a['state']), ballot_parties, disp_labels), asof)
+                                 prompts.ballot_block(STATE_NAME.get(a['state'], a['state']), ballot_parties, disp_labels, prof['others_line']),
+                                 asof, prof['day_phrase'])
             return {
                 'id': f'{arm}|{a["id"]}|{SHORT.get(model, model)}',
                 'model': model, 'system': system, 'user': f'{text}\n\n{question}',
@@ -156,7 +161,7 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             cand = f.get('candidate')
             if cand:
                 # p4: a third labelled line, after the two parties (their order and labels as in the control).
-                third = scenario.third_label(random.Random(f'{cfg.seed}:{a["id"]}:{wk}'), labels, cand['name'], prompts.LABEL_POOL)
+                third = scenario.third_label(random.Random(f'{cfg.seed}:{a["id"]}:{wk}'), labels, cand['name'], prof['label_pool'])
                 line = f'{cand["name"]}, {cand["descriptor"].rstrip(".")}, running as an independent'
                 ballot = ballot + [{'key': 'X', 'descriptor': line, 'planks': [p.rstrip('.') + '.' for p in cand['positions']]}]
                 cf_labels = labels + [third]

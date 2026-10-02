@@ -18,9 +18,6 @@ from .stats import logit
 from .whatifs import REGISTRY, apply_effects
 
 
-CAND = {0: 'Harding', 1: 'Cox', 2: 'another candidate'}
-
-
 class Run(Publisher):
     def __init__(self, cfg: RunConfig):
         self.cfg = cfg
@@ -32,8 +29,11 @@ class Run(Publisher):
         self.bulk = agentlayer.SHORT.get(cfg.agents.bulk_model, cfg.agents.bulk_model)
         self.check = agentlayer.SHORT.get(cfg.agents.check_model, cfg.agents.check_model)
         self.models = tuple(dict.fromkeys((self.bulk, self.check)))
+        # The election's profile: names, sources and how the robot speaks of it.
+        self.prof = self.extras['profile']
         self.year = cfg.election
-        self.cand = CAND
+        n = self.prof['names']
+        self.cand = {0: n['R'], 1: n['D'], 2: n['O']}
         self.dir = RUNS / self.id
         self.dir.mkdir(parents=True, exist_ok=True)
         (self.dir / 'config.json').write_text(json.dumps({'run_id': self.id, 'config': cfg.to_dict(),

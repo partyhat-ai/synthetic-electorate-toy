@@ -38,6 +38,7 @@ server. The contract changes the page could use are described in
 | `simharness/scenario.py` | Any typed what-if → a spec of one of five kinds (franchise, population, issue/event, candidate) with generic mechanics |
 | `simharness/evidence.py` | Historical evidence: web-search research, grounded extraction, source tiers, agreement, blend, confidence tiers |
 | `simharness/intake.py` | Typed what-if intake: compile → research → register → run → `serve/bundles/`; the router's queue |
+| `simharness/profiles.py` | One profile per election (names, blinded descriptors, label letters, ballot wording, sources): 1920 |
 | `simharness/run.py` | The command line (`python3 -m simharness.run <stage>`) |
 | `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, evaluate (`Run`) |
 | `simharness/publish.py` | The publish stage: every what-if combination → the bundle |
