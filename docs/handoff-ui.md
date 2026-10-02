@@ -39,10 +39,10 @@ could be a sentence in the robot's bubble instead.
 
 - **Dev:** `pnpm dev` serves the page.
 - **URLs** (query parameters, on the page's route):
-  - `?year=1896`: a given year, else a random story year. The page keeps
-    `year` in the URL as it moves.
-  - The page calls the real server path, `/api/simulacra`. With no server it
-    says there's no simulation service.
+  - `?sample=1`: sample data (`sample.ts`), starting on a random story year.
+  - `&year=1896`: a given year. The page keeps `year` in the URL as it moves.
+  - No `sample=1`: the real server path, `/api/simulacra`. With no server it
+    says there's no simulation service and offers Use Sample Data.
 - **Gates:** `pnpm lint`, `pnpm check`, `pnpm size`, `pnpm test` (see
   `AGENTS.md`).
 
@@ -64,7 +64,7 @@ All under `src/lib/simulacra/` unless noted.
 | ⓘ About popover | `InfoPopover.svelte` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |
-| Server contract, schemas, sample model | `api.ts`, `schemas.ts`, `sample.ts` (owned by the simulation side) |
+| Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
 
 ## The components' contract (Svelte 5, runes)
 
@@ -78,9 +78,10 @@ is the callback's argument.
   `onaction(key)`, `onfocus(on)`; `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
 
-Every simulation call (`api.ts`) returns the parsed answer or throws a
-`SimError` with a `reason`: `offline`, `auth`, `missing`, `unsupported` (no
-simulation service), `failed` or `malformed`.
+Every simulation call (`api.ts`, and `sample.ts` with the same shape)
+returns the parsed answer or throws a `SimError` with a `reason`:
+`offline`, `auth`, `missing`, `unsupported` (no simulation service),
+`failed` or `malformed`.
 
 ## The layout contract: one screen at 1440×900
 
@@ -92,6 +93,10 @@ simulation service), `failed` or `malformed`.
   - Who voted: a heading and five rows of 42px each.
   - Composer: the harness's face beside the bubble, suggestions and field.
   - Time bar: 68px, fixed.
+- **The busiest state to check:** `?sample=1&year=1912`, tap Taft Steps
+  Aside, then Rerun. With a three-line verdict, Rerun's bottom edge sat at
+  791px and the time bar's top at 832px. Anything you add above the composer
+  comes out of those 41px.
 - **Breakpoints:**
   - ≤760px: the header stacks.
   - ≤700px: each row's dots drop under its label.
@@ -119,7 +124,7 @@ simulation service), `failed` or `malformed`.
 - **Text wears ink, never party colours.** The dots, rings and map carry the
   colour; the words beside them stay black or grey.
 - **Copy (Apple HIG):**
-  - Title Case for buttons ("Try Again", "Another Election", "Rerun").
+  - Title Case for buttons ("Use Sample Data", "Another Election", "Rerun").
   - Sentence case everywhere else.
   - No exclamation marks; numbers as numerals.
 - **Controls:**
@@ -132,7 +137,7 @@ simulation service), `failed` or `malformed`.
 `say(...)` in the page picks the robot's line in this order:
 
 1. Connecting.
-2. No simulation service or unreachable, with Try Again.
+2. No simulation service or unreachable, with Use Sample Data and Try Again.
 3. Sign in.
 4. Unopposed, with Another Election.
 5. Rerunning, "n of m states counted".
@@ -173,12 +178,13 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
 ## Checking your work
 
 - `pnpm lint && pnpm check && pnpm size && pnpm test`.
-- **Look at it** with the dev server on `?year=1896`.
+- **Look at it** with the dev server on `?sample=1&year=1896`.
 
 ## Rough edges (good first tasks)
 
 - Long names wrap in the header ("William Jennings Bryan", "John C.
   Breckinridge").
+- When many states flip (1912, Taft Steps Aside: 30 states), the map is busy.
 - The suggestions don't look disabled while a rerun runs.
 - The map doesn't fill in state by state during a rerun, although
   `run.done` / `run.total` are available.

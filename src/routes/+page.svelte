@@ -1,7 +1,7 @@
 <script lang="ts">
   // Simulacra Americana: rerun an American presidential election with one
-  // fact changed. It opens on a real election (a featured year at random,
-  // or ?year=): the two candidates, who won, and the map as it
+  // fact changed. It opens on a real election (one of the ten with stories,
+  // at random, or ?year=): the two candidates, who won, and the map as it
   // happened. Below are the groups of voters that decided it, including the
   // ones who couldn't vote, each a row of fifty people. The harness's face
   // sits beside the what-if field: tap a suggestion or type your own, and
@@ -18,6 +18,7 @@
   import { namesOf, paintsOf } from '$lib/simulacra/header';
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
+  import { createSampleApi } from '$lib/simulacra/sample';
   import type { Choice, Kind, Slice, WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
   import { randomStory, readParams, type ShownRun } from '$lib/simulacra/state';
@@ -29,7 +30,7 @@
 
   const params = readParams(new URLSearchParams(location.search));
   const page = new PageState({
-    api: createSimulacraApi(),
+    api: params.sample ? createSampleApi() : createSimulacraApi(),
     year: params.year ?? randomStory(),
     replaceUrl: (url) => {
       try {
@@ -68,7 +69,12 @@
   });
 
   function act(key: string) {
-    if (key === 'retry') page.retry();
+    if (key === 'sample') {
+      const url = new URL(location.href);
+      url.searchParams.set('sample', '1');
+      url.searchParams.set('year', String(page.year));
+      location.assign(url.href);
+    } else if (key === 'retry') page.retry();
     else if (key === 'rerun') page.rerunNow();
     else if (key === 'shuffle') page.setYear(randomStory(page.year));
   }
@@ -138,7 +144,7 @@
   function verdict(res: ShownRun): Message {
     if (!res.applied.length && res.unknown) {
       return {
-        text: `I couldn’t turn “${res.unknown}” into a change I can model. Try one of the what-ifs below.`,
+        text: `I couldn’t turn “${res.unknown}” into a change I can model${page.api.sample ? ' with sample data' : ''}. Try one of the what-ifs below.`,
       };
     }
     // Typed words the rerun understood: say how they were read.
@@ -161,8 +167,11 @@
           page.server === 'unsupported'
             ? 'This server has no simulation service yet, so I can’t rerun elections here.'
             : 'I can’t reach the simulation server, so I can’t rerun elections yet.',
-        detail: 'The elections themselves are all here.',
-        actions: [{ key: 'retry', label: 'Try Again', primary: true }],
+        detail: 'The elections themselves are all here. Sample data shows how a rerun works.',
+        actions: [
+          { key: 'sample', label: 'Use Sample Data', primary: true },
+          { key: 'retry', label: 'Try Again' },
+        ],
       };
     }
     if (page.server === 'auth') return { text: 'Sign in to rerun elections.', actions: [{ key: 'retry', label: 'Try Again' }] };
@@ -268,10 +277,14 @@
         <div class="seg-thumb" class:second={page.view === 'whatif'} aria-hidden="true"></div>
       </div>
       <span class="trail">
+        {#if page.api.sample}
+          <span class="pill" title="The voter groups, what-ifs and reruns are invented to show how this works. The elections are real.">Sample Data</span>
+        {/if}
         <InfoPopover label="About Simulacra Americana" align="end">
           <p><strong>Simulacra Americana</strong> reruns American presidential elections with one fact changed.</p>
           <p>Every election opens as it happened. The simulation server rebuilds who could vote from census records and lets synthetic voters decide, so a rerun can change who votes, where they live or what they care about.</p>
           <p>Changing who could vote is the most reliable; changing what people cared about, the least.</p>
+          {#if page.api.sample}<p>Sample data: the voter groups, what-ifs and reruns here are invented to show how it works. The elections are real.</p>{/if}
           <p class="fine">Portraits from Wikimedia Commons.</p>
         </InfoPopover>
       </span>
@@ -347,7 +360,7 @@
   .sa.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
   .page { min-height: 100%; padding-bottom: 84px; }
   /* The brand, the History / Your year switch (once there's a rerun) and
-     About, on one toolbar row. */
+     the sample label and About, on one toolbar row. */
   .top {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -360,6 +373,14 @@
   .trail { grid-column: 3; justify-self: end; }
   .brand { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(0, 0, 0, 0.55); }
   .trail { display: flex; align-items: center; gap: 8px; }
+  .pill {
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+  }
   .trail :global(.pop p) { margin: 0 0 8px; }
   .trail :global(.pop p:last-child) { margin-bottom: 0; }
   .trail :global(.pop .fine) { font-size: 11px; color: rgba(0, 0, 0, 0.5); }

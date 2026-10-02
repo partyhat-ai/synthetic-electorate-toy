@@ -29,13 +29,19 @@ export type ShownRun = RunResult & {
 };
 
 export interface UrlParams {
+  /** ?sample=1: the labelled stand-in (sample.ts). */
+  readonly sample: boolean;
   /** ?year=, when it's an election year. */
   readonly year: number | null;
 }
 
 export function readParams(params: URLSearchParams): UrlParams {
+  const sample = params.get('sample');
   const asked = Number(params.get('year'));
-  return { year: ELECTION_YEARS.includes(asked) ? asked : null };
+  return {
+    sample: sample === '1' || sample === 'true',
+    year: ELECTION_YEARS.includes(asked) ? asked : null,
+  };
 }
 
 /** A featured year at random, other than `not`. */

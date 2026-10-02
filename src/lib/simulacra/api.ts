@@ -1,7 +1,8 @@
 // Simulacra Americana's connection to the simulation server, under
 // /api/simulacra. The page shows each election as it happened (history.ts)
 // with none of it; the groups of voters, the what-ifs and every rerun come
-// from here.
+// from here, or from the labelled stand-in in sample.ts, which has the
+// same shape.
 //
 // Every answer is parsed once here (schemas.ts). A call that fails throws a
 // SimError saying why.
@@ -53,8 +54,10 @@ export interface RunAsk {
   readonly text?: string;
 }
 
-/** What the page needs from a simulation server. */
+/** What the page needs from a simulation: the server (createSimulacraApi) or the sample (createSampleApi). */
 export interface SimulacraApi {
+  /** True for the made-up stand-in; the page labels it. */
+  readonly sample: boolean;
   election(year: number): Promise<ElectionResponse>;
   startRun(year: number, ask?: RunAsk): Promise<StartedRun>;
   run(runId: string): Promise<RunStatus>;
@@ -106,6 +109,7 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
 
   const id = encodeURIComponent;
   return {
+    sample: false,
     election: (year) => call(`/elections/${year}`, ElectionResponseSchema),
     startRun: (year, { whatIfs = [], text = '' } = {}) => call('/runs', StartedRunSchema, { year, whatIfs, text }),
     run: (runId) => call(`/runs/${id(runId)}`, RunStatusSchema),

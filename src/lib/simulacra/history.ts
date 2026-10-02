@@ -416,5 +416,5 @@ export function electionOf(year: number): Election | null {
   return e;
 }
 
-/** The years with a rich story: where a random start lands. */
+/** The years with a rich sample story: where a random start lands. */
 export const FEATURED: readonly number[] = [1800, 1860, 1876, 1896, 1912, 1948, 1960, 1968, 2000, 2016];

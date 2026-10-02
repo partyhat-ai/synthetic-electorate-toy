@@ -19,10 +19,10 @@ describe('the pure parts', () => {
     expect(toggled(['a', 'b'], 'a')).toEqual(['b']);
   });
 
-  test('the URL: an election year or none', () => {
+  test('the URL: sample, and an election year or none', () => {
     const p = (q: string) => readParams(new URLSearchParams(q));
-    expect(p('year=1896')).toEqual({ year: 1896 });
-    expect(p('year=1897').year).toBeNull();
+    expect(p('sample=1&year=1896')).toEqual({ sample: true, year: 1896 });
+    expect(p('sample=true&year=1897').year).toBeNull();
     expect(urlForYear('http://x.test/?sample=1&year=1896', 1896)).toBeNull();
     expect(urlForYear('http://x.test/?sample=1', 1912)).toBe('http://x.test/?sample=1&year=1912');
   });
@@ -41,6 +41,7 @@ const ELECTION: ElectionResponse = {
 function fakeApi(): SimulacraApi {
   const no = () => Promise.reject(new SimError('failed', 'The simulation server answered 500.', 500));
   return {
+    sample: false,
     election: async () => ELECTION,
     startRun: no,
     run: no,
