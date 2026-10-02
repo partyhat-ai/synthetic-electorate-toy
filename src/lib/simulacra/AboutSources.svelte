@@ -38,7 +38,8 @@
   </ul>
   <h4 class="cite-group">Portraits</h4>
   <ul class="cite">
-    <li>Wikimedia Commons. Candidate portraits, under the license given on each file’s page. <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">commons.wikimedia.org</a>.</li>
+    <li>Wikimedia Commons. Candidate portraits, public domain except as noted below. <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">commons.wikimedia.org</a>.</li>
+    <li>Franklin D. Roosevelt: photograph by Leon Perskie, <a href="https://commons.wikimedia.org/wiki/File:FDR-1944-Campaign-Portrait_(3x4_retouched,_cropped).jpg" target="_blank" rel="noopener">FDR-1944-Campaign-Portrait</a>, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener">CC BY 2.0</a>.</li>
   </ul>
 </details>
 
