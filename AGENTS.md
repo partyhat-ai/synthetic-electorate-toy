@@ -19,6 +19,7 @@ These are gates, not advice. CI enforces every one of them on the head SHA.
 - A test that needs raw data outside the repo skips with a stated reason. It never passes silently.
 
 ## Data and provenance
+- Provenance hashes are computed by script, never typed.
 - Only evaluate-stage code reads held-out benchmarks (`test_benchmarks_isolated`).
 - Add to `DISCLOSURES.md` the moment an inaccuracy or assumption is found.
 - No secrets in the repo. The harness reads `ANTHROPIC_API_KEY` or

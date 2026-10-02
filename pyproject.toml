@@ -8,7 +8,9 @@ version = "0.1.0"
 description = "The simulation harness behind Simulacra Americana: a calibrated backbone decides the counts, LLM agents supply paired changes and quotes."
 requires-python = ">=3.12"
 dependencies = [
+    "numpy>=2.0",
     "pandas>=2.2",
+    "scipy>=1.13",
 ]
 
 [project.optional-dependencies]

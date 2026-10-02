@@ -1,0 +1,22 @@
+{
+  "_comment": "IPUMS USA extract definition for the full-count path (not run in the prototype: no IPUMS API key on this machine). IPUMS microdata can't be redistributed; the harness ships this definition and serves only aggregates. Submit with the IPUMS API (https://developer.ipums.org/docs/v2/workflows/create_extracts/usa/) under your own registration, then point SIMHARNESS_IPUMS_1920 at the downloaded CSV. Variable names marked confirm were not confirmed on IPUMS variable pages by the research agents (toy_dataset_recipe.md §1.2); check them in the extract system first.",
+  "description": "Simulacra Americana: 1920 full count, adults 21+, for the 1920 electorate (truth mode). Strict mode uses the same definition on us1910m.",
+  "dataStructure": { "rectangular": { "on": "P" } },
+  "dataFormat": "csv",
+  "samples": { "us1920c": {} },
+  "variables": {
+    "YEAR": {}, "SERIAL": {}, "PERNUM": {}, "STATEFIP": {}, "STATEICP": {}, "COUNTYICP": {}, "COUNTYNHG": {},
+    "AGE": { "caseSelections": { "general": ["021-120"] } },
+    "SEX": {}, "RACE": {}, "BPL": {}, "OCC1950": {},
+    "NATIVITY": { "_confirm": true }, "URBAN": { "_confirm": true }, "FARM": { "_confirm": true },
+    "RELATE": { "_confirm": true }, "MARST": { "_confirm": true }, "GQ": { "_confirm": true },
+    "LIT": {}, "CITIZEN": {}, "OWNERSHP": {}
+  },
+  "_never_ship": ["HISTID", "any name field", "any record-level row"],
+  "_harness_use": {
+    "cells": "STATEFIP × SEX × RACE(harmonized: white/Black/other) × NATIVITY(native/foreign) × CITIZEN(naturalized/first papers/alien) × AGE band (21–24, 25–34, 35–44, 45–54, 55–64, 65+) × URBAN × FARM",
+    "joint": "weighted tabulation of the cells above replaces the IPF seed in population.py; the published state tables (voting age by color, nativity and citizenship) stay the raking targets, so the full count and the published volumes must agree to rounding before a run",
+    "persona": "OCC1950 and FARM replace the imputed household economy in agents.py"
+  },
+  "strict_mode_samples": { "1920": "us1910m", "1896": "us1880e (reweighted to NHGIS 1890 margins)" }
+}
