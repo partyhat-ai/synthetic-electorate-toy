@@ -75,11 +75,16 @@ describe('createSimulacraApi', () => {
     ];
     const { fetch, calls } = fakeFetch((url) => (url.endsWith('/runs') ? json({ id: 'r1' }) : json(statuses.shift())));
     const api = createSimulacraApi({ fetch, base: 'http://localhost:8787/api/simulacra' });
-    const started = await api.startRun(1912, { whatIfs: ['women'], text: 'taft out' });
+    const started = await api.startRun(1912, { whatIfs: ['women'], text: 'taft out', edits: { women: { A: 0.02, home: -0.02 } } });
     expect(started).toEqual({ id: 'r1' });
     expect(calls[0]?.url).toBe('http://localhost:8787/api/simulacra/runs');
     expect(calls[0]?.init?.method).toBe('POST');
-    expect(JSON.parse(String(calls[0]?.init?.body))).toEqual({ year: 1912, whatIfs: ['women'], text: 'taft out' });
+    expect(JSON.parse(String(calls[0]?.init?.body))).toEqual({
+      year: 1912,
+      whatIfs: ['women'],
+      text: 'taft out',
+      edits: { women: { A: 0.02, home: -0.02 } },
+    });
     expect((await api.run('r1')).status).toBe('running');
     const failed = await api.run('r1');
     expect(failed.status === 'failed' && failed.error).toContain('not been computed');

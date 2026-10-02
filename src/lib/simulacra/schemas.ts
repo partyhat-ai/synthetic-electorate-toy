@@ -4,7 +4,7 @@
 // everyone else.
 //
 // GET  /elections/:year → ElectionResponse { slices, whatIfs }
-// POST /runs { year, whatIfs: [key], text } → StartedRun { id }
+// POST /runs { year, whatIfs: [key], text, edits } → StartedRun { id }
 // GET  /runs/:id → RunStatus (running | done with a RunResult | failed)
 // POST /runs/:id/cancel → { ok }
 // GET  /elections/:year/voters/:slice?run=:id → Voter

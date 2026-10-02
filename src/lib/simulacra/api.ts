@@ -47,11 +47,17 @@ export class SimError extends Error {
   }
 }
 
+/** Fractions of a group's adults moved by hand (the page's dragged dots); each change sums to 0. */
+export type SliceEdit = Partial<Record<'A' | 'B' | 'O' | 'home' | 'barred', number>>;
+export type Edits = Readonly<Record<string, SliceEdit>>;
+
 export interface RunAsk {
   /** What-if keys, as the election lists them. */
   readonly whatIfs?: readonly string[];
   /** A what-if in the user's own words, for the server to read. */
   readonly text?: string;
+  /** Groups changed by hand, applied after the what-ifs. */
+  readonly edits?: Edits;
 }
 
 /** What the page needs from a simulation: the server (createSimulacraApi) or the sample (createSampleApi). */
@@ -111,7 +117,8 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
   return {
     sample: false,
     election: (year) => call(`/elections/${year}`, ElectionResponseSchema),
-    startRun: (year, { whatIfs = [], text = '' } = {}) => call('/runs', StartedRunSchema, { year, whatIfs, text }),
+    startRun: (year, { whatIfs = [], text = '', edits = {} } = {}) =>
+      call('/runs', StartedRunSchema, { year, whatIfs, text, edits }),
     run: (runId) => call(`/runs/${id(runId)}`, RunStatusSchema),
     stopRun: async (runId) => {
       await call(`/runs/${id(runId)}/cancel`, CancelledSchema, {});

@@ -72,7 +72,7 @@ Components take callback props instead of dispatching events. What was
 `on:toggle={(e) => toggle(e.detail)}` is now `ontoggle={toggle}`; the detail
 is the callback's argument.
 
-- `SliceRow`: `ontoggle()`.
+- `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
 - `TimeBar`: `onchange(year)`, `onshuffle()`.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
   `onaction(key)`, `onfocus(on)`; `bind:value`, `bind:input`.
@@ -167,7 +167,8 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
 ## Svelte notes (Svelte 5, runes)
 
 - **Derive, don't sync.** Prefer `$derived` over an `$effect` that copies
-  state.
+  state; `SliceRow` keeps its dragged draft keyed to the slice it was drawn
+  on rather than clearing it in an effect.
 - **Svelte 5 trims whitespace at tag edges.** Put separators inside template
   literals, like ``{` · ${x}`}``, or they vanish.
 - **SVG:** use `style:fill`, because CSS beats the `fill` attribute. CSS `r`

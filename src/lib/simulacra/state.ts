@@ -1,6 +1,7 @@
 // The page's state, the pure parts: what the URL asks for, whether there's
 // anything new to run, and the types the page keeps. The reactive holder is
 // state.svelte.ts.
+import type { Edits, SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
 import { type Election, electionOf, FEATURED } from './history';
 import type { RunResult, Slice, WhatIf } from './schemas';
@@ -65,13 +66,27 @@ export function electionFor(year: number): Election {
 }
 
 /**
- * Something to run since the rerun on show (or, with none yet, a what-if or
- * words to run at all).
+ * Something to run since the rerun on show (or, with none yet, a what-if,
+ * words or dots to run at all).
  */
-export function isDirty(shown: Pick<ShownRun, 'ran'> | null, selected: readonly string[], typed: string): boolean {
+export function isDirty(
+  shown: Pick<ShownRun, 'ran'> | null,
+  selected: readonly string[],
+  typed: string,
+  edits: Edits | undefined,
+): boolean {
   if (typed.trim()) return true;
-  if (!shown) return selected.length > 0;
+  if (!shown) return selected.length > 0 || !!edits;
   return selected.length !== shown.ran.length || selected.some((k) => !shown.ran.includes(k));
+}
+
+/** A drag on a group's dots added to the year's edits: each fraction's change summed over drags. */
+export function addEdit(edits: Edits | undefined, slice: string, d: SliceEdit): Edits {
+  const next: Record<string, SliceEdit> = { ...edits };
+  const sum: Record<string, number> = { ...next[slice] };
+  for (const [k, v] of Object.entries(d)) sum[k] = (sum[k] ?? 0) + (v ?? 0);
+  next[slice] = sum;
+  return next;
 }
 
 /** A what-if chosen or unchosen. */

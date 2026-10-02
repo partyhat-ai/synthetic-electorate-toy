@@ -7,7 +7,7 @@
 // elections have written stories (stories.ts); every other year gets the
 // groups every election has (sampleEras.ts), above all the people who
 // couldn't vote.
-import { type RunAsk, SimError, type SimulacraApi } from './api';
+import { type Edits, type RunAsk, SimError, type SimulacraApi } from './api';
 import { ELECTION_YEARS, STATE_BY_CODE } from './geo';
 import { type Election, electionOf } from './history';
 import {
@@ -559,7 +559,7 @@ const gap = (v: Votes) => {
   return x - y;
 };
 
-function rerunElection(e: Election, keys: readonly string[] = [], text = ''): RunResult {
+function rerunElection(e: Election, keys: readonly string[] = [], text = '', edits: Edits = {}): RunResult {
   const year = e.year;
   const base = baseline(e);
   const available = whatIfsFor(e);
@@ -575,6 +575,32 @@ function rerunElection(e: Election, keys: readonly string[] = [], text = ''): Ru
   }
   for (const w of chosen) w.apply(ctx);
   const shortOf = (k: string) => e.candidates.find((c) => c.key === k)?.short ?? '';
+  // Groups changed by hand: the new make-up, its votes spread over the
+  // group's states.
+  let edited = 0;
+  for (const [key, d] of Object.entries(edits)) {
+    const s = slices.get(key);
+    if (!s) continue;
+    const moved = (k: (typeof FIELDS)[number]) => Math.max(0, s[k] + (d[k] ?? 0));
+    const next: Fractions = { barred: moved('barred'), home: moved('home'), A: moved('A'), B: moved('B'), O: moved('O') };
+    deltas.push({
+      type: 'votes',
+      where: weights(e, s.where, s.states),
+      A: (next.A - s.A) * s.adults,
+      B: (next.B - s.B) * s.adults,
+      O: (next.O - s.O) * s.adults,
+    });
+    slices.set(key, { ...s, ...next });
+    const moves = (['A', 'B'] as const).flatMap((k) => {
+      const n = Math.round((d[k] ?? 0) * 50);
+      return n ? [`${shortOf(k)} ${n > 0 ? 'gains' : 'loses'} ${Math.abs(n)} in 50`] : [];
+    });
+    if (moves.length) {
+      leads.push(`Among ${lower(s.label)}, ${moves.join(' and ')}.`);
+      edited++;
+    }
+  }
+
   const now = tally(base, deltas);
   const ev: Votes = {
     A: e.candidates[0].ev,
@@ -639,7 +665,7 @@ function rerunElection(e: Election, keys: readonly string[] = [], text = ''): Ru
   const heldA = squeezed('A');
   const holds = heldA ? `${stateName(heldA.code)} holds for ${nameOf('A')} by ${pts(heldA.margin)}.` : '';
   let outcome: string;
-  if (!chosen.length) {
+  if (!chosen.length && !edited) {
     outcome = unknown ? '' : `Rerun with nothing changed, ${year} comes out as it did: ${nameOf('A')} wins, ${score('A')}.`;
   } else if (winner && winner !== 'A') {
     outcome = `That’s enough: ${nameOf(winner)} wins, ${score(winner)}${lost.length ? `, flipping ${names(lost, 4)}` : ''}.`;
@@ -735,13 +761,13 @@ export function createSampleApi(options: SampleOptions = {}): SimulacraApi {
         whatIfs: whatIfsFor(e).map(({ key, label, kind, detail, slices }) => ({ key, label, kind, detail, slices: [...slices] })),
       };
     },
-    async startRun(year, { whatIfs = [], text = '' }: RunAsk = {}) {
+    async startRun(year, { whatIfs = [], text = '', edits = {} }: RunAsk = {}) {
       await sleep(120);
       const e = electionOf(year);
       if (!e) throw missing('No simulation for this year.');
       n += 1;
       const id = `sample-${n}`;
-      runs.set(id, { at: clock(), total: e.states.length, result: rerunElection(e, whatIfs, text) });
+      runs.set(id, { at: clock(), total: e.states.length, result: rerunElection(e, whatIfs, text, edits) });
       return { id };
     },
     async run(id) {
@@ -772,9 +798,9 @@ export const _model = {
     const e = electionOf(year);
     return e ? national(e) : null;
   },
-  rerun: (year: number, keys: readonly string[] = [], text = ''): RunResult | null => {
+  rerun: (year: number, keys: readonly string[] = [], text = '', edits: Edits = {}): RunResult | null => {
     const e = electionOf(year);
-    return e ? rerunElection(e, keys, text) : null;
+    return e ? rerunElection(e, keys, text, edits) : null;
   },
   slicesFor: (year: number): Slice[] => {
     const e = electionOf(year);

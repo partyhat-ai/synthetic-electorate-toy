@@ -55,6 +55,11 @@ describe('the sample model', () => {
     expect(_model.rerun(1912, [], 'what if Taft dropped out')?.applied.map((a) => a.key)).toEqual(['taft-out']);
     expect(_model.rerun(1912, [], 'what if it rained')?.unknown).toBe('what if it rained');
   });
+
+  test('a dragged group changes the summary', () => {
+    const r = _model.rerun(2000, [], '', { felony: { B: 0.2, barred: -0.2 } });
+    expect(r?.summary).toMatch(/Among people with felony records, Gore gains 10 in 50/);
+  });
 });
 
 describe('createSampleApi', () => {

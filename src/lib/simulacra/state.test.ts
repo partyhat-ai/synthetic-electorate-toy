@@ -1,17 +1,25 @@
 import { describe, expect, test } from 'vitest';
 import { SimError, type SimulacraApi } from './api';
 import type { ElectionResponse } from './schemas';
-import { isDirty, randomStory, readParams, toggled, urlForYear } from './state';
+import { addEdit, isDirty, randomStory, readParams, toggled, urlForYear } from './state';
 import { PageState } from './state.svelte';
 
 describe('the pure parts', () => {
-  test('isDirty: typed words always; with no rerun, anything chosen; else a different choice', () => {
-    expect(isDirty(null, [], ' x ')).toBe(true);
-    expect(isDirty(null, [], '')).toBe(false);
-    expect(isDirty(null, ['league'], '')).toBe(true);
+  test('isDirty: typed words always; with no rerun, anything chosen or dragged; else a different choice', () => {
+    expect(isDirty(null, [], ' x ', undefined)).toBe(true);
+    expect(isDirty(null, [], '', undefined)).toBe(false);
+    expect(isDirty(null, ['league'], '', undefined)).toBe(true);
     const shown = { ran: ['league'] };
-    expect(isDirty(shown, ['league'], '  ')).toBe(false);
-    expect(isDirty(shown, ['league', 'no-19th'], '')).toBe(true);
+    expect(isDirty(shown, ['league'], '  ', undefined)).toBe(false);
+    expect(isDirty(shown, ['league', 'no-19th'], '', undefined)).toBe(true);
+  });
+
+  test('addEdit sums each fraction over drags, per group', () => {
+    const one = addEdit(undefined, 'women', { A: 0.1, home: -0.1 });
+    const two = addEdit(one, 'women', { A: 0.05, B: -0.05 });
+    const three = addEdit(two, 'men', { O: 0.02, home: -0.02 });
+    expect(three).toEqual({ women: { A: 0.15000000000000002, home: -0.1, B: -0.05 }, men: { O: 0.02, home: -0.02 } });
+    expect(one).toEqual({ women: { A: 0.1, home: -0.1 } });
   });
 
   test('toggled adds or removes one key', () => {
@@ -56,7 +64,7 @@ describe('PageState', () => {
     await page.loadSim(1920);
     expect(page.server).toBe('online');
     page.toggle('league');
-    page.rerunNow();
+    page.editSlice('women', { A: 0.1, home: -0.1 });
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(page.runError).toBe('The simulation server answered 500.');
 
@@ -64,6 +72,7 @@ describe('PageState', () => {
     expect(page.year).toBe(1896);
     expect(page.view).toBe('history');
     expect(page.runError).toBeNull();
+    expect(page.edits).toBeUndefined();
     expect(page.selected).toEqual([]);
     expect(page.sim).toBeNull();
   });

@@ -1,12 +1,12 @@
 // The page's state, reactive: the year on show with its groups and what-ifs
-// the server sent (sim), the chosen what-ifs and the rerun on show (result);
-// the view (kept in the URL with the year); and the run in hand. The pure
-// parts are state.ts.
+// the server sent (sim), the chosen what-ifs, the dragged dots (edits) and
+// the rerun on show (result); the view (kept in the URL with the year); and
+// the run in hand. The pure parts are state.ts.
 import { SvelteMap } from 'svelte/reactivity';
-import { type SimulacraApi, SimError } from './api';
+import { type Edits, type SimulacraApi, SimError, type SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
 import type { RunResult, RunStatus, Voter } from './schemas';
-import { electionFor, isDirty, type Server, type ShownRun, type Sim, toggled, urlForYear, type View } from './state';
+import { addEdit, electionFor, isDirty, type Server, type ShownRun, type Sim, toggled, urlForYear, type View } from './state';
 
 /** The run on show while it works. `id` is null until the server has started it. */
 export interface ActiveRun {
@@ -47,8 +47,12 @@ export class PageState {
   /** The year's groups and what-ifs. */
   sim = $state<Sim | null>(null);
   chosen = $state<readonly string[]>([]);
+  /** Dots dragged by hand: each group's change in its fractions, summed over drags. */
+  edits = $state<Edits | undefined>(undefined);
   /** The rerun on show. */
   result = $state<ShownRun | null>(null);
+  /** Bumped by Reset, so the rows drop any drag in hand. */
+  editEpoch = $state(0);
   typed = $state('');
   lastToggled = $state<string | null>(null);
   run = $state<ActiveRun | null>(null);
@@ -69,7 +73,8 @@ export class PageState {
   readonly showing = $derived<'history' | 'whatif'>(this.rerun ? 'whatif' : 'history');
   readonly running = $derived(!!this.run && this.run.year === this.year);
   readonly canRun = $derived(this.server === 'online' && !!this.sim && this.whatIfs.length > 0 && !this.running);
-  readonly dirty = $derived(isDirty(this.result, this.selected, this.typed));
+  readonly canEdit = $derived(this.server === 'online' && !!this.sim && !this.running && !this.election.unopposed);
+  readonly dirty = $derived(isDirty(this.result, this.selected, this.typed, this.edits));
   readonly voterKey = $derived(this.openSlice ? `${this.year}|${this.openSlice}|${this.rerun?.runId ?? ''}` : null);
   readonly voter = $derived(this.voterKey ? (this.voters.get(this.voterKey) ?? null) : null);
 
@@ -120,6 +125,7 @@ export class PageState {
     // A new year starts fresh: its groups load, with nothing chosen or rerun.
     this.sim = null;
     this.chosen = [];
+    this.edits = undefined;
     this.result = null;
     this.openSlice = null;
     this.typed = '';
@@ -153,6 +159,13 @@ export class PageState {
     void this.startRerun();
   }
 
+  /** A drag on a group's dots: added to the edits, then rerun at once. */
+  editSlice(key: string, d: SliceEdit): void {
+    if (!this.canEdit) return;
+    this.edits = addEdit(this.edits, key, d);
+    void this.startRerun();
+  }
+
   async startRerun(): Promise<void> {
     this.stop();
     const token = this.#token;
@@ -165,7 +178,7 @@ export class PageState {
     this.run = { id: null, year: y, done: 0, total: this.election.states.length, text, labels };
     let id: string;
     try {
-      ({ id } = await this.api.startRun(y, { whatIfs: keys, text }));
+      ({ id } = await this.api.startRun(y, { whatIfs: keys, text, edits: this.edits ?? {} }));
     } catch (err) {
       if (token !== this.#token) return;
       this.run = null;
@@ -223,6 +236,8 @@ export class PageState {
   reset(): void {
     this.chosen = [];
     this.result = null;
+    this.edits = undefined;
+    this.editEpoch += 1;
     this.typed = '';
     this.lastToggled = null;
     this.runError = null;

@@ -306,10 +306,13 @@
         </div>
         {#if page.sim?.slices.length}
           <div class="rows">
+            {#key page.editEpoch}
             {#each slices as s (s.key)}
               <SliceRow slice={s} base={baseSlices.get(s.key)} {colors} {names} rerun={!!rerun} lit={reached.has(s.key)}
-                open={page.openSlice === s.key} ontoggle={() => page.toggleSlice(s.key)} />
+                open={page.openSlice === s.key} editable={page.canEdit}
+                ontoggle={() => page.toggleSlice(s.key)} onedit={(d) => page.editSlice(s.key, d)} />
             {/each}
+            {/key}
           </div>
         {:else}
           <div class="rows ghost" aria-hidden="true">
@@ -331,7 +334,7 @@
 
       <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} bind:input={inputEl}
         {message} whatIfs={composer.chips} selected={page.selected} slice={page.openSlice} bind:value={page.typed}
-        running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0}
+        running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0 || !!page.edits}
         ran={page.result?.ran ?? []} dirty={page.dirty} closed={composer.closed}
         ontoggle={(key) => page.toggle(key)} onrun={() => page.rerunNow()} onstop={() => page.stop()} onreset={() => page.reset()} onaction={act} />
     </main>
