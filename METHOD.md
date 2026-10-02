@@ -213,7 +213,7 @@ For draw d, "adults" means legally eligible adults.
   intercept are solved by iterative scaling. Each state's R, D and other votes
   then match the certified returns to within 1e-7 of the vote.
 - **C3b: Black Southern voters.** They split like Black voters outside the
-  South.
+  South. The split is limited to parties on the state's certified ledger.
   - **Accounting bound.** Their votes for either party may not exceed 80% of
     that party's certified vote in the state.
   - Where the bound binds, their turnout is lowered, the difference is

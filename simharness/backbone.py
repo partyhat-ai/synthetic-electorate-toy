@@ -107,6 +107,14 @@ def _black_south_bound(D, S, sidx, south_state, black, south_cell, female, votes
             vb = votes_cell[d, b_idx]
             if vb.sum() <= 0:
                 continue
+            # Only parties on the state's certified ledger; minor-party share
+            # capped at 80% of the state's minor-party vote.
+            nb_s = nb.copy()
+            o_cap = 0.8 * O[s] / max(vb.sum(), 1e-9)
+            if nb_s[2] > o_cap:
+                nb_s[:2] *= (1 - o_cap) / max(nb_s[0] + nb_s[1], 1e-9)
+                nb_s[2] = o_cap
+            nb = nb_s
             scale = min(1.0, 0.8 * R[s] / max(vb.sum() * nb[0], 1e-9), 0.8 * Dm[s] / max(vb.sum() * nb[1], 1e-9))
             if scale < 1.0:
                 bound_hits[s] += 1

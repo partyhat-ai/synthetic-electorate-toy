@@ -60,6 +60,9 @@ its effect. None changes a threshold.
 6. **Sex turnout cap.** R1 first failed in Utah in 4 of 400 draws: a drawn
    men/women ratio implied men's turnout above 100%. Each sex is now capped at
    98%, and the excess moves to the other sex, so state totals stay exact.
+7. **Minor-party ledger.** R1 failed again after deviation 5: in NC and GA,
+   whose certified minor-party vote is 0, the borrowed Black split carried a
+   minor-party share. Fixed; R1 passes.
 
 ## What wasn't done
 
