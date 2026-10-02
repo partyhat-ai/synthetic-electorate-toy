@@ -40,7 +40,6 @@ export class PageState {
   server = $state<Server>('connecting');
   /** Why the year's groups didn't load. */
   simFailed = $state<string | null>(null);
-  simLoading = $state(false);
   readonly sims = new SvelteMap<number, Sim>();
   readonly chosen = new SvelteMap<number, readonly string[]>();
   /** Dots dragged by hand, per year: each group's change in its fractions, summed over drags. */
@@ -108,9 +107,7 @@ export class PageState {
   async loadSim(y: number): Promise<void> {
     if (this.sims.has(y)) return;
     this.simFailed = null;
-    this.simLoading = true;
     const out = await this.api.election(y);
-    this.simLoading = false;
     switch (out.kind) {
       case 'ok':
         this.sims.set(y, { slices: out.value.slices, whatIfs: out.value.whatIfs });

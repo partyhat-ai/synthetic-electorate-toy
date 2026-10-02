@@ -8,8 +8,8 @@
   // it reruns the election and says what changed. The timeline along the
   // bottom moves between elections.
   //
-  // This file is composition and layout, what the robot says and where it
-  // stands. State: $lib/simulacra/state(.svelte).ts.
+  // This file is composition and layout. State: $lib/simulacra/state(.svelte).ts;
+  // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
   import { toBody } from '$lib/simulacra/actions';
@@ -47,9 +47,7 @@
   let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
-  let inputEl = $state<HTMLInputElement | null>(null);
   let groupsEl = $state<HTMLElement | null>(null);
-  let scrollEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
   let revealing = $state(false);
   let narrow = $state(false);
@@ -154,7 +152,7 @@
 </svelte:head>
 <svelte:window onkeydown={onKey} />
 
-<div class="sa" class:scrubbing class:dark={!page.light} bind:this={scrollEl} onscroll={() => robot?.measureSoon()}>
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl} />
