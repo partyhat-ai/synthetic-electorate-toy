@@ -99,7 +99,7 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         a['eligibility'] = elig
         q = prompts.QUESTIONS[a['paraphrase']]
 
-        def parties(drop=frozenset(), swap=False, add=()):
+        def parties(drop=frozenset(), swap=False, add=(), news=None):
             desc = {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR}
             plank = {p: party_planks(platforms, p, drop) for p in keys}
             for x in add:  # a compiled what-if's added plank, after the party's own
@@ -107,7 +107,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             if swap:
                 plank = {**plank, 'R': plank['D'], 'D': plank['R']}
                 desc = {**desc, 'R': desc['D'], 'D': desc['R']}
-            return [{'key': p, 'descriptor': desc[p], 'planks': plank[p]} for p in order]
+            return [{'key': p, 'descriptor': desc[p], 'planks': plank[p], **({'news': news[p]} if news and news.get(p) else {})}
+                    for p in order]
 
         def request(arm, model, persona_elig, world, items, ballot_parties, disp_labels, system=prompts.SYSTEM,
                     question=q, schema=None, meta=None):
@@ -137,14 +138,21 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             if a['group'] == 'foreign_white_alien' and spec['mode'] == 'agents':
                 continue  # can't vote in either world; no effect to measure
             f = spec['facts'](a, inp)
-            if not f['facts'] and f.get('eligibility') is None:
+            if not f['facts'] and f.get('eligibility') is None and not f.get('nominee_news'):
                 continue
             items = items_for(a, f.get('drop_topics', set()), f.get('drop_after'))
             drop_planks = set(f.get('drop_planks') or ()) or ({'League of Nations'} if 'platform_override' in f else frozenset())
             change = {'what_if': wk, 'facts': f['facts'], 'eligibility': f.get('eligibility'),
                       'dropped_sources': [i['id'] for i in ctl_items if i not in items], 'dropped_planks': sorted(drop_planks),
                       'added_planks': list(f.get('add_planks') or [])}
-            ballot, cf_labels, extra = parties(drop_planks, add=f.get('add_planks') or ()), labels, {}
+            about = f.get('about') if f.get('about') in ('R', 'D') else None
+            news = {about: f['nominee_news']} if about and f.get('nominee_news') else None
+            ballot, cf_labels, extra = parties(drop_planks, add=f.get('add_planks') or (), news=news), labels, {}
+            q_cf = q
+            if news:
+                # p5 manipulation check: whose news did the person take it to be?
+                extra = {'news_check': {'expected': label_of[about], 'about': about}}
+                q_cf = f'{q} {prompts.NEWS_CHECK}'
             cand = f.get('candidate')
             if cand:
                 # p4: a third labelled line, after the two parties (their order and labels as in the control).
@@ -155,7 +163,9 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
                 extra = {**extra, 'candidate': {'label': third, 'name': cand['name']}}
             for model in (models if spec['mode'] == 'agents' else [ag.bulk_model]):
                 reqs.append(request(f'cf:{wk}', model, f.get('eligibility') or elig, {'facts': f['facts']}, items,
-                                    ballot, cf_labels, meta={'change': change, **extra}))
+                                    ballot, cf_labels, question=q_cf,
+                                    schema=prompts.answer_schema(cf_labels, news_check=True) if news else None,
+                                    meta={'change': change, **extra}))
         # L2: the platform descriptions trade labels, and the display order flips.
         if n % 2 == 0 and 'R' in label_of and 'D' in label_of:
             swapped_labels = list(reversed(labels))

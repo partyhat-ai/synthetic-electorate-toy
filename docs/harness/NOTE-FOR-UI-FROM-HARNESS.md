@@ -187,3 +187,4 @@ and `words` like any other. Kinds now include `candidate`, alongside
   `confidenceLabel` instead of the kind's default.
 - Copy for `queued`: "I haven't modelled that yet. I'm looking into it;
   try again in a minute."
+| `interview.byWhatIf[].answers[].misread` | Dev: `true` when the person took a nominee's news to be about the other candidate. Such answers are left out of the counts; suggested treatment is to dim the row with "misread the news". |

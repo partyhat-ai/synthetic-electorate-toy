@@ -38,7 +38,7 @@ from .geo import REGIONS, SOUTH
 
 WHATIFS_DIR = ROOT / 'whatifs'
 EVIDENCE_DIR = WHATIFS_DIR / 'evidence'
-COMPILER_VERSION = 'c2'  # c2: drop_topics only for contradicted topics (DISCLOSURES D17)
+COMPILER_VERSION = 'c3'  # c3: about + nominee_news (D21)  # c2: drop_topics only for contradicted topics (DISCLOSURES D17)
 
 KINDS = ['franchise', 'population', 'issue', 'event', 'candidate']
 GROUPS = ['native_white', 'foreign_white_naturalized', 'foreign_white_alien', 'black']
@@ -65,6 +65,8 @@ Kinds of change:
 - candidate: a named person on the ballot as an independent or third-party candidate.
 
 Write:
+- about: "R" or "D" when the change concerns one of the two major nominees personally (something he did, said, revealed or suffered); otherwise "none".
+- nominee_news (only when about is R or D): one or two sentences of recent news about that nominee, in the third person ("He announced…", "Editors have denounced him…"), never naming him or his party. They are printed on his own line of the ballot, so no reader has to work out whom they concern. Then facts carry only the wider world, and never refer to the nominee again; facts may be empty.
 - facts: one to three sentences stating the change as settled fact in the world on the context date, dated on or before it, in plain, neutral wording of the period. Never phrase it as a hypothesis ("what if", "imagine", "suppose", "would have"). Never name Harding, Cox, Coolidge, Franklin Roosevelt, Debs, Christensen or Wilson, and never write "Republican", "Democrat", "Democratic" or "G.O.P.". Call the Republicans "{R_DESC}" and the Democrats "{D_DESC}"; call Wilson "the President".
 - candidate (kind candidate only): the person's name as known in 1920; descriptor: a neutral one-line identity on the context date; positions: up to three neutral, dated paraphrases of stances the person actually held or voiced by the context date (positions_source "documented"), or plausible ones when nothing is on record (positions_source "inferred"). Each position is a plain statement of the stance as voters would read it on the ballot, with no notes, brackets, hedges or "would likely". Never quote a real person or put words in their mouth. eligibility_note: if the Constitution would bar the person from the office (under 35, not a natural-born citizen, fewer than 14 years resident), say so in one sentence; otherwise "".
 - reach: the sexes, groups and regions the change touches directly. Empty lists mean everyone.
@@ -88,6 +90,8 @@ COMPILE_SCHEMA = {
     'properties': {
         'modelable': {'type': 'boolean'}, 'why_not': {'type': 'string'}, 'same_as': {'type': 'string'},
         'kind': {'type': 'string', 'enum': KINDS},
+        'about': {'type': 'string', 'enum': ['R', 'D', 'none']},
+        'nominee_news': {'type': 'array', 'items': {'type': 'string'}},
         'label': {'type': 'string'}, 'detail': {'type': 'string'}, 'assumption': {'type': 'string'},
         'plausibility': {'type': 'string', 'enum': ['documented', 'within-reach', 'a-stretch', 'fantastical']},
         'anachronism': {'type': 'boolean'}, 'anachronism_note': {'type': 'string'},
@@ -112,7 +116,7 @@ COMPILE_SCHEMA = {
         'words': {'type': 'array', 'items': {'type': 'string'}},
         'research_questions': {'type': 'array', 'items': {'type': 'string'}},
     },
-    'required': ['modelable', 'why_not', 'same_as', 'kind', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
+    'required': ['modelable', 'why_not', 'same_as', 'kind', 'about', 'nominee_news', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
                  'anachronism_note', 'facts', 'reach', 'drop_topics', 'drop_planks', 'add_planks', 'candidate', 'franchise',
                  'population_scale', 'words', 'research_questions'],
     'additionalProperties': False,
@@ -130,7 +134,7 @@ def compile_request(text: str, registry: dict, cutoff: str, model: str, retry_no
 
 def naming_violations(spec: dict) -> list[str]:
     from .data import NAMES
-    texts = list(spec.get('facts', [])) + [p['text'] for p in spec.get('add_planks', [])]
+    texts = list(spec.get('facts', [])) + list(spec.get('nominee_news', [])) + [p['text'] for p in spec.get('add_planks', [])]
     c = spec.get('candidate') or {}
     texts += [c.get('descriptor', '')] + list(c.get('positions', []))
     return [t for t in texts if NAMES.search(t)]
@@ -171,6 +175,8 @@ def finalize(raw: dict, text: str, registry: dict, model: str) -> dict:
         'detail': raw['detail'], 'assumption': raw['assumption'], 'plausibility': raw['plausibility'],
         'anachronism': raw['anachronism'], 'anachronism_note': raw['anachronism_note'],
         'facts_text': [mask_names(f) for f in raw['facts']], 'reach': reach,
+        'about': raw.get('about') if raw.get('about') in ('R', 'D') else None,
+        'nominee_news': [mask_names(n) for n in raw.get('nominee_news', [])] if raw.get('about') in ('R', 'D') else [],
         'drop_topics': [t for t in raw['drop_topics'] if t in TOPICS], 'drop_planks': raw['drop_planks'],
         'add_planks': [p | {'text': mask_names(p['text'])} for p in raw['add_planks']],
         'candidate': (raw['candidate'] | {'descriptor': mask_names(raw['candidate']['descriptor']),
@@ -277,6 +283,7 @@ def make_facts(spec: dict):
 
     def facts(agent: dict, inp) -> dict:
         out = {'facts': list(spec.get('facts_text') or []), 'eligibility': None,
+               'about': spec.get('about'), 'nominee_news': list(spec.get('nominee_news') or []),
                'drop_topics': set(spec.get('drop_topics') or []), 'drop_planks': set(spec.get('drop_planks') or []),
                'add_planks': spec.get('add_planks') or []}
         if spec['kind'] == 'candidate' and spec.get('candidate'):

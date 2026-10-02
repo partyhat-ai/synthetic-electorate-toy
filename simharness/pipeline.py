@@ -226,14 +226,34 @@ class Run(Publisher):
         # Paired effects per what-if (agent-mode what-ifs apply them; others are cross-checks)
         effects, pairs_out = {}, {}
         for wk in self.cfg.what_ifs:
-            pairs = {}
+            pairs, checks = {}, []
             for aid, a in agents.items():
                 if a['group'] == 'foreign_white_alien' and REGISTRY[wk]['mode'] == 'backbone':
                     continue  # planned in error for p1 (brief contradicted itself); excluded, see EVAL.md
                 for model in self.models:
-                    c, f = norm(f'control|{aid}|{model}'), norm(f'cf:{wk}|{aid}|{model}')
+                    fid = f'cf:{wk}|{aid}|{model}'
+                    c, f = norm(f'control|{aid}|{model}'), norm(fid)
+                    chk = reqs[fid]['meta'].get('news_check') if fid in reqs else None
+                    if c and f and chk:
+                        # p5 manipulation check: a person who took the news to be about the
+                        # other candidate answered a different question; left out, and counted.
+                        got = ans[fid]['data'].get('news_about')
+                        checks.append({'agent': aid, 'expected': chk['expected'], 'got': got, 'ok': got == chk['expected']})
+                        if got != chk['expected']:
+                            continue
                     if c and f:
                         pairs.setdefault(a['cohort'], []).append((c, f, a['paraphrase'], model))
+            misread = {'checked': len(checks), 'misread': sum(not x['ok'] for x in checks), 'rows': checks}
+            if not pairs and checks:
+                # Everyone misread the change: nothing was measured, so nothing moves.
+                zero = {k: {'mean': 0.0, 'lo': 0.0, 'hi': 0.0} for k in ('dt', 'dr', 'do')}
+                effects[wk] = {'cohorts': {}, 'regions': {}, 'national': zero, 'national_bias': 0.0, 'by_paraphrase': {},
+                               'by_model': {}, 'manipulation': misread, 'blended': False,
+                               'agreement': {'verdict': 'untested', 'detail': 'Every interview misread the change.', 'measures': []},
+                               'agent_stats': {'n': 0, 'measure': 'dr', 'spans_zero': True, 'paraphrase_flip': False,
+                                               'exposed': nationally_exposed, 'checked': misread['checked'], 'misread': misread['misread']}}
+                pairs_out[wk] = {}
+                continue
             if not pairs:
                 continue
             region_of = {k: cohorts[k]['region'] for k in pairs}
@@ -265,7 +285,9 @@ class Run(Publisher):
             signs = {float(np.sign(v[mkey])) for v in eff['by_paraphrase'].values() if abs(v[mkey]) > 0.02}
             eff['agent_stats'] = {'n': sum(len(ps) for ps in pairs.values()), 'measure': mkey,
                                   'spans_zero': bool(eff['national'][mkey]['lo'] < 0 < eff['national'][mkey]['hi']),
-                                  'paraphrase_flip': len(signs) > 1, 'exposed': nationally_exposed}
+                                  'paraphrase_flip': len(signs) > 1, 'exposed': nationally_exposed,
+                                  'checked': misread['checked'], 'misread': misread['misread']}
+            eff['manipulation'] = misread
             eff['agreement'] = evidence.agreement(ev, eff['national'], nat_base, spec['kind'])
             eff['blended'] = False
             if ev and spec.get('evidence_mode') == 'blend':
@@ -321,6 +343,7 @@ class Run(Publisher):
                                    'by_paraphrase': e['by_paraphrase'], 'by_model': e['by_model'],
                                    'shared_subsample': e.get('shared_subsample'),
                                    'agent_stats': e.get('agent_stats'), 'agreement': e.get('agreement'), 'blended': e.get('blended'),
+                                   'manipulation': e.get('manipulation'),
                                    'cohorts': {k: {kk: vv for kk, vv in c.items() if kk != 'draws'} for k, c in e['cohorts'].items()}}
                               for wk, e in effects.items()}}
         (self.dir / 'analysis.json').write_text(json.dumps(result, indent=1, default=float))

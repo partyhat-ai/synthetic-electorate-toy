@@ -21,7 +21,13 @@ import random
 # p3: quote capped at 25 words, no letter labels (DISCLOSURES D11).
 # p4: a candidate what-if's counterfactual ballot carries a third labelled line (a named
 # independent); every other brief is byte-identical to p3's, so p3 answers to them are reused.
-PROMPT_VERSION = 'p4'
+# p5: news about one nominee sits on that nominee's ballot line, and those counterfactuals
+# carry a manipulation check (news_about) (DISCLOSURES D21). Briefs without such news are
+# byte-identical to p4's.
+PROMPT_VERSION = 'p5'
+
+NEWS_CHECK = ('Also fill news_about: the label of the candidate the recent news on the ballot concerns, '
+              '"neither" if it concerns neither, or "unsure".')
 
 # No H(arding), C(ox), D(ebs), R(epublican), D(emocrat), S(ocialist),
 # F(armer-Labor), W(ilson), L(eague).
@@ -56,9 +62,14 @@ PROBE_QUESTION = (
 )
 
 
-def answer_schema(labels: list[str]) -> dict:
+def answer_schema(labels: list[str], news_check: bool = False) -> dict:
     choice_props = {l: {'type': 'integer'} for l in labels}
     choice_props['other'] = {'type': 'integer'}
+    if news_check:
+        s = answer_schema(labels)
+        s['properties']['news_about'] = {'type': 'string', 'enum': labels + ['neither', 'unsure']}
+        s['required'].append('news_about')
+        return s
     return {
         'type': 'object',
         'properties': {
@@ -107,7 +118,8 @@ def ballot_block(state_name: str, parties: list[dict], labels: list[str], others
     lines = [f'On the ballot for president in {state_name}:']
     for label, p in zip(labels, parties):
         planks = ' '.join(p['planks'])
-        lines.append(f'- Candidate {label}: {p["descriptor"]}. {planks}'.rstrip())
+        news = f' Recent news: {" ".join(p["news"])}' if p.get('news') else ''
+        lines.append(f'- Candidate {label}: {p["descriptor"]}.{news} {planks}'.rstrip())
     lines.append(f'- {others}')
     return lines
 

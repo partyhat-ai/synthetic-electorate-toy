@@ -486,3 +486,20 @@ The counts use the choice and p_choice; the page shows the quote.
 The extractor recorded the historical direction as the scenario's effect.
 "The League hurt Cox" became toward-R for a scenario that removes the
 League.
+
+**D21 · High · fixed (p5, compiler c3) · voters misread whom the news was about**
+In the first Harding-disclosure run, the brief identified the nominee only
+by descriptor ("the candidate of the party that has held a majority in
+Congress…"). Most of the 12 interviewed people blamed the other candidate.
+The result was a spurious 7.8-point move *toward* Harding.
+
+Now:
+- **News on the line.** News about one nominee is printed on that
+  nominee's own ballot line (`about`, `nominee_news`).
+- **Manipulation check.** Each such counterfactual answers `news_about`.
+  Misreaders are left out of the counts, kept in the interviews with
+  `misread: true`, and flagged in confidence (`misread-change`). At least
+  half misreading forces "extremely low".
+
+The rerun: 0 of 12 misread. The spec was recompiled with c3 and its key,
+label and words kept, a post-hoc edit.

@@ -271,6 +271,9 @@ class Publisher:
             for aid, a in agents.items():
                 c_id = f'control|{aid}|{self.bulk}'
                 f_id = f'cf:{wk}|{aid}|{self.bulk}' if wk else c_id
+                chk = reqs[f_id]['meta'].get('news_check') if f_id in reqs else None
+                if chk and f_id in ans and ans[f_id]['data'].get('news_about') != chk['expected']:
+                    continue  # misread whom the news was about (p5 check)
                 if c_id in ans and f_id in ans:
                     lab = {v: k for k, v in reqs[c_id]['meta']['label_of'].items()}
                     answers[aid] = {'control': paired.normalize(ans[c_id]['data'], lab) | {'raw': ans[c_id]['data']},
@@ -340,7 +343,10 @@ class Publisher:
                 if c_id not in ans or f_id not in ans:
                     continue
                 lab = {v: k for k, v in reqs[c_id]['meta']['label_of'].items()}
+                chk = reqs[f_id]['meta'].get('news_check')
                 rows.append({
+                    # additive: took the news to be about the other candidate; left out of the counts
+                    **({'misread': True} if chk and ans[f_id]['data'].get('news_about') != chk['expected'] else {}),
                     'question': a['paraphrase'], 'name': a['name'], 'cohort': cohorts[a['cohort']]['label'],
                     'line': f'{a["age"]}, {"a city or town" if a["urban"] else "the countryside"}, {STATE_NAME.get(a["state"], a["state"])}',
                     'before': one(c_id, a, lab), 'after': one(f_id, a, lab),

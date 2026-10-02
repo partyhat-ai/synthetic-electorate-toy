@@ -467,6 +467,15 @@ def confidence(spec: dict, ev: dict | None, agree: dict | None, agent: dict | No
         elif unstable:
             flags.append('unstable-interviews')
             reasons.append('The interviews\' answer changes sign with the question\'s wording, though the record points the same way.')
+        checked, wrong = agent.get('checked') or 0, agent.get('misread') or 0
+        if checked and wrong:
+            flags.append('misread-change')
+            reasons.append(f'{wrong} of {checked} people interviewed took the news to be about the other candidate; '
+                           'their answers were left out.')
+            if wrong / checked >= 0.5:
+                t = 0
+            elif wrong / checked > 0.25:
+                t -= 1
         if agent.get('n', 99) < 6:
             t -= 1
             flags.append('few-interviews')
