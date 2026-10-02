@@ -41,6 +41,7 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
     Tr = [i for i in range(len(states)) if states[i] not in holdout_states]
     ret = inp.returns.loc[states]
     old = np.array([s in inp.women16 for s in states])
+    closed = np.array([s in inp.closed_1920 for s in states])
     south = np.array([s in SOUTH for s in states])
     E16, E20 = dg['E16'], dg['E20']
     T16, T20 = dg['T16'], dg['T20']
@@ -53,11 +54,11 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
     kap = k.mean(axis=1)[:, None] + rng.normal(0, 1, (D, len(states))) * k.std(axis=1, ddof=1)[:, None]
     m20 = expit(logit(m16) + kap)
     # ρ from training new non-Southern states
-    tr_new = [i for i in Tr if not old[i] and not south[i]]
+    tr_new = [i for i in Tr if not old[i] and not south[i] and not closed[i]]
     W = T20[None, tr_new] - m20[:, tr_new] * M20[:, tr_new]
     rho = np.clip(W / np.maximum(F20[:, tr_new], 1) / m20[:, tr_new], 0.05, 1.5)
     rho_d = rho[np.arange(D), rng.integers(0, len(tr_new), D)]
-    votes_hat = m20 * M20 + rho_d[:, None] * m20 * F20
+    votes_hat = m20 * M20 + np.where(closed, 0, rho_d[:, None] * m20 * F20)
     sidx = np.array([idx[s] for s in fit.cells.state])
     A = np.zeros((D, len(states)))
     np.add.at(A, (slice(None), sidx), fit.world.adults)
@@ -71,10 +72,10 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
     # Two-party share: swing + women's tilt, fitted on training states
     rd16 = logit((ret.R16 / (ret.R16 + ret.D16)).to_numpy())
     rd20 = logit((ret.R20 / (ret.R20 + ret.D20)).to_numpy())
-    f_hat = np.where(~old, 1 - (m20 * M20) / np.maximum(votes_hat, 1), 0.0)
+    f_hat = np.where(~old & ~closed, 1 - (m20 * M20) / np.maximum(votes_hat, 1), 0.0)
     pred = np.empty((D, len(H)))
     for d in range(D):
-        f_tr = np.where(~old, dg['votes_F'][d] / T20, 0.0)
+        f_tr = np.where(~old & ~closed, dg['votes_F'][d] / T20, 0.0)
         X = np.column_stack([~south, south, f_tr]).astype(float)[Tr]
         b, sig, _ = bayes_ols(X, (rd20 - rd16)[Tr], 1, rng)
         Xh = np.column_stack([~south, south, f_hat[d]]).astype(float)[H]

@@ -7,10 +7,9 @@ Every number below is copied from the run's `validation.json`.
 
 ## Summary
 
-- **R1 fails in Utah in 4 of 400 draws.** A drawn men/women ratio implies
-  men's turnout above 100%. The pre-registration counts any R1 miss as a
-  failure of the build, so no what-if result can be published until it
-  passes.
+- **The 19th Amendment placebo passes.** In Georgia and Mississippi, where
+  women couldn't register in time, the implied women's turnout is 2.1% and
+  3.5%, near zero as it should be.
 
 ## Pre-registered checks
 
@@ -49,6 +48,9 @@ its effect. None changes a threshold.
    - The first fit's Goodman regression (intercept, lag) gave β_B = −1.5
      after the prior, driven by region.
    - Changed to region intercepts.
+6. **Sex turnout cap.** R1 first failed in Utah in 4 of 400 draws: a drawn
+   men/women ratio implied men's turnout above 100%. Each sex is now capped at
+   98%, and the excess moves to the other sex, so state totals stay exact.
 
 ## What wasn't done
 

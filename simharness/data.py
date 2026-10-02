@@ -133,8 +133,11 @@ def franchise() -> dict:
     women16 = {s for s, y in pres.items() if pd.notna(y) and float(y) <= 1916}
     women_pre19 = {s for s, y in pres.items() if pd.notna(y) and float(y) <= 1920}
     alien = set(f.index[f.get('alien_declarant_voting', pd.Series(0, index=f.index)).fillna(0).astype(int) == 1])
+    # Georgia and Mississippi: registration closed before women could enrol
+    # (sources in franchise/state_franchise_1920.csv, women_nov1920_note).
+    closed = set(f.index[f.women_able_to_vote_nov1920.fillna(1).astype(int) == 0])
     return {'table': f, 'women16': women16, 'women_pre19': women_pre19, 'alien_voting': alien,
-            'pres_year': pres.to_dict()}
+            'closed_1920': closed, 'pres_year': pres.to_dict()}
 
 
 def urban_share() -> dict:
@@ -172,7 +175,7 @@ def load(cfg) -> tuple[Inputs, dict]:
     cells = population()
     fr = franchise()
     inp = Inputs(cells=cells, returns=ret, women16=fr['women16'], women_pre19=fr['women_pre19'],
-                 alien_voting=fr['alien_voting'], ev=ev)
+                 closed_1920=fr['closed_1920'], alien_voting=fr['alien_voting'], ev=ev)
     extras = {
         'franchise': fr,
         'urban': urban_share(),

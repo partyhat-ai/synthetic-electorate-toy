@@ -51,4 +51,23 @@ def natural_experiment(fit, inp, extras) -> list:
     out = [check('N1', 'Backbone women\'s turnout vs Corder–Wolbrecht (1920)', {'mae_points': round(mae, 1), 'coverage_90': cover, 'rows': rows},
                  'MAE ≤ 8 points and ≥ 70% inside the 90% interval', mae <= 8 and cover >= 0.7)]
 
+    # N2 placebo: GA and MS, where women couldn't register in time
+    if inp.closed_1920:
+        c = fit.cells
+        fem_cit = ((c.sex == 'F') & (c.group != 'foreign_white_alien')).to_numpy()
+        prow = []
+        ok = True
+        for s in sorted(inp.closed_1920):
+            m = fem_cit & (c.state == s).to_numpy()
+            Fc = fit.world.adults[:, m].sum(axis=1)
+            W = dg['T20'][idx[s]] - dg['men_turnout_pred'][:, idx[s]] * dg['M20'][:, idx[s]]
+            w = W / Fc
+            med = float(np.median(w))
+            prow.append({'state': s, 'implied_women_turnout': round(med * 100, 1),
+                         'lo90': round(float(np.quantile(w, 0.05)) * 100, 1), 'hi90': round(float(np.quantile(w, 0.95)) * 100, 1)})
+            ok = ok and abs(med) <= 0.05
+        out.append(check('N2', 'Placebo: implied women\'s turnout where women couldn\'t register (GA, MS)', prow, 'within ±5 points of 0', ok,
+                         'Documented: franchise/state_franchise_1920.csv women_nov1920_note (NPS).'))
+    else:
+        out.append(check('N2', 'Placebo (GA, MS)', None, '±5 points', None, 'not run: the registration closure is not documented in the data'))
     return out

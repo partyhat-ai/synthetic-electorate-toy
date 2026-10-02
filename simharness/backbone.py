@@ -14,7 +14,8 @@ Turnout, per draw d:
       spread).
   T2  In the "new" states, men's 1920 turnout = expit(logit(1916 turnout) + κ);
       women's votes are the residual, W = T20 − m20·M20, and women's turnout
-      w = W / F20.
+      w = W / F20. Georgia and Mississippi, where women couldn't register in
+      time, are a placebo: W there should be about 0.
   T3  In the old states, men and women are split with the ratio w/m drawn
       from the new states outside the South (no within-state evidence).
   T4  Within a state and sex, groups differ by a logit offset. Black
@@ -58,6 +59,7 @@ class Inputs:
     returns: pd.DataFrame    # index state; R16 D16 O16 T16 R20 D20 O20 T20
     women16: set             # states where women could vote for president in Nov 1916
     women_pre19: set         # states where women could vote for president in Nov 1920 without the 19th
+    closed_1920: set         # states where women couldn't register in time for Nov 1920
     alien_voting: set        # states where declarant aliens could vote in 1920
     ev: pd.Series            # 1920 electoral votes by state
     other_citizen: dict = field(default_factory=dict)  # state → citizen share of 'other' adults
@@ -93,7 +95,7 @@ def legal_can(inp: Inputs, year: int) -> tuple[np.ndarray, list]:
     """Fraction of each cell legally able to vote, and the reason for the rest.
 
     Aliens only where inp.alien_voting; 'other' × inp.other_citizen. Women:
-    1916 by women16; in 1920 the 19th Amendment covers every state."""
+    1916 by women16, 1920 barred only where registration closed (closed_1920)."""
     c = inp.cells
     can = np.ones(len(c))
     reason = [''] * len(c)
@@ -106,6 +108,8 @@ def legal_can(inp: Inputs, year: int) -> tuple[np.ndarray, list]:
         if r.sex == 'F':
             if year == 1916 and r.state not in inp.women16:
                 can[i], reason[i] = 0.0, 'sex'
+            if year == 1920 and r.state in inp.closed_1920:
+                can[i], reason[i] = 0.0, 'registration_closed'
     return can, reason
 
 
@@ -149,6 +153,7 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
 
     old = np.array([s in inp.women16 for s in states])
     new = ~old
+    closed = np.array([s in inp.closed_1920 for s in states])
 
     # T1: κ from the old states, predictive draw per state
     k_old = logit(T20 / E20)[:, old] - logit(T16 / E16)[:, old]           # [D, n_old]
@@ -165,17 +170,24 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
     w_raw = W / np.maximum(F20, 1)
     women_resid = w_raw.copy()                                               # kept for N1/N2
     # ρ = w/m, used for the old states (T3) from new non-Southern states
-    ref = new & ~south_state
+    ref = new & ~south_state & ~closed
     rho_new = np.clip(w_raw[:, ref] / m20_pred[:, ref], 0.05, 1.5)
     rho_draw = rho_new[np.arange(D), rng.integers(0, ref.sum(), D)]
 
     # State-sex turnout targets (votes cast by men, by women)
     votes_M = np.where(new, np.clip(m20_pred * M20, 0, T20), 0.0)
+    votes_M = np.where(closed[None, :], T20, votes_M)
     # Old states: split with the drawn ratio
     m_old = T20 / np.maximum(M20 + rho_draw[:, None] * F20, 1)
     votes_M = np.where(old[None, :], m_old * M20, votes_M)
+    # Neither sex may exceed 98% turnout of its eligible adults; any excess
+    # (a draw of the old-state ratio that doesn't fit a high-turnout state)
+    # moves to the other sex, so the state total stays exact.
+    cap_M, cap_F = 0.98 * M20, 0.98 * F20
+    votes_M = np.minimum(votes_M, cap_M)
+    votes_M = np.maximum(votes_M, T20 - cap_F)
     votes_F = T20 - votes_M
-    clipped = ((W < 0) & new[None, :]).mean(axis=0)
+    clipped = ((W < 0) & new[None, :] & ~closed[None, :]).mean(axis=0)
 
     # T4: Black Southern turnout (Goodman on 1916 men, 11 Southern states)
     blk_men16 = per_state(a16 * can16, ~female & black) / np.maximum(M16, 1)
@@ -220,7 +232,7 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
     swing_ns = np.empty(D)
     swing_s = np.empty(D)
     for d in range(D):
-        f = np.where(new, votes_F[d] / T20[0], 0.0)
+        f = np.where(new & ~closed, votes_F[d] / T20[0], 0.0)
         X = np.column_stack([~south_state, south_state, f]).astype(float)
         b, _, _ = bayes_ols(X, y, 1, rng)
         swing_ns[d], swing_s[d], delta[d] = b[0]

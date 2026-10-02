@@ -114,6 +114,7 @@ Every adult is a cell member. Nobody is dropped. Each cell has:
 |---|---|---|
 | `noncitizen` | Aliens and first-paper declarants can't vote | Census citizenship tables [V]. Alien suffrage by state is **not coded** in the data. The harness assumes no state allowed declarant voting in November 1920 [I]. See the limitations. |
 | `sex` | Only in the `no-19th` what-if, and only where the state had no presidential suffrage of its own | Teele (Keyssar tables) [V] |
+| `registration_closed` | Georgia and Mississippi women couldn't register in time for November 1920 | NPS state pages, cited in `franchise/state_franchise_1920.csv` [V] |
 | `native_status` | American Indian and Asian adults not counted as citizens | The census table where given; otherwise treated as eligible [I] |
 | `extralegal_exclusion` (additive to the recipe's 13 codes) | Black Southerners kept from voting by poll taxes, literacy and "understanding" tests, white primaries and violence | Estimated. See B.1, T4. The legal devices by state come from Gray–Jenkins (`poll_tax`, `literacy_test`) [V]. |
 
@@ -174,6 +175,9 @@ For draw d, "adults" means legally eligible adults.
     state and sex.
 - **T5: calibration.** A shift per state and sex makes the state's total votes
   match certified returns exactly.
+  - Neither sex's turnout may exceed 98%; any excess moves to the other sex,
+    so the state total holds.
+  - Found when Utah failed R1 in 4 of 400 draws.
 
 **Assumptions named here:**
 1. Men's turnout changed from 1916 to 1920 by the same logit amount in new
