@@ -12,14 +12,14 @@ def test_source_tiers():
     assert tier_of('https://example.com/x') == 'C'
 
 
-def test_ground_drops_unreturned_sources():
+def test_ground_drops_unreturned_sources_and_flips_reversed():
     notes = {'sources': [{'id': 'S1', 'url': 'https://www.jstor.org/x', 'title': 't', 'tier': 'A', 'cited': []}]}
     pop = {'sex': 'any', 'group': 'any', 'region': 'any'}
-    f = {'claim': 'c', 'population': pop, 'situation': '', 'when': '', 'match': 'same-event', 'limits': '',
-         'direction': 'toward-R', 'effects': [{'measure': 'r2', 'pp': 3.0, 'pm': 1.0}]}
-    ev = ground({'findings': [f | {'source_ids': ['S9']}, f | {'source_ids': ['S1']}]}, notes)
+    f = {'claim': 'c', 'population': pop, 'situation': '', 'when': '', 'match': 'same-event', 'limits': '', 'effects': [{'measure': 'r2', 'pp': 3.0, 'pm': 1.0}]}
+    ev = ground({'findings': [f | {'source_ids': ['S9'], 'relation': 'like-scenario', 'direction': 'toward-R'},
+                              f | {'source_ids': ['S1'], 'relation': 'reverses-scenario', 'direction': 'toward-R'}]}, notes)
     assert ev['dropped_ungrounded'] == 1 and len(ev['findings']) == 1
-    assert ev['findings'][0]['grade'] == 1.0 and ev['findings'][0]['effects'][0]['pp'] == 3.0
+    assert ev['findings'][0]['direction'] == 'toward-D' and ev['findings'][0]['effects'][0]['pp'] == -3.0
 
 
 def test_confidence_tiers():

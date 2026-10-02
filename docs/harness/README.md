@@ -92,7 +92,8 @@ How a typed what-if is modelled:
    archives on the change itself, the same groups in the most similar
    situations, and any named person's record before the context date.
 3. **Extract** (Sonnet, structured): findings grounded in the sources the
-   search returned. Each is graded by source tier × match.
+   search returned. Each is graded by source tier × match, and signed for the
+   scenario (a situation the change undoes counts the other way).
 4. **Interview**: the usual paired control/counterfactual briefs. A candidate
    gets a third labelled ballot line (p4). Identical earlier requests are
    reused, so only the new arm is paid for.

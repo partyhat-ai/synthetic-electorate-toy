@@ -134,7 +134,7 @@ def reextract(spec: dict, cfg: RunConfig, budget: Budget, have: dict) -> dict:
     notes = {'text': have['notes'], 'sources': have['sources']}
     rc = cfg.research
     extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', spec['key'])
-    ev = {**have, **evidence.ground(extracted, notes), 'models': {**have.get('models', {}), 'extract': rc.extract_model},
+    ev = {**have, **evidence.ground(extracted, notes, spec.get('about')), 'models': {**have.get('models', {}), 'extract': rc.extract_model},
           'reextracted_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')}
     scenario.save_evidence(spec['key'], ev)
     return ev
@@ -162,7 +162,7 @@ def research(spec: dict, cfg: RunConfig, budget: Budget, refresh: bool = False, 
     print(f'  {len(notes["queries"])} searches, {len(notes["sources"])} sources '
           f'({sum(s["tier"] == "A" for s in notes["sources"])} scholarly or official), ${notes["dollars"]}', flush=True)
     extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', key)
-    ev = evidence.ground(extracted, notes)
+    ev = evidence.ground(extracted, notes, spec.get('about'))
     ev.update({'key': key, 'version': evidence.EVIDENCE_VERSION,
                'researched_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
                'models': {'research': rc.research_model, 'extract': rc.extract_model}, 'queries': notes['queries'],

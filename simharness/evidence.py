@@ -72,6 +72,9 @@ BLOCKED = ['reddit.com', 'quora.com', 'pinterest.com', 'youtube.com', 'tiktok.co
 
 MATCH_WEIGHT = {'same-event': 1.0, 'same-period-similar': 0.7, 'other-period-similar': 0.45, 'distant': 0.2}
 
+FLIP = {'toward-R': 'toward-D', 'toward-D': 'toward-R', 'more-turnout': 'less-turnout', 'less-turnout': 'more-turnout',
+        'toward-other': 'mixed'}
+
 SEARCH_DOLLARS = 10 / 1000  # web search: $10 per 1,000 searches
 
 
@@ -220,7 +223,10 @@ Rules:
 - population: the group the finding is about. Use "any" where the finding doesn't narrow it.
 - match: how close the finding's situation is to the scenario. "same-event": this very change, in this very election. "same-period-similar": a similar situation within about a dozen years. "other-period-similar": a similar situation further away. "distant": a loose analogy.
 - effects: numbers only when the notes give them, as percentage-point changes caused by the situation: "turnout" (share of eligible adults voting), "r2" (the Republican share of the two-party vote; positive means more Republican), "other" (the share of all votes going to a third candidate or party). pm is the plus-or-minus the notes give or imply; use half the effect's size when they give none. Leave effects empty when the notes give no number.
-- direction: the finding's direction even without numbers.
+- direction and effects describe what happened in the finding's own situation, as the sources report it. Never flip them yourself.
+- relation says how that situation maps onto the scenario: "like-scenario" when the scenario would bring about the same kind of situation (a third-party run, for a third-party scenario); "reverses-scenario" when the scenario removes or undoes it (the scenario settles an issue that in fact cost a party votes); "context" when it only describes the election or its setting without showing how people responded to a comparable change (who won, overall turnout). The pipeline flips reversed findings and sets context aside.
+- direction: the finding's direction even without numbers, in that election's own party terms.
+- role_direction: when the scenario concerns one nominee (the affected candidate, named below), which way the finding's voters moved relative to the candidate who stood in the same role in the finding's own situation (the scandal-hit candidate, say), whatever his party: "toward-affected" or "away-from-affected". "none" when there is no such role. Give its size, when the notes do, as the effect measure "affected": the change in that candidate's share of the two-party vote, in points.
 - actor_positions: for a named real person, what they said or did on or before the scenario's date, in a neutral dated paraphrase (never a quotation), with its source ids.
 - no_reliable_evidence: true only when there are no findings at all, or every one is a loose ("distant") analogy."""
 
@@ -241,14 +247,17 @@ EXTRACT_SCHEMA = {
             'situation': {'type': 'string'},
             'when': {'type': 'string'},
             'match': {'type': 'string', 'enum': list(MATCH_WEIGHT)},
+            'relation': {'type': 'string', 'enum': ['like-scenario', 'reverses-scenario', 'context']},
+            'role_direction': {'type': 'string', 'enum': ['toward-affected', 'away-from-affected', 'none']},
             'direction': {'type': 'string', 'enum': ['toward-R', 'toward-D', 'toward-other', 'more-turnout',
                                                      'less-turnout', 'mixed', 'none', 'unclear']},
             'effects': {'type': 'array', 'items': {'type': 'object', 'properties': {
-                'measure': {'type': 'string', 'enum': ['turnout', 'r2', 'other']},
+                'measure': {'type': 'string', 'enum': ['turnout', 'r2', 'other', 'affected']},
                 'pp': {'type': 'number'}, 'pm': {'type': 'number'},
             }, 'required': ['measure', 'pp', 'pm'], 'additionalProperties': False}},
             'limits': {'type': 'string'},
-        }, 'required': ['claim', 'source_ids', 'population', 'situation', 'when', 'match', 'direction', 'effects', 'limits'],
+        }, 'required': ['claim', 'source_ids', 'population', 'situation', 'when', 'match', 'relation', 'role_direction', 'direction',
+                        'effects', 'limits'],
             'additionalProperties': False}},
         'actor_positions': {'type': 'array', 'items': {'type': 'object', 'properties': {
             'text': {'type': 'string'}, 'date': {'type': 'string'},
@@ -264,14 +273,18 @@ EXTRACT_SCHEMA = {
 
 def extract_request(spec: dict, notes: dict, model: str) -> dict:
     table = '\n'.join(f'{s["id"]}: {s["title"]} ({urlparse(s["url"]).hostname}, reliability {s["tier"]})' for s in notes['sources'])
-    user = (f'Scenario: {spec["detail"]}\n\nSources the search returned:\n{table or "(none)"}\n\n'
+    role = {'R': 'the Republican nominee (Warren G. Harding)', 'D': 'the Democratic nominee (James M. Cox)'}.get(spec.get('about'))
+    who = f'\nThe affected candidate: {role}.' if role else '\nThe scenario concerns neither nominee personally: role_direction is "none".'
+    user = (f'Scenario: {spec["detail"]}{who}\n\nSources the search returned:\n{table or "(none)"}\n\n'
             f'Research notes:\n{notes["text"] or "(the assistant found nothing)"}')
     return {'id': f'extract|{spec["key"]}', 'model': model, 'system': EXTRACT_SYSTEM, 'user': user,
             'schema': EXTRACT_SCHEMA, 'meta': {'kind': 'extract', 'what_if': spec['key']}}
 
 
-def ground(extracted: dict, notes: dict) -> dict:
-    """Keep only findings whose sources the search returned; grade each."""
+def ground(extracted: dict, notes: dict, about: str | None = None) -> dict:
+    """Keep only findings whose sources the search returned; grade each. about: the nominee
+    ('R' or 'D') the scenario concerns; findings from other elections then count by role
+    (toward the scandal-hit candidate, say), not by that year's party labels (D22)."""
     by_id = {s['id']: s for s in notes['sources']}
     findings, dropped = [], 0
     for f in extracted.get('findings', []):
@@ -283,7 +296,25 @@ def ground(extracted: dict, notes: dict) -> dict:
         # A finding resting only on tertiary sources is kept as a pointer, down-weighted.
         grade = TIER_WEIGHT[tier] * MATCH_WEIGHT.get(f['match'], 0.2)
         effects = [e for e in f.get('effects', []) if abs(e.get('pp', 0)) <= 60]
-        findings.append({**f, 'source_ids': ids, 'tier': tier, 'grade': round(grade, 3), 'effects': effects})
+        direction = f['direction']
+        if about in ('R', 'D'):
+            sign = 1 if about == 'R' else -1
+            rd = f.get('role_direction', 'none')
+            if rd != 'none':
+                toward = about if rd == 'toward-affected' else ('D' if about == 'R' else 'R')
+                direction = f'toward-{toward}'
+            # the affected candidate's two-party share, as the Republican two-party share
+            effects = [e for e in effects if e['measure'] != 'r2'] + \
+                      [e | {'measure': 'r2', 'pp': sign * e['pp']} for e in effects if e['measure'] == 'affected']
+        effects = [e for e in effects if e['measure'] != 'affected']
+        rel = f.get('relation', 'like-scenario')
+        if rel == 'reverses-scenario':  # the scenario undoes this situation: its effect runs the other way
+            direction = FLIP.get(direction, direction)
+            effects = [e | {'pp': -e['pp']} for e in effects if e['measure'] != 'other']
+        elif rel == 'context':
+            direction, effects = 'none', []
+        findings.append({**f, 'source_ids': ids, 'tier': tier, 'grade': round(grade, 3), 'effects': effects,
+                         'direction': direction, 'reported_direction': f['direction']})
     positions = [p | {'source_ids': [i for i in p['source_ids'] if i in by_id]} for p in extracted.get('actor_positions', [])]
     positions = [p for p in positions if p['source_ids']]
     return {'summary': extracted.get('summary', ''), 'findings': findings, 'actor_positions': positions,

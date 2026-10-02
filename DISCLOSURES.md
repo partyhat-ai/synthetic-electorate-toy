@@ -482,10 +482,12 @@ Haiku sometimes picks one candidate and quotes for the other:
 
 The counts use the choice and p_choice; the page shows the quote.
 
-**D20 · Medium · open · evidence sign**
+**D20 · Medium · fixed · evidence sign**
 The extractor recorded the historical direction as the scenario's effect.
 "The League hurt Cox" became toward-R for a scenario that removes the
-League.
+League. Findings now carry a `relation` field (like-scenario,
+reverses-scenario or context), and the code flips reversed findings. Context
+findings (who won, overall turnout) inform the reader but not the numbers.
 
 **D21 · High · fixed (p5, compiler c3) · voters misread whom the news was about**
 In the first Harding-disclosure run, the brief identified the nominee only
@@ -503,3 +505,23 @@ Now:
 
 The rerun: 0 of 12 misread. The spec was recompiled with c3 and its key,
 label and words kept, a post-hoc edit.
+
+**D22 · Medium · fixed · evidence read by party, not role**
+Findings from other elections were signed by that year's party. Cleveland
+in 1884, a scandal-hit *Democrat*, therefore counted as "toward D" for a
+scenario about a scandal-hit *Republican*. Findings now carry
+`role_direction` (toward or away from the candidate in the same role, plus
+an `affected` measure), and the code maps them onto the scenario's
+nominee.
+
+**D23 · Medium · open · Harding-disclosure rerun: one uniform swing, quotes elsewhere**
+- **The swing is uniform.** Midwestern men go from 0.70 to 0.32 (Harding's
+  two-party share), Southern men from 0.68 to 0.31, and every region falls
+  to about 0.31–0.33. That looks like one model reaction stamped on everyone
+  (A2 homogenization), not differences between groups.
+- **The quotes mostly talk about prices.** Several switchers' quotes never
+  mention the news, even though their choice changed.
+- **Some quotes back the candidate the person didn't choose.** Albert
+  Jackson and Lillian Jones each chose Cox but quoted "the Republican" with
+  approval. This is D19 again: "the Republican" in a blinded quote is the
+  model guessing which label is which.
