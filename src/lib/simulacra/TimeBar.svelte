@@ -16,6 +16,8 @@
     dark?: boolean;
     /** A year was picked (dragged to, clicked, stepped, keyed). */
     onchange?: (year: number) => void;
+    /** Dragging started (true) or stopped (false). */
+    onscrub?: (on: boolean) => void;
     /** The dice. */
     onshuffle?: () => void;
   }
@@ -27,6 +29,7 @@
     disabled = false,
     dark = false,
     onchange,
+    onscrub,
     onshuffle,
   }: Props = $props();
 
@@ -51,6 +54,7 @@
   function down(e: PointerEvent & { currentTarget: HTMLElement }) {
     if (e.button !== 0 || disabled) return;
     dragging = true;
+    onscrub?.(true);
     e.currentTarget.setPointerCapture?.(e.pointerId);
     set(nearest(e.clientX));
     thumb?.focus({ preventScroll: true });
@@ -61,6 +65,7 @@
     else hover = y;
   }
   function up() {
+    if (dragging) onscrub?.(false);
     dragging = false;
   }
   function leave() {

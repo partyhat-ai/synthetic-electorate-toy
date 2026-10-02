@@ -65,7 +65,10 @@
 </section>
 
 <style>
-  .election { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  /* Zero jitter while scrubbing: the block reserves its tallest year (a
+     two-line note plus an also-ran line), so the page's height never changes
+     with the year. */
+  .election { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 162px; }
   .matchup {
     margin-top: 6px;
     display: grid;

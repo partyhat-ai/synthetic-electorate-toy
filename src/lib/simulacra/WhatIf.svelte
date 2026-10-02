@@ -130,8 +130,8 @@
   }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
-  /* The robot stands in the slot's full height, feet on its floor. */
-  .stage .bot { height: auto; align-self: stretch; }
+  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
+  .stage .bot { height: 220px; align-self: start; }
   .face {
     position: absolute;
     left: 0;

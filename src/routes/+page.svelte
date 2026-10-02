@@ -49,8 +49,14 @@
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
   let inputEl = $state<HTMLInputElement | null>(null);
+  let groupsEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
   let narrow = $state(false);
+  // Dragging the time bar: the robot holds still (no restaging) and the
+  // groups keep their height while each year's load, so nothing jumps; the
+  // robot is placed once more on release.
+  let scrubbing = $state(false);
+  let groupsHold = $state(0);
 
   const e = $derived(page.election);
   const B = $derived(e.candidates[1] ?? null);
@@ -66,10 +72,15 @@
   // phone-width window shows its face.
   const stageMode = $derived(!narrow);
 
-  // The composer's chips, and whether there's nothing to rerun.
-  const composer = $derived<{ chips: readonly WhatIf[]; closed: boolean }>({
-    chips: page.whatIfs,
-    closed: page.server !== 'online' || !page.sim || e.unopposed,
+  // The composer's chips and field, held from the last loaded year while a
+  // scrubbed-to year is still loading.
+  const held: { chips: readonly WhatIf[]; closed: boolean } = { chips: [], closed: true };
+  const composer = $derived.by(() => {
+    if (!(scrubbing && !page.sim)) {
+      held.chips = page.whatIfs;
+      held.closed = page.server !== 'online' || !page.sim || e.unopposed;
+    }
+    return { chips: held.chips, closed: held.closed };
   });
 
   $effect(() => {
@@ -79,6 +90,12 @@
   $effect(() => {
     if (page.voterKey) page.fetchVoter();
   });
+
+  function scrub(on: boolean) {
+    scrubbing = on;
+    groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
+    if (!on) measureSoon();
+  }
 
   // ── The robot, framed into the WhatIf slot (RobotFrame, fixed over the
   // window). The page measures the slot and stands the robot in it; once
@@ -96,6 +113,8 @@
 
   function measureStage(): void {
     measureFrame = 0;
+    // Dragging the time bar: no restaging; it's placed once more on release.
+    if (scrubbing && box) return;
     if (!stageMode || !slotEl) {
       box = null;
       return;
@@ -336,7 +355,7 @@
 
 <RobotFrame {stage} visible={stageMode && !!stage} walking={page.running} paint={page.view === 'whatif' ? 'rerun' : 'history'} {onRobot} />
 
-<div class="sa" class:dark={!page.light} onscroll={measureSoon}>
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={measureSoon}>
   <div class="page">
     <header class="top">
       <span class="brand">Simulacra Americana</span>
@@ -364,7 +383,7 @@
     <main class="main" bind:this={mainEl}>
       <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
 
-      <section class="groups" aria-labelledby="sa-groups">
+      <section class="groups" aria-labelledby="sa-groups" bind:this={groupsEl} style:min-height={groupsHold ? `${groupsHold}px` : null}>
         <div class="groups-head">
           <h2 id="sa-groups">Who voted</h2>
           {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
@@ -414,7 +433,7 @@
 
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
-    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} />
+    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} onscrub={scrub} />
 </div>
 
 <style>
@@ -456,6 +475,8 @@
   }
 
   /* ── Who voted ── */
+  /* Zero jitter while scrubbing: the chart reserves its tallest year (five rows). */
+  .groups { min-height: 247px; }
   /* History / Your year: the hub's Content / Chat control
      (MainView .hub-segmented-control), metrics and all. */
   .seg {
@@ -509,6 +530,8 @@
   }
   .seg-thumb.second { transform: translateX(100%); }
   @media (prefers-reduced-motion: reduce) { .seg-thumb, .seg button { transition: none; } }
+  /* Scrubbing: years change faster than the fades, so they're skipped. */
+  .scrubbing :global(*) { transition: none !important; animation: none !important; }
   .groups-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 0 10px 8px; }
   h2 { margin: 0; font-size: 17px; font-weight: 600; }
   .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; font-size: 12px; color: rgba(0, 0, 0, 0.6); }

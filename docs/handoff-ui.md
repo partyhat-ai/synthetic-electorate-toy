@@ -74,7 +74,7 @@ Components take callback props instead of dispatching events. What was
 is the callback's argument.
 
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
-- `TimeBar`: `onchange(year)`, `onshuffle()`.
+- `TimeBar`: `onchange(year)`, `onscrub(on)`, `onshuffle()`.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
   `onaction(key)`, `onfocus(on)`; `bind:slot`, `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
