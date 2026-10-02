@@ -34,10 +34,13 @@ function leaderOf(v: Votes): Bucket {
   return v.B >= v.O ? 'B' : 'O';
 }
 
+/** An unopposed election (1789, 1792, 1820): everyone who voted, voted for A. */
+export const UNOPPOSED: Readonly<Votes> = { A: 1, B: 0, O: 0 };
+
 /** The country's split: the popular vote when there is one, else one guessed from the electoral vote. */
 function national(e: Election): Votes {
   const [a, b] = e.candidates;
-  if (!b) throw new Error(`${e.year} has no runner-up.`);
+  if (!b) return { ...UNOPPOSED };
   if (a.popular != null && b.popular != null) {
     const A = a.popular / 100;
     const B = b.popular / 100;

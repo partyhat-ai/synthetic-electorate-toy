@@ -1,11 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import { ELECTION_YEARS } from './geo';
 import { electionOf } from './history';
-import { _model } from './sample';
+import { _model, UNOPPOSED } from './sample';
 
 describe('the sample model', () => {
-  // The unopposed years (1789, 1792, 1820) have a test of their own, below.
-  test.each(ELECTION_YEARS.filter((y) => !electionOf(y)?.unopposed))('an unchanged rerun of %i reproduces history', (y) => {
+  test.each(ELECTION_YEARS)('an unchanged rerun of %i reproduces history', (y) => {
     const e = electionOf(y);
     const r = _model.rerun(y);
     expect(e).not.toBeNull();
@@ -18,9 +17,9 @@ describe('the sample model', () => {
     expect(new Map(r.states.map((s) => [s.code, s.won]))).toEqual(new Map(e.states.map((s) => [s.code, s.won])));
   });
 
-  // Known failure: national() reads the runner-up, and 1789 has none.
-  test.fails('1789, unopposed, has no runner-up and doesn’t crash', () => {
+  test('1789, unopposed, has no runner-up and doesn’t crash', () => {
     expect(electionOf(1789)?.unopposed).toBe(true);
+    expect(_model.national(1789)).toEqual(UNOPPOSED);
     expect(_model.rerun(1789)?.winner).toBe('A');
   });
 });
