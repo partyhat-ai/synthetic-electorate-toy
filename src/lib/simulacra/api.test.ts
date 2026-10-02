@@ -34,7 +34,7 @@ describe('createSimulacraApi', () => {
     const { fetch, calls } = fakeFetch(() => json(ELECTION));
     const api = createSimulacraApi({ fetch });
     const out = await api.election(1912);
-    expect(calls[0]?.url).toBe('/api/simulacra/elections/1912');
+    expect(calls.map((c) => c.url)).toEqual(['/api/simulacra/manifest', '/api/simulacra/elections/1912']);
     expect(out.kind).toBe('ok');
     if (out.kind === 'ok') {
       expect(out.value.slices[0]?.label).toBe('Women');
@@ -65,6 +65,7 @@ describe('createSimulacraApi', () => {
   test('a first 404 means no simulation service; a later one is just missing', async () => {
     let answered = false;
     const { fetch } = fakeFetch((url) => {
+      if (url.endsWith('/manifest')) return json({ error: 'not found' }, 404);
       if (url.endsWith('/elections/1912') && answered) return json(ELECTION);
       answered = true;
       return json({ error: 'not found' }, 404);
@@ -75,6 +76,38 @@ describe('createSimulacraApi', () => {
     const later = await api.voter(1912, 'nobody');
     expect(later.kind).toBe('error');
     if (later.kind === 'error') expect([later.reason, later.status]).toEqual(['missing', 404]);
+  });
+
+  test('years are asked for at the run the manifest names, so a CDN can keep them', async () => {
+    const { fetch, calls } = fakeFetch((url) =>
+      url.endsWith('/manifest') ? json({ years: { '1920': '1920-abc' } }) : json({ ...ELECTION, runId: '1920-abc' }),
+    );
+    const api = createSimulacraApi({ fetch });
+    await api.election(1920);
+    await api.election(1912);
+    expect(calls.map((c) => c.url)).toEqual([
+      '/api/simulacra/manifest',
+      '/api/simulacra/elections/1920?v=1920-abc',
+      '/api/simulacra/elections/1912',
+    ]);
+  });
+
+  test('a fresh load skips the cache and moves the year to the run it returns', async () => {
+    const { fetch, calls } = fakeFetch((url) =>
+      url.endsWith('/manifest') ? json({ years: { '1920': 'old' } }) : json({ ...ELECTION, runId: 'new' }),
+    );
+    const api = createSimulacraApi({ fetch });
+    await api.election(1920, { fresh: true });
+    await api.election(1920);
+    expect(calls[1]?.url).toMatch(/^\/api\/simulacra\/elections\/1920\?v=fresh-/);
+    expect(calls[2]?.url).toBe('/api/simulacra/elections/1920?v=new');
+  });
+
+  test('without a manifest, years load unversioned', async () => {
+    const { fetch, calls } = fakeFetch((url) => (url.endsWith('/manifest') ? json({ nope: 1 }) : json(ELECTION)));
+    const out = await createSimulacraApi({ fetch }).election(1912);
+    expect(out.kind).toBe('ok');
+    expect(calls[1]?.url).toBe('/api/simulacra/elections/1912');
   });
 
   test('a POST that times out is indeterminate: the run may have started', async () => {

@@ -53,8 +53,13 @@ export const ElectionResponseSchema = z.object({
   slices: z.array(SliceSchema),
   whatIfs: z.array(WhatIfSchema),
   simulated: z.boolean().optional(),
+  /** The run this year's bundle came from; absent when there's no bundle. */
+  runId: z.string().optional(),
 });
 export type ElectionResponse = z.infer<typeof ElectionResponseSchema>;
+
+/** GET /manifest: every published year and its run. */
+export const ManifestSchema = z.object({ years: z.record(z.string(), z.string()) });
 
 const EvSchema = z.object({ A: z.number(), B: z.number(), O: z.number() });
 const PairSchema = z.tuple([z.number(), z.number()]);

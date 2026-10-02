@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { createApp } from './app';
 import { Bundle } from './bundle';
-import type { SimulacraOptions } from './simulacra';
+import { IMMUTABLE, SHORT_CACHE, type SimulacraOptions } from './simulacra';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const scratch = mkdtempSync(path.join(tmpdir(), 'simulacra-test-'));
@@ -78,6 +78,27 @@ describe('/api/simulacra', () => {
     const res = await fetch(`${base}/api/simulacra/elections/1999`);
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ slices: [], whatIfs: [], simulated: false });
+  });
+
+  it('the manifest names each published year and its run', async () => {
+    const res = await fetch(`${base}/api/simulacra/manifest`);
+    expect(res.headers.get('cache-control')).toBe(SHORT_CACHE);
+    const { years } = z.object({ years: z.record(z.string(), z.string()) }).parse(await res.json());
+    const runId = readFileSync(path.join(ROOT, 'serve', 'bundles', '1920.json'), 'utf8').match(/"runId": ?"([^"]+)"/)?.[1];
+    expect(years['1920']).toBe(runId);
+    expect(years['1999']).toBeUndefined();
+  });
+
+  it("a year's answer carries its run and is immutable only at its versioned URL", async () => {
+    const plain = await fetch(`${base}/api/simulacra/elections/1920`);
+    expect(plain.headers.get('cache-control')).toBe(SHORT_CACHE);
+    const { runId } = z.object({ runId: z.string() }).parse(await plain.json());
+    const pinned = await fetch(`${base}/api/simulacra/elections/1920?v=${encodeURIComponent(runId)}`);
+    expect(pinned.headers.get('cache-control')).toBe(IMMUTABLE);
+    const stale = await fetch(`${base}/api/simulacra/elections/1920?v=not-this-run`);
+    expect(stale.headers.get('cache-control')).toBe(SHORT_CACHE);
+    const missing = await fetch(`${base}/api/simulacra/elections/1999?v=${encodeURIComponent(runId)}`);
+    expect(missing.headers.get('cache-control')).toBe(SHORT_CACHE);
   });
 
   it('matches keywords as whole words: "flu" is not in "influence"', async () => {

@@ -23,7 +23,7 @@
 //   - a bundle file that changed on disk is reloaded, so a publish needs no restart.
 import { type ChildProcess, spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { appendFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
+import { appendFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import path from 'node:path';
 import express, { type ErrorRequestHandler, type Router } from 'express';
@@ -222,6 +222,11 @@ function readJsonl<T>(file: string, schema: z.ZodType<T>): T[] {
     });
 }
 
+/** A year's answer at a URL that names its run never changes. */
+export const IMMUTABLE = 'public, max-age=31536000, s-maxage=31536000, immutable';
+/** Unversioned answers and the manifest: a minute fresh, then revalidated. */
+export const SHORT_CACHE = 'public, max-age=60, s-maxage=60, stale-while-revalidate=300';
+
 export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv()): Router {
   const bundles = new Map<number, { bundle: Bundle | null; mtime: number }>();
   const runs = new Map<string, RunEntry>();
@@ -327,15 +332,30 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
   const router = express.Router();
   router.use(express.json({ limit: '64kb' }));
 
+  // Every published year and the run its bundle came from. The page reads it
+  // first and asks for each year at /elections/<year>?v=<runId>, so a year's
+  // answer can be cached for good: a new run means a new URL.
+  router.get('/manifest', (_req, res) => {
+    const years: Record<string, string> = {};
+    const files = existsSync(opts.bundles) ? readdirSync(opts.bundles) : [];
+    for (const f of files.filter((name) => /^\d{4}\.json$/.test(name)).sort()) {
+      const b = loadBundle(Number(f.slice(0, 4)));
+      if (b) years[f.slice(0, 4)] = b.runId;
+    }
+    res.set('Cache-Control', SHORT_CACHE).json({ years });
+  });
+
   // A year without a bundle answers 200 with `simulated: false`, not 404: the
   // page reads a 404 before any answer as "there is no simulation service".
   router.get('/elections/:year', (req, res) => {
     const b = loadBundle(Number(req.params.year));
     if (!b) {
-      res.json({ slices: [], whatIfs: [], simulated: false });
+      res.set('Cache-Control', SHORT_CACHE).json({ slices: [], whatIfs: [], simulated: false });
       return;
     }
-    res.json({ ...b.election, simulated: true });
+    // Immutable only when the URL names the run being served.
+    res.set('Cache-Control', req.query.v === b.runId ? IMMUTABLE : SHORT_CACHE);
+    res.json({ ...b.election, simulated: true, runId: b.runId });
   });
 
   router.post('/runs', (req, res) => {

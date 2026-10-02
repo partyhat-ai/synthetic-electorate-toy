@@ -95,7 +95,7 @@ export class PageState {
       },
       reloadSim: async (y) => {
         this.sims.delete(y);
-        await this.loadSim(y);
+        await this.loadSim(y, true);
       },
       whatIfsOf: (y) => this.sims.get(y)?.whatIfs ?? [],
       finished: (f) => this.#finish(f),
@@ -111,10 +111,11 @@ export class PageState {
   }
 
   // ── Loading an election's groups and what-ifs ──
-  async loadSim(y: number): Promise<void> {
+  /** Loads a year once; `fresh` skips every cache (after a run). */
+  async loadSim(y: number, fresh = false): Promise<void> {
     if (this.sims.has(y)) return;
     this.simFailed = null;
-    const out = await this.api.election(y);
+    const out = await this.api.election(y, { fresh });
     switch (out.kind) {
       case 'ok':
         this.sims.set(y, { slices: out.value.slices, whatIfs: out.value.whatIfs });

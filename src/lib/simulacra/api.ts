@@ -15,6 +15,7 @@ import {
   CancelledSchema,
   type ElectionResponse,
   ElectionResponseSchema,
+  ManifestSchema,
   type RunStatus,
   RunStatusSchema,
   type StartedRun,
@@ -61,7 +62,11 @@ export interface RunAsk {
 export interface SimulacraApi {
   /** True for the made-up stand-in; the page labels it. */
   readonly sample: boolean;
-  election(year: number): Promise<Outcome<ElectionResponse>>;
+  /**
+   * A year's voters and what-ifs. `fresh` skips every cache (after a run that
+   * may have published a new what-if for the year).
+   */
+  election(year: number, opts?: { readonly fresh?: boolean }): Promise<Outcome<ElectionResponse>>;
   startRun(year: number, ask?: RunAsk): Promise<Outcome<StartedRun>>;
   run(runId: string): Promise<Outcome<RunStatus>>;
   stopRun(runId: string): Promise<Outcome<null>>;
@@ -100,6 +105,26 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   // A 404 before the service has ever answered means there's no service.
   let answered = false;
+  // year → the run its bundle came from (GET /manifest): each year is asked
+  // for at /elections/<year>?v=<runId>, a URL the CDN may keep for good.
+  let manifest: Promise<Map<number, string>> | null = null;
+
+  async function readManifest(): Promise<Map<number, string>> {
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), timeoutMs);
+    try {
+      const res = await doFetch(`${root}/manifest`, { signal: abort.signal });
+      if (!res.ok) return new Map();
+      const parsed = ManifestSchema.safeParse(await res.json());
+      if (!parsed.success) return new Map();
+      return new Map(Object.entries(parsed.data.years).map(([y, run]) => [Number(y), run]));
+    } catch {
+      // No manifest (an older server, or offline): years load unversioned.
+      return new Map();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
 
   async function call<S extends z.ZodType>(path: string, schema: S, body?: unknown): Promise<Outcome<z.output<S>>> {
     const write = body !== undefined;
@@ -144,7 +169,17 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
   const id = encodeURIComponent;
   return {
     sample: false,
-    election: (year) => call(`/elections/${year}`, ElectionResponseSchema),
+    election: async (year, opts = {}) => {
+      manifest ??= readManifest();
+      const versions = await manifest;
+      const known = versions.get(year);
+      let v = '';
+      if (opts.fresh) v = `?v=fresh-${Date.now().toString(36)}`;
+      else if (known) v = `?v=${id(known)}`;
+      const out = await call(`/elections/${year}${v}`, ElectionResponseSchema);
+      if (out.kind === 'ok' && out.value.runId) versions.set(year, out.value.runId);
+      return out;
+    },
     startRun: (year, { whatIfs = [], text = '', edits = {} } = {}) =>
       call('/runs', StartedRunSchema, { year, whatIfs, text, edits }),
     run: (runId) => call(`/runs/${id(runId)}`, RunStatusSchema),
