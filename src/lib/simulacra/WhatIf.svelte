@@ -233,6 +233,9 @@
     {#if !closed}
       <WhatIfComposer {name} {whatIfs} {selected} {slice} {ran} bind:value bind:input {running} {canRun} {canReset} {dirty}
         {ontoggle} {onrun} {onstop} {onreset} {onfocus} />
+    {:else}
+      <!-- An unopposed year: no chips or field, but on phones their room stays. -->
+      <div class="composer-room" aria-hidden="true"></div>
     {/if}
   </div>
   <!-- The robot stands over this spot (drawn by the page's overlay, which
@@ -320,7 +323,22 @@
   /* Over the robot's slot (and the robot) when they're moved onto each other. */
   .talk { position: relative; z-index: 1; min-width: 0; }
   /* Phones: each nudged up or down by the page's position sliders (?tune=1). */
+  .composer-room { display: none; }
   @media (max-width: 760px) {
+    /* Phones: the bubble's room is its folded most (CLAMP lines, padding and
+       More), and it sits on the chips; a shorter message leaves the room
+       above it. So the chips, the field and the robot never move with what
+       it says. Opened, it lifts over the page as before. */
+    .hold { min-height: 190px; justify-content: flex-end; }
+    .composer-room { display: block; height: 82px; }
+    /* The robot stands behind the what-if, not below it: both share one
+       grid cell, the robot centred with its feet 23px above the what-if's
+       bottom (behind the chips and field), the what-if drawn over it. The
+       block sits 26px lower than on a wide window (-10 + 36). The what-if's
+       height is fixed on phones (above), so the robot never moves. */
+    .whatif.stage { display: grid; grid-template-areas: 'stack'; margin-top: 26px; }
+    .whatif.stage > .talk, .whatif.stage > .bot { grid-area: stack; }
+    .stage .bot { margin: 0 0 23px; align-self: end; justify-self: center; }
     .talk { transform: translateY(var(--ui-y, 0px)); }
     .stage .bot { transform: translateY(var(--bot-y, 0px)); }
   }

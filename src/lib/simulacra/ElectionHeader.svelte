@@ -60,6 +60,8 @@
             <p class="sub">{c.ev} in history</p>
           {:else if c.popular != null}
             <p class="sub">{c.popular.toFixed(1)}% of the vote</p>
+          {:else}
+            <p class="sub" aria-hidden="true">&nbsp;</p>
           {/if}
         </div>
       </div>
@@ -72,8 +74,9 @@
       {/if}
     {/each}
   </div>
-  {#if note}<p class="note"><Places text={note} /></p>{/if}
-  {#if alsoRan}<p class="also">Also ran: {alsoRan}</p>{/if}
+  <!-- Always both, empty or not: on phones each holds its room (below). -->
+  <p class="note">{#if note}<Places text={note} />{/if}</p>
+  <p class="also">{#if alsoRan}Also ran: {alsoRan}{/if}</p>
 </section>
 
 <style>
@@ -120,10 +123,26 @@
   @media (max-width: 760px) {
     .year { font-size: 40px; }
     .matchup { grid-template-columns: 1fr 1fr; gap: 22px 12px; }
-    .matchup.solo { grid-template-columns: 1fr; }
+    .matchup.solo { grid-template-columns: 1fr; gap: 22px 12px; } /* = .matchup: an unopposed year is as tall as any */
     .center { grid-column: 1 / -1; grid-row: 1; }
     .cand, .cand.b { flex-direction: column; gap: 12px; }
     .facts, .b .facts { align-items: center; text-align: center; }
     .name { font-size: 15px; }
+    /* Phones: the block is one height every year, so the what-if and the
+       robot below it never move with the year. Each part that varies holds
+       its most: two lines of name and party, three of note, two of also-ran
+       (measured over all 60 years at 320-430px). */
+    .name { min-height: calc(2 * 1.2em); }
+    .party { line-height: 1.25; min-height: calc(2 * 1.25em); }
+    .note { min-height: calc(3 * 1.45em); }
+    .also { min-height: calc(2 * 1.45em); }
+  }
+  /* The narrowest phones: a long name ("Charles Cotesworth Pinckney") takes three lines. */
+  @media (max-width: 359px) {
+    .name { min-height: calc(3 * 1.2em); }
+  }
+  /* Empty, they take no room on a wide window. */
+  @media (min-width: 761px) {
+    .note:empty, .also:empty { display: none; }
   }
 </style>

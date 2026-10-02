@@ -468,7 +468,16 @@
     /* Phones: no wordmark; its cell stays, so the switch stays centred. */
     .brand { visibility: hidden; }
     .main { padding: 0 16px; gap: 28px; }
+    /* Phones: Who voted is one height every year (up to five groups, each
+       label up to two lines; the key up to two lines), so nothing below it
+       moves with the year. */
+    .legend { min-height: 33px; align-content: flex-start; }
+    .rows { min-height: calc(5 * 72px + 4 * 2px); }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
+  }
+  /* The narrowest phones wrap labels and counts further (1856 at 320px: 371px). */
+  @media (max-width: 359px) {
+    .rows { min-height: 384px; }
   }
 </style>
