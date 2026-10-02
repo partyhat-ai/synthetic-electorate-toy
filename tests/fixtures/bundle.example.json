@@ -1,0 +1,1849 @@
+{
+ "year": 1920,
+ "runId": "1920-1a2dcd24ad",
+ "election": {
+  "slices": [
+   {
+    "key": "men",
+    "label": "Men outside the South",
+    "adults": 21.894,
+    "barred": 0.0,
+    "home": 0.3508,
+    "A": 0.4859,
+    "B": 0.1373,
+    "O": 0.026,
+    "source": "1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns)."
+   },
+   {
+    "key": "women",
+    "label": "Women outside the South",
+    "adults": 21.249,
+    "barred": 0.0,
+    "home": 0.5337,
+    "A": 0.2151,
+    "B": 0.2121,
+    "O": 0.0392,
+    "source": "1920 census, women 21+ outside the South; turnout is each state's 1920 vote minus the men's predicted vote (1916 men's turnout × the change in states where women already voted)."
+   },
+   {
+    "key": "south-white",
+    "label": "White Southerners",
+    "adults": 8.544,
+    "barred": 0.0743,
+    "home": 0.6151,
+    "A": 0.1079,
+    "B": 0.1901,
+    "O": 0.0127,
+    "source": "1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns."
+   },
+   {
+    "key": "black-south",
+    "label": "Black Southerners",
+    "adults": 4.002,
+    "barred": 0.9837,
+    "home": 0.0109,
+    "A": 0.004,
+    "B": 0.0012,
+    "O": 0.0001,
+    "source": "1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion."
+   },
+   {
+    "key": "immigrants",
+    "label": "Immigrants not yet citizens",
+    "adults": 5.872,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0,
+    "source": "1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers)."
+   }
+  ],
+  "whatIfs": [
+   {
+    "key": "league",
+    "label": "The Senate Ratifies the League",
+    "kind": "issue",
+    "detail": "The Senate ratifies the peace treaty with its reservations in March 1920, and the League is no longer a campaign issue.",
+    "slices": [
+     "men",
+     "women",
+     "south-white",
+     "immigrants"
+    ],
+    "assumption": "Each group of voters shifts by the change its simulated members report between the world as it was and a world where the treaty was ratified, shrunk toward the regional change where the model's control answers stray from the calibrated baseline.",
+    "confidenceTier": "low",
+    "evidence": "strong",
+    "exploratory": false
+   },
+   {
+    "key": "no-19th",
+    "label": "The 19th Amendment Fails",
+    "kind": "franchise",
+    "detail": "Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.",
+    "slices": [
+     "women"
+    ],
+    "assumption": "Women in states without their own presidential suffrage can't vote. Everyone else turns out and chooses exactly as in 1920; men's votes don't change.",
+    "confidenceTier": "high",
+    "evidence": "not-researched",
+    "exploratory": false
+   }
+  ]
+ },
+ "runs": {
+  "": {
+   "ev": {
+    "A": 404,
+    "B": 127,
+    "O": 0
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "GA",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 44.6,
+     "marginRange": [
+      44.6,
+      44.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 37.6,
+     "marginRange": [
+      37.6,
+      37.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 19.9,
+     "marginRange": [
+      19.9,
+      19.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.0,
+     "marginRange": [
+      3.0,
+      3.0
+     ],
+     "pFlip": 0.0
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 21.894,
+     "barred": 0.0,
+     "home": 0.3508,
+     "A": 0.4859,
+     "B": 0.1373,
+     "O": 0.026,
+     "source": "1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns)."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 21.249,
+     "barred": 0.0,
+     "home": 0.5337,
+     "A": 0.2151,
+     "B": 0.2121,
+     "O": 0.0392,
+     "source": "1920 census, women 21+ outside the South; turnout is each state's 1920 vote minus the men's predicted vote (1916 men's turnout × the change in states where women already voted)."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 8.544,
+     "barred": 0.0743,
+     "home": 0.6151,
+     "A": 0.1079,
+     "B": 0.1901,
+     "O": 0.0127,
+     "source": "1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 4.002,
+     "barred": 0.9837,
+     "home": 0.0109,
+     "A": 0.004,
+     "B": 0.0012,
+     "O": 0.0001,
+     "source": "1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.872,
+     "barred": 1.0,
+     "home": 0.0,
+     "A": 0.0,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers)."
+    }
+   ],
+   "summary": "Rerun with nothing changed, 1920 comes out as it did: Harding wins, 404–127. The closest state was Kentucky, which went to Cox by 0.6 points. Every one of my 100 reruns reproduces it exactly.",
+   "confidence": "high",
+   "applied": [],
+   "unknown": null,
+   "range": {
+    "A": [
+     404,
+     404
+    ],
+    "B": [
+     127,
+     127
+    ],
+    "O": [
+     0,
+     0
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 16145576,
+    "B": 9142290,
+    "O": 1511118
+   },
+   "popularRange": {
+    "A": [
+     16145576,
+     16145576
+    ],
+    "B": [
+     9142290,
+     9142290
+    ],
+    "O": [
+     1511118,
+     1511118
+    ]
+   },
+   "assumptions": [],
+   "howIGotThis": [
+    "The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces 1920 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "Fourteenth Census of the United States (1920), Vol. II–III: voting age, color, nativity and citizenship",
+     "url": "https://www.census.gov/library/publications/1922/dec/vol-02-population.html"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868–2020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "Clerk of the House, Statistics of the Presidential and Congressional Election of November 2, 1920",
+     "url": "https://history.house.gov/Institution/Election-Statistics/"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1920-1a2dcd24ad",
+   "validation": null,
+   "cohortEffects": []
+  },
+  "league": {
+   "ev": {
+    "A": 392,
+    "B": 139,
+    "O": 0
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "GA",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 47.5,
+     "marginRange": [
+      38.7,
+      52.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 39.6,
+     "marginRange": [
+      33.1,
+      47.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 19.6,
+     "marginRange": [
+      2.0,
+      22.8
+     ],
+     "pFlip": 0.1
+    },
+    {
+     "code": "TN",
+     "won": "B",
+     "flipped": 1.0,
+     "margin": 4.1,
+     "marginRange": [
+      0.6,
+      13.4
+     ],
+     "pFlip": 0.53
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 21.895,
+     "barred": 0.0,
+     "home": 0.3578,
+     "A": 0.4544,
+     "B": 0.1592,
+     "O": 0.0286,
+     "source": "1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns)."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 21.201,
+     "barred": 0.0,
+     "home": 0.4952,
+     "A": 0.2722,
+     "B": 0.1958,
+     "O": 0.0368,
+     "source": "1920 census, women 21+ outside the South; turnout is each state's 1920 vote minus the men's predicted vote (1916 men's turnout × the change in states where women already voted)."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 8.608,
+     "barred": 0.0742,
+     "home": 0.6067,
+     "A": 0.1002,
+     "B": 0.2061,
+     "O": 0.0128,
+     "source": "1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 3.996,
+     "barred": 0.9122,
+     "home": 0.0594,
+     "A": 0.0168,
+     "B": 0.0107,
+     "O": 0.0009,
+     "source": "1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.962,
+     "barred": 1.0,
+     "home": 0.0,
+     "A": 0.0,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers)."
+    }
+   ],
+   "summary": "With the treaty settled, the voters I interviewed lean 0.1 points further toward Cox than the same people did in the world as it was. Tennessee flips, but Harding still wins, 392–139. The closest call is Kentucky, which holds for Cox by 0.6 points. Cox wins in 0 of 100 draws.",
+   "confidence": "low",
+   "applied": [
+    {
+     "key": "league",
+     "label": "The Senate Ratifies the League",
+     "kind": "issue"
+    }
+   ],
+   "unknown": null,
+   "range": {
+    "A": [
+     375,
+     404
+    ],
+    "B": [
+     127,
+     156
+    ],
+    "O": [
+     0,
+     0
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 16648580,
+    "B": 9454571,
+    "O": 1521035
+   },
+   "popularRange": {
+    "A": [
+     14995717,
+     16761588
+    ],
+    "B": [
+     8645916,
+     10135112
+    ],
+    "O": [
+     1507565,
+     1551675
+    ]
+   },
+   "assumptions": [
+    "Each group of voters shifts by the change its simulated members report between the world as it was and a world where the treaty was ratified, shrunk toward the regional change where the model's control answers stray from the calibrated baseline."
+   ],
+   "howIGotThis": [
+    "What changed: The Senate ratifies the peace treaty with its reservations in March 1920, and the League is no longer a campaign issue.",
+    "What historians found (9 findings, strong evidence): No source measures the League's effect on 1920 voting. Sources give qualitative accounts: the League and Wilson hurt Cox, Irish and German Americans left the Democrats (partly over wartime grievances), and Harding won 60.3% to 34.1% on low turnout. No group-level numbers.",
+    "The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces 1920 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws.",
+    "Low confidence: The interviews' answer changes sign with the question's wording, though the record points the same way."
+   ],
+   "sources": [
+    {
+     "title": "Fourteenth Census of the United States (1920), Vol. II–III: voting age, color, nativity and citizenship",
+     "url": "https://www.census.gov/library/publications/1922/dec/vol-02-population.html"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868–2020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "Clerk of the House, Statistics of the Presidential and Congressional Election of November 2, 1920",
+     "url": "https://history.house.gov/Institution/Election-Statistics/"
+    }
+   ],
+   "confidenceTier": "low",
+   "confidenceLabel": "Low confidence",
+   "confidenceFlags": [
+    "unstable-interviews"
+   ],
+   "confidenceReasons": [
+    "The interviews' answer changes sign with the question's wording, though the record points the same way."
+   ],
+   "evidence": [
+    {
+     "whatIf": "league",
+     "strength": "strong",
+     "summary": "No source measures the League's effect on 1920 voting. Sources give qualitative accounts: the League and Wilson hurt Cox, Irish and German Americans left the Democrats (partly over wartime grievances), and Harding won 60.3% to 34.1% on low turnout. No group-level numbers.",
+     "agreement": "consistent",
+     "agreementDetail": "On the Republican two-party share, the sources point the same way as the interviews (-0.1 points), without numbers.",
+     "findings": [
+      {
+       "claim": "Cox was doomed because he could not separate himself from Wilson's administration and the increasingly unpopular League; this is the conventional account summarized from older literature.",
+       "when": "1920",
+       "match": "same-event",
+       "tier": "A",
+       "sources": [
+        {
+         "title": "James Cox and the Presidential Election of 1920",
+         "url": "https://etd.ohiolink.edu/acprod/odb_etd/ws/send_file/send?accession=bgsu1256750068&disposition=inline",
+         "tier": "A"
+        }
+       ]
+      }
+     ],
+     "caveats": [
+      "No source measures the League's independent effect or gives group, regional or sex-specific swings.",
+      "Sources are a thesis, Wikipedia and aggregator sites; peer-reviewed literature not reached.",
+      "Ethnic swings bundle wartime repression, the Irish question, recession and Wilson's unpopularity."
+     ]
+    }
+   ],
+   "mode": "truth",
+   "runId": "1920-1a2dcd24ad",
+   "validation": null,
+   "cohortEffects": [
+    {
+     "whatIf": "league",
+     "cohort": "midwest:F:native_white",
+     "n": 2,
+     "bias": -0.42,
+     "weight": 0.17,
+     "exposed": false,
+     "dr": -0.722,
+     "dt": 0.116
+    },
+    {
+     "whatIf": "league",
+     "cohort": "midwest:M:native_white",
+     "n": 2,
+     "bias": -0.236,
+     "weight": 0.189,
+     "exposed": false,
+     "dr": -0.172,
+     "dt": -0.161
+    }
+   ]
+  },
+  "no-19th": {
+   "ev": {
+    "A": 429,
+    "B": 102,
+    "O": 0
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "GA",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 44.6,
+     "marginRange": [
+      44.6,
+      44.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 37.6,
+     "marginRange": [
+      37.6,
+      37.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 19.9,
+     "marginRange": [
+      19.9,
+      19.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.0,
+     "marginRange": [
+      3.0,
+      3.0
+     ],
+     "pFlip": 0.0
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 21.894,
+     "barred": 0.0,
+     "home": 0.3508,
+     "A": 0.4859,
+     "B": 0.1373,
+     "O": 0.026,
+     "source": "1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns)."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 21.249,
+     "barred": 0.2873,
+     "home": 0.3701,
+     "A": 0.1595,
+     "B": 0.1505,
+     "O": 0.0325,
+     "source": "1920 census, women 21+ outside the South; turnout is each state's 1920 vote minus the men's predicted vote (1916 men's turnout × the change in states where women already voted)."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 8.544,
+     "barred": 0.429,
+     "home": 0.3518,
+     "A": 0.0901,
+     "B": 0.1216,
+     "O": 0.0076,
+     "source": "1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 4.002,
+     "barred": 0.9901,
+     "home": 0.0062,
+     "A": 0.0028,
+     "B": 0.0008,
+     "O": 0.0001,
+     "source": "1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.872,
+     "barred": 1.0,
+     "home": 0.0,
+     "A": 0.0,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers)."
+    }
+   ],
+   "summary": "3.4 million women who voted can't, outside the states that already let them. Kentucky, North Carolina flip, but Harding still wins, 429–102. The closest call is Virginia, which holds for Cox by 1.8 points. Cox wins in 0 of 100 draws.",
+   "confidence": "high",
+   "applied": [
+    {
+     "key": "no-19th",
+     "label": "The 19th Amendment Fails",
+     "kind": "franchise"
+    }
+   ],
+   "unknown": null,
+   "range": {
+    "A": [
+     417,
+     429
+    ],
+    "B": [
+     102,
+     114
+    ],
+    "O": [
+     0,
+     0
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 14807840,
+    "B": 7247942,
+    "O": 1325699
+   },
+   "popularRange": {
+    "A": [
+     14359327,
+     14708978
+    ],
+    "B": [
+     7263138,
+     7588931
+    ],
+    "O": [
+     1327383,
+     1369649
+    ]
+   },
+   "assumptions": [
+    "Women in states without their own presidential suffrage can't vote. Everyone else turns out and chooses exactly as in 1920; men's votes don't change."
+   ],
+   "howIGotThis": [
+    "What changed: Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.",
+    "The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces 1920 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "Fourteenth Census of the United States (1920), Vol. II–III: voting age, color, nativity and citizenship",
+     "url": "https://www.census.gov/library/publications/1922/dec/vol-02-population.html"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868–2020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "Clerk of the House, Statistics of the Presidential and Congressional Election of November 2, 1920",
+     "url": "https://history.house.gov/Institution/Election-Statistics/"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [
+    "not-researched"
+   ],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1920-1a2dcd24ad",
+   "validation": null,
+   "cohortEffects": []
+  },
+  "league+no-19th": {
+   "ev": {
+    "A": 417,
+    "B": 114,
+    "O": 0
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "GA",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 45.5,
+     "marginRange": [
+      38.7,
+      52.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 41.6,
+     "marginRange": [
+      33.1,
+      47.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 12.6,
+     "marginRange": [
+      2.0,
+      22.8
+     ],
+     "pFlip": 0.1
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.1,
+     "marginRange": [
+      0.6,
+      13.4
+     ],
+     "pFlip": 0.53
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 21.97,
+     "barred": 0.0,
+     "home": 0.3692,
+     "A": 0.4181,
+     "B": 0.1789,
+     "O": 0.0337,
+     "source": "1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns)."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 21.281,
+     "barred": 0.2876,
+     "home": 0.3583,
+     "A": 0.1991,
+     "B": 0.1276,
+     "O": 0.0274,
+     "source": "1920 census, women 21+ outside the South; turnout is each state's 1920 vote minus the men's predicted vote (1916 men's turnout × the change in states where women already voted)."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 8.533,
+     "barred": 0.4276,
+     "home": 0.3631,
+     "A": 0.0709,
+     "B": 0.1297,
+     "O": 0.0087,
+     "source": "1920 census, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 3.974,
+     "barred": 0.9306,
+     "home": 0.0447,
+     "A": 0.0192,
+     "B": 0.005,
+     "O": 0.0004,
+     "source": "1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.992,
+     "barred": 1.0,
+     "home": 0.0,
+     "A": 0.0,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers)."
+    }
+   ],
+   "summary": "With the treaty settled, the voters I interviewed lean 0.1 points further toward Cox than the same people did in the world as it was. 3.4 million women who voted can't, outside the states that already let them. Kentucky flips, but Harding still wins, 417–114. The closest call is Tennessee, which holds for Harding by 0.1 points. Cox wins in 0 of 100 draws.",
+   "confidence": "low",
+   "applied": [
+    {
+     "key": "league",
+     "label": "The Senate Ratifies the League",
+     "kind": "issue"
+    },
+    {
+     "key": "no-19th",
+     "label": "The 19th Amendment Fails",
+     "kind": "franchise"
+    }
+   ],
+   "unknown": null,
+   "range": {
+    "A": [
+     388,
+     429
+    ],
+    "B": [
+     102,
+     143
+    ],
+    "O": [
+     0,
+     0
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 14106136,
+    "B": 7773550,
+    "O": 1399852
+   },
+   "popularRange": {
+    "A": [
+     13367179,
+     15060838
+    ],
+    "B": [
+     7031728,
+     8410143
+    ],
+    "O": [
+     1340485,
+     1398610
+    ]
+   },
+   "assumptions": [
+    "Each group of voters shifts by the change its simulated members report between the world as it was and a world where the treaty was ratified, shrunk toward the regional change where the model's control answers stray from the calibrated baseline.",
+    "Women in states without their own presidential suffrage can't vote. Everyone else turns out and chooses exactly as in 1920; men's votes don't change."
+   ],
+   "howIGotThis": [
+    "What changed: The Senate ratifies the peace treaty with its reservations in March 1920, and the League is no longer a campaign issue.",
+    "What historians found (9 findings, strong evidence): No source measures the League's effect on 1920 voting. Sources give qualitative accounts: the League and Wilson hurt Cox, Irish and German Americans left the Democrats (partly over wartime grievances), and Harding won 60.3% to 34.1% on low turnout. No group-level numbers.",
+    "What changed: Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.",
+    "The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces 1920 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws.",
+    "Low confidence: The interviews' answer changes sign with the question's wording, though the record points the same way."
+   ],
+   "sources": [
+    {
+     "title": "Fourteenth Census of the United States (1920), Vol. II–III: voting age, color, nativity and citizenship",
+     "url": "https://www.census.gov/library/publications/1922/dec/vol-02-population.html"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868–2020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "Clerk of the House, Statistics of the Presidential and Congressional Election of November 2, 1920",
+     "url": "https://history.house.gov/Institution/Election-Statistics/"
+    }
+   ],
+   "confidenceTier": "low",
+   "confidenceLabel": "Low confidence",
+   "confidenceFlags": [
+    "unstable-interviews",
+    "not-researched"
+   ],
+   "confidenceReasons": [
+    "The interviews' answer changes sign with the question's wording, though the record points the same way."
+   ],
+   "evidence": [
+    {
+     "whatIf": "league",
+     "strength": "strong",
+     "summary": "No source measures the League's effect on 1920 voting. Sources give qualitative accounts: the League and Wilson hurt Cox, Irish and German Americans left the Democrats (partly over wartime grievances), and Harding won 60.3% to 34.1% on low turnout. No group-level numbers.",
+     "agreement": "consistent",
+     "agreementDetail": "On the Republican two-party share, the sources point the same way as the interviews (-0.1 points), without numbers.",
+     "findings": [
+      {
+       "claim": "Cox was doomed because he could not separate himself from Wilson's administration and the increasingly unpopular League; this is the conventional account summarized from older literature.",
+       "when": "1920",
+       "match": "same-event",
+       "tier": "A",
+       "sources": [
+        {
+         "title": "James Cox and the Presidential Election of 1920",
+         "url": "https://etd.ohiolink.edu/acprod/odb_etd/ws/send_file/send?accession=bgsu1256750068&disposition=inline",
+         "tier": "A"
+        }
+       ]
+      }
+     ],
+     "caveats": [
+      "No source measures the League's independent effect or gives group, regional or sex-specific swings.",
+      "Sources are a thesis, Wikipedia and aggregator sites; peer-reviewed literature not reached.",
+      "Ethnic swings bundle wartime repression, the Irish question, recession and Wilson's unpopularity."
+     ]
+    }
+   ],
+   "mode": "truth",
+   "runId": "1920-1a2dcd24ad",
+   "validation": null,
+   "cohortEffects": [
+    {
+     "whatIf": "league",
+     "cohort": "midwest:F:native_white",
+     "n": 2,
+     "bias": -0.42,
+     "weight": 0.17,
+     "exposed": false,
+     "dr": -0.722,
+     "dt": 0.116
+    },
+    {
+     "whatIf": "league",
+     "cohort": "midwest:M:native_white",
+     "n": 2,
+     "bias": -0.236,
+     "weight": 0.189,
+     "exposed": false,
+     "dr": -0.172,
+     "dt": -0.161
+    }
+   ]
+  }
+ },
+ "tables": {
+  "": [
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 557459.9731493009,
+    "barred": 0.9911242324550453,
+    "home": 0.005989298642886454,
+    "A": 0.002219511139352751,
+    "B": 0.0006669577627154771,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5773.069791221724,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 875616.5397436696,
+    "barred": 0.4850285098796285,
+    "home": 0.347498740957496,
+    "A": 0.04551275033141804,
+    "B": 0.12195999883145765,
+    "O": 6.234536536839625e-284
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1249268.968539241,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2543130.923015257,
+    "barred": 0.0,
+    "home": 0.3544796192670083,
+    "A": 0.4967216686617819,
+    "B": 0.11315294318300335,
+    "O": 0.03564576888820636
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2655430.1447770805,
+    "barred": 0.0,
+    "home": 0.5266792610630474,
+    "A": 0.2289416190891958,
+    "B": 0.18583639789847267,
+    "O": 0.058542721949284164
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 315135.695787829,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1625469.7380845204,
+    "barred": 0.0,
+    "home": 0.3021666122187552,
+    "A": 0.5005228759866657,
+    "B": 0.18330612262198556,
+    "O": 0.01400438917259361
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1643334.8716773486,
+    "barred": 0.0,
+    "home": 0.46003339840839974,
+    "A": 0.2242008427571786,
+    "B": 0.29335384304809775,
+    "O": 0.022411915786323917
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 244300.21128635987,
+    "barred": 0.9812390006450311,
+    "home": 0.010704118051877166,
+    "A": 0.006025905266947209,
+    "B": 0.0018107700492778515,
+    "O": 0.00022020598686654905
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 4907.507378074724,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 988752.1930200773,
+    "barred": 0.0,
+    "home": 0.5690854541682984,
+    "A": 0.22023406119874744,
+    "B": 0.20846030854610537,
+    "O": 0.002220176086848883
+   }
+  ],
+  "league": [
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 564001.9758071217,
+    "barred": 0.9476637830264499,
+    "home": 0.03580168196041069,
+    "A": 0.010076889406624595,
+    "B": 0.0064576456065147435,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5610.798569774554,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 870868.0204433978,
+    "barred": 0.4950598157516244,
+    "home": 0.33184194032499525,
+    "A": 0.041724364928032553,
+    "B": 0.13137371384984,
+    "O": 1.651455078515171e-07
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1323460.4830400394,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2648828.878084959,
+    "barred": 0.0,
+    "home": 0.4258780511454305,
+    "A": 0.4231459510039965,
+    "B": 0.11468349386464198,
+    "O": 0.03629250398593096
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2685786.5493205264,
+    "barred": 0.0,
+    "home": 0.45708136643426023,
+    "A": 0.3106138700607319,
+    "B": 0.17516025307448005,
+    "O": 0.05714451043052792
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 346647.9771323291,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1693914.3340490127,
+    "barred": 0.0,
+    "home": 0.2989888790559856,
+    "A": 0.46456213234799076,
+    "B": 0.22088540715475102,
+    "O": 0.015563581441272636
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1586071.5143636116,
+    "barred": 0.0,
+    "home": 0.4207606311473178,
+    "A": 0.2796821469418845,
+    "B": 0.2790533284531488,
+    "O": 0.020503893457648772
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 255722.00982605945,
+    "barred": 0.8933198752184252,
+    "home": 0.06225159274634354,
+    "A": 0.0257955796066479,
+    "B": 0.016530767044526808,
+    "O": 0.002102185384056602
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 5077.955403907787,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 1006388.2011501151,
+    "barred": 0.0,
+    "home": 0.5576092881444593,
+    "A": 0.20985276655955237,
+    "B": 0.23078043064723888,
+    "O": 0.001757514648749543
+   }
+  ],
+  "no-19th": [
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 557459.9731493009,
+    "barred": 0.9911242324550453,
+    "home": 0.005989298642886454,
+    "A": 0.002219511139352751,
+    "B": 0.0006669577627154771,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5773.069791221724,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 875616.5397436696,
+    "barred": 0.4850285098796285,
+    "home": 0.347498740957496,
+    "A": 0.04551275033141804,
+    "B": 0.12195999883145765,
+    "O": 6.234536536839625e-284
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1249268.968539241,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2543130.923015257,
+    "barred": 0.0,
+    "home": 0.3544796192670083,
+    "A": 0.4967216686617819,
+    "B": 0.11315294318300335,
+    "O": 0.03564576888820636
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2655430.1447770805,
+    "barred": 0.0,
+    "home": 0.5266792610630474,
+    "A": 0.2289416190891958,
+    "B": 0.18583639789847267,
+    "O": 0.058542721949284164
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 315135.695787829,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1625469.7380845204,
+    "barred": 0.0,
+    "home": 0.3021666122187552,
+    "A": 0.5005228759866657,
+    "B": 0.18330612262198556,
+    "O": 0.01400438917259361
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1643334.8716773486,
+    "barred": 0.0,
+    "home": 0.46003339840839974,
+    "A": 0.2242008427571786,
+    "B": 0.29335384304809775,
+    "O": 0.022411915786323917
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 244300.21128635987,
+    "barred": 0.9812390006450311,
+    "home": 0.010704118051877166,
+    "A": 0.006025905266947209,
+    "B": 0.0018107700492778515,
+    "O": 0.00022020598686654905
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 4907.507378074724,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 988752.1930200773,
+    "barred": 0.0,
+    "home": 0.5690854541682984,
+    "A": 0.22023406119874744,
+    "B": 0.20846030854610537,
+    "O": 0.002220176086848883
+   }
+  ],
+  "league+no-19th": [
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 583326.6231166037,
+    "barred": 0.9347457321980708,
+    "home": 0.04517873713632781,
+    "A": 0.015928398264805545,
+    "B": 0.004147132400795914,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5485.705276610124,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 865045.0004641049,
+    "barred": 0.486944456722197,
+    "home": 0.3568005921669412,
+    "A": 0.03551298361841568,
+    "B": 0.1207418076777875,
+    "O": 1.5981465860491753e-07
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1358030.047915105,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2630193.088891419,
+    "barred": 0.0,
+    "home": 0.390989123117027,
+    "A": 0.4246486326614276,
+    "B": 0.1372499334016628,
+    "O": 0.04711231081988245
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2719845.1153991506,
+    "barred": 0.0,
+    "home": 0.5356425726252995,
+    "A": 0.2884675579253347,
+    "B": 0.12860313674533413,
+    "O": 0.04728673270403156
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 307959.7283354442,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1735047.2370342605,
+    "barred": 0.0,
+    "home": 0.29453553131492105,
+    "A": 0.4199315115875304,
+    "B": 0.2660120226247139,
+    "O": 0.01952093447283469
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1609546.719802368,
+    "barred": 0.0,
+    "home": 0.5145020735167958,
+    "A": 0.22952889580349045,
+    "B": 0.23882053734941405,
+    "O": 0.017148493330299875
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 249748.12773080647,
+    "barred": 0.8608066121154228,
+    "home": 0.08077770656520142,
+    "A": 0.045211970164433096,
+    "B": 0.011771430074487008,
+    "O": 0.0014322810804558474
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 5231.586112071547,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 975335.6826607335,
+    "barred": 0.0,
+    "home": 0.5790388035344632,
+    "A": 0.20536589055323912,
+    "B": 0.21360216298576634,
+    "O": 0.001993142926531106
+   }
+  ]
+ },
+ "voters": {
+  "": {
+   "south-white": {
+    "name": "Anna Reed",
+    "line": "40, a city or town, Alabama",
+    "quote": "The amendment is ratified and we can vote at last—after seventy years. I mean to exercise that right tomorrow, though there's much to think about with prices so high.",
+    "history": "B",
+    "now": "B",
+    "controlQuote": "The amendment is ratified and we can vote at last—after seventy years. I mean to exercise that right tomorrow, though there's much to think about with prices so high.",
+    "cohort": "Native-born white women, south",
+    "cohortAdults": 4077716,
+    "weight": 2038858,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "The Birmingham Age-Herald, 1920-09-21",
+      "url": "https://www.loc.gov/resource/sn85038485/1920-09-21/ed-1/?sp=5",
+      "date": "1920-09-21"
+     },
+     {
+      "title": "Americus Times-Recorder, 1920-08-31",
+      "url": "https://www.loc.gov/resource/sn89053204/1920-08-31/ed-1/?sp=1",
+      "date": "1920-08-31"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   },
+   "women": {
+    "name": "Ruth Robinson",
+    "line": "36, the countryside, New York",
+    "quote": "I mean to vote tomorrow—it's our first chance, you know. The Republican's talk about making more goods and going after these profiteers sits better with me than his opponent's deflation talk.",
+    "history": "B",
+    "now": "B",
+    "controlQuote": "I mean to vote tomorrow—it's our first chance, you know. The Republican's talk about making more goods and going after these profiteers sits better with me than his opponent's deflation talk.",
+    "cohort": "Native-born white women, northeast",
+    "cohortAdults": 5920176,
+    "weight": 2960088,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "The Sun and the New York Herald, 1920-09-05",
+      "url": "https://www.loc.gov/resource/sn83030273/1920-09-05/ed-1/?sp=4",
+      "date": "1920-09-05"
+     },
+     {
+      "title": "The New York Herald, 1920-10-10",
+      "url": "https://www.loc.gov/resource/sn83045774/1920-10-10/ed-1/?sp=54",
+      "date": "1920-10-10"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   }
+  },
+  "league": {
+   "south-white": {
+    "name": "Sarah Sutton",
+    "line": "68, the countryside, Virginia",
+    "quote": "My folks work hard for wages, and we need someone who understands that. These high prices are squeezing us all, and I want to see something done about it.",
+    "history": "A",
+    "now": "B",
+    "controlQuote": "I aim to vote tomorrow if I can manage the registration. We need someone who'll bring these prices down and get things back to normal.",
+    "cohort": "Native-born white women, south",
+    "cohortAdults": 4077716,
+    "weight": 2038858,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "Richmond Times-Dispatch, 1920-09-23",
+      "url": "https://www.loc.gov/resource/sn83045389/1920-09-23/ed-1/?sp=14",
+      "date": "1920-09-23"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": false,
+    "change": {
+     "what_if": "league",
+     "facts": [
+      "In March 1920 the Senate ratified the peace treaty with its reservations, and the United States took its seat in the League of Nations this spring. The treaty is settled, and neither party proposes to reopen it."
+     ],
+     "eligibility": null,
+     "dropped_sources": [],
+     "dropped_planks": [
+      "League of Nations"
+     ],
+     "added_planks": []
+    }
+   },
+   "women": {
+    "name": "Ruth Robinson",
+    "line": "36, the countryside, New York",
+    "quote": "I've been thinking to go tomorrow. These prices have been hard on us. The Republican says it's all about making more, but maybe the other party has something with their talk of the money supply.",
+    "history": "B",
+    "now": "A",
+    "controlQuote": "I mean to vote tomorrow—it's our first chance, you know. The Republican's talk about making more goods and going after these profiteers sits better with me than his opponent's deflation talk.",
+    "cohort": "Native-born white women, northeast",
+    "cohortAdults": 5920176,
+    "weight": 2960088,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "The Sun and the New York Herald, 1920-09-05",
+      "url": "https://www.loc.gov/resource/sn83030273/1920-09-05/ed-1/?sp=4",
+      "date": "1920-09-05"
+     },
+     {
+      "title": "The New York Herald, 1920-10-10",
+      "url": "https://www.loc.gov/resource/sn83045774/1920-10-10/ed-1/?sp=54",
+      "date": "1920-10-10"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": false,
+    "change": {
+     "what_if": "league",
+     "facts": [
+      "In March 1920 the Senate ratified the peace treaty with its reservations, and the United States took its seat in the League of Nations this spring. The treaty is settled, and neither party proposes to reopen it."
+     ],
+     "eligibility": null,
+     "dropped_sources": [],
+     "dropped_planks": [
+      "League of Nations"
+     ],
+     "added_planks": []
+    }
+   }
+  },
+  "no-19th": {
+   "south-white": {
+    "name": "Sarah Sutton",
+    "line": "68, the countryside, Virginia",
+    "quote": "I won't be voting tomorrow—women can't vote here yet. My son will have to vote for both of us, so to speak.",
+    "history": "A",
+    "now": "barred",
+    "controlQuote": "I aim to vote tomorrow if I can manage the registration. We need someone who'll bring these prices down and get things back to normal.",
+    "cohort": "Native-born white women, south",
+    "cohortAdults": 4077716,
+    "weight": 2038858,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "The Star-Progress, 1920-06-19",
+      "url": "https://www.loc.gov/resource/sn88064249/1920-06-19/ed-1/?sp=4",
+      "date": "1920-06-19"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": false,
+    "change": {
+     "what_if": "no-19th",
+     "facts": [
+      "In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified."
+     ],
+     "eligibility": "Women cannot vote for president in Virginia this year.",
+     "dropped_sources": [
+      "ca-sn83045389-1920-09-23-14",
+      "ca-sn89053204-1920-09-03-3"
+     ],
+     "dropped_planks": [],
+     "added_planks": []
+    }
+   },
+   "women": {
+    "name": "Ruth Robinson",
+    "line": "36, the countryside, New York",
+    "quote": "I'll vote tomorrow if I can get to town. The cost of everything troubles us, but I believe we need steady work and honest dealing more than quick fixes.",
+    "history": "B",
+    "now": "B",
+    "controlQuote": "I mean to vote tomorrow—it's our first chance, you know. The Republican's talk about making more goods and going after these profiteers sits better with me than his opponent's deflation talk.",
+    "cohort": "Native-born white women, northeast",
+    "cohortAdults": 5920176,
+    "weight": 2960088,
+    "contextDate": "1920-11-01",
+    "sources": [
+     {
+      "title": "The Sun and the New York Herald, 1920-09-05",
+      "url": "https://www.loc.gov/resource/sn83030273/1920-09-05/ed-1/?sp=4",
+      "date": "1920-09-05"
+     },
+     {
+      "title": "The New York Herald, 1920-10-10",
+      "url": "https://www.loc.gov/resource/sn83045774/1920-10-10/ed-1/?sp=54",
+      "date": "1920-10-10"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": {
+     "what_if": "no-19th",
+     "facts": [
+      "In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified."
+     ],
+     "eligibility": "New York law already lets women vote for president, so this person can vote this year.",
+     "dropped_sources": [],
+     "dropped_planks": [],
+     "added_planks": []
+    }
+   }
+  }
+ },
+ "interviews": {
+  "questions": [
+   "Election Day is Tuesday. Can this person vote, how likely are they to vote, and if they vote, for whom?",
+   "A neighbour asks what this person will do on Tuesday, 2 November. Will they cast a ballot for president, and for which candidate?",
+   "Think about Tuesday's presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?"
+  ],
+  "byWhatIf": {
+   "no-19th": [
+    {
+     "question": 0,
+     "name": "Arthur Hayes",
+     "cohort": "Native-born white men, midwest",
+     "line": "30, a city or town, Ohio",
+     "before": {
+      "choice": "Harding",
+      "pVote": 82,
+      "quote": "These prices are killing us. The Republican says it's the money they printed, not the strikes. I'm not sure I trust either one, but the fellow in office hasn't fixed it.",
+      "reason": "Arthur Hayes is a working man whose wages depend on mill or factory production in Ohio during a period of severe inflation and labor unrest. He has read complaints that strikes are blamed for soaring prices of food and goods, making him skeptical of the administration's promises; he may find the Republican's diagnosis of currency expansion and call for deflation more credible, though he worries about workers' rights and the Republican's stance on strikes limits his confidence."
+     },
+     "after": {
+      "choice": "Harding",
+      "pVote": 87,
+      "quote": "Prices have gone crazy—a dozen eggs a dollar now. That Republican fellow says we need less spending and sound money. Can't do worse than what we've got.",
+      "reason": "Arthur Hayes works in a mill, shop, mine or railroad and has witnessed sharp increases in the cost of living—eggs, butter, bread, and other essentials—over the past months. Harding blames wartime currency expansion for high prices and promises economy and deflation, while the administration's Cox offers only vague talk of more production and profiteers. Hayes is likely to vote because the election is tomorrow and these pocketbook issues are urgent to a wage-earner."
+     }
+    },
+    {
+     "question": 0,
+     "name": "Ernest Reed",
+     "cohort": "Native-born white men, northeast",
+     "line": "55, a city or town, Massachusetts",
+     "before": {
+      "choice": "Harding",
+      "pVote": 78,
+      "quote": "This inflation has squeezed us long enough. The administration's man keeps talking about making more goods, but prices keep climbing. I want someone who'll bring costs back down to earth.",
+      "reason": "Ernest Reed is a mill worker in Massachusetts facing high prices and housing shortages. He likely favors the Republican promise of deflation and economy over the Democratic emphasis on production, and he is skeptical of the League of Nations covenant as presented by Cox."
+     },
+     "after": {
+      "choice": "Harding",
+      "pVote": 78,
+      "quote": "These prices have got to come down. The Republican says we need economy and deflation, not more of what got us into this mess in the first place.",
+      "reason": "Ernest Reed is a mill worker in Massachusetts facing high prices and housing shortages that the current administration has not solved. He favors the Republican's promise of deflation and economy over the Democrat's call for more production, and prefers rejection of the controversial league covenant."
+     }
+    }
+   ],
+   "league": [
+    {
+     "question": 0,
+     "name": "Arthur Hayes",
+     "cohort": "Native-born white men, midwest",
+     "line": "30, a city or town, Ohio",
+     "before": {
+      "choice": "Harding",
+      "pVote": 82,
+      "quote": "These prices are killing us. The Republican says it's the money they printed, not the strikes. I'm not sure I trust either one, but the fellow in office hasn't fixed it.",
+      "reason": "Arthur Hayes is a working man whose wages depend on mill or factory production in Ohio during a period of severe inflation and labor unrest. He has read complaints that strikes are blamed for soaring prices of food and goods, making him skeptical of the administration's promises; he may find the Republican's diagnosis of currency expansion and call for deflation more credible, though he worries about workers' rights and the Republican's stance on strikes limits his confidence."
+     },
+     "after": {
+      "choice": "Harding",
+      "pVote": 85,
+      "quote": "These prices are killing us. The fellow from the Republican side says they'll cut spending and bring costs down. We need somebody to fix this mess, not keep doing what's been done.",
+      "reason": "Arthur Hayes is a working man in Ohio whose household depends on mill or factory wages. He has read recent accounts blaming strikes for catastrophic price increases in eggs, butter, bread, and other necessities—concerns that would weigh heavily on someone managing a tight household budget. Harding's Republican platform of deflation and economy, combined with Congress's Republican majority since 1918, offers the prospect of relief from inflation."
+     }
+    },
+    {
+     "question": 0,
+     "name": "Ernest Reed",
+     "cohort": "Native-born white men, northeast",
+     "line": "55, a city or town, Massachusetts",
+     "before": {
+      "choice": "Harding",
+      "pVote": 78,
+      "quote": "This inflation has squeezed us long enough. The administration's man keeps talking about making more goods, but prices keep climbing. I want someone who'll bring costs back down to earth.",
+      "reason": "Ernest Reed is a mill worker in Massachusetts facing high prices and housing shortages. He likely favors the Republican promise of deflation and economy over the Democratic emphasis on production, and he is skeptical of the League of Nations covenant as presented by Cox."
+     },
+     "after": {
+      "choice": "Harding",
+      "pVote": 82,
+      "quote": "The prices are eating us alive. The Republican says he'll bring costs down by tightening the government's belt. That's what we need right now.",
+      "reason": "Ernest Reed is a mill or railroad wage-earner in Massachusetts facing the acute housing shortage and high living costs documented in his region. He likely favors the opposition party's promise of deflation and economy to bring down prices that burden his household, though he is not entirely settled between the major candidates or resistant to other options."
+     }
+    }
+   ]
+  }
+ },
+ "ev": {
+  "GA": 14,
+  "NY": 45,
+  "OH": 24,
+  "TN": 12
+ },
+ "historyWinner": {
+  "GA": "B",
+  "NY": "A",
+  "OH": "A",
+  "TN": "A"
+ },
+ "words": [
+  {
+   "key": "league",
+   "words": [
+    "league",
+    "treaty",
+    "versailles"
+   ]
+  },
+  {
+   "key": "no-19th",
+   "words": [
+    "19th",
+    "nineteenth",
+    "suffrage fails",
+    "women can't vote",
+    "no women",
+    "19th amendment",
+    "ratification fails",
+    "suffrage amendment rejected",
+    "tennessee",
+    "what if the tennessee legislature had rejected the women's amendment",
+    "women vote",
+    "women's suffrage"
+   ]
+  }
+ ],
+ "pre": {
+  "voters": 12,
+  "interviews": 12,
+  "items": [
+   3,
+   3
+  ],
+  "asOf": "1920-11-01",
+  "wordings": 3
+ },
+ "told": {
+  "no-19th": {
+   "facts": [
+    "In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified."
+   ]
+  },
+  "league": {
+   "facts": [
+    "In March 1920 the Senate ratified the peace treaty with its reservations, and the United States took its seat in the League of Nations this spring. The treaty is settled, and neither party proposes to reopen it."
+   ],
+   "dropped": [
+    "League of Nations"
+   ]
+  }
+ },
+ "reading": [
+  {
+   "date": "1920-06-11",
+   "newspaper": "The Snyder Signal",
+   "place": "Snyder, TX",
+   "summary": "Texas farmers' union prepares a questionnaire on farm issues for legislators and gubernatorial candidates."
+  },
+  {
+   "date": "1920-06-19",
+   "newspaper": "The Star-Progress",
+   "place": "Opelousas, LA",
+   "summary": "Writer links high town wages to the farm labor shortage in this agricultural area."
+  }
+ ]
+}
