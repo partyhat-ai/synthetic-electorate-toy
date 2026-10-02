@@ -1,0 +1,102 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Harrison",
+  "D": "Cleveland",
+  "O": "Weaver"
+ },
+ "full_names": {
+  "R": "Benjamin Harrison",
+  "D": "Grover Cleveland",
+  "O": "James B. Weaver"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1889",
+  "D": "nominee of the party that has held a majority in the House since the 1890 elections; himself President from 1885 to 1889",
+  "O": "nominee of a new third party founded by farmers' alliances and labor organizations, calling for free coinage of silver, a graduated income tax and government ownership of the railroads"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1889",
+  "D": "the party that has held a majority in the House since the 1890 elections",
+  "president": "Harrison"
+ },
+ "third": "O",
+ "label_pool": [
+  "K",
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Prohibition and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "tariff",
+  "currency",
+  "ballot",
+  "railroads",
+  "income tax",
+  "trusts",
+  "immigration",
+  "land"
+ ],
+ "names_re": "\\b(Harrison|Cleveland|(?-i:Weaver)|Whitelaw Reid|Reid|Stevenson|(?:James G\\. |General )Field|Bidwell|Simon Wing|McKinley|Blaine|Populists?|People's [Pp]arty|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Harrison, Cleveland, Weaver, Reid, Stevenson, Field, Bidwell, McKinley or Blaine",
+ "corpus": null,
+ "platforms": "context/platforms_1892.json",
+ "ev_label": "277–145–22",
+ "slice_sources": {
+  "men": "1890 and 1900 censuses interpolated to November 1892 (1890 from the published state tables; most 1890 schedules were later lost); men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1892 returns.",
+  "women": "1890 and 1900 censuses interpolated to November 1892 (1890 from the published state tables; most 1890 schedules were later lost); women 21+ outside the South; only Wyoming (a state since 1890) let women vote for president in 1892, so only Wyoming women cast a presidential vote.",
+  "south-white": "1890 and 1900 censuses interpolated to November 1892 (1890 from the published state tables; most 1890 schedules were later lost); white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1892 returns.",
+  "black-south": "1890 and 1900 censuses interpolated to November 1892 (1890 from the published state tables; most 1890 schedules were later lost); Black adults in the eleven former Confederate states; legal disfranchisement had begun (Mississippi's 1890 constitution, poll taxes in Florida, Tennessee and Arkansas) on top of violence and fraud; the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1890 and 1900 censuses interpolated to November 1892 (1890 from the published state tables; most 1890 schedules were later lost); foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Benjamin )?Harrison\\b",
+   "the President"
+  ],
+  [
+   "\\bPeople's [Pp]arty\\b|\\bPopulists?\\b",
+   "the new farmer-labor party"
+  ],
+  [
+   "\\b(?:General |James B\\. )?Weaver\\b",
+   "the third-party candidate"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the House majority party"
+  ],
+  [
+   "\\b(?:[Ff]ormer |[Ee]x-)?(?:President |Grover )?Cleveland\\b",
+   "the House majority party's nominee"
+  ],
+  [
+   "\\b(?:Whitelaw )?Reid\\b|\\b(?:Adlai E\\. )?Stevenson\\b|\\b(?:James G\\. |General )Field\\b",
+   "a running mate"
+  ],
+  [
+   "\\bMcKinley\\b",
+   "the author of the 1890 tariff"
+  ],
+  [
+   "\\bBlaine\\b",
+   "the former Secretary of State"
+  ],
+  [
+   "\\b(?:Bidwell|Simon Wing)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

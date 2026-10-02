@@ -1,0 +1,103 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Hoover",
+  "D": "Roosevelt",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Herbert Hoover",
+  "D": "Franklin D. Roosevelt"
+ },
+ "descriptors": {
+  "R": "nominee of the party in office since 1921, renominating the sitting President",
+  "D": "nominee of the party out of the presidency since 1921, which won control of the House of Representatives in 1930"
+ },
+ "compile_desc": {
+  "R": "the party in office since 1921",
+  "D": "the party out of the presidency since 1921",
+  "president": "Hoover"
+ },
+ "third": null,
+ "label_pool": [
+  "E",
+  "K",
+  "Q",
+  "V",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist and a Communist nominee (answer \"other\").",
+ "plank_order": [
+  "unemployment relief",
+  "Prohibition",
+  "agriculture",
+  "government spending",
+  "tariff",
+  "currency",
+  "banking"
+ ],
+ "names_re": "\\b(Hoover|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|Curtis|Garner|Norman Thomas|Foster|Upshaw|Al Smith|Alfred E\\. Smith|Coolidge|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Hoover, Roosevelt, Curtis, Garner, Norman Thomas, Foster, Al Smith or Coolidge",
+ "corpus": null,
+ "platforms": "context/platforms_1932.json",
+ "ev_label": "472–59",
+ "slice_sources": {
+  "men": "1930 and 1940 censuses interpolated to November 1932 (the 1930 \"Mexican\" race category folded back into white, as the 1940 census recoded it); men 21+ outside the eleven Southern states, citizens only, American Indians included as citizens since the 1924 Indian Citizenship Act (some Western states still barred them in practice); calibrated to certified 1932 returns.",
+  "women": "1930–1940 interpolation to November 1932, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1932 vote.",
+  "south-white": "1930–1940 interpolation to November 1932, white adults (including Mexican-origin adults, listed separately in 1930) in the eleven former Confederate states; poll taxes in most of them; calibrated to certified 1932 returns.",
+  "black-south": "1930–1940 interpolation to November 1932, Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test and the white primary continues, so the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1930–1940 interpolation to November 1932, foreign-born white adults who were not naturalized; no state let aliens vote after 1926."
+ },
+ "masks": [
+  [
+   "\\bHoovervilles?\\b",
+   "shantytowns"
+  ],
+  [
+   "\\b(?:President |Mr\\. )?(?:Herbert (?:C\\. |Clark )?)?Hoover\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Vice[- ]President )?(?:Charles )?Curtis\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Speaker )?(?:John (?:N\\. |Nance )?)?Garner\\b",
+   "the Speaker of the House"
+  ],
+  [
+   "\\bNorman (?:M\\. )?Thomas\\b|\\b(?:William Z\\. )?Foster\\b|\\b(?:William D\\. )?Upshaw\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\bAl(?:fred E\\.)? Smith\\b",
+   "the 1928 nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Calvin )?Coolidge\\b",
+   "the former President"
+  ]
+ ]
+}

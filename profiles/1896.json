@@ -1,0 +1,106 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "McKinley",
+  "D": "Bryan",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "William McKinley",
+  "D": "William Jennings Bryan"
+ },
+ "descriptors": {
+  "R": "nominee of the party that won control of the House in a landslide in the 1894 elections",
+  "D": "nominee of the party of the administration in office since 1893, chosen on a free-silver platform that breaks with the administration's gold policy, and also endorsed by the farmer-labor third party"
+ },
+ "compile_desc": {
+  "R": "the party that won control of the House in the 1894 elections",
+  "D": "the party of the administration in office since 1893",
+  "president": "Cleveland"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a gold-standard breakaway ticket, a Prohibition nominee and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "currency",
+  "tariff",
+  "labor",
+  "trusts",
+  "immigration",
+  "Cuba"
+ ],
+ "names_re": "\\b(McKinley|Bryan|Hobart|Sewall|Watson|Palmer|Buckner|Levering|Bentley|Matchett|Hanna|Cleveland|Altgeld|(?-i:Reed)|Populists?|People's [Pp]arty|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "McKinley, Bryan, Hobart, Sewall, Watson, Palmer, Buckner, Hanna, Altgeld, Reed or Cleveland",
+ "corpus": null,
+ "platforms": "context/platforms_1896.json",
+ "ev_label": "271–176",
+ "slice_sources": {
+  "men": "1890 and 1900 censuses interpolated to November 1896; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1896 returns.",
+  "women": "1890 and 1900 censuses interpolated to November 1896; women 21+ outside the South; women could vote for president only in Wyoming, Colorado (1893) and Utah (statehood, January 1896); Idaho's amendment was adopted at this same election, so Idaho women first voted in 1898.",
+  "south-white": "1890 and 1900 censuses interpolated to November 1896; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1896 returns.",
+  "black-south": "1890 and 1900 censuses interpolated to November 1896; Black adults in the eleven former Confederate states; disfranchisement was intensifying (Mississippi 1890, South Carolina 1895, poll taxes and registration laws elsewhere); the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1890 and 1900 censuses interpolated to November 1896; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Grover )?Cleveland\\b",
+   "the President"
+  ],
+  [
+   "\\bPeople's [Pp]arty\\b|\\bPopulists?\\b",
+   "the farmer-labor third party"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the House majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the House majority party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:William )?McKinley\\b",
+   "the House majority party's nominee"
+  ],
+  [
+   "\\b(?:William Jennings |W\\. J\\. )?Bryan\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\b(?:Hobart|Sewall|Watson)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Mark )?Hanna\\b",
+   "the House majority party's campaign manager"
+  ],
+  [
+   "\\b(?:Palmer|Buckner)\\b",
+   "a gold-standard breakaway nominee"
+  ],
+  [
+   "\\bAltgeld\\b",
+   "a silver-wing governor"
+  ],
+  [
+   "\\bReed\\b",
+   "the former Speaker"
+  ],
+  [
+   "\\b(?:Levering|Bentley|Matchett)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

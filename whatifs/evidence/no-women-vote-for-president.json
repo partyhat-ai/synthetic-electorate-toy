@@ -1,0 +1,483 @@
+{
+ "summary": "Sources give only press estimates and local counts suggesting enfranchised women in 1916 leaned toward Wilson, with Illinois a partial exception. No measured group-level or turnout-by-sex figures exist, so barring women would likely have moved results toward Hughes (R), by an unquantified amount.",
+ "findings": [
+  {
+   "claim": "Women could vote in 12 states in 1916 and 11 went to Wilson; Whitman says only Illinois and Oregon went to Hughes. Sources differ on the exceptions.",
+   "source_ids": [
+    "S2",
+    "S3"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Suffrage states' presidential results in 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "State outcomes, not women's votes; confounded by war issue and Progressive return.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "The NYT reported San Francisco women voted for Wilson three to one; Wilson won California by about 3,000 votes.",
+   "source_ids": [
+    "S2"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "San Francisco women's vote, 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Press impression relayed via a student blog.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Observers estimated 90,000 of 155,000 registered Washington women voted for Wilson, who carried the state by 16,594 votes.",
+   "source_ids": [
+    "S4"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Washington women's vote, 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Newspaper estimate, not a measured count.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "In a Kansas town straw vote, men split 541 Wilson to 467 Hughes and women 380 to 216: about 54% of men and 64% of women for Wilson.",
+   "source_ids": [
+    "S12"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "midwest"
+   },
+   "situation": "Kansas town straw vote by sex",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [
+    {
+     "measure": "r2",
+     "pp": -10,
+     "pm": 8
+    }
+   ],
+   "limits": "One small local count; effect is the male-female gap in two-party share.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Wilson's vote share rose dramatically in most western states versus 1912; the article argues his peace message worked especially well with western women, though measuring this is hard.",
+   "source_ids": [
+    "S4"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Western swing to Wilson, 1912 to 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Confounded by Progressive reunion and war issue.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Republicans said Hughes would have had pretty plain sailing in Illinois without women's votes, and a pre-election straw poll showed most Illinois women favoring Wilson. Hughes still won 52.56% to 43.34%.",
+   "source_ids": [
+    "S4",
+    "S10"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "midwest"
+   },
+   "situation": "Illinois women voting for electors only",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Partisan statements and polls; no counterfactual margin.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "A state suffrage-history site says women's votes played a significant role in Illinois remaining Republican, conflicting with the Republican claim.",
+   "source_ids": [
+    "S13"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "midwest"
+   },
+   "situation": "Illinois women's effect on outcome",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Unquantified; conflicts with other sources.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Total votes rose sharply in states that added women: Illinois up a million over 1912, Kansas up over 260,000, Montana more than doubled. Part is due to suffrage extensions.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Total vote growth in suffrage states",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "more-turnout",
+   "effects": [],
+   "limits": "Wikipedia figures; not turnout by sex.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Extremely high early registration among Illinois women suggested the vote could come down to them.",
+   "source_ids": [
+    "S4"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "midwest"
+   },
+   "situation": "Illinois women's registration",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "more-turnout",
+   "effects": [],
+   "limits": "Qualitative; no rates given.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "The National Woman's Party urged enfranchised women to vote against Wilson; an Oregon correspondent reported it got a frigid reception from women of both parties.",
+   "source_ids": [
+    "S6",
+    "S7"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Campaign to turn women against Wilson",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Partisan letter, not a measurement.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Corder and Wolbrecht estimate large gender turnout gaps for 1920-1936 from ten non-western states, with wide variation.",
+   "source_ids": [
+    "S4"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Women's turnout after national suffrage",
+   "when": "1920-1936",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [],
+   "limits": "Later period, non-western states; no figures given.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Press headlines said 250,000 women voted in Chicago in April 1914 after Illinois's 1913 law.",
+   "source_ids": [
+    "S11"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "midwest"
+   },
+   "situation": "Chicago women's first municipal vote",
+   "when": "1914",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "more-turnout",
+   "effects": [],
+   "limits": "Headline count, not a turnout rate.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "more-turnout"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Wilson opposed a federal suffrage amendment but voiced support for state-by-state suffrage in 1915-16 and ensured the Democratic platform endorsed it.",
+   "date": "1916",
+   "source_ids": [
+    "S3"
+   ]
+  },
+  {
+   "text": "Hughes endorsed a national suffrage amendment; Chicago suffragists helped persuade him at the June 1916 convention.",
+   "date": "1916-06",
+   "source_ids": [
+    "S3",
+    "S13"
+   ]
+  },
+  {
+   "text": "Carrie Chapman Catt wrote that Illinois's 1913 law was the turning point at which politicians saw women gaining real political power.",
+   "date": "1913",
+   "source_ids": [
+    "S11"
+   ]
+  }
+ ],
+ "caveats": [
+  "No measured 1916 vote or turnout split by sex exists in these sources.",
+  "Western women were atypical, and war and Progressive-reunion effects are not separated from gender.",
+  "No evidence on Black, naturalized or alien women, or by non-western region."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "no-women-vote-for-president",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "1916 election women voters western states Wilson Hughes woman suffrage vote turnout",
+  "Illinois 1916 women presidential electors vote Chicago women's vote Hughes Wilson analysis"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://en.wikipedia.org/wiki/1916_United_States_presidential_election",
+   "title": "1916 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Some of this was due to the extension of suffrage to women in individual states. In Illinois, for example, the total vote was one million greater than..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://blogs.dickinson.edu/hist-211pinsker/2010/10/12/war-women-and-the-west-wilson%E2%80%99s-1916-presidential-victory/",
+   "title": "War, Women, and the West: Wilson\u2019s 1916 Presidential Victory",
+   "tier": "A",
+   "cited": [
+    "Although the 19^th Amendment granting universal women suffrage was not enacted until 1920, women could vote in 12 states by 1916, 11 of which went to ...",
+    "\u201cThe women and the Progressives did the trick: the women in San Francisco voted for Wilson three to one,\u201d noted the *New York Times*.",
+    "Wilson won California by only around 3,000 votes, with San Francisco proving to be the difference maker."
+   ],
+   "page_age": "5833 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://library.whitman.edu/blog/presidential-election-1916/",
+   "title": "Presidential election 1916",
+   "tier": "A",
+   "cited": [
+    "http://chroniclingamerica.loc.gov/lccn/sn83030431/1916-11-12/ed-1/seq-49/[/caption]Of the twelve suffrage states, only two went to Hughes (Illinois an...",
+    "The sitting president Woodrow Wilson had opposed granting women suffrage on the federal level, although he had voiced support for it on a state-by-sta...",
+    "[2] His opponent, Republican candidate Charles Evans Hughes, endorsed a national amendment for suffrage."
+   ],
+   "page_age": "3569 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.tandfonline.com/doi/abs/10.1080/09636412.2022.2129439",
+   "title": "How Women Shape the Course of War: Women\u2019s Suffrage and the Election of 1916: Security Studies: Vol 31, No 4",
+   "tier": "A",
+   "cited": [
+    "The Spokane *Spokesman Review* reported that observers around the state, which Wilson carried by 16,594 votes, estimated that 90,000 out of 155,000 re...",
+    "73 As Table 1 shows, Wilson\u2019s vote share in 1916 increased dramatically in most of the western states against 1912, when he failed to gain the plurali...",
+    "Corder and Wolbrecht, *Counting Women\u2019s Ballots*, estimates large gender gaps in turnout in early elections from 1920 to 1936, though these estimates ...",
+    "Extremely high levels of early voter registration among women suggested early on that the vote could come down to them.",
+    "The Republicans agreed that that the Republican nominee would have had \u201cpretty plain sailing\u201d in Illinois, if not for the women\u2019s vote.",
+    "The Democratic National Committee, headquartered in Chicago, would also supervise ...\n\n# How Women Shape the Course of War: Women\u2019s Suffrage and the E..."
+   ],
+   "page_age": "1434 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1916",
+   "title": "United States presidential election of 1916",
+   "tier": "B",
+   "cited": [],
+   "page_age": "335 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://www.maxrambod.com/pages/books/16026/woodrow-wilson-women-suffrage/women-voters-vote-against-wilson-he-opposes-national-woman-suffrage",
+   "title": "\u201cWomen Voters Vote Against Wilson He Opposes National Woman Suffrage\u201d by Woodrow Wilson on Max Rambod",
+   "tier": "C",
+   "cited": [
+    "Addressed to the approximately four million women who had secured voting rights in states including Wyoming, Colorado, Utah, Idaho, Washington, Califo..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S7",
+   "url": "https://www.loc.gov/collections/woodrow-wilson-papers/articles-and-essays/letters-from-ordinary-americans/womens-suffrage/",
+   "title": "\u201cMillions of women await your next message, Mr. President\u201d: The Fight for Women\u2019s Suffrage in Letters to President Wilson",
+   "tier": "A",
+   "cited": [
+    "Millie R. Trumbell of Oregon\u2019s Child Labor Commission assured Wilson that the National Woman\u2019s Party was met with \u201ca rather frigid reception in our st..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S8",
+   "url": "https://www.senate.gov/artandhistory/history/minute/A_Vote_For_Women.htm",
+   "title": "U.S. Senate: A Vote for Women",
+   "tier": "A",
+   "cited": [],
+   "page_age": "1791 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://www.pbs.org/wgbh/americanexperience/features/wilson-womens-suffrage/",
+   "title": "Wilson and Women's Suffrage",
+   "tier": "B",
+   "cited": [],
+   "page_age": "3199 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://en.wikipedia.org/wiki/1916_United_States_presidential_election_in_Illinois",
+   "title": "1916 United States presidential election in Illinois",
+   "tier": "C",
+   "cited": [
+    "## Results\n| 1916 United States presidential election in Illinois / Party | 1916 United States presidential election in Illinois / Party | 1916 United..."
+   ],
+   "page_age": "194 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://app.chicagoelections.gov/documents/general/Suffrage-Movement-Timeline-Notes-Links.pdf",
+   "title": "Suffrage-Movement-Timeline-Notes- ...",
+   "tier": "A",
+   "cited": [
+    "In Chicago, African American anti-lynching\n\nPerhaps because (and thanks to the oddity that) women voters had\n\nto use **separate ballots and separate b...",
+    "When the first Illinois election took*\n\n*place in April, (1914) the press carried the headlines that 250,000 women had voted in Chicago.",
+    "*\n\n*Illinois, with its large electoral vote of 29, proved the turning point beyond which politicians at*\n\n*last got a clear view of the fact that wome..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S12",
+   "url": "https://kgi.contentdm.oclc.org/digital/api/collection/p16884coll1/id/2199/download",
+   "title": "1916 Presidential Election: As Kansas Votes, So Goes the Election",
+   "tier": "C",
+   "cited": [
+    "The men\u2019s vote stood 541 for Wilson and\n\n467 for Hughes, while the women\u2019s votes counted 380 for Wilson and 216 for Hughes.\u201d"
+   ],
+   "page_age": "2163 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://suffrage2020illinois.org/2019/05/27/leading-up-to-1920-womens-suffrage-in-illinois/",
+   "title": "Leading Up to 1920",
+   "tier": "C",
+   "cited": [
+    "That fall the Presidential election was held and the votes of Illinois women played a significant role in Illinois remaining a Republican state.",
+    "Their efforts convinced the convention to include a Woman\u2019s Suffrage plank in the party platform, and persuaded Presidential candidate Charles Evans H..."
+   ],
+   "page_age": "2680 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://arxiv.org/pdf/2608.23051",
+   "title": "Female Nomination and Party Vote Share in US Gubernatorial Elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S15",
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9801876/",
+   "title": "Seventeenth Annual Meeting of the Illinois State Medical Society",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  }
+ ],
+ "notes": "**Summary:** The sources I found only partly answer your three questions. No source I found gives a measured, group-level split of women's votes in 1916. Most of the evidence is press estimates and the work of one journal article.\n\n**1. Direct evidence**\n\n*How women in the western states divided their votes*\n- Contemporary observers thought Wilson did well with women. Women could vote in 12 states by 1916, and 11 of those states went to Wilson [S2]. The exception list differs by source. Whitman College's library says only Illinois and Oregon went to Hughes [S3].\n- The New York Times said the women in San Francisco voted for Wilson three to one [S2]. That quote is relayed through a student blog, so treat it as a press impression, not a measurement. Wilson won California by only about 3,000 votes. [S2]\n- In Washington, observers estimated that 90,000 of 155,000 registered women voted for Wilson [S4]. This is a newspaper estimate relayed by a peer-reviewed article in *Security Studies*. Wilson carried the state by 16,594 votes.\n- A Kansas town straw vote shows the same pattern. Men split 541 for Wilson and 467 for Hughes. Women split 380 for Wilson and 216 for Hughes. [S12] That works out to about 54% of men for Wilson against about 64% of women, among two-party voters. It is one small local count, not a state estimate.\n- The *Security Studies* article argues that Wilson's \"kept us out of war\" message worked especially well with western women. It also finds that Wilson's vote share rose dramatically in most western states compared with 1912 [S4]. Its author's own caveat is that measuring this is hard.\n- The National Woman's Party tried to turn enfranchised women against Wilson. It told them to vote against him because he refused to support the federal amendment. [S6] An Oregon correspondent told Wilson the party got a \"rather frigid reception\" there from both Democratic and Republican women. [S7] That is a partisan letter, not a measurement.\n\n*Women's turnout compared with men's*\n- I found no reliable 1916 turnout figures by sex. Few states recorded votes by sex. The *Security Studies* article notes that Corder and Wolbrecht estimate large gender gaps in turnout for 1920\u20131936, based on ten non-western states, with wide variation [S4].\n- Total turnout rose in the states that had added women. Part of the rise was due to suffrage extensions. Illinois's total vote was a million higher than in 1912, Kansas gained more than 260,000, and Montana's more than doubled. [S1] These are cited from Wikipedia, so check them against the primary returns. They show women entering the electorate but not their turnout rate relative to men.\n- Illinois registration is the best hint on turnout. Extremely high levels of early registration among women suggested the vote could come down to them. [S4]\n\n*Illinois, where women voted for presidential electors only*\n- Hughes won Illinois. Hughes got 1,152,549 votes (52.56%) and Wilson 950,229 (43.34%). [S10] That is a margin of 9.2 percentage points. The vote figures come from Wikipedia and should be checked against official returns.\n- Republicans themselves said women hurt them. They agreed Hughes would have had \"pretty plain sailing\" in Illinois without the women's vote. [S4] That implies women leaned more toward Wilson than men did.\n- Pre-election, a straw poll suggested a majority of Illinois women planned to vote for Wilson even where the men in their district did not [S4].\n- A different reading comes from a state suffrage-history site. It says women's votes played a significant role in Illinois remaining Republican [S13]. That conflicts with the Republican statement above. I found no reliable counterfactual number for the margin. Women voted on separate ballots in Illinois (separate ballots and separate ballot boxes [S11]), so sex-specific tallies may exist in county records. I did not find them.\n\n**2. Analogues**\n- **Illinois municipal and presidential-elector suffrage, 1913\u201314.** Press headlines said 250,000 women voted in Chicago in April 1914. [S11] That is one source's report, not a turnout rate.\n- **Western full-suffrage states.** The sources I found give no first-election turnout or vote-share numbers for women in Wyoming, Colorado, Utah or Idaho. I did not search for them. I found no evidence on newly barred groups. I found nothing for Black, naturalized or non-citizen women, or by Northeast, South or border-state region. The simulation's other group splits cannot be filled from these results.\n\n**3. Named people**\n- **Woodrow Wilson.** He opposed a federal amendment but voiced support for suffrage state by state in 1915 and 1916. He also ensured the Democratic platform endorsed it. [S3]\n- **Charles Evans Hughes.** He endorsed a national amendment. [S3] Chicago suffragists helped persuade him to do so at the June 1916 convention. [S13]\n- **Carrie Chapman Catt.** She wrote that Illinois's 1913 law was the turning point at which politicians saw that women were gaining real political power [S11].\n\n**4. Limits**\n- Most women's-vote claims are press estimates or small local straw votes. They are partisan and unrepresentative.\n- Western women were not typical of national women. The estimates above lean on 1916 issues: the war and peace question, and the Progressive voters of 1912 moving back toward Wilson. Those voters may explain part of the swing, and the sources do not separate them from the gender effect.\n- Illinois was urban and industrial, with large immigrant populations. It is not a good guide to the rural West.\n- The comparison with 1912 mixes the effect of women voting with the effect of the Republican\u2013Progressive reunion. That limits any counterfactual for a scenario that bars women.\n\nI did not find better sources for turnout by sex or for a margin counterfactual. For those, check Corder and Wolbrecht's *Counting Women's Ballots*, state election returns, and Illinois county records.",
+ "prompt": "Scenario for the 1916 United States presidential election (election day 1916-11-07).\nA reader asked: \"No women can vote for president anywhere in 1916.\".\nAs modelled: Women are barred from voting for president in every state, including the western states where they had full suffrage.\nKind of change: franchise. Populations it reaches first: sex: F, region: west, midwest.\nInclude how newly enfranchised or newly barred groups actually turned out and voted the first times the rules changed for them.\n\nQuestions to answer:\n- How did women in the full-suffrage western states divide their votes between the two major parties in 1916?\n- How did women's turnout compare with men's in states where they could vote for President in 1916?\n- What effect did woman suffrage have on the vote margins in Illinois, which allowed women to vote for presidential electors only?\n\nGroups the simulation distinguishes: men and women; native-born white, naturalized immigrant, non-citizen immigrant and Black adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 23905,
+  "output_tokens": 2502,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 2
+ },
+ "dollars": 0.1243
+}

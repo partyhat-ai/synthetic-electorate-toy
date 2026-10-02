@@ -1,0 +1,95 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "McKinley",
+  "D": "Bryan",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "William McKinley",
+  "D": "William Jennings Bryan"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1897",
+  "D": "nominee of the party that held the presidency from 1893 to 1897, renominating its 1896 candidate"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1897",
+  "D": "the party that held the presidency from 1893 to 1897",
+  "president": "McKinley"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Prohibition, a Socialist, a Socialist Labor and a dissident People's party nominee (answer \"other\").",
+ "plank_order": [
+  "imperialism",
+  "trusts",
+  "currency",
+  "tariff",
+  "labor",
+  "ballot",
+  "Chinese"
+ ],
+ "names_re": "\\b(McKinley|Bryan|Roosevelt|Stevenson|Woolley|Debs|Barker|Maloney|Hanna|Cleveland|Dewey|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "McKinley, Bryan, Roosevelt, Stevenson, Woolley, Debs, Hanna or Cleveland",
+ "corpus": null,
+ "platforms": "context/platforms_1900.json",
+ "ev_label": "292–155",
+ "slice_sources": {
+  "men": "1900 census (Twelfth Census); men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1900 returns.",
+  "women": "1900 census (Twelfth Census); women 21+ outside the South; women could vote for president only in Wyoming, Colorado (1893), Utah and Idaho (1896).",
+  "south-white": "1900 census (Twelfth Census); white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1900 returns.",
+  "black-south": "1900 census (Twelfth Census); Black adults in the eleven former Confederate states; disfranchisement was intensifying (Mississippi 1890, South Carolina 1895, Louisiana's 1898 grandfather clause, North Carolina's August 1900 amendment); the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1900 census (Twelfth Census); foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |William )?McKinley\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:William Jennings |W\\. J\\. )?Bryan\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Theodore |Governor )?Roosevelt\\b|\\b(?:Adlai E\\. )?Stevenson\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Mark )?Hanna\\b",
+   "the administration party's campaign manager"
+  ],
+  [
+   "\\b(?:[Ff]ormer |[Ee]x-)?(?:President |Grover )?Cleveland\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Admiral )?Dewey\\b",
+   "the admiral"
+  ],
+  [
+   "\\b(?:Woolley|Debs|Barker|Maloney)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

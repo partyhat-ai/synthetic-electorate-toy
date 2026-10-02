@@ -12,7 +12,10 @@ DISCLOSURES C13–C16.
 """
 from __future__ import annotations
 
+import json
 import re
+
+from .config import ROOT
 
 PROFILES = {
     1920: {
@@ -82,13 +85,36 @@ PROFILES = {
 }
 
 
+# Every other year is a JSON file in harness/profiles/<year>.json with the same
+# keys (plus optional "masks": [[pattern, replacement], …] for scenario.mask_names).
+# A JSON profile whose "corpus" is null picks up sources/corpus_<year>.jsonl
+# from the cache once that file exists.
+PROFILE_DIR = ROOT / 'profiles'
+
+
+def _load_json(year: int) -> dict | None:
+    f = PROFILE_DIR / f'{year}.json'
+    if not f.exists():
+        return None
+    prof = json.loads(f.read_text())
+    prof['year'] = year
+    if not prof.get('corpus'):
+        from .config import CACHE
+        rel = f'sources/corpus_{year}.jsonl'
+        prof['corpus'] = rel if (CACHE / rel).exists() else None
+    return prof
+
+
 def years() -> list[int]:
-    return sorted(PROFILES)
+    return sorted(set(PROFILES) | {int(f.stem) for f in PROFILE_DIR.glob('[0-9]*.json')})
 
 
 def get(year: int) -> dict:
     if year not in PROFILES:
-        raise SystemExit(f'No election profile for {year}. Simulated years: {years()}')
+        prof = _load_json(year)
+        if prof is None:
+            raise SystemExit(f'No election profile for {year}. Simulated years: {years()}')
+        PROFILES[year] = prof
     return PROFILES[year]
 
 

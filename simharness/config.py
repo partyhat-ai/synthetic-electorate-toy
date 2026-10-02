@@ -13,7 +13,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-# The repo root: configs/, whatifs/, extracts/, runs/, sessions/ and serve/bundles/
+# The repo root: configs/, profiles/, whatifs/, extracts/, runs/, sessions/ and serve/bundles/
 # all sit next to the simharness package.
 ROOT = HERE.parent
 RUNS = ROOT / 'runs'
@@ -80,5 +80,7 @@ class RunConfig:
         return asdict(self)
 
     def run_id(self, data_manifest: dict | None = None) -> str:
-        blob = json.dumps({'config': self.to_dict(), 'data': data_manifest or {}}, sort_keys=True)
+        # G1: the code is part of the instrument, so a changed prompt or module gets a new run folder.
+        code = hashlib.sha256(b''.join(p.read_bytes() for p in sorted(HERE.glob('*.py')))).hexdigest()
+        blob = json.dumps({'config': self.to_dict(), 'data': data_manifest or {}, 'code': code}, sort_keys=True)
         return f'{self.election}-{hashlib.sha256(blob.encode()).hexdigest()[:10]}'

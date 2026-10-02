@@ -1,0 +1,1976 @@
+{
+ "year": 1820,
+ "runId": "1820-68200326ab",
+ "election": {
+  "slices": [
+   {
+    "key": "men",
+    "label": "Men outside the South",
+    "adults": 1.357,
+    "barred": 0.2066,
+    "home": 0.7203,
+    "A": 0.056,
+    "B": 0.0,
+    "O": 0.0171,
+    "source": "1820 census at the census date, free adult men outside the Southern states; the census gives free white males 16\u201318, 18\u201326, 26\u201345 and 45+, so men 21+ are split from the 18\u201326 band. Voters were men meeting each state's rules: several states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 15 states; elsewhere (Alabama, Delaware, Georgia, Indiana, Louisiana, Missouri, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms."
+   },
+   {
+    "key": "women",
+    "label": "Women outside the South",
+    "adults": 1.276,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0,
+    "source": "1820 census at the census date, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate."
+   },
+   {
+    "key": "south-white",
+    "label": "White Southerners",
+    "adults": 0.796,
+    "barred": 0.5901,
+    "home": 0.3977,
+    "A": 0.0118,
+    "B": 0.0,
+    "O": 0.0004,
+    "source": "1820 census at the census date, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia, Louisiana and Alabama legislatures chose their electors, so people there cast no presidential vote."
+   },
+   {
+    "key": "black-south",
+    "label": "Black Southerners, most of them enslaved",
+    "adults": 0.553,
+    "barred": 0.9958,
+    "home": 0.004,
+    "A": 0.0002,
+    "B": 0.0,
+    "O": 0.0,
+    "source": "1820 census at the census date, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia, Louisiana and Alabama the legislature chose the electors, so no one there voted for president directly."
+   }
+  ],
+  "whatIfs": [
+   {
+    "key": "everyone",
+    "label": "Everyone Votes",
+    "kind": "franchise",
+    "detail": "Every adult can vote, and turns out.",
+    "slices": [],
+    "assumption": "Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1820.",
+    "confidenceTier": "high",
+    "evidence": "not-researched",
+    "exploratory": false
+   }
+  ]
+ },
+ "runs": {
+  "": {
+   "ev": {
+    "A": 231,
+    "B": 0,
+    "O": 1
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "AL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 68.3,
+     "marginRange": [
+      68.3,
+      68.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "DE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "GA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 30.3,
+     "marginRange": [
+      30.3,
+      30.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 16.9,
+     "marginRange": [
+      16.9,
+      16.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "LA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 35.5,
+     "marginRange": [
+      35.5,
+      35.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MD",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 65.2,
+     "marginRange": [
+      65.2,
+      65.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ME",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 94.4,
+     "marginRange": [
+      94.4,
+      94.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 98.2,
+     "marginRange": [
+      98.2,
+      98.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 97.9,
+     "marginRange": [
+      97.9,
+      97.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NJ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 99.8,
+     "marginRange": [
+      99.8,
+      99.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 99.1,
+     "marginRange": [
+      99.1,
+      99.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "PA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 88.2,
+     "marginRange": [
+      88.2,
+      88.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "RI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 60.7,
+     "marginRange": [
+      60.7,
+      60.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.0,
+     "marginRange": [
+      0.0,
+      0.0
+     ],
+     "pFlip": 0.0
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 1.357,
+     "barred": 0.2066,
+     "home": 0.7203,
+     "A": 0.056,
+     "B": 0.0,
+     "O": 0.0171,
+     "source": "1820 census at the census date, free adult men outside the Southern states; the census gives free white males 16\u201318, 18\u201326, 26\u201345 and 45+, so men 21+ are split from the 18\u201326 band. Voters were men meeting each state's rules: several states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 15 states; elsewhere (Alabama, Delaware, Georgia, Indiana, Louisiana, Missouri, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 1.276,
+     "barred": 1.0,
+     "home": 0.0,
+     "A": 0.0,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1820 census at the census date, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 0.796,
+     "barred": 0.5901,
+     "home": 0.3977,
+     "A": 0.0118,
+     "B": 0.0,
+     "O": 0.0004,
+     "source": "1820 census at the census date, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia, Louisiana and Alabama legislatures chose their electors, so people there cast no presidential vote."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners, most of them enslaved",
+     "adults": 0.553,
+     "barred": 0.9958,
+     "home": 0.004,
+     "A": 0.0002,
+     "B": 0.0,
+     "O": 0.0,
+     "source": "1820 census at the census date, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia, Louisiana and Alabama the legislature chose the electors, so no one there voted for president directly."
+    }
+   ],
+   "summary": "Rerun with nothing changed, 1820 comes out as it did: Monroe wins, 231\u20130\u20131. The closest state was Kentucky, which went to Monroe by 16.9 points. Every one of my 100 reruns reproduces it exactly.",
+   "confidence": "high",
+   "applied": [],
+   "unknown": null,
+   "range": {
+    "A": [
+     231,
+     231
+    ],
+    "B": [
+     0,
+     0
+    ],
+    "O": [
+     1,
+     1
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 85443,
+    "B": 0,
+    "O": 23619
+   },
+   "popularRange": {
+    "A": [
+     85443,
+     85443
+    ],
+    "B": [
+     0,
+     0
+    ],
+    "O": [
+     23619,
+     23619
+    ]
+   },
+   "assumptions": [],
+   "howIGotThis": [
+    "The numbers: the 1820 census counts and certified returns; every draw reproduces 1820 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "1820 United States census (population by state, sex, race, nativity and citizenship, via NHGIS)",
+     "url": "https://www.nhgis.org/"
+    },
+    {
+     "title": "Dubin, United States Presidential Elections, 1788\u20131860",
+     "url": "https://mcfarlandbooks.com/product/united-states-presidential-elections-1788-1860/"
+    },
+    {
+     "title": "National Archives, 1820 Electoral College results",
+     "url": "https://www.archives.gov/electoral-college/1820"
+    },
+    {
+     "title": "Gray & Jenkins, state-level franchise data (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/QIY9EM"
+    },
+    {
+     "title": "Teele, women's suffrage dates (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/JZYGRB"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1820-68200326ab",
+   "validation": null,
+   "cohortEffects": []
+  },
+  "everyone": {
+   "ev": {
+    "A": 231,
+    "B": 0,
+    "O": 1
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "AL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 90.9,
+     "marginRange": [
+      90.1,
+      91.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 68.3,
+     "marginRange": [
+      68.3,
+      68.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "DE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "GA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 87.4,
+     "marginRange": [
+      86.2,
+      87.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 30.3,
+     "marginRange": [
+      30.3,
+      30.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 16.9,
+     "marginRange": [
+      16.9,
+      16.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "LA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 85.5,
+     "marginRange": [
+      84.0,
+      85.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 35.5,
+     "marginRange": [
+      35.5,
+      35.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MD",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 65.2,
+     "marginRange": [
+      65.2,
+      65.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ME",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 94.4,
+     "marginRange": [
+      94.4,
+      94.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 87.8,
+     "marginRange": [
+      86.5,
+      87.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 89.6,
+     "marginRange": [
+      88.7,
+      89.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 97.9,
+     "marginRange": [
+      97.9,
+      97.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NJ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 99.8,
+     "marginRange": [
+      99.8,
+      99.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 99.1,
+     "marginRange": [
+      99.1,
+      99.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "PA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 88.2,
+     "marginRange": [
+      88.2,
+      88.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "RI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 84.9,
+     "marginRange": [
+      83.1,
+      84.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 62.9,
+     "marginRange": [
+      62.4,
+      63.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 88.0,
+     "marginRange": [
+      87.1,
+      88.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 100.0,
+     "marginRange": [
+      100.0,
+      100.0
+     ],
+     "pFlip": 0.0
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 1.357,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.8711,
+     "B": 0.0,
+     "O": 0.1289,
+     "source": "1820 census at the census date, free adult men outside the Southern states; the census gives free white males 16\u201318, 18\u201326, 26\u201345 and 45+, so men 21+ are split from the 18\u201326 band. Voters were men meeting each state's rules: several states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 15 states; elsewhere (Alabama, Delaware, Georgia, Indiana, Louisiana, Missouri, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 1.276,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.8641,
+     "B": 0.0,
+     "O": 0.1359,
+     "source": "1820 census at the census date, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 0.796,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.9673,
+     "B": 0.0,
+     "O": 0.0327,
+     "source": "1820 census at the census date, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia, Louisiana and Alabama legislatures chose their electors, so people there cast no presidential vote."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners, most of them enslaved",
+     "adults": 0.553,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.8627,
+     "B": 0.0,
+     "O": 0.1373,
+     "source": "1820 census at the census date, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia, Louisiana and Alabama the legislature chose the electors, so no one there voted for president directly."
+    }
+   ],
+   "summary": "3.9 million more adults vote. No state flips. Monroe wins, 231\u20130\u20131.",
+   "confidence": "high",
+   "applied": [
+    {
+     "key": "everyone",
+     "label": "Everyone Votes",
+     "kind": "franchise"
+    }
+   ],
+   "unknown": null,
+   "range": {
+    "A": [
+     231,
+     231
+    ],
+    "B": [
+     0,
+     0
+    ],
+    "O": [
+     1,
+     1
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 3532191,
+    "B": 0,
+    "O": 450317
+   },
+   "popularRange": {
+    "A": [
+     3488438,
+     3525324
+    ],
+    "B": [
+     0,
+     0
+    ],
+    "O": [
+     445400,
+     456549
+    ]
+   },
+   "assumptions": [
+    "Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1820."
+   ],
+   "howIGotThis": [
+    "What changed: Every adult can vote, and turns out.",
+    "New voters borrow the behaviour of naturalized citizens of the same state and sex; Black voters outside the South.",
+    "The numbers: the 1820 census counts and certified returns; every draw reproduces 1820 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "1820 United States census (population by state, sex, race, nativity and citizenship, via NHGIS)",
+     "url": "https://www.nhgis.org/"
+    },
+    {
+     "title": "Dubin, United States Presidential Elections, 1788\u20131860",
+     "url": "https://mcfarlandbooks.com/product/united-states-presidential-elections-1788-1860/"
+    },
+    {
+     "title": "National Archives, 1820 Electoral College results",
+     "url": "https://www.archives.gov/electoral-college/1820"
+    },
+    {
+     "title": "Gray & Jenkins, state-level franchise data (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/QIY9EM"
+    },
+    {
+     "title": "Teele, women's suffrage dates (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/JZYGRB"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [
+    "not-researched"
+   ],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1820-68200326ab",
+   "validation": null,
+   "cohortEffects": []
+  }
+ },
+ "tables": {
+  "": [
+   {
+    "state": "AL",
+    "slice": "black-south",
+    "adults": 15700.170563520514,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "AL",
+    "slice": "south-white",
+    "adults": 31829.23694997895,
+    "barred": 0.449782804036274,
+    "home": 0.5502171959637259,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "CT",
+    "slice": "men",
+    "adults": 64699.86381868385,
+    "barred": 0.14502470862397412,
+    "home": 0.7838932252237951,
+    "A": 0.05983011047491162,
+    "B": 0.0,
+    "O": 0.011251955677319032
+   },
+   {
+    "state": "CT",
+    "slice": "women",
+    "adults": 68527.1314663217,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "DE",
+    "slice": "men",
+    "adults": 15154.777739359824,
+    "barred": 0.36355545190267435,
+    "home": 0.6364445480973256,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "DE",
+    "slice": "women",
+    "adults": 15172.527360011853,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 62471.05636320937,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 74204.72351379402,
+    "barred": 0.5215828401678848,
+    "home": 0.4784171598321151,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IL",
+    "slice": "men",
+    "adults": 12538.11677133597,
+    "barred": 0.07927812521936933,
+    "home": 0.8056328206334469,
+    "A": 0.07497138662327055,
+    "B": 0.0,
+    "O": 0.040117667523913346
+   },
+   {
+    "state": "IL",
+    "slice": "women",
+    "adults": 8520.707411791183,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IN",
+    "slice": "men",
+    "adults": 29105.75701896107,
+    "barred": 0.06099805721513216,
+    "home": 0.9390019427848678,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IN",
+    "slice": "women",
+    "adults": 24804.579332193684,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "KY",
+    "slice": "men",
+    "adults": 109188.16444729688,
+    "barred": 0.25626860035195187,
+    "home": 0.700961196268962,
+    "A": 0.02499355139625856,
+    "B": 0.0,
+    "O": 0.01777665198282766
+   },
+   {
+    "state": "KY",
+    "slice": "women",
+    "adults": 99711.3242875558,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "LA",
+    "slice": "black-south",
+    "adults": 35540.11777403885,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "LA",
+    "slice": "south-white",
+    "adults": 32010.51285849945,
+    "barred": 0.5595956665882228,
+    "home": 0.4404043334117773,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MA",
+    "slice": "men",
+    "adults": 122891.03486331482,
+    "barred": 0.2574650912942378,
+    "home": 0.5376379442688822,
+    "A": 0.0661073446824658,
+    "B": 0.0,
+    "O": 0.13878961975441426
+   },
+   {
+    "state": "MA",
+    "slice": "women",
+    "adults": 130003.42065315573,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MD",
+    "slice": "men",
+    "adults": 88273.02726141788,
+    "barred": 0.3726421042971656,
+    "home": 0.570216998234094,
+    "A": 0.047205812797703785,
+    "B": 0.0,
+    "O": 0.009935084671036553
+   },
+   {
+    "state": "MD",
+    "slice": "women",
+    "adults": 84706.67171686594,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ME",
+    "slice": "men",
+    "adults": 62662.53261758534,
+    "barred": 0.050000000000000044,
+    "home": 0.8783463369187227,
+    "A": 0.06964289213509578,
+    "B": 0.0,
+    "O": 0.002010770946181388
+   },
+   {
+    "state": "ME",
+    "slice": "women",
+    "adults": 61610.020068567865,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MO",
+    "slice": "men",
+    "adults": 15445.047837933686,
+    "barred": 0.18256920677412658,
+    "home": 0.8174307932258733,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MO",
+    "slice": "women",
+    "adults": 10470.018274273709,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MS",
+    "slice": "black-south",
+    "adults": 13124.520668122383,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MS",
+    "slice": "south-white",
+    "adults": 16330.50718348519,
+    "barred": 0.4710481921869832,
+    "home": 0.49894661602720813,
+    "A": 0.030005191785808714,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NC",
+    "slice": "black-south",
+    "adults": 85821.32428800015,
+    "barred": 0.9798629136435318,
+    "home": 0.019001822094303598,
+    "A": 0.0011251580521152483,
+    "B": 0.0,
+    "O": 1.0106210049494296e-05
+   },
+   {
+    "state": "NC",
+    "slice": "south-white",
+    "adults": 170050.01751161565,
+    "barred": 0.5820844279197532,
+    "home": 0.3986708218268064,
+    "A": 0.01907343200191661,
+    "B": 0.0,
+    "O": 0.00017131825152362826
+   },
+   {
+    "state": "NH",
+    "slice": "men",
+    "adults": 52709.02526153466,
+    "barred": 0.050000000000000044,
+    "home": 0.7686648310687862,
+    "A": 0.17945693271796154,
+    "B": 0.0,
+    "O": 0.00187823621325218
+   },
+   {
+    "state": "NH",
+    "slice": "women",
+    "adults": 57226.36566801001,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NJ",
+    "slice": "men",
+    "adults": 61050.6075270109,
+    "barred": 0.18788183997766775,
+    "home": 0.7448461021941948,
+    "A": 0.06719015856109448,
+    "B": 0.0,
+    "O": 8.18992670429523e-05
+   },
+   {
+    "state": "NJ",
+    "slice": "women",
+    "adults": 58795.10821062359,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 302634.6589245748,
+    "barred": 0.31516098547533855,
+    "home": 0.6848390145246616,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 271956.2302872641,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 121681.32513584159,
+    "barred": 0.10796693751245406,
+    "home": 0.8328785456217545,
+    "A": 0.05887509847534637,
+    "B": 0.0,
+    "O": 0.00027941839044512374
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 98558.73155833012,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "PA",
+    "slice": "men",
+    "adults": 227152.2997118614,
+    "barred": 0.12964340707856759,
+    "home": 0.7285750655459546,
+    "A": 0.13344791154757188,
+    "B": 0.0,
+    "O": 0.008333615827905915
+   },
+   {
+    "state": "PA",
+    "slice": "women",
+    "adults": 212773.19046734142,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "RI",
+    "slice": "men",
+    "adults": 18698.479670532535,
+    "barred": 0.5105146894132521,
+    "home": 0.4507655850926495,
+    "A": 0.03871972549409844,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "RI",
+    "slice": "women",
+    "adults": 21078.530250091353,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "SC",
+    "slice": "black-south",
+    "adults": 115520.04558610462,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "SC",
+    "slice": "south-white",
+    "adults": 94326.44645215366,
+    "barred": 0.5014129843798248,
+    "home": 0.4985870156201751,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 29426.797837274367,
+    "barred": 0.979507130362744,
+    "home": 0.019815514751707487,
+    "A": 0.0005441648388996982,
+    "B": 0.0,
+    "O": 0.00013319004664890985
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 124584.93120308364,
+    "barred": 0.509301193958474,
+    "home": 0.4775104725982099,
+    "A": 0.010595077258098015,
+    "B": 0.0,
+    "O": 0.002593256185218146
+   },
+   {
+    "state": "VA",
+    "slice": "black-south",
+    "adults": 195811.32912385892,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VA",
+    "slice": "south-white",
+    "adults": 252582.4773646982,
+    "barred": 0.7177012569019707,
+    "home": 0.2651954188885574,
+    "A": 0.01710332420947178,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VT",
+    "slice": "men",
+    "adults": 53344.17419181044,
+    "barred": 0.05000000000000004,
+    "home": 0.9499999999999998,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VT",
+    "slice": "women",
+    "adults": 52030.41003088087,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   }
+  ],
+  "everyone": [
+   {
+    "state": "AL",
+    "slice": "black-south",
+    "adults": 15700.170563520514,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711805,
+    "B": 0.0,
+    "O": 0.1373347645288198
+   },
+   {
+    "state": "AL",
+    "slice": "south-white",
+    "adults": 31829.23694997895,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "CT",
+    "slice": "men",
+    "adults": 64699.86381868385,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8417047184134794,
+    "B": 0.0,
+    "O": 0.1582952815865205
+   },
+   {
+    "state": "CT",
+    "slice": "women",
+    "adults": 68527.1314663217,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8417047184134794,
+    "B": 0.0,
+    "O": 0.1582952815865205
+   },
+   {
+    "state": "DE",
+    "slice": "men",
+    "adults": 15154.777739359824,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "DE",
+    "slice": "women",
+    "adults": 15172.527360011853,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 62471.05636320937,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711802,
+    "B": 0.0,
+    "O": 0.1373347645288198
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 74204.72351379402,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IL",
+    "slice": "men",
+    "adults": 12538.11677133597,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.6514206514147899,
+    "B": 0.0,
+    "O": 0.34857934858521017
+   },
+   {
+    "state": "IL",
+    "slice": "women",
+    "adults": 8520.707411791183,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.6514206514147898,
+    "B": 0.0,
+    "O": 0.3485793485852101
+   },
+   {
+    "state": "IN",
+    "slice": "men",
+    "adults": 29105.75701896107,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IN",
+    "slice": "women",
+    "adults": 24804.579332193684,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "KY",
+    "slice": "men",
+    "adults": 109188.16444729688,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.584368308346177,
+    "B": 0.0,
+    "O": 0.415631691653823
+   },
+   {
+    "state": "KY",
+    "slice": "women",
+    "adults": 99711.3242875558,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.584368308346177,
+    "B": 0.0,
+    "O": 0.41563169165382297
+   },
+   {
+    "state": "LA",
+    "slice": "black-south",
+    "adults": 35540.11777403885,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711803,
+    "B": 0.0,
+    "O": 0.13733476452881976
+   },
+   {
+    "state": "LA",
+    "slice": "south-white",
+    "adults": 32010.51285849945,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MA",
+    "slice": "men",
+    "adults": 122891.03486331482,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.32263701350651613,
+    "B": 0.0,
+    "O": 0.677362986493484
+   },
+   {
+    "state": "MA",
+    "slice": "women",
+    "adults": 130003.42065315573,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.322637013506516,
+    "B": 0.0,
+    "O": 0.6773629864934839
+   },
+   {
+    "state": "MD",
+    "slice": "men",
+    "adults": 88273.02726141788,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8261300555093369,
+    "B": 0.0,
+    "O": 0.17386994449066306
+   },
+   {
+    "state": "MD",
+    "slice": "women",
+    "adults": 84706.67171686594,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8261300555093368,
+    "B": 0.0,
+    "O": 0.17386994449066306
+   },
+   {
+    "state": "ME",
+    "slice": "men",
+    "adults": 62662.53261758534,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9719376391978655,
+    "B": 0.0,
+    "O": 0.02806236080213455
+   },
+   {
+    "state": "ME",
+    "slice": "women",
+    "adults": 61610.020068567865,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9719376391978655,
+    "B": 0.0,
+    "O": 0.02806236080213455
+   },
+   {
+    "state": "MO",
+    "slice": "men",
+    "adults": 15445.047837933686,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MO",
+    "slice": "women",
+    "adults": 10470.018274273709,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MS",
+    "slice": "black-south",
+    "adults": 13124.520668122383,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711803,
+    "B": 0.0,
+    "O": 0.13733476452881976
+   },
+   {
+    "state": "MS",
+    "slice": "south-white",
+    "adults": 16330.50718348519,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NC",
+    "slice": "black-south",
+    "adults": 85821.32428800015,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711805,
+    "B": 0.0,
+    "O": 0.13733476452881982
+   },
+   {
+    "state": "NC",
+    "slice": "south-white",
+    "adults": 170050.01751161565,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.99109792284818,
+    "B": 0.0,
+    "O": 0.008902077151819779
+   },
+   {
+    "state": "NH",
+    "slice": "men",
+    "adults": 52709.02526153466,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9896421845562419,
+    "B": 0.0,
+    "O": 0.010357815443757934
+   },
+   {
+    "state": "NH",
+    "slice": "women",
+    "adults": 57226.36566801001,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9896421845562421,
+    "B": 0.0,
+    "O": 0.010357815443757938
+   },
+   {
+    "state": "NJ",
+    "slice": "men",
+    "adults": 61050.6075270109,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.998782566347945,
+    "B": 0.0,
+    "O": 0.0012174336520548185
+   },
+   {
+    "state": "NJ",
+    "slice": "women",
+    "adults": 58795.10821062359,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9987825663479452,
+    "B": 0.0,
+    "O": 0.0012174336520548183
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 302634.6589245748,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 271956.2302872641,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 121681.32513584159,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9952764656825942,
+    "B": 0.0,
+    "O": 0.004723534317405758
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 98558.73155833012,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9952764656825941,
+    "B": 0.0,
+    "O": 0.004723534317405757
+   },
+   {
+    "state": "PA",
+    "slice": "men",
+    "adults": 227152.2997118614,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9412221325149354,
+    "B": 0.0,
+    "O": 0.05877786748506477
+   },
+   {
+    "state": "PA",
+    "slice": "women",
+    "adults": 212773.19046734142,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9412221325149353,
+    "B": 0.0,
+    "O": 0.058777867485064764
+   },
+   {
+    "state": "RI",
+    "slice": "men",
+    "adults": 18698.479670532535,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "RI",
+    "slice": "women",
+    "adults": 21078.530250091353,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "SC",
+    "slice": "black-south",
+    "adults": 115520.04558610462,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711803,
+    "B": 0.0,
+    "O": 0.1373347645288198
+   },
+   {
+    "state": "SC",
+    "slice": "south-white",
+    "adults": 94326.44645215366,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 29426.797837274367,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711803,
+    "B": 0.0,
+    "O": 0.1373347645288198
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 124584.93120308364,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8033674082958218,
+    "B": 0.0,
+    "O": 0.19663259170417827
+   },
+   {
+    "state": "VA",
+    "slice": "black-south",
+    "adults": 195811.32912385892,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.8626652354711805,
+    "B": 0.0,
+    "O": 0.1373347645288198
+   },
+   {
+    "state": "VA",
+    "slice": "south-white",
+    "adults": 252582.4773646982,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VT",
+    "slice": "men",
+    "adults": 53344.17419181044,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VT",
+    "slice": "women",
+    "adults": 52030.41003088087,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 1.0,
+    "B": 0.0,
+    "O": 0.0
+   }
+  ]
+ },
+ "voters": {
+  "": {
+   "south-white": {
+    "name": "Anna Reed",
+    "line": "40, a city or town, North Carolina",
+    "quote": "I cannot vote myself, but my husband will cast our household's vote for the President when the time comes.",
+    "history": "barred",
+    "now": "barred",
+    "controlQuote": "I cannot vote myself, but my husband will cast our household's vote for the President when the time comes.",
+    "cohort": "White women, south",
+    "cohortAdults": 373712,
+    "weight": 186856,
+    "contextDate": "1820-10-31",
+    "sources": [],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   },
+   "women": {
+    "name": "Ruth Robinson",
+    "line": "36, the countryside, Maine",
+    "quote": "I've no say in it\u2014that's men's business. My husband will vote for the President, I expect, if he goes to town for it.",
+    "history": "barred",
+    "now": "barred",
+    "controlQuote": "I've no say in it\u2014that's men's business. My husband will vote for the President, I expect, if he goes to town for it.",
+    "cohort": "White women, northeast",
+    "cohortAdults": 908708,
+    "weight": 454354,
+    "contextDate": "1820-10-31",
+    "sources": [],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   },
+   "men": {
+    "name": "Ernest Reed",
+    "line": "55, a city or town, Massachusetts",
+    "quote": "The President speaks sense about the roads and canals\u2014that's good for trade and work here in town. I'll likely vote for him come the first.",
+    "history": "A",
+    "now": "A",
+    "controlQuote": "The President speaks sense about the roads and canals\u2014that's good for trade and work here in town. I'll likely vote for him come the first.",
+    "cohort": "White men, northeast",
+    "cohortAdults": 932135,
+    "weight": 466068,
+    "contextDate": "1820-10-31",
+    "sources": [],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   }
+  }
+ },
+ "interviews": {
+  "questions": [
+   "The presidential election is near. Can this person vote, how likely are they to vote, and if they vote, for whom?",
+   "A neighbour asks what this person will do on election day. Will they cast a ballot for president, and for which candidate?",
+   "Think about the coming presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?"
+  ],
+  "byWhatIf": {}
+ },
+ "ev": {
+  "AL": 3,
+  "CT": 9,
+  "DE": 4,
+  "GA": 8,
+  "IL": 3,
+  "IN": 3,
+  "KY": 12,
+  "LA": 3,
+  "MA": 15,
+  "MD": 11,
+  "ME": 9,
+  "MO": 3,
+  "MS": 2,
+  "NC": 15,
+  "NH": 8,
+  "NJ": 8,
+  "NY": 29,
+  "OH": 8,
+  "PA": 24,
+  "RI": 4,
+  "SC": 11,
+  "TN": 7,
+  "VA": 25,
+  "VT": 8
+ },
+ "historyWinner": {
+  "AL": "A",
+  "CT": "A",
+  "DE": "A",
+  "GA": "A",
+  "IL": "A",
+  "IN": "A",
+  "KY": "A",
+  "LA": "A",
+  "MA": "O",
+  "MD": "A",
+  "ME": "A",
+  "MO": "A",
+  "MS": "A",
+  "NC": "A",
+  "NH": "A",
+  "NJ": "A",
+  "NY": "A",
+  "OH": "A",
+  "PA": "A",
+  "RI": "A",
+  "SC": "A",
+  "TN": "A",
+  "VA": "A",
+  "VT": "A"
+ },
+ "words": [
+  {
+   "key": "everyone",
+   "words": [
+    "everyone",
+    "all adults",
+    "universal"
+   ]
+  }
+ ]
+}

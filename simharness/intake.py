@@ -69,7 +69,7 @@ class Progress:
         if not self.text:
             return
         SESSIONS.mkdir(exist_ok=True)
-        tmp = STATUS.with_suffix('.tmp')
+        tmp = STATUS.with_suffix(f'.{os.getpid()}.tmp')
         tmp.write_text(json.dumps({'text': self.text, 'steps': self.steps, 'ts': dt.datetime.now().isoformat(timespec='seconds')}))
         tmp.replace(STATUS)
 
@@ -219,6 +219,7 @@ def run_pipeline(config_path: Path, budget: Budget, publish_only: bool = False, 
     SERVE_BUNDLES.mkdir(parents=True, exist_ok=True)
     src = run.dir / 'published' / f'{run.cfg.election}.json'
     shutil.copyfile(src, SERVE_BUNDLES / f'{run.cfg.election}.json')
+    (SERVE_BUNDLES / 'RUN_ID').write_text(run.id + '\n')
     return {'run': run.id, 'bundle': str(src)}
 
 
@@ -294,8 +295,8 @@ def _pid_alive(pid: int) -> bool:
 
 
 def _config_for(year: int, fallback: Path | None = None) -> Path | None:
-    """configs/live-<year>.json for a simulated year (1920, 1924), or the worker's own
-    config when it is that year's; None when the year isn't simulated."""
+    """configs/live-<year>.json for any simulated year (one with a profile), or the
+    worker's own config when it is that year's; None when the year isn't simulated."""
     from . import profiles
     if year not in profiles.years():
         return None

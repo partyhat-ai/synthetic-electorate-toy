@@ -1,0 +1,552 @@
+{
+ "summary": "No source models a no-Depression 1932. Indirect evidence: the 1928 prosperity election gave Republicans a landslide, while the Depression swung 1932 sharply to Democrats. Group-level breakdowns are mostly missing, and religion confounds the 1928 analogue.",
+ "findings": [
+  {
+   "claim": "Hoover fell from over 58% in 1928 to 39.6% in 1932; the national swing to Democrats was 17.59 points. Roosevelt took 57.4% to Hoover's 39.7%.",
+   "source_ids": [
+    "S1",
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Depression-era swing against incumbent Republicans, 1928 to 1932",
+   "when": "1928-1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [
+    {
+     "measure": "r2",
+     "pp": 17.59,
+     "pm": 3
+    }
+   ],
+   "limits": "Swing mixes Depression with Prohibition fatigue, Roosevelt's appeal and the end of Smith's 1928 religious effect.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "In 1928, in prosperity, Hoover won 444 electoral votes to Smith's 87, with 58.2% to 40.8% of the popular vote.",
+   "source_ids": [
+    "S19",
+    "S18"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Prosperous year, incumbent party seeking another term",
+   "when": "1928",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Smith's Catholicism and wet stance confound the economic effect.",
+   "tier": "B",
+   "grade": 0.42,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Turnout in 1928 was 56.9%, about 8 points above 1924 according to a non-academic source.",
+   "source_ids": [
+    "S16",
+    "S18"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "High-turnout prosperity election with a Catholic nominee",
+   "when": "1928",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Rise partly reflects Smith mobilizing Catholic and urban voters.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Historians tie Republicans to the booming 1920s economy; prosperity plus anti-Catholicism made Hoover's 1928 election seen as inevitable.",
+   "source_ids": [
+    "S11",
+    "S13"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Prosperity favouring the governing Republicans",
+   "when": "1928",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Qualitative; religion entangled with the economy.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "1932 was a repudiation of Hoover and the Republicans, with large Democratic majorities in both houses; 1928-32 is called the starkest case of economic conditions driving outcomes.",
+   "source_ids": [
+    "S5",
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Depression repudiation of the governing party",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "S9 is a weak polling-data website.",
+   "tier": "B",
+   "grade": 0.6,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "County-data economics work attributes the 1932 Democratic vote to the Depression's onset, dissatisfaction with Republican policy and expectations of Democratic policy; only some regions shifted durably.",
+   "source_ids": [
+    "S7",
+    "S6"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Depression as driver of the Democratic vote",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Abstract-level; no figures given.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Hoover lost 34 of the 40 states he won in 1928; his remaining strength was in the Northeast, with 48.4% in New England and 45.4% in the Middle Atlantic states.",
+   "source_ids": [
+    "S2",
+    "S3",
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "northeast"
+   },
+   "situation": "Depression collapse of Hoover's coalition, strongest holdouts in Northeast",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Regional shares only; no counterfactual.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Farm depression cut into traditional Republican majorities in the western states in 1932; no numbers given.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Farm distress eroding Republican western vote",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Qualitative only.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Texas, Florida, North Carolina and Virginia voted Republican in 1928; in Virginia the Depression's severity made the GOP trend short-lived, with Roosevelt ahead about 5 to 2 in an October poll.",
+   "source_ids": [
+    "S10",
+    "S8"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Southern 1928 Republican defections reversed in Depression",
+   "when": "1928-1932",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Wikipedia sources; the poll is a single mid-October reading.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Smith's 1928 run brought first-time immigrant, Catholic and urban workers into the Democratic fold, especially women; Roosevelt beat Hoover in all but one major urban center in 1932.",
+   "source_ids": [
+    "S3",
+    "S14"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Urban and Catholic Democratic mobilization under Smith",
+   "when": "1928-1932",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Citizendium claim on women is weak; Smith-specific.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Smith helped shift the African American vote toward the Democrats in 1928; no figures given.",
+   "source_ids": [
+    "S12"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "black",
+    "region": "any"
+   },
+   "situation": "Black voters moving toward Democrats under Smith",
+   "when": "1928",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Textbook-style source without numbers.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Smith's anti-Prohibition stance cost votes in 1928, but activists said his faith was the main problem; anti-Catholicism appears to have done him in. In 1932 the Depression outweighed cultural battles.",
+   "source_ids": [
+    "S11",
+    "S12",
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Prohibition and religion in a prosperous year versus 1932",
+   "when": "1928-1932",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Religion and Prohibition not separable; no figures.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "toward-R"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Hoover called Prohibition a noble experiment to be refined rather than repealed in 1928.",
+   "date": "1928",
+   "source_ids": [
+    "S16"
+   ]
+  },
+  {
+   "text": "Hoover proposed a vague constitutional amendment on Prohibition that satisfied neither wets nor drys.",
+   "date": "1932",
+   "source_ids": [
+    "S1"
+   ]
+  },
+  {
+   "text": "Al Smith favored relaxing or repealing Prohibition but used noncommittal statements to avoid the issue, and did not hide his Catholicism.",
+   "date": "1928",
+   "source_ids": [
+    "S13",
+    "S12"
+   ]
+  },
+  {
+   "text": "Joseph T. Robinson was chosen as Smith's 1928 running mate as a Protestant who toed the party line on Prohibition.",
+   "date": "1928",
+   "source_ids": [
+    "S19"
+   ]
+  }
+ ],
+ "caveats": [
+  "No source models a no-Depression 1932; evidence is indirect.",
+  "1928 mixes religion, Prohibition and prosperity, so it is an imperfect baseline.",
+  "Little breakdown by sex, group or region; most sources are encyclopedia or website material.",
+  "Swing figures do not separate Depression effects from Prohibition fatigue or Roosevelt's appeal."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "no-great-depression-occurred",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "1932 election Hoover Roosevelt vote share by region 1928 swing Depression scholars",
+  "1928 election Prohibition Al Smith Catholic immigrants turnout cities realignment Lubell"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://en.wikipedia.org/wiki/1932_United_States_presidential_election",
+   "title": "1932 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Hoover had won over 58% of the popular vote in the 1928 presidential election, but his share of the popular vote evaporated to just 39.6% in 1932; he ...",
+    "While Hoover had won a greater percentage of the vote in 1928 (as did Harding in 1920), the national swing of 17.59% to the Democrats impressed all wh...",
+    "Roosevelt's Protestant background prevented the anti-Catholic attacks Smith faced in 1928, and the Depression seemed to be of much greater concern amo...",
+    "Prohibition was increasingly unpopular, and wets offered the argument that states and localities needed the tax money.",
+    "Hoover proposed a new constitutional amendment that was vague on particulars and satisfied neither side."
+   ],
+   "page_age": "0 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.statista.com/statistics/1056543/distribution-votes-1932-us-presidential-election/",
+   "title": "Distribution of votes in the 1932 US presidential election",
+   "tier": "C",
+   "cited": [
+    "Following one of the most decisive victories in US presidential election history in 1928, Hoover was then on the receiving end of the largest swings i..."
+   ],
+   "page_age": "5572 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://www.encyclopedia.com/economics/encyclopedias-almanacs-transcripts-and-maps/election-1932",
+   "title": "Election of 1932",
+   "tier": "C",
+   "cited": [
+    "The popular vote for Roosevelt was 22,809,638 (57.4%), for Hoover 15,758,901 (39.7%).",
+    "Hoover's voting strength was concentrated in the New England states, a Republican bastion, where he won 48.4 percent of the vote, and in the middle At...",
+    "The farm depression cut into traditional Republican majorities in the western states.",
+    "While Democratic candidates for the presidency could usually rely on the South, Alfred E. Smith's unsuccessful effort in 1928 nevertheless brought fir...",
+    "As a result, Roosevelt bested Hoover in all but one of the nation's major urban centers, establishing the basis for a long-term New Deal majority."
+   ],
+   "page_age": "2043 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://study.com/academy/lesson/the-presidential-election-of-1932-summary-lesson.html",
+   "title": "1932 Presidential Election Major Issues & Significance",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1681 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1932",
+   "title": "United States presidential election of 1932",
+   "tier": "B",
+   "cited": [
+    "In a repudiation not just of Hoover but also of the Republican Party, Americans also elected substantial Democratic majorities to both houses of Congr..."
+   ],
+   "page_age": "334 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://www.sciencedirect.com/science/article/abs/pii/S001449831300034X",
+   "title": "Did the New Deal solidify the 1932 Democratic realignment? - ScienceDirect",
+   "tier": "A",
+   "cited": [
+    "## Cited by (7)\nEven though the Depression's effects and the New Deal's benefits were famously widespread, only some parts of the country responded wi..."
+   ],
+   "page_age": "4783 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://www.sciencedirect.com/science/article/abs/pii/S0014498313000181",
+   "title": "Why did the electorate swing between parties during the Great Depression? - ScienceDirect",
+   "tier": "A",
+   "cited": [
+    "The 1932 variable will reflect the effects of the Depression's onset and, specifically, voters' dissatisfaction with Republican policies and voters' e..."
+   ],
+   "page_age": "4853 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://en.wikipedia.org/wiki/1932_United_States_presidential_election_in_Virginia",
+   "title": "1932 United States presidential election in Virginia",
+   "tier": "C",
+   "cited": [
+    "However, a combination of record drought and the economic catastrophe of the Great Depression meant that the trend towards the GOP would be short-live...",
+    "when the state was finally polled in the middle of October, Roosevelt was clearly leading over Hoover by around five-to-two."
+   ],
+   "page_age": "51 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://uspollingdata.com/elections/1932/",
+   "title": "1932 Presidential Election: FDR vs. Hoover \u2014 Great Depression Landslide",
+   "tier": "C",
+   "cited": [
+    "## Why 1932 Matters Today\nThe 1928-to-1932 reversal also stands as the starkest example of economic conditions driving electoral outcomes.",
+    "Winner\n\nFranklin D. Roosevelt\n\nDemocrat (Governor of New York)\n\n472\n\nElectoral Votes \u2014 57.4% popular vote\n\nvs.\n\nRepublican\n\nHerbert Hoover\n\nIncumbent ..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S10",
+   "url": "https://en.wikipedia.org/wiki/Al_Smith",
+   "title": "Al Smith",
+   "tier": "C",
+   "cited": [
+    "States that had never voted Republican after Reconstruction, such as Texas, Florida, North Carolina and Virginia, voted for Hoover, while Smith carrie..."
+   ],
+   "page_age": "4 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://en.wikipedia.org/wiki/1928_United_States_presidential_election",
+   "title": "1928 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "In the end, the Republicans were identified with the booming economy of the 1920s, and Smith, a Roman Catholic, suffered politically from anti-Catholi...",
+    "Smith's opposition to Prohibition, a key reform promoted by Protestants, also lost him votes, as did his association with Tammany Hall.",
+    "Contemporary Prohibition activists said that their main problem with the Democratic candidate was his faith and not any political view.",
+    "I'd rather see a saloon on every corner of the South than see the foreigners elect Al Smith president\"."
+   ],
+   "page_age": "8 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://www.digitalhistory.uh.edu/disp_textbook.cfm?smtid=2&psid=3394",
+   "title": "The Election of 1928",
+   "tier": "A",
+   "cited": [
+    "And he helped shift the African American vote toward the Democrats.",
+    "Economic prosperity and Prohibition played a part.",
+    "However, it appears that anti-Catholicism did him in.",
+    "Smith refused to pretend that he was anything other than what he was: a Catholic, who kept a picture of the Pope over his desk."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S13",
+   "url": "https://www.newworldencyclopedia.org/entry/Alfred_E._Smith",
+   "title": "Alfred E. Smith - New World Encyclopedia",
+   "tier": "C",
+   "cited": [
+    "Historians agree that the prosperity along with anti-Catholic sentiment made Hoover's election inevitable, although he had never run for office.",
+    "During the campaign Smith tried to duck the issue with noncommittal statements."
+   ],
+   "page_age": "1965 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://citizendium.org/wiki/Al_Smith",
+   "title": "Al Smith - Citizendium",
+   "tier": "C",
+   "cited": [
+    "Smith swept the entire Catholic vote, which had been split in 1920 and 1924, and brought millions of Catholic ethnics to the polls for the first time,..."
+   ],
+   "page_age": "816 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://www.ebsco.com/research-starters/history/us-elections-1928/",
+   "title": "U.S. Elections of 1928",
+   "tier": "C",
+   "cited": [],
+   "page_age": "437 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://brilliantmaps.com/us-elections/1928-us-presidential-election/",
+   "title": "1928 US Presidential Election Map: Hoover vs Smith",
+   "tier": "C",
+   "cited": [
+    "Turnout for the election was 56.90%.",
+    "Hoover referred to it as a \u201cnoble experiment\u201d that should be refined rather than repealed, believing that it could be made to work with better enforce..."
+   ],
+   "page_age": "216 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://encyclopediaofalabama.org/article/presidential-race-of-1928/",
+   "title": "Presidential Race of 1928 - Encyclopedia of Alabama",
+   "tier": "B",
+   "cited": [],
+   "page_age": "379 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://www.legalwin.org/blog/the-1928-election-issues-results-and-significance/",
+   "title": "1928 US Election: Key Issues, Results, and Enduring Significance \u2014 legalwin.org",
+   "tier": "C",
+   "cited": [
+    "## Election Results Breakdown#\n- **Popular Vote**: Hoover received 58.2% of the popular vote (21.4 million), while Smith garnered 40.8% (15 million).",
+    "Voter turnout surged to approximately 57%\u2014an 8-percentage-point increase over 1924\u2014driven in part by the intense interest surrounding Smith\u2019s candidac..."
+   ],
+   "page_age": "126 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1928",
+   "title": "United States presidential election of 1928",
+   "tier": "B",
+   "cited": [
+    "## Results of the 1928 election\n| presidential candidate | political party | electoral votes | popular votes |\n| --- | --- | --- | --- |\n| Herbert Hoo...",
+    "Fears that Smith\u2019s anti-Prohibition stance and Catholicism would alienate Southern voters led to the nomination of Joseph T. Robinson, an Arkansas sen..."
+   ],
+   "page_age": "336 days ago"
+  }
+ ],
+ "notes": "**Summary:** The searches returned good evidence on national results and on the 1928 religion and Prohibition story. They returned almost nothing broken down by sex, citizenship status or race, or by the five regions you list. For most of your groups I have no reliable figures. Several of the sources are Wikipedia or similar sites, which I'm using only as pointers, not as a basis for findings.\n\n**1. Direct evidence (what scholars say about a no-Depression 1932)**\n- I found no scholarship that models a 1932 without the Depression. The nearest evidence is indirect.\n- One source says that 1928 to 1932 is the starkest example of economic conditions driving electoral outcomes [S9]. That source is a polling-data website, so it is a weak one.\n- Britannica's account describes the 1932 vote as a repudiation of Hoover and of the Republican Party, with large Democratic majorities in both houses [S5]. In a no-Depression year, those Democratic gains would plausibly not occur.\n- An economics paper using county data treats the 1932 Democratic vote as reflecting the Depression's onset, voters' dissatisfaction with Republican policies and their expectations of Democratic policy [S7].\n- The same literature finds that only some parts of the country responded with large and durable partisan shifts [S6].\n\n**2. Analogues**\n\n*Good times, incumbent party seeking another term (1920 and 1928)*\n- 1928 is the closest analogue. Hoover won 444 electoral votes to Smith's 87 [S19]. Popular vote was 58.2% to 40.8% [S18].\n- Turnout was 56.9% [S16]. One non-academic source puts that at about 8 points above 1924 [S18].\n- Historians describe the Republicans as identified with the booming economy of the 1920s [S11]. They also say prosperity plus anti-Catholic sentiment made Hoover's election inevitable [S13].\n- 1920 is not a good analogue, because it was not a prosperous year. I found no 1920 data in these searches. Harding's 1920 share is only mentioned in passing as being higher than Roosevelt's 1932 share (see the swing figure below).\n\n*Swing from 1928 to 1932 (Depression)*\n- Hoover fell from over 58% in 1928 to 39.6% in 1932 [S1]. Roosevelt took 57.4% to Hoover's 39.7% [S3].\n- Hoover lost 34 of the 40 states he won in 1928 [S2]. The national swing to the Democrats was 17.59% [S1].\n- Hoover's remaining strength was in the Northeast. He took 48.4% in New England and 45.4% in the Middle Atlantic states [S3]. He carried six states there: Connecticut, Delaware, Maine, New Hampshire, Pennsylvania and Vermont [S9].\n- West: the farm depression cut into traditional Republican majorities in the western states [S3]. I found no numbers for this.\n- South: in 1928 Texas, Florida, North Carolina and Virginia voted Republican [S10]. In Virginia, the Depression's severity meant the trend toward the GOP was short-lived [S8]. A mid-October poll showed Roosevelt ahead about five to two [S8]. That source is a Wikipedia page.\n- Cities and immigrants: Smith's 1928 run brought first-time immigrant, Catholic and urban workers into the Democratic fold [S3]. In 1932 Roosevelt beat Hoover in all but one of the major urban centers [S3].\n- Black voters: Smith helped shift the African American vote toward the Democrats [S12]. This is a textbook-style source with no numbers.\n- Women: one source says Smith brought millions of Catholic ethnics to the polls for the first time, especially women [S14]. That source is Citizendium, so treat it cautiously.\n- Border states and the male/female split: I found nothing.\n\n*Prohibition in prosperous years (1924 and 1928)*\n- In 1928, Smith's anti-Prohibition stance lost him votes [S11]. But Prohibition activists said their main problem with him was his faith, not any political view [S11].\n- One Southern pastor's remark is the example. He said a saloon on every corner would be preferable to foreigners electing Al Smith [S11].\n- Digital History says that economic prosperity and Prohibition played a part [S12] in Smith's defeat, but anti-Catholicism appears to have done him in [S12].\n- In 1932 the issue looked different. The Depression seemed a greater concern than earlier cultural battles [S1]. Also, Prohibition was increasingly unpopular, and wets argued localities needed the tax money [S1].\n- I found nothing on 1924, so I can't say whether Prohibition weighed more in prosperous years than in 1924 specifically.\n\n**3. Named people**\n- **Hoover:** He called Prohibition a \"noble experiment\" to be refined, not repealed, in 1928, per a map-site summary [S16]. In 1932 he proposed a vague constitutional amendment that satisfied neither side [S1].\n- **Al Smith:** He favored relaxing or repealing Prohibition but tried to duck the issue with noncommittal statements [S13] during the 1928 campaign. He did not hide his Catholicism [S12].\n- **Joseph T. Robinson:** He was chosen as Smith's running mate in 1928 as a Protestant who toed the party line on Prohibition [S19].\n- **Roosevelt:** His Protestant background spared him the anti-Catholic attacks Smith faced [S1]. I did not search for his own statements on Prohibition or the economy before 1932.\n\n**4. Limits**\n- **1928 as a baseline:** It was not a pure economic test. Religion was entangled with the economy, and Smith was an unusual candidate. A no-Depression 1932 would likely have no Catholic nominee, so the religious effect would probably be much smaller. Smith's immigrant and urban gains might also not repeat.\n- **Swing figures:** They are national or state-level. They don't separate economic effects from Prohibition fatigue, Roosevelt's personality, or the Republican split.\n- **Prohibition in a no-Depression 1932:** Repeal's popularity and the tax-revenue argument were partly Depression-driven. Without the slump, the wet and dry balance may have stayed closer to 1928.\n- **Source quality:** Most of what I found is encyclopedia, Wikipedia or website material, not peer-reviewed work. The strongest sources are Britannica, the Encyclopedia of Alabama and the economics journal abstracts. For group-level numbers you would need county or state data and works such as Lubell, Burnham or Lichtman, which these searches did not retrieve.",
+ "prompt": "Scenario for the 1932 United States presidential election (election day 1932-11-08).\nA reader asked: \"what if the great depression never happened?\".\nAs modelled: The 1929 crash passes without a lasting slump, so 1932 is an ordinary year of work, wages and steady farm and bank conditions.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How did voters in 1920 and 1928 behave when times were good and the party in office sought another term?\n- How did voters in different regions and groups shift between 1928 and 1932 as unemployment and farm prices worsened?\n- Did the Prohibition issue weigh more heavily on voters in years of prosperity, such as 1924 and 1928?\n\nGroups the simulation distinguishes: men and women; native-born white, naturalized immigrant, non-citizen immigrant and Black adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 23546,
+  "output_tokens": 2959,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 2
+ },
+ "dollars": 0.1376
+}

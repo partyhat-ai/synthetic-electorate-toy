@@ -1,0 +1,98 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Taylor",
+  "D": "Cass",
+  "O": "Van Buren"
+ },
+ "full_names": {
+  "R": "Zachary Taylor",
+  "D": "Lewis Cass",
+  "O": "Martin Van Buren"
+ },
+ "descriptors": {
+  "R": "nominee of the opposition party, which has held the House since 1847; a career army general and hero of the war with Mexico who has never held civil office and runs without a platform",
+  "D": "nominee of the party of the administration in office since 1845; a senator from the Northwest and former Secretary of War, who holds that the settlers of each territory should decide on slavery for themselves",
+  "O": "nominee of a new coalition of antislavery breakaways from both major parties and the old antislavery party, pledged to keep slavery out of all the territories; a former President"
+ },
+ "compile_desc": {
+  "R": "the opposition party, which has held the House since 1847",
+  "D": "the party of the administration in office since 1845",
+  "president": "Polk"
+ },
+ "third": "O",
+ "label_pool": [
+  "E",
+  "N",
+  "Q",
+  "U",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on very few ballots (answer \"other\").",
+ "plank_order": [
+  "slavery",
+  "war",
+  "tariff",
+  "prosperity",
+  "Union",
+  "national bank",
+  "public lands",
+  "internal improvements"
+ ],
+ "names_re": "\\b(Taylor|Fillmore|(?-i:Cass)\\b|Butler|Van ?Buren|Charles Francis Adams|(?-i:Adams)\\b|Polk|(?-i:Clay)\\b|Webster|Wilmot|Barnburners?|Hunkers?|Whigs?\\b|Democrat|(?-i:Democracy)|Free[- ]Soil)",
+ "never_name": "Taylor, Fillmore, Cass, Butler, Van Buren, Charles Francis Adams, Polk, Clay or Webster",
+ "corpus": null,
+ "platforms": "context/platforms_1848.json",
+ "ev_label": "163–127",
+ "slice_sources": {
+  "men": "1840 and 1850 censuses interpolated to November 1848, white men 20+ outside the eleven later-Confederate states; property tests had largely gone and a few New England states let free Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1848 (the Seneca Falls convention had only just demanded it); women 20+ shown for population only.",
+  "south-white": "1840 and 1850 censuses interpolated to 1848, white adults in the eleven later-Confederate states (Florida and Texas now voting); white men voted except in South Carolina, whose legislature chose its electors; calibrated to certified returns.",
+  "black-south": "1840 and 1850 censuses interpolated to 1848, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote and no Southern state let free Black men vote.",
+  "immigrants": "Estimate back-projected from the 1850 census (the first to record nativity) and arrival records, white foreign-born men who were not yet citizens; Wisconsin's 1848 constitution let aliens who had declared their intent vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Polk\\b|\\bPolk\\b",
+   "the President"
+  ],
+  [
+   "\\bTaylor\\b",
+   "the general"
+  ],
+  [
+   "\\bCass\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bVan ?Buren\\b",
+   "the antislavery coalition's nominee"
+  ],
+  [
+   "\\bFree[- ]Soil(?:ers?)?\\b",
+   "the antislavery coalition"
+  ],
+  [
+   "\\bWhigs?\\b",
+   "the opposition party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Fillmore|Butler|Adams)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Clay|Webster)\\b",
+   "a senator"
+  ],
+  [
+   "\\bWilmot\\b",
+   "a congressman"
+  ]
+ ]
+}

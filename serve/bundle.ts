@@ -90,7 +90,11 @@ export const Bundle = z.object({
   interviews: Interviews,
   ev: z.record(z.string(), z.number()),
   historyWinner: z.record(z.string(), PageKey),
-  words: z.array(z.object({ key: z.string(), words: z.array(z.string()) }))
+  words: z.array(z.object({ key: z.string(), words: z.array(z.string()) })),
+  // Bundles published before the briefs record (1916, 1924) lack these three.
+  pre: z.record(z.string(), z.unknown()).nullable().optional(),
+  told: z.record(z.string(), z.record(z.string(), z.array(z.string()))).optional(),
+  reading: z.array(z.record(z.string(), z.unknown())).optional()
 });
 export type Bundle = z.infer<typeof Bundle>;
 

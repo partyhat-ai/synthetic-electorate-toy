@@ -1,0 +1,119 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 2 November",
+ "names": {
+  "R": "Dewey",
+  "D": "Truman",
+  "O": "Thurmond"
+ },
+ "full_names": {
+  "R": "Thomas E. Dewey",
+  "D": "Harry S. Truman",
+  "O": "Strom Thurmond"
+ },
+ "descriptors": {
+  "R": "nominee of the party that won both houses of Congress in 1946 and has been out of the presidency since 1933",
+  "D": "nominee of the party in office since 1933, nominating the sitting President, who succeeded to the office in 1945",
+  "O": "nominee of a states'-rights movement of Southern members of the administration party who broke with it over its civil-rights program; on the ballot mainly in the South"
+ },
+ "compile_desc": {
+  "R": "the party that has held a majority in Congress since the 1946 elections",
+  "D": "the party in office since 1933",
+  "president": "Truman"
+ },
+ "third": "O",
+ "label_pool": [
+  "K",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including the new Progressive party's nominee, a former Vice President who broke with the administration over relations with the Soviet Union, and a Socialist nominee (answer \"other\").",
+ "plank_order": [
+  "civil rights",
+  "inflation",
+  "labor",
+  "states' rights",
+  "Communism",
+  "foreign aid",
+  "housing",
+  "agriculture",
+  "taxes"
+ ],
+ "names_re": "\\b(Dewey|Truman|Thurmond|Wallace|Warren|Barkley|Fielding (?:[A-Z]\\. )?Wright|Glen (?:H\\. )?Taylor|Norman Thomas|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|Dixiecrat|States'? Rights Democrat|Progressive party|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Dewey, Truman, Thurmond, Wallace, Warren, Barkley, Fielding Wright, Glen Taylor, Norman Thomas or Franklin Roosevelt",
+ "corpus": null,
+ "platforms": "context/platforms_1948.json",
+ "ev_label": "303–189–39",
+ "slice_sources": {
+  "men": "1940 and 1950 censuses interpolated to November 1948; men 21+ outside the eleven Southern states, citizens only; American Indians in Arizona and New Mexico won the vote by court rulings that summer; Black voters here vote heavily Democratic since 1936; calibrated to certified 1948 returns.",
+  "women": "1940–1950 interpolation to November 1948, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1948 vote.",
+  "south-white": "1940–1950 interpolation to November 1948, white adults in the eleven former Confederate states, 18+ in Georgia (voting age 18 since 1943; poll tax repealed 1945); calibrated to certified 1948 returns.",
+  "black-south": "1940–1950 interpolation to November 1948, Black adults in the eleven former Confederate states (18+ in Georgia); registration has risen since the white primary fell in 1944, but poll taxes, literacy tests and intimidation keep most disfranchised, so the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1940–1950 interpolation to November 1948, foreign-born white adults who were not naturalized; no state let aliens vote."
+ },
+ "masks": [
+  [
+   "\\bTruman Doctrine\\b",
+   "the President's policy of aid to Greece and Turkey"
+  ],
+  [
+   "\\bMarshall Plan\\b",
+   "the European recovery program"
+  ],
+  [
+   "\\b(?:President |Senator |Sen\\. )?(?:Harry (?:S\\.? )?)?Truman\\b",
+   "the President"
+  ],
+  [
+   "\\bStates'? Rights Democrat(?:s|ic)?(?: [Pp]arty)?\\b|\\bDixiecrats?\\b",
+   "the States' Rights movement"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:J\\. )?(?:Strom )?Thurmond\\b",
+   "the States' Rights candidate"
+  ],
+  [
+   "\\b(?:Henry (?:A\\. )?)?Wallace\\b",
+   "the new third-party candidate"
+  ],
+  [
+   "\\bProgressive [Pp]arty\\b",
+   "the new third party"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Thomas (?:E\\. )?)?Dewey\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the congressional majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Earl )?Warren\\b|\\b(?:Senator )?(?:Alben (?:W\\. )?)?Barkley\\b|\\bFielding (?:[A-Z]\\. )?Wright\\b|\\bGlen (?:H\\. )?Taylor\\b",
+   "a running mate"
+  ],
+  [
+   "\\bNorman (?:M\\. )?Thomas\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the late President"
+  ]
+ ]
+}

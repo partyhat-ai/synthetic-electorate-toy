@@ -1,0 +1,98 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Goldwater",
+  "D": "Johnson",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Barry M. Goldwater",
+  "D": "Lyndon B. Johnson"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1953 to 1961",
+  "D": "nominee of the party of the administration in office since 1961, which also holds majorities in both houses of Congress"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1953 to 1961",
+  "D": "the party of the administration in office since 1961, which also holds majorities in both houses of Congress",
+  "president": "Johnson"
+ },
+ "third": null,
+ "label_pool": [
+  "F",
+  "P",
+  "Q",
+  "T",
+  "V",
+  "X"
+ ],
+ "others_line": "Other choices on some ballots, including an unpledged elector slate in Alabama and Socialist Labor and Socialist Workers nominees (answer \"other\").",
+ "plank_order": [
+  "civil rights",
+  "national defense",
+  "poverty",
+  "spending",
+  "health care",
+  "law and order"
+ ],
+ "names_re": "\\b(Johnson|LBJ|Goldwater|Humphrey|Miller|Kennedy|JFK|Rockefeller|Scranton|Lodge|Wallace|Nixon|Eisenhower|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Johnson, Goldwater, Humphrey, Miller, Kennedy, Rockefeller, Scranton, Lodge, Wallace, Nixon or Eisenhower",
+ "corpus": null,
+ "platforms": "context/platforms_1964.json",
+ "ev_label": "486–52",
+ "slice_sources": {
+  "men": "1960 and 1970 censuses interpolated to November 1964; men 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states and DC (first presidential vote in DC, Twenty-third Amendment); calibrated to certified 1964 returns.",
+  "women": "1960 and 1970 censuses interpolated to November 1964; women 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states and DC (first presidential vote in DC, Twenty-third Amendment); calibrated to certified 1964 returns.",
+  "south-white": "1960 and 1970 censuses interpolated to November 1964; white adults (21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii)) in the eleven former Confederate states (includes a small number of American Indian and Asian adults) (the Twenty-fourth Amendment ended poll taxes in federal elections in January 1964); calibrated to certified 1964 returns.",
+  "black-south": "1960 and 1970 censuses interpolated to November 1964; Black adults in the eleven former Confederate states; registration still held to well under half of Black adults by literacy tests, registrar discretion and intimidation (the Voting Rights Act came only in 1965). The shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1960 and 1970 censuses interpolated to November 1964; foreign-born white adults who were not naturalized citizens (aliens could not vote in any state)."
+ },
+ "masks": [
+  [
+   "\\bPresident Johnson\\b|\\bJohnson\\b|\\bLBJ\\b",
+   "the President"
+  ],
+  [
+   "\\bGoldwater\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Humphrey|Miller)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:the late )?(?:President )?Kennedy\\b|\\bJFK\\b",
+   "the late President"
+  ],
+  [
+   "\\bEisenhower\\b",
+   "the former President"
+  ],
+  [
+   "\\bNixon\\b",
+   "the former Vice President"
+  ],
+  [
+   "\\b(?:Rockefeller|Scranton|Lodge)\\b",
+   "a rival for the nomination of the party out of power"
+  ],
+  [
+   "\\bWallace\\b",
+   "a Southern governor"
+  ]
+ ]
+}

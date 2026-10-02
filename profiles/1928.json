@@ -1,0 +1,94 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Hoover",
+  "D": "Smith",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Herbert Hoover",
+  "D": "Alfred E. Smith"
+ },
+ "descriptors": {
+  "R": "nominee of the party in office since 1921; the sitting President is not running again",
+  "D": "nominee of the party out of the presidency since 1921, which held it from 1913 to 1921"
+ },
+ "compile_desc": {
+  "R": "the party in office since 1921",
+  "D": "the party out of the presidency since 1921",
+  "president": "Coolidge"
+ },
+ "third": null,
+ "label_pool": [
+  "G",
+  "Q",
+  "U",
+  "V",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist and a Workers (Communist) party nominee (answer \"other\").",
+ "plank_order": [
+  "Prohibition",
+  "agriculture",
+  "prosperity",
+  "corruption",
+  "tariff",
+  "taxes"
+ ],
+ "names_re": "\\b(Hoover|Smith|Curtis|Robinson|Norman Thomas|Foster|Coolidge|Harding|Wilson|Tammany|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Hoover, Al Smith, Curtis, Robinson, Norman Thomas, Foster, Coolidge, Harding or Wilson",
+ "corpus": null,
+ "platforms": "context/platforms_1928.json",
+ "ev_label": "444–87",
+ "slice_sources": {
+  "men": "1920 and 1930 censuses interpolated to November 1928 (the 1930 \"Mexican\" race category folded back into white, as the 1940 census later recoded it); men 21+ outside the eleven Southern states, citizens only, American Indians included as citizens since the 1924 Indian Citizenship Act though some Western states still kept them from voting; calibrated to certified 1928 returns.",
+  "women": "1920–1930 interpolation to November 1928, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1928 vote.",
+  "south-white": "1920–1930 interpolation to November 1928, white adults (including Mexican-origin adults, listed separately in 1930) in the eleven former Confederate states; calibrated to certified 1928 returns.",
+  "black-south": "1920–1930 interpolation to November 1928, Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test and the white primary continues, and the 1920 exclusion estimate is carried forward.",
+  "immigrants": "1920–1930 interpolation to November 1928, foreign-born white adults who were not naturalized; Arkansas, the last state to let aliens vote, ended it in 1926."
+ },
+ "masks": [
+  [
+   "\\b(?:President )?(?:Calvin )?Coolidge\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Secretary |Mr\\. )?(?:Herbert (?:C\\. |Clark )?)?Hoover\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Al(?:fred)? (?:E\\. )?)?Smith\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Vice[- ]President |Senator )?(?:Charles )?Curtis\\b|\\b(?:Senator )?(?:Joseph T\\. )?Robinson\\b",
+   "a running mate"
+  ],
+  [
+   "\\bNorman (?:M\\. )?Thomas\\b|\\b(?:William Z\\. )?Foster\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:Warren G\\. )?Harding\\b|\\b(?:Woodrow )?Wilson\\b",
+   "a late President"
+  ],
+  [
+   "\\bTammany(?: Hall)?\\b",
+   "a New York City party organization"
+  ]
+ ]
+}

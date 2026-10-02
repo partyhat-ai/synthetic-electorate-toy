@@ -1,0 +1,93 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Lincoln",
+  "D": "McClellan",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Abraham Lincoln",
+  "D": "George B. McClellan"
+ },
+ "descriptors": {
+  "R": "the sitting President, nominee of the wartime coalition of the administration party and pro-war members of the opposition, pledged to fight on to unconditional surrender and to amend the Constitution to abolish slavery",
+  "D": "nominee of the opposition party, whose platform calls the war a failure and urges immediate efforts toward a cessation of hostilities; a former commanding general of the Union armies, removed in 1862, who says he will not accept peace without Union"
+ },
+ "compile_desc": {
+  "R": "the wartime Union coalition led by the administration party",
+  "D": "the opposition party, whose platform calls the war a failure",
+  "president": "Lincoln"
+ },
+ "third": null,
+ "label_pool": [
+  "E",
+  "K",
+  "Q",
+  "T",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on very few ballots (answer \"other\").",
+ "plank_order": [
+  "war",
+  "slavery",
+  "civil liberties",
+  "soldiers",
+  "Union",
+  "public debt",
+  "immigration",
+  "elections",
+  "prisoners"
+ ],
+ "names_re": "\\b(Lincoln|Johnson|McClellan|Pendleton|Fr[eé]mont|(?-i:Grant)\\b|Sherman|Jefferson Davis|Vallandigham|Seward|Republican|Democrat|(?-i:Democracy)|National Union|Copperheads?)",
+ "never_name": "Lincoln, Andrew Johnson, McClellan, Pendleton, Frémont, Grant, Sherman, Jefferson Davis, Vallandigham or Seward",
+ "corpus": null,
+ "platforms": "context/platforms_1864.json",
+ "ev_label": "212–21",
+ "slice_sources": {
+  "men": "1860 census aged to November 1864, white men 21+ in the loyal states (the eleven seceded states did not vote, and Louisiana's and Tennessee's returns were not counted); many states let soldiers vote in the field; a few New England states let Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1864; women 21+ in the loyal states shown for population only.",
+  "south-white": "The eleven seceded states cast no counted vote in 1864; their white adults (1860 census) are shown for population only and contribute nothing to the result.",
+  "black-south": "The eleven seceded states cast no counted vote in 1864, and enslaved people could vote nowhere; Black adults in those states (1860 census) are shown for population only.",
+  "immigrants": "1860 census aged to 1864, foreign-born white men in the loyal states not yet naturalized; several Midwestern and Western states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Lincoln\\b|\\bLincoln\\b",
+   "the President"
+  ],
+  [
+   "\\bMcClellan\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bNational Union\\b|\\bRepublicans?\\b",
+   "the administration coalition"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b|\\bCopperheads?\\b",
+   "the opposition party"
+  ],
+  [
+   "\\b(?:Johnson|Pendleton)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Grant|Sherman)\\b",
+   "a Union general"
+  ],
+  [
+   "\\bJefferson Davis\\b",
+   "the Confederate president"
+  ],
+  [
+   "\\bFr[eé]mont\\b",
+   "a former nominee"
+  ],
+  [
+   "\\b(?:Vallandigham|Seward)\\b",
+   "a politician"
+  ]
+ ]
+}

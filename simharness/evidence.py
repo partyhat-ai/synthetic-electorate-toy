@@ -131,9 +131,11 @@ def research_prompt(spec: dict, election: dict) -> str:
     qs = spec.get('research_questions') or []
     if qs:
         lines += ['', 'Questions to answer:'] + [f'- {q}' for q in qs]
-    lines += ['', 'Groups the simulation distinguishes: men and women; native-born white, naturalized immigrant, '
-                  'non-citizen immigrant and Black adults; the Northeast, Midwest, South (the eleven former '
-                  'Confederate states), border states and West. Evidence by these groups is most useful.']
+    from .agentlayer import groups_for
+    phrase = groups_for(int(election['year']))['phrase']
+    lines += ['', f'Groups the simulation distinguishes: men and women; {phrase} adults; '
+                  f'the Northeast, Midwest, South (the eleven former '
+                  f'Confederate states), border states and West. Evidence by these groups is most useful.']
     return '\n'.join(lines)
 
 

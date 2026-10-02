@@ -1,0 +1,73 @@
+{
+  "run_id": "1968-31d3e00682",
+  "config": {
+    "election": 1968,
+    "election_day": "1968-11-05",
+    "context_cutoff": "1968-11-04",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AZ",
+      "DC",
+      "FL",
+      "ID",
+      "KY",
+      "MD",
+      "MT",
+      "NM",
+      "SC",
+      "SD",
+      "TN",
+      "WV"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "1f496c28400be6a5",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults18_1960_by_state_nhgis.csv": "0816cad640aa08c9",
+    "population/adults18_1970_by_state_nhgis.csv": "6bc33f790a883c24",
+    "population/adults_1960_by_state_nhgis.csv": "f40da7c05e02206a",
+    "population/adults_1970_by_state_nhgis.csv": "3d9f89b21ca5ed6e",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1968.json": "69fa97d5229c1ead"
+  }
+}

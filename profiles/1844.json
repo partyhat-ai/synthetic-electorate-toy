@@ -1,0 +1,94 @@
+{
+ "base": null,
+ "day_phrase": "the day appointed in this person's state (the states vote between Friday, 1 November and Wednesday, 4 December)",
+ "names": {
+  "R": "Clay",
+  "D": "Polk",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Henry Clay",
+  "D": "James K. Polk"
+ },
+ "descriptors": {
+  "R": "nominee of the party that won the 1840 election and holds the Senate, which broke with the sitting President in 1841; a long-serving senator and former Secretary of State who stands for a protective tariff, a sound national currency and against annexing Texas now",
+  "D": "nominee of the party that held the presidency from 1829 to 1841 and now holds the House; a former Speaker of the House and governor, pledged to annex Texas and claim all of Oregon"
+ },
+ "compile_desc": {
+  "R": "the party that won the 1840 election and broke with the sitting President",
+  "D": "the party that held the presidency from 1829 to 1841",
+  "president": "Tyler"
+ },
+ "third": null,
+ "label_pool": [
+  "E",
+  "N",
+  "Q",
+  "U",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including the nominee of a small antislavery party (answer \"other\").",
+ "plank_order": [
+  "Texas",
+  "tariff",
+  "national bank",
+  "public lands",
+  "executive power",
+  "slavery"
+ ],
+ "names_re": "\\b(Polk|Dallas|(?-i:Clay)\\b|Frelinghuysen|Birney|Thomas Morris|Tyler|Van ?Buren|Calhoun|Jackson|Webster|Whigs?\\b|Democrat|(?-i:Democracy)|Loco-?focos?|Liberty party)",
+ "never_name": "Clay, Polk, Dallas, Frelinghuysen, Birney, Tyler, Van Buren, Calhoun or Jackson",
+ "corpus": null,
+ "platforms": "context/platforms_1844.json",
+ "ev_label": "105–170",
+ "slice_sources": {
+  "men": "1840 census interpolated toward 1850 to November 1844, free white men 20+ outside the eleven later-Confederate states; property tests had largely gone (Rhode Island's freehold test was relaxed for native-born men in 1843) and a few New England states let free Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1844; women 20+ (1840 census interpolated to 1844) are shown for population only.",
+  "south-white": "1840 census interpolated to 1844, free white adults in the eleven later-Confederate states; white men voted except in South Carolina, whose legislature chose its electors; calibrated to certified returns.",
+  "black-south": "1840 census interpolated to 1844, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote and no Southern state let free Black men vote.",
+  "immigrants": "Estimate only: nativity was first recorded in 1850, so the foreign-born count is back-projected from the 1850 census and arrival records; naturalized men could vote, aliens could not."
+ },
+ "masks": [
+  [
+   "\\bPresident Tyler\\b|\\bTyler\\b",
+   "the President"
+  ],
+  [
+   "\\bClay\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bPolk\\b",
+   "the expansionist nominee"
+  ],
+  [
+   "\\bWhigs?\\b",
+   "the opposition party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b|\\bLoco-?focos?\\b",
+   "the expansionist party"
+  ],
+  [
+   "\\b(?:Dallas|Frelinghuysen)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bBirney\\b",
+   "an antislavery nominee"
+  ],
+  [
+   "\\bLiberty [Pp]arty\\b",
+   "a small antislavery party"
+  ],
+  [
+   "\\b(?:Van ?Buren|Jackson)\\b",
+   "a former President"
+  ],
+  [
+   "\\b(?:Calhoun|Webster)\\b",
+   "a senior statesman"
+  ]
+ ]
+}

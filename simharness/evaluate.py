@@ -19,6 +19,7 @@ def r1_reproduction(fit, inp, state_votes) -> dict:
     """state_votes [D, S, 3] from the unchanged world."""
     states = fit.diagnostics['states']
     cert = np.array(inp.returns.reindex(states)[['R20', 'D20', 'O20']].fillna(0), dtype=float)
+    cert[[st in (getattr(inp, 'no_popular', None) or ()) for st in states]] = 0.0
     err = np.abs(state_votes - cert[None, :, :])
     worst = float(err.max())
     ev = inp.ev.reindex(states).fillna(0).to_numpy()

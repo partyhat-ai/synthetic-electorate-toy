@@ -1,0 +1,71 @@
+{
+  "run_id": "1884-9ed48ace14",
+  "config": {
+    "election": 1884,
+    "election_day": "1884-11-04",
+    "context_cutoff": "1884-11-03",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AR",
+      "DE",
+      "GA",
+      "KS",
+      "MA",
+      "ME",
+      "MN",
+      "NC",
+      "NV",
+      "TN",
+      "TX",
+      "WV"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "1f496c28400be6a5",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults_1880_by_state_nhgis.csv": "52f50949532e1bf4",
+    "population/adults_1890_by_state_nhgis.csv": "f71ef765588c6ce8",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1884.json": "a71a0df2657fa85d"
+  }
+}

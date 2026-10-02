@@ -1,0 +1,96 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 2 November",
+ "names": {
+  "R": "Scott",
+  "D": "Pierce",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Winfield Scott",
+  "D": "Franklin Pierce"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1849; the army's commanding general and conqueror of Mexico City, whose party accepts the 1850 compromise as a final settlement",
+  "D": "nominee of the party that held the presidency from 1845 to 1849 and holds a majority in Congress; a former senator from New England and volunteer general in the war with Mexico, standing on the 1850 compromise and against renewed slavery agitation"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1849",
+  "D": "the party that held the presidency from 1845 to 1849",
+  "president": "Fillmore"
+ },
+ "third": null,
+ "label_pool": [
+  "E",
+  "N",
+  "Q",
+  "U",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including the nominee of a small antislavery party opposed to the 1850 compromise (answer \"other\").",
+ "plank_order": [
+  "slavery",
+  "tariff",
+  "internal improvements",
+  "national bank",
+  "foreign",
+  "immigration",
+  "states' rights",
+  "limited government"
+ ],
+ "names_re": "\\b((?-i:Scott)\\b|(?-i:Pierce)\\b|(?-i:King)\\b|Graham|(?-i:Hale)\\b|(?-i:Julian)\\b|Fillmore|Webster|(?-i:Clay)\\b|Taylor|Whigs?\\b|Democrat|(?-i:Democracy)|Free[- ]Soil|Free Democra)",
+ "never_name": "Scott, Pierce, King, Graham, Hale, Julian, Fillmore, Webster, Clay or Taylor",
+ "corpus": null,
+ "platforms": "context/platforms_1852.json",
+ "ev_label": "42–254",
+ "slice_sources": {
+  "men": "1850 census (Seventh Census, the first with ages by single year and nativity) aged to November 1852, white men 21+ outside the eleven later-Confederate states; property tests had largely ended and a few New England states let free Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1852; women 21+ (1850 census aged to 1852) shown for population only.",
+  "south-white": "1850 census aged to 1852, white adults in the eleven later-Confederate states; white men voted except in South Carolina, whose legislature chose its electors; calibrated to certified returns.",
+  "black-south": "1850 census aged to 1852, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote and no Southern state let free Black men vote.",
+  "immigrants": "1850 census aged to 1852, foreign-born white men (nativity first recorded in 1850) not yet naturalized; Wisconsin and Michigan let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Fillmore\\b|\\bFillmore\\b",
+   "the President"
+  ],
+  [
+   "\\bScott\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bPierce\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bWhigs?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bFree[- ]Soil(?:ers?)?\\b|\\bFree Democra(?:ts?|cy)\\b",
+   "the antislavery party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the opposition party"
+  ],
+  [
+   "\\b(?:King|Graham|Julian)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bHale\\b",
+   "an antislavery nominee"
+  ],
+  [
+   "\\bTaylor\\b",
+   "the late President"
+  ],
+  [
+   "\\b(?:Clay|Webster)\\b",
+   "a senior statesman"
+  ]
+ ]
+}

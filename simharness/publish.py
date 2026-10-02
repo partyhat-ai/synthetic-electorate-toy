@@ -8,30 +8,104 @@ from __future__ import annotations
 import itertools
 import json
 import pickle
+from pathlib import Path
 
 import numpy as np
 
-from . import aggregate, evidence, paired, prompts, quotes, scenario, serialize
+from . import agentlayer, aggregate, evidence, paired, prompts, quotes, scenario, serialize
+from .config import ROOT
 from .geo import STATE_NAME
-from .whatifs import REGISTRY, apply_effects, for_year, withdraw
+from .whatifs import REGISTRY, apply_effects, for_year, text_for, withdraw
 
 CONF = {'franchise': 'high', 'population': 'medium', 'issue': 'low', 'candidate': 'low'}
 KIND_ORDER = ['franchise', 'population', 'issue', 'candidate']
 
 
+def pre_interviews(run_dir: Path) -> dict | None:
+    """The interviews done before any change, from a run's answered requests:
+    each synthetic voter asked in the world as it was (the baseline the
+    what-ifs are measured against), and the leakage probes when the run had
+    them (L1 recall, L2 label swap; analysis.json)."""
+    rq, an = run_dir / 'agents/all_requests.jsonl', run_dir / 'agents/answers.jsonl'
+    if not rq.exists() or not an.exists():
+        return None
+    meta = {r['id']: r['meta'] for r in map(json.loads, rq.read_text().splitlines()) if r}
+    done = [meta[a['id']] for a in map(json.loads, an.read_text().splitlines()) if a.get('ok', True) and a['id'] in meta]
+    control = [m for m in done if m['kind'] == 'control']
+    if not control:
+        return None
+    out = {'voters': len({m['agent'] for m in control}), 'interviews': len(control)}
+    ap = run_dir / 'analysis.json'
+    a = json.loads(ap.read_text()) if ap.exists() else {}
+    if a.get('l1', {}).get('n'):
+        out['recall'] = {'n': a['l1']['n'], 'winnerRate': a['l1']['winner_rate']}
+    if a.get('l2', {}).get('n'):
+        out['swap'] = {'n': a['l2']['n'], 'platformRate': a['l2']['platform_rate']}
+    ag = run_dir / 'agents/agents.json'
+    agents = {x['id']: x for x in json.loads(ag.read_text())} if ag.exists() else {}
+    per = [len(agents[m['agent']].get('items', [])) for m in control if m['agent'] in agents]
+    if per:
+        out['items'] = [min(per), max(per)]
+    out['asOf'] = max((m.get('context_date') or '' for m in control), default='') or None
+    out['wordings'] = len({m.get('paraphrase') for m in control})
+    return out
+
+
+ITEM_SUMMARIES = ROOT / 'extracts' / 'item-summaries.json'
+
+
+
+def briefs_record(run_dir: Path) -> dict:
+    """What the synthetic voters were shown, from a run's requests and agents.
+    told: per what-if, the exact lines that wrote the change into their world
+    (settled facts; news printed on a nominee's ballot line; planks added or
+    dropped). reading: every dated newspaper item in their briefs, with a
+    one-line summary from extracts/item-summaries.json when it has one."""
+    rq, ag = run_dir / 'agents/all_requests.jsonl', run_dir / 'agents/agents.json'
+    told, reading = {}, []
+    if rq.exists():
+        by = {}
+        for r in map(json.loads, rq.read_text().splitlines()):
+            if r and r['meta']['kind'] == 'cf':
+                by.setdefault(r['meta']['change']['what_if'], []).append(r)
+        for wk, rs in by.items():
+            ch = [r['meta']['change'] for r in rs]
+            facts = max((c.get('facts', []) for c in ch), key=lambda f: sum(c.get('facts', []) == f for c in ch))
+            t = {'facts': facts,
+                 'added': sorted({p['text'] for c in ch for p in c.get('added_planks', [])}),
+                 'dropped': sorted({p for c in ch for p in c.get('dropped_planks', [])})}
+            sp = scenario.spec_path(wk)
+            spec = json.loads(sp.read_text()) if sp.exists() else REGISTRY.get(wk, {})
+            news = spec.get('nominee_news') or []
+            if news and any(f'Recent news: {" ".join(news)}' in r['user'] for r in rs):
+                t['news'] = news
+            told[wk] = {k: v for k, v in t.items() if v}
+    if ag.exists():
+        sums = json.loads(ITEM_SUMMARIES.read_text()) if ITEM_SUMMARIES.exists() else {}
+        seen = {}
+        for a in json.loads(ag.read_text()):
+            for i in a.get('items', []):
+                seen.setdefault(i['id'], {'date': i['date'], 'newspaper': i['newspaper'], 'place': i['place'],
+                                          **({'summary': sums[i['id']]} if i['id'] in sums else {})})
+        reading = sorted(seen.values(), key=lambda x: (x['date'], x['newspaper']))
+    return {'told': told, 'reading': reading}
+
 class Publisher:
     """The publish stage and the bundle's parts. Needs the attributes and
     helpers `Run` sets up: cfg, inp, extras, prof, year, cand, dir, id, bulk,
-    fit(), state_index(), requests() and answers()."""
+    fit(), state_index(), requests(), answers(), _fixed_ev(), _split_ev(),
+    _o_single() and _ret_cols()."""
 
     def publish(self):
         fit = self.fit()
         states, sidx = self.state_index(fit)
         ev = self.inp.ev.reindex(states).fillna(0).to_numpy()
         base_votes = aggregate.by_state(fit.world, sidx, len(states))
-        base = aggregate.outcome(base_votes, ev)
+        base = aggregate.outcome(base_votes, ev, self._fixed_ev(states), self._split_ev(states), o_single=self._o_single(states))
         base_winner = base['winner'][0]
         base_sum = aggregate.summarize(base, base_winner)
+        # Page key A is the historical winner (history.js): D → A in a year the D nominee won.
+        self.key_of = serialize.key_map(base_sum['ev_point'])
         eff_path = self.dir / 'effects.pkl'
         eff = pickle.load(open(eff_path, 'rb')) if eff_path.exists() else {'effects': {}, 'pairs': {}, 'exposed': set(), 'nationally_exposed': False}
         co = json.loads((self.dir / 'agents/cohorts.json').read_text()) if (self.dir / 'agents/cohorts.json').exists() else None
@@ -56,11 +130,13 @@ class Publisher:
                     else:
                         world = apply_effects(fit, world, cell_to, eff['effects'][k]['cohorts'])
                 sv = aggregate.by_state(world, sidx, len(states))
-                out = aggregate.outcome(sv, ev)
+                out = aggregate.outcome(sv, ev, self._fixed_ev(states), self._split_ev(states), o_single=self._o_single(states))
                 summ = aggregate.summarize(out, base_winner)
                 key = '+'.join(combo)
                 runs[key] = (world, summ, out)
         bundle = self._bundle(fit, states, runs, base_sum, base_winner, eff)
+        bundle['pre'] = pre_interviews(self.dir)
+        bundle.update(briefs_record(self.dir))
         pub = self.dir / 'published'
         pub.mkdir(exist_ok=True)
         (pub / f'{self.cfg.election}.json').write_text(json.dumps(bundle, indent=1, default=float))
@@ -68,14 +144,21 @@ class Publisher:
 
     def _third_frac(self, fit):
         """Per cell: the labelled third candidate's part of the state's `other` vote."""
-        r, yy = self.inp.returns, self.year % 100
-        if f'P{yy}' not in r:
+        r = self.inp.returns
+        col = next((c for c in (f'P{self.year}', f'P{self.year % 100}') if c in r), None)
+        if col is None:
             return np.ones(len(fit.cells))
-        frac = (r[f'P{yy}'] / r[f'O{yy}'].clip(lower=1)).clip(0, 1)
+        frac = (r[col] / r[self._ret_cols()[2]].clip(lower=1)).clip(0, 1)
         return fit.cells.state.map(frac).fillna(0).to_numpy()
 
+    def spec(self, k: str) -> dict:
+        """A what-if's registry entry as this year's page reads it."""
+        return text_for(REGISTRY[k], self.year)
+
     def _bundle(self, fit, states, runs, base_sum, base_winner, eff):
+        state_names = {**{s: s for s in states}, **STATE_NAME}  # a state geo doesn't name (AK, HI) reads as its code
         sources_by_slice = self.prof['slice_sources']
+        slice_labels = None if 1868 <= self.year < 1972 else agentlayer.groups_for(self.year)['slices']
         base_world = runs[''][0]
         base_point = base_sum['point']
         used = sorted({k for key in runs for k in key.split('+') if k})
@@ -84,9 +167,9 @@ class Publisher:
                                           eff['effects'].get(k, {}).get('agent_stats'), bool(REGISTRY[k].get('generated')))
                    for k in used}
         election = {
-            'slices': serialize.slices(fit, base_world, base_point, sources_by_slice),
-            'whatIfs': [{'key': k, 'label': REGISTRY[k]['label'], 'kind': REGISTRY[k]['kind'], 'detail': REGISTRY[k]['detail'],
-                         'slices': REGISTRY[k]['slices'], 'assumption': REGISTRY[k]['assumption'],
+            'slices': serialize.slices(fit, base_world, base_point, sources_by_slice, slice_labels, self.key_of),
+            'whatIfs': [{'key': k, 'label': self.spec(k)['label'], 'kind': REGISTRY[k]['kind'], 'detail': self.spec(k)['detail'],
+                         'slices': REGISTRY[k]['slices'], 'assumption': self.spec(k)['assumption'],
                          # additive
                          'confidenceTier': conf_of[k]['tier'], 'evidence': conf_of[k]['evidence'],
                          'exploratory': bool(REGISTRY[k].get('generated'))}
@@ -105,21 +188,21 @@ class Publisher:
             tier = evidence.combine_tiers([conf_of[k] for k in combo])
             # The page knows high, medium and low; "very-low" reaches it as low plus the flag.
             conf = tier['tier'] if tier['tier'] in CONF.values() else 'low'
-            sl = serialize.slices(fit, world, summ['point'], sources_by_slice)
+            sl = serialize.slices(fit, world, summ['point'], sources_by_slice, slice_labels, self.key_of)
             lead = ' '.join(single[k] for k in combo) if combo else self._lead([], fit, runs[''][0], world, summ)
             cand = dict(self.cand)
             for k in combo:
                 if REGISTRY[k]['kind'] == 'candidate' and REGISTRY[k].get('candidate') and not REGISTRY[k].get('withdraws'):
                     cand[2] = REGISTRY[k]['candidate']['name']
-            text = serialize.verdict(lead=lead, names=states, state_names=STATE_NAME, cand=cand, summary=summ,
-                                     base_summary=base_sum, base_winner=base_winner)
+            text = serialize.verdict(lead=lead, names=states, state_names=state_names, cand=cand, summary=summ,
+                                     base_summary=base_sum, base_winner=base_winner, key_of=self.key_of)
             if tier['reasons'] and (tier['tier'] == 'very-low' or any(REGISTRY[k].get('generated') for k in combo)):
                 text += f' {tier["label"]}. {tier["reasons"][0]}'
             ev_page = [x for x in (evidence.page_evidence(k, evs[k], eff['effects'].get(k, {}).get('agreement')) for k in combo) if x]
             ev_sources = list({s['url']: {'title': s['title'], 'url': s['url']} for x in ev_page for f in x['findings']
                                for s in f['sources']}.values())
             extras = {
-                'assumptions': [REGISTRY[k]['assumption'] for k in combo],
+                'assumptions': [self.spec(k)['assumption'] for k in combo],
                 'howIGotThis': self._how(combo, summ, evs, tier),
                 'sources': sources_for(self.year) + ev_sources,
                 # additive: how sure, and why
@@ -133,13 +216,13 @@ class Publisher:
             }
             applied = [{'key': k, 'label': REGISTRY[k]['label'], 'kind': REGISTRY[k]['kind']} for k in combo]
             out_runs[key] = serialize.result(names=states, summary=summ, base_winner=base_winner, slices_out=sl, text=text,
-                                             confidence=conf, applied=applied, extras=extras)
+                                             confidence=conf, applied=applied, extras=extras, key_of=self.key_of)
             tables[key] = self._state_slice_table(fit, world, summ['point'])
         voters = self._voters(eff, runs)
         return {
             'year': self.cfg.election, 'runId': self.id, 'election': election, 'runs': out_runs, 'tables': tables,
             'voters': voters, 'interviews': self._interviews(eff), 'ev': dict(zip(states, self.inp.ev.reindex(states).fillna(0).astype(int).tolist())),
-            'historyWinner': {s: serialize.PARTY_TO_KEY[int(w)] for s, w in zip(states, base_winner)},
+            'historyWinner': {s: self.key_of[int(w)] for s, w in zip(states, base_winner)},
             'words': self._words(used),
         }
 
@@ -158,7 +241,10 @@ class Publisher:
 
     def _lead(self, combo, fit, base, world, summ):
         if not combo:
-            return f'Rerun with nothing changed, {self.year} comes out as it did: {self.cand[0]} wins, {self.prof["ev_label"]}.'
+            # Winner and electoral votes from the calibrated rerun, not the profile's ev_label (whose order varies).
+            won = int(np.argmax(summ['ev_point']))
+            return (f'Rerun with nothing changed, {self.year} comes out as it did: {self.cand[won]} wins, '
+                    f'{serialize.headline_ev(summ, getattr(self, "key_of", serialize.PARTY_TO_KEY))}.')
         p = summ['point']
         voted_base = (base.adults[p] * base.can[p] * base.t[p]).sum()
         voted = (world.adults[p] * world.can[p] * world.t[p]).sum()
@@ -209,7 +295,7 @@ class Publisher:
     def _how(self, combo, summ, evs=None, tier=None):
         lines = []
         for k in combo:
-            spec = REGISTRY[k]
+            spec = self.spec(k)
             lines.append(f'What changed: {spec["detail"]}')
             if spec.get('borrowed'):
                 lines.append(f'New voters borrow the behaviour of {spec["borrowed"]}.')
@@ -218,8 +304,10 @@ class Publisher:
                 n, level = len(ev.get('findings', [])), evidence.strength(ev)['level']
                 count = f' ({n} finding{"s" if n != 1 else ""}, {level} evidence)' if n else ''
                 lines.append(f'What historians found{count}: {ev["summary"]}')
-        census = ('1920 census voting-age tables' if self.year == 1920 else
-                  f'{self.prof["base"]} census voting-age tables aged to {self.year}')
+        census = self.prof.get('census_line') or (
+            '1920 census voting-age tables' if self.year == 1920 else
+            f'{self.prof["base"]} census voting-age tables aged to {self.year}' if self.prof.get('base') else
+            census_phrase(self.year))
         lines.append(f'The numbers: the {census} and certified returns; every draw reproduces {self.year} exactly before the change.')
         lines.append(f'How sure: I reran it {summ["draws"]} times with different population and parameter draws.')
         if tier and tier['tier'] in ('low', 'very-low') and combo:
@@ -247,7 +335,7 @@ class Publisher:
             if n <= 0:
                 continue
             voted = a * world.can[p, idx] * world.t[p, idx]
-            by_key = {serialize.PARTY_TO_KEY[j]: float((voted * world.share[p, idx, j]).sum() / n) for j in range(3)}
+            by_key = {self.key_of[j]: float((voted * world.share[p, idx, j]).sum() / n) for j in range(3)}
             rows.append({'state': s, 'slice': sl, 'adults': float(n),
                          'barred': float((a * (1 - world.can[p, idx])).sum() / n),
                          'home': float((a * world.can[p, idx] * (1 - world.t[p, idx])).sum() / n),
@@ -296,7 +384,7 @@ class Publisher:
                     names[x['cf_req']['meta']['candidate']['label']] = x['cf_req']['meta']['candidate']['name']
                 srcs = [corpus[i] for i in x['cf']['raw'].get('sources_used', []) if i in corpus] or \
                        [corpus[i] for i in x['cf_req']['meta']['sources'] if i in corpus]
-                key_map = {'R': 'A', 'D': 'B', 'O': 'O', 'home': 'home', 'barred': 'barred'}
+                key_map = {'R': self.key_of[0], 'D': self.key_of[1], 'O': 'O', 'home': 'home', 'barred': 'barred'}
                 per[p['slice']] = {
                     'name': a['name'],
                     'line': f'{a["age"]}, {"a city or town" if a["urban"] else "the countryside"}, {STATE_NAME.get(a["state"], a["state"])}',
@@ -364,14 +452,50 @@ class Publisher:
 
 
 
+def census_phrase(year: int) -> str:
+    """Which censuses a general year's population comes from (first census 1790; latest 2020)."""
+    c = min(max(year - year % 10, 1790), 2020)
+    if c == year:
+        return f'{year} census counts'
+    if c > year:
+        return f'{c} census counts carried back to {year}'
+    if c == 2020:
+        return f'2020 census counts carried forward to {year}'
+    return f'{c} and {c + 10} census counts interpolated to {year}'
+
+
 def sources_for(year: int) -> list[dict]:
     if year == 1920:
         return SOURCES
-    return [SOURCES[0], SOURCES[1],
-            {'title': f'National Archives, {year} Electoral College results', 'url': f'https://www.archives.gov/electoral-college/{year}'},
-            SOURCES[4], SOURCES[5],
-            {'title': f'American Presidency Project, {year} party platforms (Republican, Democratic, Progressive)',
-             'url': 'https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms'}]
+    if year == 1924:
+        return [SOURCES[0], SOURCES[1],
+                {'title': f'National Archives, {year} Electoral College results', 'url': f'https://www.archives.gov/electoral-college/{year}'},
+                SOURCES[4], SOURCES[5],
+                {'title': f'American Presidency Project, {year} party platforms (Republican, Democratic, Progressive)',
+                 'url': 'https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms'}]
+    from . import profiles
+    prof = profiles.get(year)
+    if prof.get('sources'):
+        return prof['sources']  # a profile's own list wins
+    census = min(max(year - year % 10, 1790), 2020)
+    out = [{'title': f'{census} United States census (population by state, sex, race, nativity and citizenship, via NHGIS)',
+            'url': 'https://www.nhgis.org/'}]
+    if 1868 <= year <= 2020:
+        out.append(SOURCES[1])
+    else:
+        out.append({'title': 'Dubin, United States Presidential Elections, 1788–1860' if year < 1868 else
+                    f'Federal Election Commission, Official {year} Presidential General Election Results',
+                    'url': 'https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/'
+                    if year > 2020 else 'https://mcfarlandbooks.com/product/united-states-presidential-elections-1788-1860/'})
+    out.append({'title': f'National Archives, {year} Electoral College results', 'url': f'https://www.archives.gov/electoral-college/{year}'})
+    out.append(SOURCES[4])
+    if year < 1920:
+        out.append(SOURCES[5])
+    if year >= 1840:
+        parties = ', '.join(prof.get('full_names', {}).get(k, '') for k in ('R', 'D', 'O') if prof.get('full_names', {}).get(k))
+        out.append({'title': f'American Presidency Project, {year} party platforms' + (f' ({parties})' if parties else ''),
+                    'url': 'https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms'})
+    return out
 
 
 SOURCES = [

@@ -1,7 +1,7 @@
 # Simulacra Americana harness
 
 This is the simulation behind `/api/simulacra`. Its code and data sit at the repo
-root (`simharness/`, `configs/`, `whatifs/`, `extracts/`, `runs/`,
+root (`simharness/`, `configs/`, `profiles/`, `whatifs/`, `extracts/`, `runs/`,
 `serve/`); this README and the UI note live in `docs/harness/`, and the method
 documents stay at the root.
 
@@ -40,9 +40,9 @@ server. The contract changes the page could use are described in
 | `simharness/scenario.py` | Any typed what-if → a spec of one of five kinds (franchise, population, issue/event, candidate) with generic mechanics |
 | `simharness/evidence.py` | Historical evidence: web-search research, grounded extraction, source tiers, agreement, blend, confidence tiers |
 | `simharness/intake.py` | Typed what-if intake: compile → research → register → run → `serve/bundles/`; the router's queue |
-| `simharness/profiles.py` | One profile per election (names, blinded descriptors, label letters, ballot wording, sources): 1920 and 1924 |
+| `simharness/profiles.py` | Loads one profile per election (names, blinded descriptors, label letters, ballot wording, sources): 1920 and 1924 in code, the other 58 from `profiles/<year>.json` |
 | `simharness/run.py` | The command line (`python3 -m simharness.run <stage>`) |
-| `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, verify, evaluate (`Run`) |
+| `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, verify, dryrun, evaluate (`Run`) |
 | `simharness/publish.py` | The publish stage: every what-if combination → the bundle |
 | `serve/simulacra.ts`, `serve/index.ts` | The Express router that serves the bundles, and the server that mounts it at `/api/simulacra` next to the static page |
 | `serve/bundles/<year>.json` | The bundles the server serves (`SIMULACRA_BUNDLES` overrides the folder) |
@@ -51,7 +51,7 @@ server. The contract changes the page could use are described in
 | `runs/_cache/` | Identical-request answer cache (regenerable from `runs/*`; gitignored) |
 | `whatifs/<key>.json`, `whatifs/evidence/<key>.json` | Compiled what-ifs (exploratory) and every what-if's researched evidence; both hashed into run ids |
 | `sessions/` | Dev only, gitignored: typed requests, the unknown-text queue, intake outcomes, the spend ledger |
-| `scripts/harness/bundle_fixture.py` | Trims the served 1920 bundle into the shared contract example |
+| `scripts/harness/` | The cache build scripts (returns, franchise, population, corpus, NHGIS extracts) and `bundle_fixture.py` |
 | `scripts/harness/sessions-report.py` | What people typed, the share unmodelled, unknowns by kind, today's spend |
 
 The raw data lives outside the repo, in `SIMHARNESS_CACHE`. It defaults to
@@ -131,5 +131,18 @@ Serve the bundles:
   experiment.
 - **1924** is carried forward from it (`backbone.carry_forward`; DISCLOSURES
   C13–C16). It has its own `configs/live-1924.json`.
-- `run verify` checks 1924: exact reproduction, plus Corder–Wolbrecht 1924.
-  `evaluate` stays 1920's pre-registered set.
+- **All 60 elections, 1789–2024, are built.** Each other year has
+  `profiles/<year>.json` and `configs/live-<year>.json`. Years other than 1916–1924 use
+  `backbone.general_fit` (DISCLOSURES B10–B13). The unchanged rerun of every
+  year reproduces each state's certified returns and history's electoral votes.
+- `run dryrun --year Y [--all-cohorts] [--samples N]` runs backbone → verify →
+  plan for any year with no model calls, and prints sample briefs, counts and
+  the cost estimate (`runs/<id>/dryrun.json`).
+- `run verify` checks any year: exact reproduction, plus Corder–Wolbrecht
+  where it exists. `evaluate` stays 1920's pre-registered set.
+- **Adding a year:**
+  - a `profiles/<year>.json`;
+  - returns, voting rules and platforms in the cache;
+  - a `live-<year>.json` config.
+
+  The queue sends typed what-ifs to their year's config.

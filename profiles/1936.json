@@ -1,0 +1,115 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Landon",
+  "D": "Roosevelt",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Alf M. Landon",
+  "D": "Franklin D. Roosevelt"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1921 to 1933",
+  "D": "nominee of the party in office since 1933, renominating the sitting President"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1921 to 1933",
+  "D": "the party in office since 1933",
+  "president": "Roosevelt"
+ },
+ "third": null,
+ "label_pool": [
+  "P",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Union party, a Socialist and a Communist nominee (answer \"other\").",
+ "plank_order": [
+  "relief",
+  "social security",
+  "recovery",
+  "agriculture",
+  "labor",
+  "Constitution",
+  "budget"
+ ],
+ "names_re": "\\b(Landon|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|Knox|Garner|Lemke|Norman Thomas|Browder|Coughlin|Townsend|Huey Long|Hoover|New Deal|Liberty League|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Landon, Roosevelt, Knox, Garner, Lemke, Norman Thomas, Browder, Coughlin, Townsend, Huey Long or Hoover",
+ "corpus": null,
+ "platforms": "context/platforms_1936.json",
+ "ev_label": "523–8",
+ "slice_sources": {
+  "men": "1930 and 1940 censuses interpolated to November 1936 (the 1930 \"Mexican\" race category folded back into white, as the 1940 census recoded it); men 21+ outside the eleven Southern states, citizens only, American Indians included as citizens since 1924; Black voters here, mostly in Northern cities, swing toward the Democrats from 1936; calibrated to certified 1936 returns.",
+  "women": "1930–1940 interpolation to November 1936, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1936 vote.",
+  "south-white": "1930–1940 interpolation to November 1936, white adults (including Mexican-origin adults, listed separately in 1930) in the eleven former Confederate states; poll taxes remain in most (Louisiana repealed its in 1934); calibrated to certified 1936 returns.",
+  "black-south": "1930–1940 interpolation to November 1936, Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test and the white primary continues, so the shortfall against white turnout is counted as exclusion; the few who vote share in the Black realignment toward the Democrats that begins in 1936.",
+  "immigrants": "1930–1940 interpolation to November 1936, foreign-born white adults who were not naturalized; no state let aliens vote."
+ },
+ "masks": [
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Alf(?:red)? (?:M\\. )?)?Landon\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bNew Deal\\b",
+   "the administration's program"
+  ],
+  [
+   "\\b(?:Vice[- ]President )?(?:John (?:N\\. |Nance )?)?Garner\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Colonel )?(?:Frank )?Knox\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:William )?Lemke\\b|\\bNorman (?:M\\. )?Thomas\\b|\\b(?:Earl )?Browder\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:Father )?(?:Charles E\\. )?Coughlin\\b",
+   "a radio priest"
+  ],
+  [
+   "\\b(?:Dr\\. )?(?:Francis E\\. )?Townsend\\b",
+   "an old-age pension crusader"
+  ],
+  [
+   "\\bHuey (?:P\\. )?Long\\b",
+   "the late Louisiana senator"
+  ],
+  [
+   "\\bLiberty League\\b",
+   "an anti-administration business league"
+  ],
+  [
+   "\\b(?:Herbert )?Hoover\\b",
+   "the former President"
+  ]
+ ]
+}

@@ -1,0 +1,75 @@
+{
+  "run_id": "1928-8ba8b21b58",
+  "config": {
+    "election": 1928,
+    "election_day": "1928-11-06",
+    "context_cutoff": "1928-11-05",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "protestant-dry-democratic-nominee"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AR",
+      "CO",
+      "FL",
+      "GA",
+      "IN",
+      "MA",
+      "MD",
+      "MS",
+      "NY",
+      "TN",
+      "WA",
+      "WY"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults_1920_by_state.csv": "3a760fb7fb5f976b",
+    "population/adults_1930_by_state_nhgis.csv": "0654b1f1bbe8cc0e",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1928.json": "4c98228936306b3c",
+    "sources/corpus_1928.jsonl": "c9ebeff8e55cd7ca",
+    "whatifs/protestant-dry-democratic-nominee.json": "a9e652f0652c831e",
+    "whatifs/evidence/protestant-dry-democratic-nominee.json": "a0fd5533f1e87902"
+  }
+}

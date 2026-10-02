@@ -1,0 +1,64 @@
+{
+  "election": 2020,
+  "election_day": "2020-11-03",
+  "context_cutoff": "2020-11-02",
+  "mode": "truth",
+  "what_ifs": [
+    "everyone",
+    "no-covid-19-pandemic-occurs",
+    "democratic-nominee-twenty-years-younger",
+    "hunter-biden-laptop-story-spreads",
+    "no-black-lives-matter-movement"
+  ],
+  "seed": 1920,
+  "draws": 100,
+  "prompt_version": "p5",
+  "holdout": [
+    "GA",
+    "HI",
+    "MN",
+    "MT",
+    "ND",
+    "NE",
+    "NH",
+    "NY",
+    "RI",
+    "TN",
+    "WV",
+    "WY"
+  ],
+  "agents": {
+    "bulk_model": "claude-haiku-4-5",
+    "check_model": "claude-haiku-4-5",
+    "check_share": 0,
+    "per_cohort": 2,
+    "paraphrases": 3,
+    "effort": "low",
+    "backend": "anthropic",
+    "max_cohorts": 36,
+    "only_cohorts": [
+      "midwest:M:native_white",
+      "midwest:F:native_white",
+      "northeast:F:native_white",
+      "northeast:M:native_white",
+      "south:M:native_white",
+      "south:F:native_white"
+    ],
+    "arms": [
+      "control",
+      "cf"
+    ],
+    "max_requests": 60,
+    "max_dollars": 0.5,
+    "max_tokens": 1500
+  },
+  "research": {
+    "compile_model": "claude-sonnet-5-5",
+    "research_model": "claude-sonnet-5-5",
+    "extract_model": "claude-sonnet-5-5",
+    "max_searches": 4,
+    "research_max_tokens": 4000,
+    "whatif_dollars": 0.5
+  },
+  "max_combo": 3
+}

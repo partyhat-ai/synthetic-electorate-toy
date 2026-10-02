@@ -1,0 +1,71 @@
+{
+  "run_id": "2012-2dace062e9",
+  "config": {
+    "election": 2012,
+    "election_day": "2012-11-06",
+    "context_cutoff": "2012-11-05",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AK",
+      "CT",
+      "IA",
+      "MA",
+      "MD",
+      "ME",
+      "MN",
+      "NH",
+      "NM",
+      "OR",
+      "RI",
+      "WV"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "1f496c28400be6a5",
+    "franchise/state_franchise_1972_2024.csv": "e36c4e5e6f7b2eda",
+    "population/adults18_2012_by_state_nhgis.csv": "e57f18b6e7a4aef7",
+    "population/adults18_2016_by_state_nhgis.csv": "f400971a74c6f2a1",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_2012.json": "86f55a2c4cda52d6"
+  }
+}

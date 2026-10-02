@@ -55,9 +55,21 @@ QUESTIONS = [
     'Think about Tuesday\'s presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?',
 ]
 
+WEEKDAYS = ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+
+
 def questions(day_phrase: str = 'Tuesday, 2 November') -> list[str]:
-    """The three paraphrases for an election day (1920's are QUESTIONS, unchanged)."""
-    return [q.replace('Tuesday, 2 November', day_phrase) for q in QUESTIONS]
+    """The three paraphrases for an election day (1920's are QUESTIONS, unchanged). Before
+    1845 states chose electors on different days, and the profile's day_phrase is a clause
+    ("the day this person's state has set…"): the questions then say "election day"."""
+    day = day_phrase.split(',')[0].strip()
+    if day == 'Tuesday':
+        return [q.replace('Tuesday, 2 November', day_phrase) for q in QUESTIONS]
+    if day in WEEKDAYS:
+        return [q.replace('Tuesday, 2 November', day_phrase).replace('Election Day is Tuesday.', f'Election Day is {day}.')
+                .replace("Tuesday's presidential election", f"{day}'s presidential election") for q in QUESTIONS]
+    return [q.replace('Tuesday, 2 November', 'election day').replace('Election Day is Tuesday.', 'The presidential election is near.')
+            .replace("Tuesday's presidential election", 'the coming presidential election') for q in QUESTIONS]
 
 
 PROBE_QUESTION = (
@@ -117,15 +129,19 @@ def long_date(iso: str) -> str:
 OTHERS_1920 = 'Other candidates on some ballots, including a Socialist and a Farmer-Labor nominee (answer "other").'
 
 
-def ballot_block(state_name: str, parties: list[dict], labels: list[str], others: str = OTHERS_1920) -> list[str]:
+def ballot_block(state_name: str, parties: list[dict], labels: list[str], others: str = OTHERS_1920,
+                 note: str | None = None) -> list[str]:
     """parties: [{key, descriptor, planks: [str]}] in display order, already
-    paired with labels in the same order."""
+    paired with labels in the same order. note: a profile's ballot note for this
+    state (profile 'ballot_notes', e.g. 1964 Alabama's unpledged electors), last."""
     lines = [f'On the ballot for president in {state_name}:']
     for label, p in zip(labels, parties):
         planks = ' '.join(p['planks'])
         news = f' Recent news: {" ".join(p["news"])}' if p.get('news') else ''
         lines.append(f'- Candidate {label}: {p["descriptor"]}.{news} {planks}'.rstrip())
     lines.append(f'- {others}')
+    if note:
+        lines.append(f'- {note}')
     return lines
 
 

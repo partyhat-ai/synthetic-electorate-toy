@@ -35,7 +35,7 @@ def test_cohort_merge_terminates_on_degenerate_config():
             for st, region in (('NY', 'northeast'), ('GA', 'south'), ('XX', 'nowhere'))
             for sex in 'MF' for group in ('native_white', 'black', 'other')]
     cells = pd.DataFrame(rows)
-    out, cell_to = _build_with_timeout(cells, cap=0, min_share=1.0)
+    out, cell_to = _build_with_timeout(cells, cap=0, min_share=1.0, year=1920)
     assert set(cell_to) == set(cells.index)  # every cell lands in exactly one cohort
     assert len(out) == 6  # one national cohort per (sex, group): nothing left to merge
     assert all(c['region'] == 'mixed' for c in out.values())
@@ -45,5 +45,5 @@ def test_cohort_merge_terminates_on_degenerate_config():
 def test_cohort_merge_only_national_cells():
     """Cells already national can't merge: the loop has no keys and stops at once."""
     cells = pd.DataFrame([{'state': 'NY', 'region': 'national', 'sex': s, 'group': 'native_white', 'adults20': 10.0} for s in 'MF'])
-    out, _ = _build_with_timeout(cells, cap=1, min_share=1.0)
+    out, _ = _build_with_timeout(cells, cap=1, min_share=1.0, year=1920)
     assert len(out) == 2

@@ -1,0 +1,110 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 30 October until the electors meet on 3 December 1800)",
+  "names": {
+    "R": "Adams",
+    "D": "Jefferson",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "John Adams",
+    "D": "Thomas Jefferson"
+  },
+  "descriptors": {
+    "R": "the incumbent President, candidate of the governing party that passed the 1798 alien and sedition laws, built up the army and navy in the undeclared naval war with France, and has since sent envoys to make peace",
+    "D": "the sitting Vice President, candidate of the opposition party that denounces the alien and sedition laws and calls for a frugal government, a small military and the powers reserved to the states"
+  },
+  "compile_desc": {
+    "R": "the party of the administration in office since 1789",
+    "D": "the opposition party, whose leader is the Vice President",
+    "president": "Adams"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y"
+  ],
+  "others_line": "Each side also backs a second man; any elector's vote outside the two sides counts as \"other\".",
+  "plank_order": [
+    "civil liberties",
+    "states rights",
+    "military",
+    "taxes",
+    "foreign policy",
+    "religion"
+  ],
+  "names_re": "\\b(Adams|Jefferson|Burr|Pinckney|(?-i:Jay)|Hamilton|Madison|Federalist|Republican|Democrat)",
+  "never_name": "Adams, Jefferson, Burr, Pinckney, Jay, Hamilton or Madison",
+  "corpus": null,
+  "platforms": "context/platforms_1800.json",
+  "ev_label": "65–73",
+  "slice_sources": {
+    "men": "1800 census at the census date, free adult men outside the Southern states; the census gives free white males in bands (16–26, 26–45, 45+), so men 21+ are split from the 16–26 band. Voters were men meeting each state's rules: most states required a freehold, property or taxpaying qualification (Vermont and Kentucky did not). Electors were chosen by popular vote in 6 states; elsewhere (Connecticut, Delaware, Georgia, Massachusetts, New Hampshire, New Jersey, New York, South Carolina and Vermont, with Pennsylvania's divided legislature splitting its electors by compromise) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1800 census at the census date, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey's propertied women could vote in state elections, but its legislature chose the electors this year. Turnout is zero by law, not by estimate.",
+    "south-white": "1800 census at the census date, white adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina and Georgia legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1800 census at the census date, Black adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina and Georgia the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1800 census did not count aliens. Immigration was small (a few thousand a year), naturalization needed fourteen years' residence under the 1798 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bPresident Adams\\b|\\b(?:John )?Adams\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:Vice President |Thomas )?Jefferson\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:Aaron )?Burr\\b",
+      "the opposition party's second candidate"
+    ],
+    [
+      "\\b(?:Charles )?(?:Cotesworth )?(?:C\\. )?Pinckney\\b",
+      "the administration party's second candidate"
+    ],
+    [
+      "\\b(?:Alexander )?Hamilton\\b",
+      "the former Secretary of the Treasury"
+    ],
+    [
+      "\\b(?:James )?Madison\\b",
+      "a Virginia legislator"
+    ],
+    [
+      "\\bJohn Jay\\b|\\bJay\\b",
+      "the governor of New York"
+    ],
+    [
+      "\\b(?:General|President) Washington\\b",
+      "the late first President"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

@@ -1,0 +1,107 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 4 November",
+ "names": {
+  "R": "McCain",
+  "D": "Obama",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "John McCain",
+  "D": "Barack Obama"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 2001; a sitting senator from a Western state",
+  "D": "nominee of the party that has held a majority in both houses of Congress since the 2006 elections; a first-term senator from a Midwestern state"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 2001",
+  "D": "the party that has held a majority in both houses of Congress since the 2006 elections",
+  "president": "Bush"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "T",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including an independent, a Libertarian, a Green and a Constitution party nominee (answer \"other\").",
+ "plank_order": [
+  "economy",
+  "taxes",
+  "Iraq",
+  "energy",
+  "health care",
+  "spending",
+  "immigration"
+ ],
+ "names_re": "\\b(McCain|Obama\\w*|Barack|Palin|Biden|Bush|Cheney|Clinton|Hillary|Huckabee|Romney|Edwards|Nader|Bob Barr|McKinney|Jeremiah Wright|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "McCain, Obama, Palin, Biden, Bush, Cheney, Hillary or Bill Clinton, Huckabee, Romney, Edwards, Nader, Bob Barr or McKinney",
+ "corpus": null,
+ "platforms": "context/platforms_2008.json",
+ "ev_label": "173–365",
+ "slice_sources": {
+  "men": "2008 American Community Survey (1-year, IPUMS) aged to November 2008; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2008 (interpolated between their 2004 and 2010 estimates)); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2008 returns.",
+  "women": "2008 American Community Survey (1-year, IPUMS) aged to November 2008; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2008 (interpolated between their 2004 and 2010 estimates)); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2008 returns.",
+  "south-white": "2008 American Community Survey (1-year, IPUMS) aged to November 2008; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2008 (interpolated between their 2004 and 2010 estimates)); calibrated to the certified 2008 returns.",
+  "black-south": "2008 American Community Survey (1-year, IPUMS) aged to November 2008; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2008 (interpolated between their 2004 and 2010 estimates)), which falls on them disproportionately; calibrated to the certified 2008 returns.",
+  "immigrants": "2008 American Community Survey (1-year, IPUMS) aged to November 2008; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President )?(?:George )?(?:W\\. )?Bush\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Senator )?(?:John )?McCain\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\b(?:Senator )?(?:Barack )?Obama\\b|\\bBarack\\b",
+   "the nominee of the congressional majority party"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Dick )?Cheney\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Sarah )?Palin\\b|\\b(?:Joe )?Biden\\b",
+   "a running mate"
+  ],
+  [
+   "\\bBill Clinton\\b",
+   "a former President"
+  ],
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b|\\bClinton\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Mike )?Huckabee\\b|\\b(?:Mitt )?Romney\\b|\\b(?:John )?Edwards\\b",
+   "a primary rival"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\b(?:Ralph )?Nader\\b|\\bBob Barr\\b|\\b(?:Cynthia )?McKinney\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\bJeremiah Wright\\b",
+   "a pastor"
+  ]
+ ]
+}

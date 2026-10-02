@@ -1,0 +1,112 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Nixon",
+  "D": "Humphrey",
+  "O": "Wallace"
+ },
+ "full_names": {
+  "R": "Richard M. Nixon",
+  "D": "Hubert H. Humphrey",
+  "O": "George C. Wallace"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1953 to 1961",
+  "D": "nominee of the party of the administration in office since 1961",
+  "O": "candidate of a new third party: a former Southern governor running on states' rights, law and order, and opposition to federal school-desegregation enforcement"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1953 to 1961",
+  "D": "the party of the administration in office since 1961",
+  "president": "Johnson"
+ },
+ "third": "O",
+ "label_pool": [
+  "F",
+  "Q",
+  "T",
+  "V",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including Socialist Labor, Socialist Workers and Peace and Freedom nominees (answer \"other\").",
+ "plank_order": [
+  "Vietnam",
+  "law and order",
+  "civil rights",
+  "cities",
+  "inflation",
+  "schools"
+ ],
+ "names_re": "\\b(Nixon|Humphrey|Wallace|Agnew|Muskie|LeMay|Johnson|LBJ|Kennedy|RFK|McCarthy|Rockefeller|Reagan|Romney|Eisenhower|Republican|Democrat|American Independent|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Nixon, Humphrey, Wallace, Agnew, Muskie, LeMay, Johnson, Robert Kennedy, Eugene McCarthy, Rockefeller, Reagan, Romney or Eisenhower",
+ "corpus": null,
+ "platforms": "context/platforms_1968.json",
+ "ev_label": "301–191–46",
+ "slice_sources": {
+  "men": "1960 and 1970 censuses interpolated to November 1968; men 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states and DC; calibrated to certified 1968 returns.",
+  "women": "1960 and 1970 censuses interpolated to November 1968; women 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states and DC; calibrated to certified 1968 returns.",
+  "south-white": "1960 and 1970 censuses interpolated to November 1968; white adults (21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii)) in the eleven former Confederate states (includes a small number of American Indian and Asian adults) (no poll taxes after Harper v. Virginia Board of Elections, 1966); calibrated to certified 1968 returns.",
+  "black-south": "1960 and 1970 censuses interpolated to November 1968; Black adults in the eleven former Confederate states; the Voting Rights Act of 1965 suspended literacy tests and sent federal examiners, and registration rose from under half to roughly three in five Black adults. The shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1960 and 1970 censuses interpolated to November 1968; foreign-born white adults who were not naturalized citizens (aliens could not vote in any state)."
+ },
+ "masks": [
+  [
+   "\\bPresident Johnson\\b|\\bJohnson\\b|\\bLBJ\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?Humphrey\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bNixon\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?American Independent(?: Party)?\\b",
+   "the new third party"
+  ],
+  [
+   "\\bWallace\\b",
+   "the third-party candidate"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Agnew|Muskie|LeMay)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bRobert F?\\.?\\s?Kennedy\\b|\\bRFK\\b",
+   "the late senator"
+  ],
+  [
+   "\\bKennedy\\b",
+   "the late President"
+  ],
+  [
+   "\\bMcCarthy\\b",
+   "an antiwar senator"
+  ],
+  [
+   "\\b(?:Rockefeller|Reagan|Romney)\\b",
+   "a rival for the nomination of the party out of power"
+  ],
+  [
+   "\\bEisenhower\\b",
+   "the former President"
+  ]
+ ]
+}

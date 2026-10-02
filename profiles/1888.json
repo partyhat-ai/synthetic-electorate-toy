@@ -1,0 +1,99 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Harrison",
+  "D": "Cleveland",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Benjamin Harrison",
+  "D": "Grover Cleveland"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1861 to 1885 and holds a majority in the Senate",
+  "D": "nominee of the party of the administration in office since 1885"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1861 to 1885 and holds a majority in the Senate",
+  "D": "the party of the administration in office since 1885",
+  "president": "Cleveland"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "N",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Prohibition and a Union Labor nominee (answer \"other\").",
+ "plank_order": [
+  "tariff",
+  "trusts",
+  "pensions",
+  "ballot",
+  "Chinese",
+  "civil service",
+  "Ireland"
+ ],
+ "names_re": "\\b(Harrison|Cleveland|Morton|Thurman|Fisk|Streeter|Cowdrey|Blaine|Sherman|Sackville|Murchison|Quay|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Harrison, Cleveland, Morton, Thurman, Fisk, Streeter, Blaine or Sherman",
+ "corpus": null,
+ "platforms": "context/platforms_1888.json",
+ "ev_label": "233–168",
+ "slice_sources": {
+  "men": "1880 and 1890 censuses interpolated to November 1888; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1888 returns.",
+  "women": "1880 and 1890 censuses interpolated to November 1888; women 21+ outside the South; no state let women vote for president in 1888 (women voted in Wyoming Territory, which had no electoral votes), so this slice casts no presidential vote.",
+  "south-white": "1880 and 1890 censuses interpolated to November 1888; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1888 returns.",
+  "black-south": "1880 and 1890 censuses interpolated to November 1888; Black adults in the eleven former Confederate states; Black men still voted in large numbers, but violence, fraud, complex ballot laws and new poll taxes (Florida, 1889) cut their turnout; the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1880 and 1890 censuses interpolated to November 1888; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Grover )?Cleveland\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the Senate majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the Senate majority party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Benjamin )?Harrison\\b",
+   "the Senate majority party's nominee"
+  ],
+  [
+   "\\b(?:Morton|Thurman)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Blaine|Sherman)\\b",
+   "a Senate majority party leader"
+  ],
+  [
+   "\\bQuay\\b",
+   "the Senate majority party's campaign chairman"
+  ],
+  [
+   "\\bSackville(?:-West)?\\b",
+   "the British minister"
+  ],
+  [
+   "\\bMurchison\\b",
+   "a letter-writer"
+  ],
+  [
+   "\\b(?:Fisk|Streeter|Cowdrey)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

@@ -1,5 +1,5 @@
 """The pipeline's stages other than publish (publish.py): backbone, plan, ask,
-analyze, verify and evaluate. Each writes into runs/<run id>/ and can be
+analyze, verify, dryrun and evaluate. Each writes into runs/<run id>/ and can be
 rerun alone; run.py is the command line.
 """
 from __future__ import annotations
@@ -11,11 +11,12 @@ import time
 
 import numpy as np
 
-from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, evidence, llm, paired, quotes, scenario
+from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, evidence, llm, paired, quotes, scenario, serialize
 from .config import RUNS, RunConfig
+from .geo import STATE_NAME
 from .publish import Publisher
 from .stats import logit
-from .whatifs import REGISTRY, apply_effects
+from .whatifs import REGISTRY, apply_effects, for_year
 
 
 class Run(Publisher):
@@ -33,7 +34,8 @@ class Run(Publisher):
         self.prof = self.extras['profile']
         self.year = cfg.election
         n = self.prof['names']
-        self.cand = {0: n['R'], 1: n['D'], 2: n['O']}
+        # An unopposed year's empty line (1789 D, 1820 R) still needs a printable name.
+        self.cand = {0: n['R'] or 'no candidate', 1: n['D'] or 'no candidate', 2: n['O']}
         self.dir = RUNS / self.id
         self.dir.mkdir(parents=True, exist_ok=True)
         (self.dir / 'config.json').write_text(json.dumps({'run_id': self.id, 'config': cfg.to_dict(),
@@ -45,6 +47,9 @@ class Run(Publisher):
             # A carried-forward year: fit the base year, then recalibrate to this year's returns.
             base = backbone.fit(self.extras['base_inp'], self.cfg.draws, self.cfg.seed)
             fit = backbone.carry_forward(base, self.inp, self.year, self.cfg.seed)
+        elif self.year != 1920:
+            # Every other year: calibrated exactly to its own returns, group splits from priors (backbone.general_fit).
+            fit = backbone.general_fit(self.inp, self.year, self.cfg.draws, self.cfg.seed)
         else:
             fit = backbone.fit(self.inp, self.cfg.draws, self.cfg.seed)
         with open(self.dir / 'fit.pkl', 'wb') as f:
@@ -66,7 +71,7 @@ class Run(Publisher):
     def plan(self):
         fit = self.fit()
         cells = fit.cells
-        cohorts, cell_to = cohorts_mod.build(cells, cap=self.cfg.agents.max_cohorts)
+        cohorts, cell_to = cohorts_mod.build(cells, cap=self.cfg.agents.max_cohorts, year=self.year)
         agents, reqs = agentlayer.build_requests(self.cfg, cohorts, self.extras, self.inp, REGISTRY)
         out = self.dir / 'agents'
         out.mkdir(exist_ok=True)
@@ -184,8 +189,10 @@ class Run(Publisher):
             backbone_turn[k] = float(np.median(vv.sum(axis=1) / np.maximum(elig, 1e-9)))
             backbone_o[k] = float(np.median((vv * w.share[:, idx, 2]).sum(axis=1) / np.maximum(vv.sum(axis=1), 1e-9)))
 
-        # L1 recall probe (the winner is the historical one: Harding in 1920, Coolidge in 1924)
-        won = 0
+        # L1 recall probe (the winner is the historical one: R in 1920, D in 1960)
+        states_, sidx_ = self.state_index(fit)
+        won = int(np.argmax(aggregate.outcome(aggregate.by_state(fit.world, sidx_, len(states_))[:1],
+                                              self.inp.ev.reindex(states_).fillna(0).to_numpy(), self._fixed_ev(states_), self._split_ev(states_), o_single=self._o_single(states_))['ev'][0]))
         probes = []
         for rid, r in reqs.items():
             if r['meta']['kind'] != 'probe' or rid not in ans:
@@ -381,15 +388,18 @@ class Run(Publisher):
             else:
                 return None
             sv = aggregate.by_state(world, sidx, len(states))
-            out = aggregate.outcome(sv, ev)
+            out = aggregate.outcome(sv, ev, self._fixed_ev(states), self._split_ev(states), o_single=self._o_single(states))
             nat = sv.sum(axis=1)
             return {'r2_sd': float(np.std(nat[:, 0] / (nat[:, 0] + nat[:, 1])) * 100), 'ev_sd': float(np.std(out['ev'][:, 0]))}
 
         full = measure(fit, fit.world)
         zero = {k: 0.0 for k in backbone.GROUPS}
-        no_pop = backbone.fit(self.extras.get('base_inp') or self.inp, draws, self.cfg.seed, pop_cv=zero)
-        if self.extras.get('base_inp') is not None:
-            no_pop = backbone.carry_forward(no_pop, self.inp, self.year, self.cfg.seed)
+        if self.year == 1920 or self.extras.get('base_inp') is not None:
+            no_pop = backbone.fit(self.extras.get('base_inp') or self.inp, draws, self.cfg.seed, pop_cv=zero)
+            if self.extras.get('base_inp') is not None:
+                no_pop = backbone.carry_forward(no_pop, self.inp, self.year, self.cfg.seed)
+        else:
+            no_pop = backbone.general_fit(self.inp, self.year, draws, self.cfg.seed, pop_cv=zero)
         params_only = measure(no_pop, no_pop.world)
         agents_only = None
         if spec['mode'] == 'agents' and eff and what_if in eff['effects']:
@@ -401,23 +411,40 @@ class Run(Publisher):
         return {'what_if': what_if, 'full': full, 'backbone_params_only': params_only, 'agents_only': agents_only,
                 'note': 'SD in points of the national R two-party share and in Harding EV. Population share ≈ full − params-only (variances).'}
 
-    # ── verify ──
+    # ── verify (any year) ──
     def verify(self):
         """The unchanged rerun reproduces every state's certified votes (R1), and,
         for a carried-forward year, the held-out women's turnout benchmark."""
         fit = self.fit()
         states, sidx = self.state_index(fit)
         sv = aggregate.by_state(fit.world, sidx, len(states))
-        yy = self.year % 100
-        cert = np.array(self.inp.returns.reindex(states)[[f'R{yy}', f'D{yy}', f'O{yy}']].fillna(0), dtype=float)
-        out = aggregate.outcome(sv, self.inp.ev.reindex(states).fillna(0).to_numpy())
+        # Certified R/D/O per state; a state missing from the returns, or whose legislature
+        # chose the electors (no popular vote), is checked against zero.
+        no_pop = set(getattr(self.inp, 'no_popular', None) or ()) | set(fit.diagnostics.get('no_popular') or ())
+        cert = np.array(self.inp.returns.reindex(states)[self._ret_cols()].fillna(0), dtype=float)
+        cert[[s in no_pop for s in states]] = 0.0
+        out = aggregate.outcome(sv, self.inp.ev.reindex(states).fillna(0).to_numpy(), self._fixed_ev(states), self._split_ev(states), o_single=self._o_single(states))
         err = np.abs(sv - cert[None, :, :])
         worst = float(err.max()) if err.size else 0.0
         by_state = err.max(axis=(0, 2))
         res = {'year': self.year, 'R1_worst_vote_error': worst, 'R1_pass': bool(worst <= 0.5), 'R1_states': len(states),
+               'R1_no_popular': sorted(no_pop & set(states)),
                'R1_worst_states': [{'state': s, 'error': round(float(e), 3)}
                                    for s, e in sorted(zip(states, by_state), key=lambda x: -x[1])[:3]],
                'ev_by_draw': sorted({tuple(int(x) for x in e) for e in out['ev']})[:3]}
+        d = fit.diagnostics
+        if d.get('method') == 'general_fit':
+            # general_fit's edge cases and the era priors it used (backbone.py, notes/B.md).
+            flags = {k: d[k] for k in ('missing_returns', 'dropped_cell_states', 'synthetic_cell_states', 'legal_rules_contradicted',
+                                       'T_column_mismatch', 'other_majority', 'black_south_bound_on') if d.get(k)}
+            zp = {p: v for p, v in (d.get('zero_party') or {}).items() if v}
+            if zp:
+                flags['zero_party'] = zp
+            scaled = {s: round(float(x), 3) for s, x in (d.get('adults_scaled_share') or {}).items() if x}
+            if scaled:
+                flags['adults_scaled_share'] = scaled
+            res['fit_flags'] = flags
+            res['priors'] = d.get('priors')
         from . import benchmarks  # validation stage: the held-out Corder–Wolbrecht turnout
         cw = benchmarks.corder_wolbrecht_any_year()
         cw = cw[(cw.year == self.year) & cw.state.isin(states)].set_index('state')
@@ -444,12 +471,104 @@ class Run(Publisher):
         (self.dir / 'check.json').write_text(json.dumps(res, indent=1, default=float))
         return res
 
+    def _fixed_ev(self, states):
+        """[S, 3] electors by party for states whose legislature chose them (inp.ev_fixed:
+        state → (R, D, O)); NaN rows elsewhere. None when the inputs carry no such table."""
+        fx = getattr(self.inp, 'ev_fixed', None) or self.extras.get('franchise', {}).get('ev_fixed') or LEGISLATURE_EV.get(self.year)
+        if not fx:
+            return None
+        out = np.full((len(states), 3), np.nan)
+        for i, s in enumerate(states):
+            if s in fx:
+                v = fx[s]
+                out[i] = [v.get(k, 0) for k in 'RDO'] if isinstance(v, dict) else list(v)
+        return out
+
+    def _o_single(self, states):
+        """[S] the largest single "other" candidate's share of O (the named third P vs
+        the rest), so a lumped O can't carry a state no one of its candidates won.
+        None for 1916–1924 (their bundles stay as published)."""
+        if self.year in (1916, 1920, 1924):
+            return None
+        r, yy = self.inp.returns.reindex(states).fillna(0), self.year % 100
+        if f'P{yy}' not in r or f'O{yy}' not in r:
+            return None
+        o, p = r[f'O{yy}'].to_numpy(float), r[f'P{yy}'].clip(lower=0).to_numpy(float)
+        p = np.minimum(p, o)
+        return np.where(o > 0, np.maximum(p, o - p) / np.maximum(o, 1e-9), 1.0)
+
+    def _split_ev(self, states):
+        """[S, 3] historical electors by party for states that divided them (inp.ev_split:
+        state → (R, D, O)); None when the inputs carry no such table."""
+        sp = getattr(self.inp, 'ev_split', None) or self.extras.get('franchise', {}).get('ev_split')
+        if not sp:
+            return None
+        out = np.full((len(states), 4), np.nan)
+        cols = self._ret_cols()
+        r = self.inp.returns.reindex(states).fillna(0)
+        osg = self._o_single(states)
+        for i, s in enumerate(states):
+            if s in sp:
+                v = sp[s]
+                out[i, :3] = [v.get(k, 0) for k in 'RDO'] if isinstance(v, dict) else list(v)
+                pv = r.loc[s, cols].to_numpy(float) * np.array([1, 1, osg[i] if osg is not None else 1])
+                if pv.sum() > 0:
+                    out[i, 3] = pv.argmax()   # the historical popular winner keeps the historical division
+        return out
+
+    def _ret_cols(self) -> list[str]:
+        """This year's certified R, D and other columns in the returns (R1920… or the older R20…)."""
+        r, y = self.inp.returns, self.year
+        for suf in (str(y), f'{y % 100:02d}', str(y % 100)):  # R1920 first: R20 is ambiguous across centuries
+            cols = [f'R{suf}', f'D{suf}', f'O{suf}']
+            if all(c in r for c in cols):
+                return cols
+        raise SystemExit(f'No certified {y} returns (R/D/O columns) in the inputs: {list(r.columns)[:12]}')
+
+    # ── dry run (free: no model calls) ──
+    def dryrun(self, samples: int = 1) -> dict:
+        """backbone (if not fitted) → verify → plan. Brief samples: one control per page slice,
+        one counterfactual per what-if; counts of agents, requests and eligibility lines."""
+        if not (self.dir / 'fit.pkl').exists():
+            self.backbone()
+        check = self.verify()
+        plan = self.plan()
+        reqs = self.requests()
+        agents = json.loads((self.dir / 'agents/agents.json').read_text())
+        by_agent = {a['id']: a for a in agents}
+        out_slices, seen = {}, {}
+        for r in reqs:
+            a = by_agent[r['meta']['agent']]
+            sl = serialize.slice_of(type('R', (), {'group': a['group'], 'south': a['state'] in agentlayer.SOUTH, 'sex': a['sex']}))
+            out_slices[sl] = out_slices.get(sl, 0) + (r['meta']['kind'] == 'control')
+            k = ('control', sl) if r['meta']['kind'] == 'control' else (r['meta']['arm'], None) if r['meta']['kind'] == 'cf' else None
+            if k and seen.get(k, 0) < samples:
+                seen[k] = seen.get(k, 0) + 1
+                seen.setdefault('_briefs', []).append({'arm': r['meta']['arm'], 'slice': sl, 'agent': a['id'], 'user': r['user']})
+        elig = {}
+        for a in agents:
+            line = a['eligibility'].replace(STATE_NAME.get(a['state'], a['state']), '<state>')
+            elig[line] = elig.get(line, 0) + 1
+        groups = {}
+        for a in agents:
+            g = a['group'] + (f':{a["status"]}' if a.get('status') else '') + (f':{a["origin"]}' if a.get('origin') else '')
+            groups[g] = groups.get(g, 0) + 1
+        res = {'year': self.year, 'run': self.id, 'era': agentlayer.era(self.year),
+               'R1_worst_vote_error': check['R1_worst_vote_error'], 'R1_pass': check['R1_pass'], 'ev_by_draw': check['ev_by_draw'],
+               'what_ifs': {k: k in for_year([k], self.year) for k in self.cfg.what_ifs},
+               'cohorts': plan['cohorts'], 'agents': plan['agents'], 'requests': plan['requests'],
+               'by_arm_model': plan['by_arm_model'], 'estimate': plan['estimate'],
+               'controls_by_slice': out_slices, 'agents_by_group': groups,
+               'eligibility_lines': dict(sorted(elig.items(), key=lambda x: -x[1])), 'briefs': seen.get('_briefs', [])}
+        (self.dir / 'dryrun.json').write_text(json.dumps(res, indent=1, default=float))
+        return res
+
     # ── evaluate ──
     def evaluate(self):
         from . import benchmarks
         if self.year != 1920:
-            raise SystemExit('evaluate: the pre-registered checks are 1920\'s; 1924 is checked by '
-                             '`run verify` (reproduction, and Corder–Wolbrecht 1924).')
+            raise SystemExit('evaluate: the pre-registered checks are 1920\'s; every other year is checked by '
+                             '`run verify` (reproduction, and Corder–Wolbrecht where it exists).')
         fit = self.fit()
         states, sidx = self.state_index(fit)
         base_votes = aggregate.by_state(fit.world, sidx, len(states))
@@ -466,3 +585,12 @@ class Run(Publisher):
         out = {'summary': summary, 'checks': checks, 'holdout_rows': ho['rows'], 'uncertainty_budget': budget}
         (self.dir / 'validation.json').write_text(json.dumps(out, indent=1, default=float))
         return out
+
+
+# Electors chosen by a legislature, by party slot (R, D, O), 1828–1876: a fallback until the
+# data layer supplies inp.ev_fixed (which wins). Before 1828 the data layer must supply it.
+LEGISLATURE_EV = {
+    1828: {'DE': (3, 0, 0), 'SC': (0, 11, 0)}, 1832: {'SC': (0, 0, 11)}, 1836: {'SC': (0, 0, 11)},
+    1840: {'SC': (0, 11, 0)}, 1844: {'SC': (0, 9, 0)}, 1848: {'SC': (0, 9, 0)}, 1852: {'SC': (0, 8, 0)},
+    1856: {'SC': (0, 8, 0)}, 1860: {'SC': (0, 0, 8)}, 1868: {'FL': (3, 0, 0)}, 1876: {'CO': (3, 0, 0)},
+}

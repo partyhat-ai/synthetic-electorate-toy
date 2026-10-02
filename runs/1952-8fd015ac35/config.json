@@ -1,0 +1,77 @@
+{
+  "run_id": "1952-8fd015ac35",
+  "config": {
+    "election": 1952,
+    "election_day": "1952-11-04",
+    "context_cutoff": "1952-11-03",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "eisenhower-runs-as-a-democrat"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AL",
+      "AR",
+      "IL",
+      "ME",
+      "MS",
+      "ND",
+      "NE",
+      "OK",
+      "RI",
+      "WI",
+      "WV",
+      "WY"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults18_1950_by_state_nhgis.csv": "578342b2eed65063",
+    "population/adults18_1960_by_state_nhgis.csv": "0816cad640aa08c9",
+    "population/adults_1950_by_state_nhgis.csv": "09150a849dd3e39b",
+    "population/adults_1960_by_state_nhgis.csv": "f40da7c05e02206a",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1952.json": "10d5117c711b9959",
+    "sources/corpus_1952.jsonl": "00e79ba23bc87cfe",
+    "whatifs/eisenhower-runs-as-a-democrat.json": "7964b1d32f073ba7",
+    "whatifs/evidence/eisenhower-runs-as-a-democrat.json": "6c8ae13f3667c9c5"
+  }
+}

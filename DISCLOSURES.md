@@ -146,14 +146,21 @@ Personas carry imputed details:
 - the household economy (farm, wage, trade or proprietor);
 - a uniform age from 21 to 75, because no age table was built.
 
-Neither drives any count, but both shape the quotes.
+Neither drives any count, but both shape the quotes. Since the all-years
+build, economy wording and weights are set per era [I] and ages run 18–80
+from 1972. First names come from 1920-era lists in every year: they carry no
+information, but they read as period names.
 
 **Next:** OCC1950, FARM and AGE from the IPUMS full count.
 
 **B8 · Medium · open · franchise**
 Non-citizens who had declared their intent are treated as barred
 everywhere. No dataset we found codes which states still let them vote in
-1920. HANDOFF-SIMULATION says several did until 1926.
+1920. HANDOFF-SIMULATION says several did until 1926. The all-years
+franchise file now codes IN, MO, TX and AR as still letting declarant
+aliens vote in 1920, from unchecked memory of Keyssar A.12 (C25). The legacy
+1916–1924 files are left blank to keep those years byte-identical (G9), so
+they still run with no alien voting.
 
 **Next:** Keyssar, Table A.12.
 
@@ -259,13 +266,14 @@ Every person, name and quote is invented. Only their circumstances (census
 cells, dated newspaper items) are documented. Quotes are voiced by a model
 that knows the outcome (D2).
 
-**G1 · Medium · open · `config.py`**
-A run's id hashes its config and data, **not the code**. The
+**G1 · Medium · fixed · `config.py`**
+A run's id used to hash its config and data, **not the code**. The
 `1920-bcbd86b43f` bundle was produced by code changed after its requests
-were planned and answered (p1 → p2, deviations 1–9). The same run id can't
-be regenerated from today's code with identical results.
+were planned and answered (p1 → p2, deviations 1–9), so that run id can't be
+regenerated from today's code with identical results.
 
-**Next:** hash `simharness/*.py` into the run id.
+**Fixed:** `run_id` now also hashes `simharness/*.py`, so a code change gives a
+new run id. Runs recorded before the change keep their old ids.
 
 **G2 · Low · open · timing**
 The backbone was refitted after the agent answers existed. The cohort bias
@@ -460,7 +468,7 @@ retried once.
 
 **G6 · Low · open · spend ledger**
 `sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
-backfilled from runs' usage.
+backfilled from runs' usage, and D15's $0.052 is estimated.
 
 **D17 · Medium · fixed (c2), hand-edited · compiler dropped topics**
 The flu what-if's compile dropped T2 (League) and T3 (prices) as "crowded
@@ -554,7 +562,7 @@ his voters were inside a state isn't identified.
 **C15 · Medium · open · 1924 briefs have no dated newspaper items**
 There is no 1924 corpus yet, so 1924 people know only their circumstances
 and the ballot. Pulling Chronicling America items for October 1924 is the
-next step.
+next step. The all-years corpus build stopped before 1924 was done (C30).
 
 **C16 · Low · open · 1924 platforms (`context/platforms_1924.json`)**
 - Quotes come from American Presidency Project pages and the paraphrases
@@ -575,3 +583,488 @@ The record is mixed:
 So the Davis share is probably too high, and region matters. The evidence
 check says "untested" because no source gives a number. Fix: regional
 transfers, plus a prior from the 1928 split.
+
+**A9 · High · fixed (requests already sent) · data-fetch scripts**
+During the all-years build, three agents (G, C and E) put the user's email
+address in the HTTP User-Agent of requests to Wikipedia and loc.gov, as a
+"contact" string. E also sent it in two manual curl probes. The user's
+address must never go to an unrelated service. It was removed from every
+script, which now send a generic User-Agent, and E's running 1932 corpus
+build was restarted from its HTTP cache. The requests already sent can't be
+recalled.
+
+**Next:** no contact address in any fetcher; check the User-Agent whenever a
+fetch script is reviewed.
+
+**A10 · Medium · fixed · `pipeline.py` verify, `benchmarks.py`**
+`Run.verify` read the Corder–Wolbrecht held-out benchmark file directly,
+outside the evaluate stage, so `test_benchmarks_isolated` failed. Found while
+porting to the clean repo. The read now goes through
+`benchmarks.corder_wolbrecht_any_year()`, and `check.json` is byte-identical.
+The isolation test allows benchmark imports in exactly two places in
+`pipeline.py`: verify and evaluate.
+
+**Next:** decide whether verify should see the benchmark at all, or move that
+check into evaluate.
+
+**B10 · High · by design · `backbone.general_fit`**
+Every year outside 1916–1924 is fitted by `general_fit`, which has no
+natural experiment. Nothing is identified within the year. Each group's
+turnout gap and partisan tilt is a literature prior, a (year, mean, sd) knot
+table interpolated between knots, and exact calibration to the state returns
+does the rest. The priors are not updated from the data. A fit's values are
+in `fit.diagnostics['priors']`, and all are [I]:
+- **Women's turnout:** Corder–Wolbrecht to 1936, ANES 1952, CPS P20 and CAWP
+  from 1964. Before 1920, the 1920 gap with a wider sd.
+- **Naturalized turnout:** Merriam–Gosnell and CPS. Declarant aliens and
+  `other` have no source.
+- **Black Southern exclusion:** Foner and Kousser for 1868–1900, the 1920
+  posterior for 1904–44, registration ratios for 1948–76.
+- **Black turnout:** CPS national gaps, which partly double-count the
+  Southern exclusion in 1964–76.
+- **β_B:** Fox, Foner, Weiss, Gallup, ANES and exit polls. Before 1856 it
+  assumes slot R is the anti-Democratic party.
+- **Naturalized tilt:** Kleppner, Lubell and Pew. `other` has none.
+
+A what-if's shift lands on groups in proportion to these priors, so they
+shape every what-if outside 1916–1924.
+
+**Next:** in-year updating where county returns exist (`bayes_ols`), and a
+sensitivity table per prior.
+
+**B11 · Medium · open · women's tilt δ, 1936–1940**
+As briefed, `general_fit` uses the 1920 posterior δ (−0.66 ± 0.27, toward
+D) for every year to 1940. Gallup's 1936 and 1940 vote-by-sex tables show
+women slightly *more* Republican than men. The prior contradicts the only
+direct evidence for those two years. From 1944 it follows Gallup, then exit
+polls.
+
+**Next:** use Gallup for 1936–40, or publish both.
+
+**B12 · Medium · open · `general_fit` repairs (`fit_flags`)**
+When the data and the rules disagree, the fit repairs the inputs instead of
+failing:
+- If a state's votes exceed 97% of its eligible adults, its adults are
+  scaled up for that draw (`adults_scaled_share`; e.g. 1876 SC).
+- If returns exist where the coded rules bar every adult, the rules lose and
+  the state's men are opened (`legal_rules_contradicted`).
+- A state with votes but no population cells gets synthetic native-white
+  cells at votes ÷ 0.6 (`cells.synthetic`).
+
+Each one signals an undercount or a coding error, and each makes
+reproduction exact by construction. They are reported per fit, not on the
+page.
+
+**Next:** list each year's repaired states here and in the page's sources.
+
+**B13 · Medium · by design · 60-election reproduction (`aggregate.outcome`)**
+The unchanged rerun of every one of the 60 elections, 1789–2024, now
+reproduces every state's certified R/D/O exactly and matches history's
+electoral votes. Four kinds of fix were needed:
+- **Legislature-chosen states** keep their history's electors (`ev_fixed`).
+- **Split or slate states** keep their historical division while the
+  recorded plurality winner holds (`ev_split`).
+- **A lumped "other"** can carry a state only if its largest single
+  candidate would. This fixes 1860 (Bell and Breckinridge together beat
+  Douglas in MO), 1892 and 1912.
+- **Before 1868**, electoral votes count the electors who actually voted,
+  not those appointed.
+
+These are rules, not estimates. A what-if can't move a legislature's
+electors, a split state's division changes only when its plurality winner
+does, and O's candidates remain one slot, so a what-if can't say which of
+them gains.
+
+**C17 · Medium · by design · NHGIS populations (`scripts/harness/build_population.py`)**
+State tables for 1870–1970 come from NHGIS extract 1 (cache:
+`population/nhgis/`; not redistributable).
+
+- **The 1920 conversion reproduces the hand-keyed 1920 table exactly:**
+  60,886,520 adults, 0 of 588 cells off.
+- **1930's race/nativity-by-sex table (NT10) is mislabelled.** Its codebook
+  labels interleave the sexes, but the values run all male groups first.
+  Taking the labels at face value gave New York 15,184 foreign-born men.
+  The mapping now follows the values, and the build asserts it against two
+  independent 1930 tables (race by sex; white nativity by sex).
+- **1930's "Other race" includes Mexican Americans.** The 1930 census
+  counted "Mexican" as a race, so 1930's `other` group is 1.01 million
+  adults, against 0.25 million in 1920. Most were citizens.
+  `Inputs.other_citizen` must not treat them as 1920's American Indian and
+  Asian adults.
+
+**C18 · Medium · open · 1870–1910 women (`scripts/harness/build_population_early.py`)**
+The 1870–1900 tables have no women 21+ by group. Women are each group's men
+× its whole-population F/M ratio [I]. 1870 has no table by sex at all, so it
+borrows 1880's ratios. Checked against the hand-keyed 1910 table, the method
+runs **2.0% high** (25.05M against 24.56M):
+- native white −0.6%, Negro +2.1%, foreign white +10.4%, other +21%;
+- per-state errors are wide (foreign white: mean |error| 12%).
+
+Whole-population ratios overstate foreign-born adult women.
+
+**Next:** a per-group 1910 factor (hand ÷ estimate), applied to 1870–1900.
+
+**C19 · Medium · by design · other 1870–1910 estimates**
+- **1900's NT7 is mislabelled.** "Other colored" holds all colored people,
+  Negro included. Other races = AZ3001 − AZ3003, asserted in the build.
+- **1890 has no citizenship table** in extract 1, so 1880 and 1890
+  citizenship are interpolated 1870 → 1900 [I].
+- **1870 men 21+** come only as separate race and nativity margins, raked
+  with IPF [I]. 1870 naturalized = citizens − native-born, clipped to
+  [0, foreign-born white]. That gives 61% nationally, but AR and NC clip to
+  0, and VT (14%), ME (16%), IN (84%) and AL (81%) are implausible.
+- **1880 and 1890 "colored" includes Chinese and Indians.** It is split with
+  fixed weights (0.420; 0.95 for Chinese and Japanese, a guess), and for 1890
+  with the mean of 1880's and 1900's Negro shares [I].
+- **Territories** are kept as their later states. Consumers must filter to
+  the states that voted.
+
+**C20 · Medium · by design · 1940 race break**
+The 1940 census counted Mexican Americans as white; 1930 counted them as a
+race (C17). `other_races` 21+ falls from 1.01M to 0.33M, and `native_white`
+rises by the same people. That is a change of classification, not of
+population. 1932 and 1936 interpolate across it, and their profiles say the
+1930 "Mexican" count is folded into white; the population build must match.
+
+**C21 · Medium · open · 1960 and 1970 nativity (`build_population_mid.py`)**
+The extract has no 1960 or 1970 nativity table, so both carry 1950's
+foreign-born share of whites forward [I]. Foreign-born white adults then rise
+from 9.9M (1950) to 10.8M (1960) and 11.9M (1970), while the real
+foreign-born population (all ages) fell from 10.3M to 9.6M. 1970's
+foreign-born whites are probably about 3M too high, and native whites 3M too
+low. White totals are unaffected.
+
+**Next:** NHGIS 1960 and 1970 nativity and citizenship tables (requests
+drafted in `notes/A2.md`, not submitted).
+
+**C22 · Low · open · other 1940–1970 estimates**
+- 1950 and 1960 have only white/nonwhite. The Negro share of nonwhite adults
+  is interpolated 1940 → 1970 by state and sex [I].
+- 1950 foreign-born whites by sex use 1940's ratios, and citizenship is
+  raked to 1950's all-foreign-born split. 1950 has no "first papers"
+  category.
+- The 18–20 add-on for 1950–60 uses the 21+ nativity shares, which
+  overstates the foreign-born among 18–20s.
+- Hawaii is blank in every 1950 table and omitted (it first voted in 1960).
+  Its 1960–70 nativity uses national 1950 shares.
+- There is no 1940 age-band table, so Georgia's 18–20s in 1944 and 1948 are
+  21+ × the 1950 18+/21+ ratio [I].
+
+**C23 · Medium · by design · returns 1868–2024 (`scripts/harness/build_returns.py`)**
+Algara–Amlani county sums are used only where both party shares are within
+0.5 points of the state file. 153 state-years fail and fall back to
+Wikipedia. The failures extend C2 to every year:
+- Missouri's county total is about 1.2× too high in nearly every year.
+  Alaska has no county data.
+- Fusion tickets (1884 and 1892 Weaver/Butler, 1896 Bryan), and unpledged or
+  Dixiecrat lines counted as Democratic (1948 AL, 1952 SC, 1964 AL).
+- Garbage rows: 1872 MI and IL, 1896 MI, 1900 WA, 1912 ID.
+- Algara–Amlani's state file has the wrong electoral votes for 1968 NC and
+  2020 NE (539 in total).
+
+In 10 state-years Wikipedia also differs from the state file by more than
+1.5 points (fusion allocation); Wikipedia is kept and flagged in `source`.
+1872 GA's 3 rejected Greeley votes stay in `ev_dem` (352 nationally, not the
+349 counted). 1868 MO's total is set to R + D.
+
+**C24 · Medium · by design · pre-1868 adults (`build_population_republic.py`, `data.population`)**
+No census before 1870 tabulates age 21, so every adult count for 1789–1864
+is an estimate [I]:
+- **Age bands** are split on a stationary 3%-growth profile. 46% of 16–25s,
+  69% of 19–25s, 89% of 20–29s, 37% of 14–25s and 18% of 10–23s count as
+  21+.
+- **1790** counts only white males 16+, converted with the state's 1800
+  ratio.
+- **1790–1810 free colored and enslaved people** have totals only, split by
+  1820's adult shares.
+- **Nativity.** None before 1850. In 1850–60, foreign-born white adults are
+  72% (men) and 70% (women) of all foreign-born whites, and citizenship
+  isn't split.
+- **Dates.** Before 1848 election day is taken as 1 November, and 1790–1820
+  census days as 2 August. A cell found in only one bracketing census takes
+  that count, which double-counts some native whites in 1844 and 1848.
+
+**C25 · High · open · franchise rules from memory (`build_republic.py`, `build_franchise.py`)**
+Gray–Jenkins starts in 1870 and has no alien-voting field. The rules it
+doesn't cover were coded from the agents' memory of Keyssar (Tables A.1–A.4,
+A.12) and Hayduk, **not checked against the books** [I]:
+- **Alien voting, 1789–1968:** e.g. NJ 1789–1804, IL 1820–48, MI from 1836,
+  IN from 1852, MN and OR from 1860; IN, MO, TX and AR still in 1920 (B8).
+- **Property and taxpaying tests, 1789–1864,** as the share who could vote:
+  0.95 under manhood suffrage, 0.88 under a taxpaying test, 0.55–0.75 under a
+  freehold (VA 0.55 before 1830; RI down to 0.40). Georgia 1840 then turns
+  out 102% of its eligible men, so 0.88 is too strict there.
+- **Free Black men:** the free share × 0.95, 0.6, 0.25 or 0.08 (NY's $250
+  rule), by regime.
+- **New Jersey women, 1792–1804:** about 10% of adult women.
+- **1868:** each state's 1870 Gray–Jenkins row. Ex-Confederate test oaths
+  as MO 0.80, TN 0.70, WV 0.85, AR 0.85. NY's Black men 0.1.
+- **American Indians** (`other_citizen`): 0.2 before 1888, 0.6 for
+  1888–1920, then 1 (AZ and NM 0.2 to 1944).
+
+Before 1868, `poll_tax=1` marks any taxpaying test, not only a capitation
+tax.
+
+**Next:** check every rule against Keyssar's printed tables.
+
+**C26 · Medium · open · felony disenfranchisement (`franchise/state_franchise_1972_2024.csv`)**
+State rates exist only for 1980 (map bins) and from 2010 (Sentencing
+Project, Uggen). 1972–2008 is interpolated between the 1980 bin midpoints
+and the 2010 table, then scaled to the national series [I]. That smooths
+over law changes: TX 1997, NM and CT 2001, NE 2005, IA 2005–11, RI 2006, MD
+2007, WA 2009. Also:
+- The 2022 and 2024 reports use VEP denominators; earlier ones use VAP.
+- `white_can` is 1 − the non-Black rate. No white-specific rate exists.
+- DC is a hand estimate (incarcerated only), 0 from 2020.
+- Before 1972 the share is blank, and 1789–1864 uses a flat 0.0005.
+- Where a year has no state table, agents' eligibility lines use national
+  rates (`FELONY_SHARE`), with Black adults at 3.5× and women at 0.25× [I].
+
+**C27 · Low · open · 1980–2024 adults 18+ (`build_population_modern.py`, NHGIS extract 3)**
+- 1980 and 1990 foreign-born adults by race are all-ages counts × the
+  foreign-born adult share. 1980's share comes from 1990, and both years'
+  sex split from 2000 [I].
+- 1990 totals come from MARS, because STF1's table covered Hispanics only.
+  They aren't raked (−0.17% nationally).
+- 2020 is ACS 2016–20 raked to the PL count, a −1.96% gap (ID −4.8%).
+- Suppressed ACS cells use a fallback in a few small states (MT and WY in
+  most years).
+- Black non-Hispanic native adults = Black native × the all-ages
+  non-Hispanic share [I].
+- Years without their own file borrow [I]: 1972 and 1976 from 1980; 1984
+  from 1980/1990; 1988 and 1992 from 1990; 1996 from 2000; 2004 from
+  2000/2008.
+
+**C28 · Medium · by design · 1789–1824 popular votes (`labels/state_pres_1789_1864.csv`)**
+Every number is parsed from Wikipedia's results tables (Tufts' *A New Nation
+Votes* to 1824; Dubin, CQ or Leip after). None was re-keyed from the
+sources. The early record is fragmentary:
+- About 20 rows in 1792–1824 are partial ("do not use for turnout") or not
+  extant.
+- 1789's slates were for or against the Constitution. 1792's ~7,800 votes
+  were on uncontested slates. 1820's ~109,000 were effectively uncontested,
+  20,660 of them for unpledged or Federalist-leaning slates.
+- How electors were chosen is hand-keyed, and some methods are ambiguous (MA
+  1789–96, KY 1792/96, TN 1796/1800).
+- There are no county returns before 1868.
+
+A share model of these years measures turnout and dissent, not a contest.
+
+**C29 · Low · open · platforms 1789–2024 (`context/platforms_<year>.json`)**
+Quotes are substring-checked against fetched pages, except:
+- Founders Online refused bulk fetches. Its 1789–1816 quotes were copied by
+  hand from a browser and not compared by script.
+- archive.org OCR sources (1808, 1816, 1824, 1831–32, Harrison) were
+  normalised for hyphens and spacing.
+
+Weak or odd sources:
+- Before 1840 there were no platforms. Those files hold documented
+  positions, some from private letters or diaries (1796, 1824). 1812 R rests
+  on the Federalist House minority's address.
+- APP dates the 1912 Progressive platform 5 November; it was adopted 7
+  August [I].
+- APP typos are kept verbatim (1968 D, 1972 R).
+- 2020 R adopted no platform: the RNC resolution, plus four 2016 planks
+  marked as carried.
+- 2024 D was drafted while Biden was the presumptive nominee and says "his
+  second term".
+- Some quotes start mid-sentence, and some paraphrases summarise
+  neighbouring passages.
+
+**C30 · Medium · open · newspaper corpora beyond 1920 (`scripts/harness/build_corpus.py`)**
+The per-year corpus build was stopped by the user before it finished. Other
+years' people know their circumstances and the ballot, and a corpus with
+non-1920 topic codes falls back to the items nearest the person. For
+whatever was written:
+- **The schema is inferred.** The permission classifier refused agent E's
+  reads of the 1920 corpus and the corpus code, and E didn't work around
+  it. The field names come from `PROVENANCE-sources.md`, and nobody has
+  diffed them against a 1920 line.
+- **Topics are per year** (`topic`, plus `topic_code` T1–T8 in 1920's slot
+  order). Code keyed on 1920's fixed topic list would mislabel them.
+
+**Next:** diff the keys against 1920 (the rerun is offline, from the HTTP
+cache), then finish the years.
+
+**C31 · Low · open · first election years (`history.ts`, `geo.ts`)**
+`history.ts` gives Missouri electoral votes in 1820 and Michigan in 1836, but
+`geo.ts` dates their first elections 1824 and 1840. The mini map leaves their
+tiles empty in those years. Pinned by `history.test.ts`.
+
+**Next:** check the sources for each state's first counted electoral votes and
+make the two files agree.
+
+**C32 · Low · open · state electoral votes vs. totals (`history.ts`)**
+In 8 years (1789, 1792, 1808, 1812, 1816, 1820, 1832, 1864) the state
+electoral votes don't sum to the year's total: the table lists electors
+allotted, not electors who voted. Pinned by `history.test.ts`.
+
+**Next:** add the number who voted per state, or label the column as allotted.
+
+**C33 · Low · open · faithless and abstaining electors (`history.ts`)**
+In 1956, 1972, 1976, 1988, 2000, 2004 and 2016, minor faithless or abstaining
+electors aren't listed as candidates, so the candidates' electoral votes fall
+short of the total. See also F8 (2000's abstaining DC elector).
+
+**Next:** list them under Other, or note the shortfall wherever totals appear.
+
+**D25 · High · by design · modern descriptors name offices (`profiles/1988–2024`)**
+From 1988 the descriptors give the nominee's office where voters plainly
+knew it: "the sitting President", "the sitting Vice President", "a former
+President seeking a second, non-consecutive term". That blinds the name, not
+the identity. With the year in the brief, any current model identifies every
+nominee, so **contamination is total for 1988–2020**. 2024 has holdout value
+only for a model whose training ends early in 2024.
+
+Earlier years leak the same way through the record itself: "former
+commander-in-chief of the Continental Army" (1789), "the general … at New
+Orleans" (1824, 1828), "a former President" (1848, 1856), "the sitting
+Vice-President" (1860), "a longtime newspaper editor" (1872). This is D2
+for every year.
+
+**D26 · Medium · open · 1928 and 1952 descriptors leave out what drove votes**
+Descriptors are party-role only, as in 1920/1924:
+- 1928's leave out Smith's Catholicism and his wet stance. Both 1928
+  platforms pledge Prohibition enforcement, so the brief hides the wet/dry
+  split Smith ran on.
+- 1952's leave out Eisenhower's war record.
+
+Agents who recognise the year (D25) may supply these from memory. Agents who
+don't can't.
+
+**D27 · Medium · open · 1948 Wallace voters**
+Thurmond is 1948's labelled third line. Wallace has none: `others_line`
+names his party, his voters can only answer "other", and his planks sit
+under party "O2", which `party_planks` never selects. In the counts, Wallace
+and Thurmond share the O slot.
+
+**D28 · Medium · open · ballot access**
+One ballot for the whole country can't show a nominee missing from some
+states:
+- 1860: the Republican was on no ballot in 10 Southern states.
+- 1948: Truman wasn't on Alabama's ballot, and Thurmond held the Democratic
+  line in AL, LA, MS and SC.
+- 1964: Johnson wasn't on Alabama's ballot. `others_line` says so, but the
+  ballot still shows a D line. The `ballot_notes` key exists and isn't set.
+
+Some candidates reach agents only through `others_line` or a shared
+descriptor: Bell (1860), Crawford and Clay (1824), the four Whigs (1836).
+
+**D29 · Low · open · planks that aren't platforms**
+Some text that agents see as planks is something else:
+- **1980 Anderson:** his answers in the 21 September Baltimore debate (APP).
+- **1992 Perot:** the 15 October Richmond debate transcript (APP).
+- **1996 Perot:** the Reform Party's "Principles of Reform" from janda.org,
+  not APP. Re-spaced and undated.
+- **1840 Whigs:** campaign positions from secondary sources
+  (`verbatim: false`).
+- **1844 Whig Texas plank:** Clay's Raleigh letter. The platform says
+  nothing on Texas.
+- **Before 1840:** documented positions, not platforms (C29).
+
+**D30 · Medium · by design · unopposed years**
+1789 and 1792 have no D side, and 1820 has no R side. Those years get one
+ballot line and no swap arm, and their verdicts omit the runner-up. Their
+interviews measure turnout and dissent, not a contest (C28).
+
+**D31 · Low · open · masks and label letters**
+- Common-word surnames (Clay, King, White, Grant, Bell, Smith and others)
+  are matched case-sensitively, or only with a first name or title, so
+  ordinary words don't count as leaks. A lower-case mention isn't caught.
+- Generic modern surnames (Dean, Clark, Harris, Stein, Ryan) cause false
+  naming violations in compiled specs. A false hit forces a recompile, not a
+  leak.
+- Masks run in sequence and produced "the the administration party". The
+  doubled "the" now collapses.
+- Label pools leave out initials of candidates, parties and prominent
+  figures. Questionable picks: P in 1936 and 1940 (Perkins; it may read as
+  "President"), E in 1932.
+
+**D32 · Low · fixed · 1920 wording in other years**
+Found while building profiles, and fixed in the pipeline generalisation:
+- Every brief said "Election Day is Tuesday", which is wrong for 1789–1844,
+  when states chose on their own days.
+- `compile_system` called any third candidate "the independent Progressive
+  candidate" (Wirt, Van Buren, Fillmore, Breckinridge, Wallace, Anderson,
+  Perot).
+- `run._lead` always named R as the winner, which is wrong in every D year.
+
+**E7 · by design · what-ifs in other years (`whatifs.py` `years`, `text_for`)**
+The 1920 what-ifs now run in other years: `everyone` in all of them,
+`fifteenth` in 1892–1964, `no-19th` from 1920, and `league` in 1920 only.
+Their invented facts (E1–E3) were written for 1920. Other years get them by
+rewriting "1920" in the assumption and borrowed text; 1924 is kept as it
+was. Nobody has read the rewritten text year by year.
+
+**E8 · fixed · the 31 example what-ifs**
+Thirty-one example what-ifs were run as chips across 28 years (about $7.80 in all). Four compiled specs were wrong and were fixed by hand or rebuilt. Each fix is recorded in the spec's `hand_edited`:
+- **1972, no voting under 21:** the spec barred every adult. The cells have no age split, so `franchise.share` now bars a uniform 8.1% slice of every cell (the 18–20 share of 18+ in 1970 [I]). That slice votes like the rest of its cell, which understates the change, because young voters turned out less and leaned toward the challenger.
+- **2000, Florida restores felons' rights:** the spec enfranchised every Southern adult. The spec now reaches Florida only (new `reach.state`), and the action lifts only the felony bar (new `franchise.reason: felony`). Newly eligible voters vote like their cell. Uggen & Manza assume lower turnout but a strong lean toward the administration party, so the cell assumption understates the change.
+- **2000, Nader doesn't run:** with no named third in 2000, the compiler invented a candidate whose positions came from Perot's 1992 run. Nader is now 2000's named third: his per-state votes come from Wikipedia (2,882,955 nationally), and the profile has a blinded descriptor. The 2000 returns changed only in the `third` column, and every other year is byte-identical.
+- **1932, no crash:** an earlier batch was killed mid-run, which left the key in the config but not in the bundle. The bundle was republished.
+
+Four what-ifs (1844, 1856, 1860, 1916 Hughes) stopped at the research cost check: about $0.27–0.28 against a $0.175 estimate, because 19th-century searches return longer pages. The saved evidence was reused, so no search was repeated. The research estimate is probably low for pre-1900 topics.
+
+Two code fixes:
+- Parallel what-if runs collided on `sessions/intake-status.tmp`. The temporary file now carries the process id.
+- When the winner changes, the headline now puts the new winner's electoral votes first (`serialize.winner_ev`). Before, it printed "Blaine wins, 129–272".
+
+**F7 · Medium · open · slice-source sentences (`profiles/<year>.json`)**
+Each profile's `slice_sources` names the census vintages its year uses
+(e.g. 1952 "the 1950 census aged", 2020 "ACS 2019/2021"). They were written
+before most populations existed, so they describe the intended build, not
+what `data.population` does. 1932 and 1936 promise the 1930 Mexican count
+folded into white (C20). 1972–2024 cite vintages that differ from the files
+actually used (C27).
+
+**Next:** generate each sentence from the population build's own
+provenance.
+
+**F8 · Low · open · electoral-vote labels (`ev_label`)**
+Some labels are conventions a reader could dispute (see also F4):
+- **1789–1800:** before the 12th Amendment only each side's top man counts.
+  Second votes (Adams 1789–92, Pinckney, Burr) aren't O. 1800 was a 73–73
+  Jefferson–Burr tie decided by the House.
+- **1824:** Adams won the House contingent election, not the electoral vote
+  (84–99–78).
+- **1832:** O is Wirt's 7 plus Floyd's 11 from South Carolina's legislature.
+- **1860:** O is Breckinridge plus Bell.
+- **1872:** 286–63 counts the D-ticket votes counted after Greeley's death.
+  286–66 is also defensible.
+- **2000:** one DC elector abstained, which isn't an O vote.
+- **Order varies.** 1948 and 1956–1984 put the winner first (1948
+  303–189–39, 1960 303–219–15). 1789–1836 and 1988–2024 are R–D(–O).
+
+**F9 · Low · open · place matching in typed text (`places.ts`)**
+"Washington, D.C." in a typed what-if lights up Washington state. The D.C.
+rule ends in `\b`, which can't match after the final period. Carried over
+from the source and kept as is during the port.
+
+**Next:** end the D.C. pattern with a lookahead for a non-word character or the
+end of the text, and add a test.
+
+**G7 · Medium · open · generators outside the repo**
+The all-years profiles, configs and platform files were written by scratch
+scripts kept in session scratchpads (`gen_d1.py`, `d3_build.py`,
+`d3_planks.py` and unnamed ones for the other years). So was the 1920/1924
+invariant capture (`inv/capture.py`). The felony-rate parsers live in the
+cache beside their PDFs. None can be rerun from the repo; the outputs are
+the record.
+
+**Next:** move the generators into `scripts/`.
+
+**G8 · Low · open · holdout states**
+Holdout sets were drawn three ways. live-1924 reuses 1920's draw. 1789–1836
+take a quarter of the hand-listed popular-vote states, some of them
+uncertain (TN 1800). 1880–2024 take
+`sorted(random.Random(year).sample(states, 12))`.
+
+**Next:** one formula, written down before any holdout check is run.
+
+**G9 · Low · by design · 1920/1924 invariant**
+The generalisation was checked against a capture taken before any edit.
+Every plan request, compile request and publish bundle for 1920 and 1924 is
+byte-identical, except 1924's compile prompt: its list of existing what-ifs
+now includes `no-19th`. Each typed 1924 text misses the compile cache once
+(about $0.02); no brief changes. Legacy 1916–1924 data still goes through
+the untouched loaders.

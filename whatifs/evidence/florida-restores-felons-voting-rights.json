@@ -1,0 +1,471 @@
+{
+ "summary": "Uggen and Manza's modeled counterfactual suggests that enfranchising Florida's roughly 827,000 disenfranchised felons in 2000 would have netted Gore tens of thousands of votes, enough to flip the state. The 2018 Amendment 4 evidence is mixed: it points to depressed turnout from uncertainty and fees, and one study found no clear partisan advantage.",
+ "findings": [
+  {
+   "claim": "With modeled 27.2% turnout and 68.9% Democratic preference, enfranchising Florida's disenfranchised felons yields about 85,050 net Democratic votes, versus an actual Republican margin of 537; Gore would have carried Florida.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Counterfactual restoration of felon voting in Florida, 2000",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Modeled from survey patterns, not observed; depends on the 68.9% Democratic assumption.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "With turnout halved to 13.6%, net Democratic gain is still about 42,525 votes; ex-felons only gives about 63,079 net, or about 31,540 at half turnout.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Sensitivity of the Florida 2000 counterfactual to turnout and to ex-felons only",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Net vote counts, not percentage-point shares; still assumes Democratic preference of 68.9%.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Nationally, the 2000 presidential outcome and seven US Senate seats would likely have differed without felon disenfranchisement.",
+   "source_ids": [
+    "S2"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "National counterfactual of no felon disenfranchisement",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Modeled counterfactual; the extract gives no numbers.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "About 827,000 Floridians were disenfranchised felons in 2000, the most of any state; 613,514 were ex-felons only.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Size of Florida's disenfranchised population",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Count includes prisoners and parolees; no racial breakdown retrieved.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "An estimated 600,000 ex-felons could not vote in Florida in the 2000 presidential election.",
+   "source_ids": [
+    "S8"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Florida ex-felons barred in 2000",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Overview figure; no turnout or vote-choice data.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Modeled turnout of disenfranchised felons is far below the rest of the electorate: about one-third, over 1.5 million, would have voted in a 2000 or 2004-style election.",
+   "source_ids": [
+    "S5"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Modeled national turnout of disenfranchised felons",
+   "when": "2000-2004",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [],
+   "limits": "Modeled, not observed.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "The national model gives 29.7% turnout and 68.9% Democratic preference among disenfranchised felons in 2000.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "National modeled turnout and vote choice of felons",
+   "when": "2000",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Model assumptions, not observed behavior.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "For 1978 Florida, 11,773 of 71,788 disenfranchised ex-felons would have voted (16.4 percent).",
+   "source_ids": [
+    "S4"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Modeled turnout of Florida ex-felons in 1978",
+   "when": "1978",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [],
+   "limits": "Fragmentary extract; modeled.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Amendment 4 (2018) restored rights to over 1.4 million Floridians, but SB 7066 conditioned voting on paying legal financial obligations; about 300,000 returning citizens are predicted not to vote, with uncertainty depressing turnout.",
+   "source_ids": [
+    "S10",
+    "S12"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Florida felon rights restoration in 2018 and the fee restriction",
+   "when": "2018",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [],
+   "limits": "Prediction, not observed turnout; a legal-fee barrier absent from the scenario.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "A study of Amendment 4 was reported to find it unlikely to give either party a significant advantage.",
+   "source_ids": [
+    "S13"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Partisan effect of Florida's 2018 restoration",
+   "when": "2018",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Secondhand commentary; no numbers.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Black and low-income returning citizens are dramatically affected by the later legislation limiting Amendment 4.",
+   "source_ids": [
+    "S16"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "black",
+    "region": "south"
+   },
+   "situation": "Effect of SB 7066 on returning citizens in Florida",
+   "when": "2019",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "No numbers in the notes.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "As many as 40% of black men may permanently lose the vote in states that disenfranchise ex-offenders.",
+   "source_ids": [
+    "S8"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "black",
+    "region": "any"
+   },
+   "situation": "Racial impact of ex-offender disenfranchisement",
+   "when": "c. 2000",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "General estimate, not Florida-specific.",
+   "tier": "A",
+   "grade": 0.2,
+   "reported_direction": "none"
+  }
+ ],
+ "actor_positions": [],
+ "caveats": [
+  "No breakdowns by sex, nativity or region.",
+  "The 2000 figures are modeled counterfactuals resting on assumptions.",
+  "No observed restoration turnout data from 2000 or other Southern states.",
+  "The S18 findings were not seen."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "florida-restores-felons-voting-rights",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "Uggen Manza democratic contraction felon disenfranchisement 2000 election Florida number disenfranchised",
+  "Florida Amendment 4 2018 restored voting rights turnout of returning citizens study"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "http://users.soc.umn.edu/~uggen/Uggen_ASR_02.pdf",
+   "title": "DEMOCRATIC CONTRACTION? POLITICAL CONSEQUENCES OF FELON DISENFRANCHISEMENT IN",
+   "tier": "A",
+   "cited": [
+    "number of eligible African Americans vot-."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S2",
+   "url": "https://www.researchgate.net/publication/238215000_Democratic_Contraction_The_Political_Consequences_of_Felon_Disenfranchisement_in_the_United_States",
+   "title": "Democratic Contraction? The Political Consequences of Felon Disenfranchisement in the United States",
+   "tier": "C",
+   "cited": [
+    "Specifically, if people banned for a felony conviction were eligible to vote, the outcome of the 2000 presidential election as well as seven U.S. sena..."
+   ],
+   "page_age": "8705 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "http://users.soc.umn.edu/~uggen/Uggen_Manza_ASR_02.pdf",
+   "title": "FELON DISENFRANCHISEMENT FELON DISENFRANCHISEMENT FELON DISENFRANCHISEMENT",
+   "tier": "A",
+   "cited": [
+    "Estimated Turnout and Voting Preferences of Disenfranchised Felons: Election Years 1972**\n\n**to 2000**\n\nAs Appendix Table A shows, there are have been...",
+    "Had they participated in the election at our\n\nestimated rate of Florida turnout (27.2 percent) and Democratic preference (68.9 percent), Gore would ha..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S4",
+   "url": "https://as.nyu.edu/content/dam/nyu-as/sociology/documents/manza-publications/perspectives.pdf",
+   "title": "Punishment and Democracy: Disenfranchisement of Nonincarcerated",
+   "tier": "A",
+   "cited": [
+    "pool of eligible voters, then, we can conclude that felon disenfranchisement has provided a small but clear advantage to election detailed in the top ..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S5",
+   "url": "https://web.pdx.edu/~nwallace/AHP/Manza.pdf",
+   "title": "The Impact of Disenfranchisement on Political Participation Page 1 of 16",
+   "tier": "A",
+   "cited": [
+    "To be sure, their turnout rates would fall far\n\nbelow those of the rest of the electorate. In presidential elections such as the\n\n2000 or 2004 contest..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S6",
+   "url": "http://users.cla.umn.edu/~uggen/Behrens_Uggen_Manza_ajs.pdf",
+   "title": "Racial Threat and Felon Disenfranchisement in the United ...",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S7",
+   "url": "https://as.nyu.edu/content/dam/nyu-as/faculty/documents/Punishment_and_Democracy.pdf",
+   "title": "Disenfranchisement of Nonincarcerated Felons in the ...",
+   "tier": "A",
+   "cited": [
+    "For instance, the disenfranchised felon population at the time of the 2000 presidential election has been estimated to range from 4.1 to 4.7 million A..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S8",
+   "url": "https://law.osu.edu/electionlaw/ebook/part1/documents/felonyvoting.pdf",
+   "title": "FELONY DISENFRANCHISEMENT LAWS IN THE UNITED STATES Overview",
+   "tier": "A",
+   "cited": [
+    "The state of\n\nFlorida had an estimated 600,000 ex-felons who were unable to vote in the 2000 presidential election.",
+    "In states that disenfranchise ex-offenders, as many as\n\n40% of black men may permanently lose their right to vote."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S9",
+   "url": "http://faculty.washington.edu/matsueda/courses/587/readings/Uggen%20and%20Manza%202002.pdf",
+   "title": "Democratic Contraction? Political Consequences of Felon ...",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S10",
+   "url": "https://ash.harvard.edu/wp-content/uploads/2024/02/voting_rights_restoration_in_florida_-_amendment_4_final.pdf",
+   "title": "Voting rights restoration in Florida: Amendment 4 - Ash Center",
+   "tier": "A",
+   "cited": [
+    "After an extensive campaign by the Florida Rights Restoration Coalition (FRRC) and partners,\n\nvoters in Florida passed Amendment 4 with 64% of the vot...",
+    "We predict this to be the case for ~300,000 returning citizens, demonstrating\n\nthat uncertainty around the right to vote is depressing turnout."
+   ],
+   "page_age": "973 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://miamisao.com/community/amendment4/",
+   "title": "Restoration of Voter Rights - Office of Miami-Dade State Attorney Katherine Fernandez Rundle - Office of Miami-Dade State Attorney Katherine Fernandez Rundle",
+   "tier": "C",
+   "cited": [],
+   "page_age": "173 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://www.brennancenter.org/our-work/research-reports/voting-rights-restoration-efforts-florida",
+   "title": "Voting Rights Restoration Efforts in Florida",
+   "tier": "C",
+   "cited": [
+    "Individuals can submit this form as a .PDF attachment by email to [email protected] or ...\n\n# Voting Rights Restoration Efforts in Florida\nIn November...",
+    "Ron DeSantis signed\u00a0**Senate Bill 7066**\u00a0into law, prohibiting returning citizens from voting unless they pay off certain legal financial obligations ..."
+   ],
+   "page_age": "682 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://www.usnews.com/news/best-states/articles/2018-11-07/commentary-florida-restores-voting-rights-to-15-million-citizens-which-might-also-decrease-crime",
+   "title": "Commentary: Florida Restores Voting Rights to 1.5 Million Citizens, Which Might Also Decrease Crime",
+   "tier": "C",
+   "cited": [
+    "Though a recent study estimated that Amendment 4 was unlikely to provide a significant advantage to either party."
+   ],
+   "page_age": "2884 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://en.wikipedia.org/wiki/2018_Florida_Amendment_4",
+   "title": "2018 Florida Amendment 4",
+   "tier": "C",
+   "cited": [],
+   "page_age": "43 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://www.aclu.org/news/voting-rights/amendment-4-is-back-in-court-as-florida-fights-our-victory-over-its-modern-day-poll-tax",
+   "title": "Amendment 4 is Back in Court as Florida Fights Our Victory Over its Modern-Day Poll Tax",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1311 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://www.brennancenter.org/our-work/research-reports/thwarting-amendment-4",
+   "title": "Thwarting Amendment 4",
+   "tier": "C",
+   "cited": [
+    "The analysis below demonstrates that:\n\nBy looking at voter registration data since Amendment 4 went into effect, we can see that Black and low-income ..."
+   ],
+   "page_age": "2702 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://www.propublica.org/article/in-florida-the-gutting-of-a-landmark-law-leaves-few-felons-likely-to-vote",
+   "title": "In Florida, the Gutting of a Landmark Law Leaves Few Felons Likely to Vote \u2014 ProPublica",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2175 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://www.cambridge.org/core/journals/american-political-science-review/article/abs/turnout-and-amendment-four-mobilizing-eligible-voters-close-to-formerly-incarcerated-floridians/511B638C6A909E53CD4B695BECE333CF",
+   "title": "Turnout and Amendment Four: Mobilizing Eligible Voters Close to Formerly Incarcerated Floridians",
+   "tier": "A",
+   "cited": [],
+   "page_age": "1990 days ago"
+  }
+ ],
+ "notes": "**Scope note.** The sources I found don't break results down by your simulation's groups, such as nativity, sex or region. They give totals and some racial detail. Some figures below come from fragmentary text extracts, and I flag those.\n\n## 1. Direct evidence\n\n**Number barred in Florida, 2000**\n- Uggen and Manza (American Sociological Review, 2002) estimate about 827,000 disenfranchised felons in Florida, more than in any other state [S3].\n- Their table splits that figure into 613,514 ex-felons only, within the 827,207 total [S3].\n- Another source gives a similar figure: an estimated 600,000 ex-felons who were unable to vote in the 2000 presidential election [S8].\n- Nationally, estimates for 2000 range from 4.1 to 4.7 million Americans, the latter about 2.3 percent of the voting-age population [S7].\n- The sources I retrieved did not give Florida's racial breakdown for 2000. Two related points are available:\n  - The authors' reasoning rests on disenfranchisement reducing the number of eligible African American voters [S1].\n  - One estimate says that in states that disenfranchise ex-offenders, as many as 40% of black men may permanently lose their right to vote [S8].\n- I have no reliable Florida racial percentages for 2000. Please pull Appendix Table A or the 2006 book *Locked Out*.\n\n**Effect on the outcome**\n- Uggen and Manza's counterfactual assumes Florida turnout of 27.2 percent and a Democratic preference of 68.9 percent [S3].\n- On those assumptions, Gore would have carried Florida [S3]. The table gives a net of about 85,050 Democratic votes against an actual Republican margin of 537.\n- With turnout halved to 13.6%, the net is still about 42,525 Democratic votes.\n- Restricting the counterfactual to ex-felons only gives about 63,079 net Democratic votes, or about 31,540 at half the turnout.\n- Nationally, the outcome of the 2000 presidential election, and seven US Senate seats, would likely have been different [S2].\n\n## 2. Analogues: turnout and vote choice\n\n**Turnout compared with similar voters**\n- Uggen and Manza model that disenfranchised felons' turnout would fall far below the rest of the electorate. About one-third, over 1.5 million people, would have voted in a 2000 or 2004-style election [S5].\n- Their Florida estimate of 27.2% is the modeled rate for people with the demographics of the disenfranchised. It is not an observed rate.\n- For 1978 Florida, one extract says 11,773 of 71,788 disenfranchised ex-felons would have voted (16.4 percent) [S4].\n- Their national model gives 29.7 percent turnout and 68.9 percent Democratic preference in 2000 [S3].\n- I did not find a source here that compares ex-offenders directly with matched non-offenders, so the \"similar age and background\" question is only partly answered.\n\n**Observed behavior after restoration**\n- **Florida 2018 (Amendment 4).** Nearly 65 percent of Florida voters approved it [S12].\n  - It restored rights to more than 1.4 million residents [S10], with exclusions for murder and felony sex offenses.\n  - SB 7066 then barred returning citizens from voting unless they paid certain legal financial obligations [S12].\n  - A Harvard Ash Center paper says about 300,000 returning citizens are predicted not to exercise the right, showing uncertainty is depressing turnout [S10].\n  - A study of Amendment 4 was reported to find it unlikely to give either party a significant advantage [S13].\n  - That contrasts with Uggen and Manza's 68.9% Democratic assumption.\n  - Another paper in the APSR, \"Turnout and Amendment Four,\" looks at mobilization of eligible voters close to formerly incarcerated Floridians. I only saw its reference list, so I can't report its findings.\n  - Observed turnout and vote shares by race for returning citizens were not in my results. The Brennan Center analysis finds Black and low-income returning citizens are dramatically affected by the later legislation [S16].\n\n**Not found**\n- I did not find observed restoration-turnout data for other Southern states, such as Virginia, Kentucky or Mississippi.\n- I found nothing by sex, nativity or region.\n\n## 3. Named people\nThe scenario names no specific person. Governor Jeb Bush, Katherine Harris and Al Gore are plausible candidates, but I did not search for their positions in 2000, so I report nothing on them.\n\n## 4. Limits\n- **Modeled, not observed.** The 2000 figures are projections from survey-based turnout and vote-choice patterns. The authors call their assumptions conservative, but they remain assumptions.\n- **Counterfactual sensitivity.** The result depends on the 68.9% Democratic share. If the 2018 evidence of no clear partisan advantage applies to 2000, the net Democratic gain would be smaller.\n- **Restoration is not registration.** In 2018, uncertainty about eligibility and fees held turnout down, and the same would likely happen in 2000. A restoration enacted shortly before the election would probably see lower turnout than the model assumes.\n- **Time and composition.** 2018 differs from 2000 in the size and racial composition of the population, in party alignment and in campaign mobilization.\n- **Ex-felon share.** The 2000 counts include current prisoners and parolees as well as ex-felons. The ex-felon-only row shows 613,514 of the 827,207.\n- **Data gaps.** The sources here don't separate Black, Hispanic and white returning citizens, or men and women. They also don't separate naturalized citizens, because noncitizens cannot vote anyway. Treat any group split as unsupported until you check the full tables.",
+ "prompt": "Scenario for the 2000 United States presidential election (election day 2000-11-07).\nA reader asked: \"Florida restores voting rights to people with felony convictions before the 2000 election.\".\nAs modelled: Florida lets people with past felony convictions vote in the 2000 presidential election.\nKind of change: franchise. Populations it reaches first: region: south.\nInclude how newly enfranchised or newly barred groups actually turned out and voted the first times the rules changed for them.\n\nQuestions to answer:\n- How many Floridians were barred from voting in 2000 because of felony convictions, and what was their racial makeup?\n- How much do ex-offenders turn out compared with other voters of similar age and background?\n- How have people with felony records voted when rights were restored, in Florida or elsewhere?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 20400,
+  "output_tokens": 2394,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 2
+ },
+ "dollars": 0.1155
+}

@@ -1,0 +1,94 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 2 November",
+ "names": {
+  "R": "Bush",
+  "D": "Kerry",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "George W. Bush",
+  "D": "John Kerry"
+ },
+ "descriptors": {
+  "R": "the sitting President, nominee of the party that holds the White House and both houses of Congress",
+  "D": "nominee of the party out of power since 2001; a sitting senator from a New England state"
+ },
+ "compile_desc": {
+  "R": "the party that holds the White House and both houses of Congress",
+  "D": "the party out of power since 2001",
+  "president": "Bush"
+ },
+ "third": null,
+ "label_pool": [
+  "Q",
+  "U",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including an independent, a Libertarian and a Green nominee (answer \"other\").",
+ "plank_order": [
+  "terror",
+  "Iraq",
+  "taxes",
+  "Social Security",
+  "health care",
+  "marriage"
+ ],
+ "names_re": "\\b(Bush|Kerry|Cheney|Edwards|Dean|Clark|Lieberman|Gephardt|Nader|Camejo|Badnarik|Cobb|Clinton|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Bush, Kerry, Cheney, Edwards, Dean, Clark, Lieberman, Gephardt, Nader, Camejo, Badnarik, Cobb or Clinton",
+ "corpus": null,
+ "platforms": "context/platforms_2004.json",
+ "ev_label": "286–251–1",
+ "slice_sources": {
+  "men": "2000 census and 2005 American Community Survey (1-year, IPUMS) interpolated to November 2004; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2004); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2004 returns.",
+  "women": "2000 census and 2005 American Community Survey (1-year, IPUMS) interpolated to November 2004; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2004); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2004 returns.",
+  "south-white": "2000 census and 2005 American Community Survey (1-year, IPUMS) interpolated to November 2004; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2004); calibrated to the certified 2004 returns.",
+  "black-south": "2000 census and 2005 American Community Survey (1-year, IPUMS) interpolated to November 2004; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2004), which falls on them disproportionately; calibrated to the certified 2004 returns.",
+  "immigrants": "2000 census and 2005 American Community Survey (1-year, IPUMS) interpolated to November 2004; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President )?(?:George )?(?:W\\. )?Bush\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Senator )?(?:John )?(?:F\\. )?Kerry\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Dick )?Cheney\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:John )?Edwards\\b",
+   "a running mate"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Howard )?Dean\\b|\\b(?:Wesley )?Clark\\b|\\b(?:Joe )?Lieberman\\b|\\b(?:Dick )?Gephardt\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Ralph )?Nader\\b|\\b(?:Peter )?Camejo\\b|\\b(?:Michael )?Badnarik\\b|\\b(?:David )?Cobb\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:Bill )?Clinton\\b",
+   "the former President"
+  ]
+ ]
+}

@@ -1,0 +1,72 @@
+{
+  "run_id": "1908-0855061e50",
+  "config": {
+    "election": 1908,
+    "election_day": "1908-11-03",
+    "context_cutoff": "1908-11-02",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AR",
+      "IL",
+      "IN",
+      "KY",
+      "LA",
+      "MS",
+      "ND",
+      "OH",
+      "RI",
+      "SC",
+      "VT",
+      "WY"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "1f496c28400be6a5",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults_1900_by_state_nhgis.csv": "200c981864b18786",
+    "population/adults_1910_by_state.csv": "78ec7a0ca2094430",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1908.json": "1efb7dd9a60b7d53",
+    "sources/corpus_1908.jsonl": "25c64a1f7a001590"
+  }
+}

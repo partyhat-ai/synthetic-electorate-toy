@@ -18,6 +18,9 @@ from .aggregate import World
 from .geo import SOUTH, STATE_NAME
 from .stats import expit, logit
 
+# Every presidential election: 1789, then every fourth year from 1792.
+ELECTION_YEARS = [1789] + list(range(1792, 2025, 4))
+
 
 def _northern_black_share(fit, world: World) -> np.ndarray:
     """[D, 3] vote shares of Black voters outside the South, this world."""
@@ -125,7 +128,10 @@ def transfer(pairs: list, draws: int, rng) -> dict:
 
 def facts_no_19th(agent: dict, inp, year: int = 1920) -> dict:
     s = agent['state']
-    facts = ['In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified.']
+    if year == 1920:
+        facts = ['In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified.']
+    else:
+        facts = ['In August 1920 the Tennessee legislature voted the woman suffrage amendment down, and it has never been ratified.']
     elig = None
     if agent['sex'] == 'F':
         if s in inp.women_pre19:
@@ -142,7 +148,8 @@ def facts_fifteenth(agent: dict, inp, year: int = 1920) -> dict:
     s = agent['state']
     if s not in SOUTH:
         return {'facts': [], 'eligibility': None, 'drop_topics': set()}
-    facts = [f'Since the Supreme Court struck down {STATE_NAME.get(s, s)}\'s poll tax and registration test in 1919, and '
+    # 1920 and 1924 read "in 1919"; an earlier election, the year before it.
+    facts = [f'Since the Supreme Court struck down {STATE_NAME.get(s, s)}\'s poll tax and registration test in {min(year - 1, 1919)}, and '
              'federal registrars were sent to every Southern county, Black citizens register and vote on the same '
              'terms as white citizens.']
     elig = None
@@ -150,6 +157,8 @@ def facts_fifteenth(agent: dict, inp, year: int = 1920) -> dict:
     if agent['group'] == 'black':
         if agent['sex'] == 'F' and s in closed:
             elig = f'Registration in {STATE_NAME.get(s, s)} closed before women could enrol, so this person cannot vote for president this year.'
+        elif agent['sex'] == 'F' and year < 1920 and s not in (getattr(inp, 'women_vote', None) or ()):
+            elig = f'Women cannot vote for president in {STATE_NAME.get(s, s)}.'
         else:
             elig = 'This person is registered and can vote this year.'
     return {'facts': facts, 'eligibility': elig, 'drop_topics': {'T5'} if agent['group'] == 'black' else set()}
@@ -168,7 +177,7 @@ def facts_league(agent: dict, inp, year: int = 1920) -> dict:
 
 REGISTRY = {
     'no-19th': {
-        'label': 'The 19th Amendment Fails', 'kind': 'franchise', 'mode': 'backbone', 'apply': no_19th, 'years': [1920],
+        'label': 'The 19th Amendment Fails', 'kind': 'franchise', 'mode': 'backbone', 'apply': no_19th, 'years': [y for y in ELECTION_YEARS if y >= 1920],
         'facts': facts_no_19th, 'slices': ['women'],
         'detail': 'Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.',
         'assumption': 'Women in states without their own presidential suffrage can\'t vote. Everyone else turns out and chooses exactly as in 1920; men\'s votes don\'t change.',
@@ -177,7 +186,7 @@ REGISTRY = {
                                'In states where women already voted for president before 1920, did their votes change the result or the parties\' shares?'],
     },
     'fifteenth': {
-        'label': 'Enforce the 15th Amendment', 'kind': 'franchise', 'mode': 'backbone', 'apply': fifteenth, 'years': [1920, 1924],
+        'label': 'Enforce the 15th Amendment', 'kind': 'franchise', 'mode': 'backbone', 'apply': fifteenth, 'years': list(range(1892, 1965, 4)),
         'facts': facts_fifteenth, 'slices': ['black-south'],
         'detail': 'Black Southerners vote as freely as white Southerners: no literacy tests, poll taxes or terror.',
         'assumption': 'Black adults in the eleven former Confederate states turn out at the rate white adults of their own state and sex did in 1920, and split like Black voters outside the South in 1920.',
@@ -195,13 +204,25 @@ REGISTRY = {
                                'Which groups (German, Irish and Italian Americans; Midwestern farmers) moved against the administration over the treaty, and by how much?'],
     },
     'everyone': {
-        'label': 'Everyone Votes', 'kind': 'franchise', 'mode': 'backbone', 'apply': everyone, 'years': [1920, 1924],
+        'label': 'Everyone Votes', 'kind': 'franchise', 'mode': 'backbone', 'apply': everyone, 'years': list(ELECTION_YEARS),
         'facts': None, 'slices': [],
         'detail': 'Every adult can vote, and turns out.',
         'assumption': 'Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1920.',
         'borrowed': 'naturalized citizens of the same state and sex; Black voters outside the South',
     },
 }
+
+# Built-in texts written for 1920 that name its year. Another year (1924 kept as it
+# was published) reads them with its own year: "as their group did in 1932".
+YEAR_TEXT = ('assumption', 'borrowed')
+
+
+def text_for(spec: dict, year: int) -> dict:
+    """A registry entry as an election year's page reads it."""
+    if spec.get('generated') or year in (1920, 1924):
+        return spec
+    return {**spec, **{k: spec[k].replace('1920', str(year)) for k in YEAR_TEXT if isinstance(spec.get(k), str)}}
+
 
 def for_year(keys, year: int) -> list:
     """The keys whose what-if applies to this election year."""

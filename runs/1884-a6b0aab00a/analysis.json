@@ -1,0 +1,347 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:F:native_white",
+   "label": "Native-born white women, south",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.7410709985199639,
+   "agent_r2": 0.5159010600706714,
+   "backbone_r2": 0.33025436191731117,
+   "bias_logit": 0.7706605402887914,
+   "tvd": 0.25892900148003606,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:F:native_white",
+   "label": "Native-born white women, northeast",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 2,
+   "agent_turnout": 0.7333333333333334,
+   "backbone_turnout": 0.8131397048988436,
+   "agent_r2": 0.6679841897233201,
+   "backbone_r2": 0.5456958192557262,
+   "bias_logit": 0.5157871784970174,
+   "tvd": 0.5562730625658661,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:F:native_white",
+   "label": "Native-born white women, midwest",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 2,
+   "agent_turnout": 0.7399999999999999,
+   "backbone_turnout": 0.8636715963069739,
+   "agent_r2": 0.4933120383310042,
+   "backbone_r2": 0.551594692988379,
+   "bias_logit": -0.2338694404665795,
+   "tvd": 0.13632840369302612,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "south:M:native_white",
+    "n": 2,
+    "sd_R2": 0.3006535947712418,
+    "modal_share": 0.5,
+    "backbone_r2": 0.33025436191731117,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 2,
+    "sd_R2": 0.0,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5456958192557262,
+    "homogenized": true
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 2,
+    "sd_R2": 0.2712418300653594,
+    "modal_share": 0.5,
+    "backbone_r2": 0.551594692988379,
+    "homogenized": false
+   }
+  ],
+  "homogenization_index": 0.3333333333333333,
+  "eligible_cohorts": 3
+ },
+ "a4": {
+  "audited": 24,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {
+  "no-rum-romanism-rebellion-remark": {
+   "national": {
+    "dt": {
+     "mean": -0.02717442522950048,
+     "lo": -0.04702855650907645,
+     "hi": -0.007984211654344308
+    },
+    "dr": {
+     "mean": 0.23948598712202646,
+     "lo": 0.10446071478627153,
+     "hi": 0.3548468348933204
+    },
+    "do": {
+     "mean": 0.021545370862573358,
+     "lo": -0.003647499455349554,
+     "hi": 0.046740812760810324
+    }
+   },
+   "national_bias": 0.17542971305320487,
+   "by_paraphrase": {
+    "0": {
+     "dt": 0.024273036356206618,
+     "dr": 0.0937080860110785,
+     "do": -0.042622394750451376
+    },
+    "1": {
+     "dt": -0.08102776639922107,
+     "dr": -0.04532578859176917,
+     "do": 0.10164100013518884
+    },
+    "2": {
+     "dt": -0.05702799323330829,
+     "dr": 1.4339147587524477,
+     "do": 0.09820828850614127
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": -0.04388307900967714,
+     "dr": 0.7390762928602645,
+     "do": 0.07677175899951516
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": -0.04388307900967714,
+     "dr": 0.7390762928602645,
+     "do": 0.07677175899951516
+    }
+   },
+   "agent_stats": {
+    "n": 12,
+    "measure": "dr",
+    "spans_zero": false,
+    "paraphrase_flip": true,
+    "exposed": false,
+    "checked": 0,
+    "misread": 0
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "r2",
+      "agents_pp": 4.8,
+      "detail": "On the Republican two-party share, the sources point the same way as the interviews (+4.8 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the same way as the interviews (+4.8 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": []
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.7399999999999999,
+      "R2": 0.4933120383310042,
+      "O": 0.2630514705882353,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7399999999999999,
+      "R2": 0.6803753244160511,
+      "O": 0.2630514705882353,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": 0.7822506172382148,
+     "do": 0.0,
+     "bias": -0.2338694404665795,
+     "n": 2,
+     "bias_used": -0.2338694404665795,
+     "weight": 0.18962829641127055,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.6679841897233201,
+      "O": 0.24814814814814815,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.6648847043804357,
+      "O": 0.25681481481481483,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": -0.013942905969012265,
+     "do": 0.04592336641023187,
+     "bias": 0.5157871784970174,
+     "n": 2,
+     "bias_used": 0.5157871784970174,
+     "weight": 0.15797333936611738,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.7566666666666667,
+      "R2": 0.5159010600706714,
+      "O": 0.26101083032490974,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.71,
+      "R2": 0.687906099350241,
+      "O": 0.28307984790874524,
+      "n": 2
+     },
+     "dt": -0.23910652927817044,
+     "dr": 0.7267225430858157,
+     "do": 0.11148589892817684,
+     "bias": 0.7706605402887914,
+     "n": 2,
+     "bias_used": 0.7706605402887914,
+     "weight": 0.1254769954372905,
+     "exposed": false,
+     "evidence_blend": {}
+    }
+   }
+  }
+ }
+}

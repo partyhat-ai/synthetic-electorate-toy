@@ -1,0 +1,94 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 4 November",
+ "names": {
+  "R": "Frémont",
+  "D": "Buchanan",
+  "O": "Fillmore"
+ },
+ "full_names": {
+  "R": "John C. Frémont",
+  "D": "James Buchanan",
+  "O": "Millard Fillmore"
+ },
+ "descriptors": {
+  "R": "nominee of a new party, organized since 1854 in the free states, that would bar slavery from the territories and admit Kansas as a free state; an explorer of the Far West and briefly a senator, new to party politics",
+  "D": "nominee of the party of the administration in office since 1853; a former Secretary of State and minister to Britain, abroad during the Kansas–Nebraska fight, standing on the right of each territory's settlers to decide on slavery",
+  "O": "nominee of the nativist party that would lengthen naturalization and keep the foreign-born from office, and that seeks to quiet the slavery question; a former President"
+ },
+ "compile_desc": {
+  "R": "the new party organized since 1854 against the extension of slavery",
+  "D": "the party of the administration in office since 1853",
+  "president": "Pierce"
+ },
+ "third": "O",
+ "label_pool": [
+  "E",
+  "G",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on very few ballots (answer \"other\").",
+ "plank_order": [
+  "slavery",
+  "Kansas",
+  "immigration",
+  "Union",
+  "Pacific railroad",
+  "internal improvements",
+  "national bank",
+  "foreign"
+ ],
+ "names_re": "\\b(Fr[eé]mont|Buchanan|Breckinridge|Dayton|Fillmore|Donelson|(?-i:Pierce)\\b|Douglas|Sumner|Republican|Democrat|(?-i:Democracy)|American party|Know[- ]?Nothing)",
+ "never_name": "Frémont, Buchanan, Breckinridge, Dayton, Fillmore, Donelson, Pierce, Douglas or Sumner",
+ "corpus": null,
+ "platforms": "context/platforms_1856.json",
+ "ev_label": "114–174–8",
+ "slice_sources": {
+  "men": "1850 and 1860 censuses interpolated to November 1856, white men 21+ outside the eleven later-Confederate states; property tests had mostly ended and a few New England states let free Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1856; women 21+ shown for population only.",
+  "south-white": "1850 and 1860 censuses interpolated to 1856, white adults in the eleven later-Confederate states; white men voted except in South Carolina, whose legislature chose its electors; the new free-soil party was on almost no Southern ballot; calibrated to certified returns.",
+  "black-south": "1850 and 1860 censuses interpolated to 1856, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote and no Southern state let free Black men vote.",
+  "immigrants": "1850 and 1860 censuses interpolated to 1856, foreign-born white men not yet naturalized; several Western states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Pierce\\b|\\bPierce\\b",
+   "the President"
+  ],
+  [
+   "\\bFr[eé]mont\\b",
+   "the free-soil nominee"
+  ],
+  [
+   "\\bBuchanan\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bFillmore\\b",
+   "the nativist nominee"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the new free-soil party"
+  ],
+  [
+   "\\bAmerican [Pp]arty\\b|\\bKnow[- ]?Nothings?\\b",
+   "the nativist party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Breckinridge|Dayton|Donelson)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Douglas|Sumner)\\b",
+   "a senator"
+  ]
+ ]
+}

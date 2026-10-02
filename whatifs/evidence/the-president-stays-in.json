@@ -1,0 +1,573 @@
+{
+ "summary": "No actual outcome exists for Biden staying in; he withdrew July 21, 2024. Pre-withdrawal polls show high age concerns, shaky Democratic loyalty and a small, growing Trump lead. Analogues (FDR 1944, Humphrey 1968) are loose and carry no group breakdowns.",
+ "findings": [
+  {
+   "claim": "Majorities said Biden was too old: 67% of voters (Data for Progress); 78% of debate viewers versus 64% of all voters earlier (Morning Consult). Democratic debate viewers saying too old rose from 43% to 64%.",
+   "source_ids": [
+    "S1",
+    "S2"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Post-debate polling on Biden's age, 2024",
+   "when": "June-July 2024",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Pre-withdrawal polls; no demographic breakdown retrieved; opinion not votes.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Horse race barely moved at first (Biden 45, Trump 44 the day after the debate), but 538's average later showed Trump ahead by 2 points.",
+   "source_ids": [
+    "S2",
+    "S5",
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Biden-Trump polling after debate",
+   "when": "June-July 2024",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Polls, not outcomes; the effect was small and some voters had priced it in.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Democratic loyalty was shaky: 47% of Democrats said Biden should be replaced; only 51% wanted him to remain nominee, down 12 points since March; 40 congressional Democrats urged him out.",
+   "source_ids": [
+    "S1",
+    "S2",
+    "S5"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Democratic support for Biden staying as nominee",
+   "when": "June-July 2024",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Stated preference; no vote or turnout numbers.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "No clear evidence that an alternative Democratic nominee would significantly outperform Biden against Trump.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Hypothetical alternative nominees versus Trump",
+   "when": "July 2024",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Hypothetical matchups; the Harris-specific result isn't given.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Roosevelt won 1944 with 53.4% to Dewey's 45.9%, a lower share than in 1940, and turnout fell 6.6 points to 55.9%, which sources attribute to wartime conditions.",
+   "source_ids": [
+    "S6"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Ailing incumbent re-elected, 1944",
+   "when": "1944",
+   "match": "distant",
+   "relation": "like-scenario",
+   "role_direction": "toward-affected",
+   "direction": "toward-D",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -6.6,
+     "pm": 3.3
+    }
+   ],
+   "limits": "Health was concealed; war drove turnout; the drop isn't tied to health.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Dewey carried 12 states, mostly Midwestern and Plains states plus Maine and Vermont; Roosevelt held the South and the coasts. In Texas, 135,553 voted against Roosevelt without backing the Republican ticket.",
+   "source_ids": [
+    "S8",
+    "S9",
+    "S6"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Regional pattern in the 1944 election",
+   "when": "1944",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Southern anti-Roosevelt feeling, not health; electorate differed greatly.",
+   "tier": "B",
+   "grade": 0.12,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Voters were reluctant to change leadership during wartime in 1944.",
+   "source_ids": [
+    "S13"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Wartime reluctance to change incumbent",
+   "when": "1944",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Homework site; war-specific.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "In 1968 after Johnson withdrew, Nixon won 43.4%, Humphrey 42.7%, Wallace 13.5%; turnout was 62.5%, down 0.3 points.",
+   "source_ids": [
+    "S16"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Democratic nominee after incumbent withdrew, 1968",
+   "when": "1968",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "away-from-affected",
+   "direction": "none",
+   "effects": [],
+   "limits": "Withdrawal came months before the convention; Wallace drove the third-party vote; the effect isn't isolated.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Humphrey won 74% of Democrats versus Nixon's 86% of Republicans, and lost independents 31% to 44% with 25% for Wallace. Catholics backed him 59%; Nixon won voters over 50, 47% to 41%.",
+   "source_ids": [
+    "S19"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1968 Humphrey coalition and party loyalty",
+   "when": "1968",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "away-from-affected",
+   "direction": "none",
+   "effects": [],
+   "limits": "Divisions driven by war and convention; not caused by a nominee change.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "White Southern Democrats rallied to Wallace in 1968, and some antiwar McCarthy and Kennedy supporters reportedly stayed home, though national turnout barely moved.",
+   "source_ids": [
+    "S16",
+    "S23"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Democratic defections in 1968",
+   "when": "1968",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "away-from-affected",
+   "direction": "none",
+   "effects": [],
+   "limits": "Textbook claim; the segregationist realignment has no 2024 equivalent.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "toward-other"
+  },
+  {
+   "claim": "Convention violence and party divisions in 1968 were blamed for the loss, convincing many Americans a Democratic administration could not govern; Dallek is cited saying Humphrey was too tied to Johnson's policies.",
+   "source_ids": [
+    "S25",
+    "S16"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Explanations for Democratic defeat, 1968",
+   "when": "1968",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "away-from-affected",
+   "direction": "none",
+   "effects": [],
+   "limits": "Interpretive claims; specific to the 1968 war and convention.",
+   "tier": "B",
+   "grade": 0.12,
+   "reported_direction": "toward-R"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Biden's team blamed his debate performance on a cold, and the campaign called it a bad night.",
+   "date": "2024-06",
+   "source_ids": [
+    "S5"
+   ]
+  },
+  {
+   "text": "Biden insisted he would stay in the race, saying he was the best option to defeat Trump, and said he thought he had done well in the debate.",
+   "date": "2024-06/07",
+   "source_ids": [
+    "S5",
+    "S3"
+   ]
+  },
+  {
+   "text": "The Guardian reported Biden was reconsidering his candidacy; he withdrew two days later.",
+   "date": "2024-07-19",
+   "source_ids": [
+    "S3"
+   ]
+  },
+  {
+   "text": "Biden withdrew from the race after pressure from party members.",
+   "date": "2024-07-21",
+   "source_ids": [
+    "S3",
+    "S5"
+   ]
+  }
+ ],
+ "caveats": [
+  "No source breaks evidence down by sex, citizenship, race or region.",
+  "Biden actually withdrew, so there is no real outcome for the scenario.",
+  "Sources are mostly Wikipedia, polling firms and reference sites.",
+  "No 1920 Wilson source was found.",
+  "Roosevelt's physician statement is from Grokipedia and I left it out as an actor position because it falls outside the scenario's focus."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "the-president-stays-in",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "Biden debate performance age concerns voters poll Democrats replace nominee June 2024",
+  "1944 election Roosevelt health concealed voters turnout Truman vote share 1944 by region",
+  "1968 election Humphrey Democratic defections turnout 1968 Johnson withdrew late nominee change vote by group"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://www.dataforprogress.org/blog/2024/6/29/in-post-debate-poll-voters-think-biden-is-too-old-to-be-president-yet-alternative-candidates-perform-similarly-against-trump",
+   "title": "In Post-Debate Poll, Voters Think Biden Is Too Old to Be President Yet Alternative Candidates Perform Similarly Against Trump",
+   "tier": "C",
+   "cited": [
+    "**Voters\u2019 Perceptions of Biden\u2019s Age and Leadership Qualities**\n\nSixty-seven percent of voters say that Biden is too old to be president, while 35% sa...",
+    "Only 51% of Democrats and 35% of all likely voters say that Joe Biden should remain as the Democratic nominee for the 2024 presidential election. This...",
+    "Overall, these results show that voters continue to be concerned about Biden\u2019s age \u2014 but there is not yet clear evidence that an alternative nominee w..."
+   ],
+   "page_age": "814 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://pro.morningconsult.com/analysis/biden-trump-debate-poll-june-2024",
+   "title": "Post Biden-Trump Debate Poll Finds Democrats Want a New Nominee",
+   "tier": "C",
+   "cited": [
+    "- The Biden campaign viewed last night\u2019s debate as another opportunity to assuage concerns about his age and mental acuity, but that didn\u2019t work: Amon...",
+    "The shift on perceptions of Biden\u2019s age was even larger among Democrats who tuned in: 64% of Democrats who watched the debate said he is too old, up f...",
+    "Our latest survey, conducted Friday, found 45% of voters support Biden and 44% support Trump.",
+    "Three in 5 voters, including a 47% plurality of Democrats, said Biden should be replaced as the Democratic candidate for president."
+   ],
+   "page_age": "813 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://en.wikipedia.org/wiki/2024_Joe_Biden%E2%80%93Donald_Trump_presidential_debate",
+   "title": "2024 Joe Biden\u2013Donald Trump presidential debate",
+   "tier": "C",
+   "cited": [
+    "Though his campaign was initially defiant, Biden ultimately bowed to party pressure and withdrew from the election on July\u00a021.",
+    "Amy Walter, the editor of *The Cook Political Report*, said that while Biden's poor performance stunned \"Democratic elite types\", many voters had alre...",
+    "### Biden campaign's response\nAfter the debate, Biden remarked to reporters at a Waffle House that he thought he had done well.",
+    "On July 19, *The Guardian* reported that \"after weeks of defiantly stating that he will remain the Democratic nominee, despite concerns about his age ..."
+   ],
+   "page_age": "26 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.deseret.com/politics/2024/07/01/polls-voters-biden-drop-out/",
+   "title": "After messy debate, polls show voters want Biden replaced on Dem ticket",
+   "tier": "C",
+   "cited": [],
+   "page_age": "821 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://abcnews.go.com/amp/Politics/biden-drops-2024-presidential-race/story?id=111648603",
+   "title": "Biden drops out of 2024 presidential race - ABC News",
+   "tier": "C",
+   "cited": [
+    "In 538's national polling average, Trump now leads by 2 percentage points over Biden, while the two candidates were just about tied on the day of the ...",
+    "The number of congressional Democrats who called on him to step aside rose to 40 by the time Biden announced his decision to leave the race.",
+    "The White House and campaign chalked up the performance as a \"bad night.\"",
+    "Biden defiantly insisted he would remain in the race, repeatedly telling Democrats he was the best option to defeat Trump."
+   ],
+   "page_age": "801 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://en.wikipedia.org/wiki/1944_United_States_presidential_election",
+   "title": "1944 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "# 1944 United States presidential election\n**1944 United States presidential election**\n\nNovember 7, 1944\n\n**531 members of the Electoral College 266 ...",
+    "Dewey did better against Roosevelt than any of Roosevelt's previous three Republican opponents: Roosevelt's percentage and margin of the total vote we...",
+    "In 1944, the constantly growing Southern protest against Roosevelt's leadership became clearest in Texas, where 135,553 people voted against Roosevelt..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://www.presidency.ucsb.edu/statistics/elections/1944",
+   "title": "1944",
+   "tier": "A",
+   "cited": [],
+   "page_age": "536 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1944",
+   "title": "United States presidential election of 1944",
+   "tier": "B",
+   "cited": [
+    "Dewey won only 12 states: Colorado, Indiana, Iowa, Kansas, Maine, Nebraska, North Dakota, Ohio, South Dakota, Vermont, Wisconsin, and Wyoming."
+   ],
+   "page_age": "335 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://www.statista.com/statistics/1056568/distribution-votes-1944-us-presidential-election/",
+   "title": "Distribution of votes in the 1944 US presidential election",
+   "tier": "C",
+   "cited": [
+    "Roosevelt carried the traditionally-Democratic Solid South, as well as every coastal state except Maine."
+   ],
+   "page_age": "5572 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://simple.wikipedia.org/wiki/1944_United_States_presidential_election",
+   "title": "1944 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Roosevelt's aides covered up the fact the president was in poor health.",
+    "To quiet rumors of his poor health, Roosevelt insisted on making a vigorous campaign trip in October and rode in an open car through city streets."
+   ],
+   "page_age": "334 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://grokipedia.com/page/1944_United_States_presidential_election",
+   "title": "1944 United States presidential election \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [
+    "remained decisive at 3.6 million votes (from 5 million in 1940).^^[37] ^^[1] Notable close contests included Ohio, where Dewey edged Roosevelt by appr..."
+   ],
+   "page_age": "260 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://presidentialcampaignselectionsreference.wordpress.com/overviews/20th-century/1944-overview/",
+   "title": "1944",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2657 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://study.com/academy/lesson/the-presidential-election-of-1944.html",
+   "title": "The 1944 Presidential Election",
+   "tier": "C",
+   "cited": [
+    "Though concerned about his health, Americans were reluctant to change leadership during a war, and a string of battle victories leading to election da..."
+   ],
+   "page_age": "1717 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://www.archives.gov/electoral-college/1944",
+   "title": "1944 Electoral College Results",
+   "tier": "A",
+   "cited": [],
+   "page_age": "2449 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://www.historycentral.com/elections/1944.html",
+   "title": "The Election of 1944 \u2014 Franklin D. Roosevelt",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S16",
+   "url": "https://en.wikipedia.org/wiki/1968_United_States_presidential_election",
+   "title": "1968 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "**1968 United States presidential election**\n\nNovember 5, 1968\n\n**538 members of the Electoral College 270 electoral votes needed to win**\n\nOpinion po...",
+    "Many would rally behind the third-party campaign of former Alabama Governor George Wallace as a \"law and order\" candidate.",
+    "Accordingly, I shall not seek, and I will not accept, the nomination of my party for another term as your President.\"",
+    "Dallek concludes that Nixon's advice to Saigon made no difference, and that Humphrey was so closely identified with Johnson's unpopular policies that ..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://en.wikipedia.org/wiki/Withdrawal_of_Lyndon_B._Johnson_from_the_1968_United_States_presidential_election",
+   "title": "Withdrawal of Lyndon B. Johnson from the 1968 United States presidential election",
+   "tier": "C",
+   "cited": [],
+   "page_age": "15 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://en.wikipedia.org/wiki/1968_Democratic_Party_presidential_primaries",
+   "title": "1968 Democratic Party presidential primaries",
+   "tier": "C",
+   "cited": [],
+   "page_age": "14 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://en.wikipedia.org/wiki/Hubert_Humphrey_1968_presidential_campaign",
+   "title": "Hubert Humphrey 1968 presidential campaign",
+   "tier": "C",
+   "cited": [
+    "Humphrey lost the Independent vote 31% to 44%, with 25% going to Wallace, and won a lower percentage among Democrats (74%) than Nixon won among Republ...",
+    "Catholics backed Humphrey with 59%, twelve points ahead of Nixon, but Protestants favored Nixon, 49% to 35%.",
+    "## Results\nNixon won among voters over 50 years, 47% to 41%."
+   ],
+   "page_age": "97 days ago"
+  },
+  {
+   "id": "S20",
+   "url": "https://www.pbs.org/johngardner/chapters/5a.html",
+   "title": "PBS - Thematic Window: The Election of 1968",
+   "tier": "B",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S21",
+   "url": "https://www.statista.com/statistics/1056667/distribution-votes-1968-us-presidential-election/",
+   "title": "Distribution of votes in the 1968 US presidential election",
+   "tier": "C",
+   "cited": [],
+   "page_age": "5572 days ago"
+  },
+  {
+   "id": "S22",
+   "url": "https://thetexasorator.com/2020/04/14/1968-the-year-that-broke-the-democratic-party/",
+   "title": "1968: The Year that Broke the Democratic Party",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2359 days ago"
+  },
+  {
+   "id": "S23",
+   "url": "https://courses.lumenlearning.com/wm-ushistory2/chapter/the-election-of-1968/",
+   "title": "The Election of 1968",
+   "tier": "C",
+   "cited": [
+    "In November, many who had supported antiwar candidates Eugene McCarthy and the late Robert Kennedy refused to vote."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S24",
+   "url": "https://www.detroitnews.com/picture-gallery/news/local/michigan-history/2016/05/11/1968-a-tumultous-election-year/83900734/",
+   "title": "1968: A tumultous election year",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2965 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://www.britannica.com/event/Democratic-National-Convention-of-1968",
+   "title": "Democratic National Convention of 1968",
+   "tier": "B",
+   "cited": [
+    "The pandemonium at the convention and violent confrontations between police and thousands of antiwar, Black Power, and other leftist protesters from a..."
+   ],
+   "page_age": "36 days ago"
+  }
+ ],
+ "notes": "**Scope note.** My searches found nothing that breaks the evidence down by your simulation's groups (sex, nativity or citizenship, race, region) for any of these cases. Region appears only in a few 1944 and 1968 fragments. I found no 1920 Wilson source at all. The sources are also mostly Wikipedia, polling firms and reference sites, not peer-reviewed work. Treat everything below as weak-to-moderate evidence.\n\n## 1. Direct evidence: what happened when Biden stayed in the race\n\nBiden did not stay in. He withdrew on July 21, 2024, so there is no actual election result for this scenario. His campaign was initially defiant, but he bowed to party pressure and withdrew on July 21. [S3] The best evidence is therefore polling before he left.\n\n- **Age concern was already high.**\n  - Data for Progress found 67% of voters said Biden was too old to be president, against 35% for Trump. [S1]\n  - Morning Consult reported that 78% of debate viewers said Biden was too old, compared with 64% of all voters days before the debate. [S2]\n  - Among Democrats, 64% of those who watched the debate said he was too old, up from 43% in the broader Democratic electorate in the earlier survey. [S2]\n- **The horse-race effect was small at first.**\n  - Morning Consult found 45% support for Biden and 44% for Trump the day after the debate. [S2]\n  - Analysts noted that many voters had already \"priced this in.\" [S3]\n- **It grew later.** ABC reported that 538's polling average had Trump ahead by 2 points, after the two were roughly tied on debate day. [S5]\n- **Party loyalty was shaky.**\n  - Three in 5 voters, including a 47% plurality of Democrats, said Biden should be replaced. [S2]\n  - Data for Progress found only 51% of Democrats wanted him to remain the nominee, a 12-point drop since March. [S1]\n  - By the time he withdrew, 40 congressional Democrats had called on him to step aside. [S5]\n- **Replacement was not clearly better.** Data for Progress said there was no clear evidence an alternative nominee would significantly outperform him against Trump. [S1]\n\nThese polls did not break results out by sex, nativity or region in the excerpts I retrieved. I have no turnout evidence for 2024 itself.\n\n## 2. Analogues\n\n**Roosevelt, 1944 (health concealed).** I found no scholarly study of how voters reacted to his health.\n- Roosevelt won 53.4% to Dewey's 45.9%. [S6] Dewey did better than any of Roosevelt's earlier Republican opponents, and Roosevelt's share and margin were lower than in 1940. [S6]\n- Turnout was 55.9%, a drop of 6.6 points. [S6] Reference sources attribute the drop to wartime conditions. I did not find a source tying it to health concerns.\n- The health issue was largely hidden. His aides covered up his poor health, and he made a vigorous October campaign trip, riding in an open car, to quiet the rumours. [S10] That makes it a weak analogue for a visibly frail candidate whose age is openly debated.\n- Regionally, Dewey carried 12 states, mostly Midwestern and Plains states plus Maine and Vermont. [S8] Roosevelt carried the Solid South and every coastal state except Maine. [S9]\n- In the South, in Texas, 135,553 people voted against Roosevelt but not for the Republican ticket. [S6] This reflects Southern anti-Roosevelt feeling and was not specifically about health.\n- Another source says Americans were reluctant to change leadership during a war. [S13] That source is a homework site, so use it with caution.\n\n**Wilson, 1920.** I found no usable source, so I make no claim.\n\n**Late nominee change, Democrats 1968 (an incumbent withdrew, and the VP was nominated).**\n- Nixon won 43.4%, Humphrey 42.7% and Wallace 13.5%. Turnout was 62.5%, down 0.3 points. [S16]\n- On party loyalty, Humphrey won 74% of Democrats, while Nixon won 86% of Republicans. Humphrey lost independents 31% to 44%, with 25% going to Wallace. [S19]\n- On groups, Catholics backed Humphrey 59%, twelve points ahead of Nixon, while Protestants favoured Nixon 49% to 35%. [S19] Nixon won voters over 50, 47% to 41%. [S19]\n- In the South, many white Southern Democrats rallied behind Wallace's third-party campaign. [S16]\n- Some antiwar Democrats stayed home. One course text says that many who had backed McCarthy and the late Robert Kennedy refused to vote. [S23] That is a textbook claim, and turnout barely moved nationally.\n- The change was a withdrawal from the race, not a replacement of a nominee already chosen. It happened March 31, months before the convention, so it is not a clean analogue for a mid-summer swap.\n\n**Kept versus changed.** I found no source comparing the two systematically. In 1968, the party's divisions and the convention violence were blamed for the loss. The televised convention violence convinced many Americans a Democratic administration could not govern. [S25] The 2024 poll evidence suggests doubt about Biden but no clear gain from switching.\n\n## 3. Named people\n\n- **Biden.**\n  - His team attributed his debate voice to a cold, and the campaign called it a \"bad night.\" [S5]\n  - He insisted he would remain in the race, repeatedly telling Democrats he was the best option to defeat Trump. [S5]\n  - After the debate, he told reporters he thought he had done well. [S3]\n  - On July 19, The Guardian reported he was reconsidering. [S3] He withdrew on July 21.\n- **Roosevelt.** His physician, Ross McIntire, publicly described him as in \"excellent health\" on January 30, 1944. [S11] This comes from a Grokipedia page, so confirm it elsewhere.\n- **Lyndon Johnson, 1968.** On March 31, 1968, he said he would not seek or accept his party's nomination. [S16] Dallek is cited as saying Humphrey was so tied to Johnson's unpopular policies that no last-minute deal with Hanoi could have changed the election. [S16]\n\n## 4. Limits\n\n- **1944.** The health problem was concealed and the war was going well. Concern about FDR's health was mostly latent, whereas 2024 had visible, documented public worry. Turnout fell for wartime reasons. The electorate also excluded most Black Southerners, and noncitizens and naturalized citizens were a very different share of it.\n- **1968.** A war and a violent convention drove the split, and the third-party vote came from a segregationist realignment that has no 2024 equivalent. Humphrey was a replacement, not a retained incumbent.\n- **2024 polls.** They were taken before Biden left. They show opinion at a moment of peak alarm and cannot show how voters would have behaved on election day.\n- **Groups.** None of the sources give numbers for naturalized citizens, noncitizens, or Hispanic, Asian or American Indian adults. Exit-poll or Census CPS data would be needed for those, and I did not retrieve any.",
+ "prompt": "Scenario for the 2024 United States presidential election (election day 2024-11-05).\nA reader asked: \"Joe Biden stays in the 2024 race as the Democratic nominee.\".\nAs modelled: The President does not withdraw, and remains the nominee of the party that has held the White House since 2021 through election day.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How did voters behave when an incumbent president seen as too old or infirm stayed on the ticket, as with Woodrow Wilson's illness in 1920 or Franklin Roosevelt's health in 1944?\n- How did turnout and party loyalty change when a party's nominee faced open doubts from within his own party?\n- How did voters respond when an incumbent party changed its nominee late versus kept its nominee?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 75024,
+  "output_tokens": 3261,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 3
+ },
+ "dollars": 0.248
+}

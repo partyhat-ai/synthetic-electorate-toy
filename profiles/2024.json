@@ -1,0 +1,114 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Trump",
+  "D": "Harris",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Donald Trump",
+  "D": "Kamala Harris"
+ },
+ "descriptors": {
+  "R": "nominee of the party that has held a majority in the House of Representatives since 2023; a former President seeking a second, non-consecutive term",
+  "D": "the sitting Vice President, nominee of the party that has held the White House since 2021, who became the nominee after the President withdrew in July"
+ },
+ "compile_desc": {
+  "R": "the party that has held a majority in the House of Representatives since 2023",
+  "D": "the party that has held the White House since 2021",
+  "president": "Biden"
+ },
+ "third": null,
+ "label_pool": [
+  "F",
+  "Q",
+  "U",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Green and a Libertarian nominee and an independent who has suspended his campaign (answer \"other\").",
+ "plank_order": [
+  "inflation",
+  "immigration",
+  "taxes",
+  "abortion",
+  "energy",
+  "trade"
+ ],
+ "names_re": "\\b(Trump\\w*|Harris|Kamala|Biden\\w*|Vance|Walz|Obama\\w*|Kennedy|RFK|Stein|Chase Oliver|Cornel West|Haley|DeSantis|Pence|MAGA|Make America Great Again|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Trump, Harris, Biden, Vance, Walz, Obama, Kennedy, Stein, Chase Oliver, Cornel West, Haley, DeSantis or Pence",
+ "corpus": null,
+ "platforms": "context/platforms_2024.json",
+ "ev_label": "312–226",
+ "slice_sources": {
+  "men": "2023 American Community Survey (1-year, IPUMS) aged to November 2024 along the 2022→2023 trend; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2024); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2024 returns.",
+  "women": "2023 American Community Survey (1-year, IPUMS) aged to November 2024 along the 2022→2023 trend; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2024); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2024 returns.",
+  "south-white": "2023 American Community Survey (1-year, IPUMS) aged to November 2024 along the 2022→2023 trend; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2024); calibrated to the certified 2024 returns.",
+  "black-south": "2023 American Community Survey (1-year, IPUMS) aged to November 2024 along the 2022→2023 trend; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2024), which falls on them disproportionately; calibrated to the certified 2024 returns.",
+  "immigrants": "2023 American Community Survey (1-year, IPUMS) aged to November 2024 along the 2022→2023 trend; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bObamacare\\b",
+   "the 2010 health care law"
+  ],
+  [
+   "\\bBiden-Harris\\b",
+   "the current"
+  ],
+  [
+   "\\b(?:President )?(?:Joe )?Biden\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Kamala )?Harris\\b|\\bKamala\\b",
+   "the Vice President"
+  ],
+  [
+   "\\bMake America Great Again\\b|\\bMAGA\\b",
+   "the former President's slogan"
+  ],
+  [
+   "\\b(?:former President |President )?(?:Donald )?(?:J\\. )?Trump\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:J\\.? ?D\\.? )?Vance\\b|\\b(?:Tim )?Walz\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Barack )?Obama\\b",
+   "a former President"
+  ],
+  [
+   "\\b(?:Robert F\\. )?Kennedy(?: Jr\\.?)?\\b|\\bRFK(?: Jr\\.?)?\\b",
+   "an independent candidate"
+  ],
+  [
+   "\\b(?:Jill )?Stein\\b|\\bChase Oliver\\b|\\bCornel West\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:Nikki )?Haley\\b|\\b(?:Ron )?DeSantis\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Mike )?Pence\\b",
+   "a former Vice President"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the House majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the House majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ]
+ ]
+}

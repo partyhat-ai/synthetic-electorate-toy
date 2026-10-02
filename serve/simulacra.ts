@@ -72,8 +72,11 @@ export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraO
   };
 }
 
-/** The result the page receives: a bundle result plus the interviews behind it. */
+/** The result the page receives: a bundle result plus the brief and interviews behind it. */
 export type RunResult = Result & {
+  told?: Record<string, Record<string, string[]>>;
+  reading?: Record<string, unknown>[];
+  pre?: Record<string, unknown>;
   interview?: { questions: string[] | undefined; byWhatIf: { whatIf: string; answers: unknown[] }[] };
   queued?: { text: string; worker: boolean };
   unknownWhy?: string;
@@ -181,11 +184,16 @@ export function compute(
     const answers = byWhatIf[k];
     return answers ? [{ whatIf: k, answers }] : [];
   });
+  // What the voters were told for each applied what-if, and the dated newspaper items in their briefs.
+  const told = Object.fromEntries(keys.flatMap((k) => (b.told?.[k] ? [[k, b.told[k]]] : [])));
   return {
     key,
     result: {
       ...result,
       unknown,
+      ...(Object.keys(told).length ? { told } : {}),
+      ...(b.reading?.length ? { reading: b.reading } : {}),
+      ...(b.pre ? { pre: b.pre } : {}),
       ...(interviews.length ? { interview: { questions: b.interviews.questions, byWhatIf: interviews } } : {})
     }
   };

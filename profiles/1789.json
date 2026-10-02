@@ -1,0 +1,108 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 15 December 1788 until the electors meet on 4 February 1789)",
+  "names": {
+    "R": "Washington",
+    "D": null,
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "George Washington",
+    "D": null
+  },
+  "descriptors": {
+    "R": "the man the Constitution's supporters expect every elector to name: the former commander-in-chief of the Continental Army who presided over the Constitutional Convention",
+    "D": null
+  },
+  "compile_desc": {
+    "R": "the supporters of the new Constitution",
+    "D": "the opponents of the new Constitution, who run no one for the first office",
+    "president": "no one yet (the first President is being chosen)"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y"
+  ],
+  "others_line": "Some elector tickets are run by opponents of the new Constitution who want it amended before it takes hold (answer \"other\").",
+  "plank_order": [
+    "union",
+    "public credit",
+    "defense",
+    "amendments"
+  ],
+  "names_re": "\\b(Washington|Adams|(?-i:Jay)|Hancock|Rutledge|Clinton|Hamilton|Madison|Jefferson|Patrick Henry|Anti-?Federalist|Federalist)",
+  "never_name": "Washington, Adams, Jay, Hancock, Rutledge, Clinton, Hamilton, Madison, Jefferson or Patrick Henry",
+  "corpus": null,
+  "platforms": "context/platforms_1789.json",
+  "ev_label": "69–0",
+  "slice_sources": {
+    "men": "1790 census back-projected to late 1788, free adult men outside the Southern states; the 1790 census gives only free white males 16 and over, so men 21+ are estimated. Voters were men meeting each state's rules: most states required a freehold, property or taxpaying qualification. Electors were chosen by popular vote in 6 states; elsewhere (Connecticut, Georgia and South Carolina, whose legislatures chose, and New Jersey, whose governor and council chose; New York failed to appoint, and North Carolina and Rhode Island had not yet ratified) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1790 census back-projected to late 1788, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey's women with £50 of property could vote in state elections under its 1776 constitution, but its electors were named by the governor and council. Turnout is zero by law, not by estimate.",
+    "south-white": "1790 census back-projected to late 1788, white adults in Virginia, North Carolina, South Carolina and Georgia; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina and Georgia legislatures chose their electors, so people there cast no presidential vote. North Carolina had not yet ratified the Constitution.",
+    "black-south": "1790 census back-projected to late 1788, Black adults in Virginia, North Carolina, South Carolina and Georgia; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution); the other Southern states limited the vote to white men. In South Carolina and Georgia the legislature chose the electors, so no one there voted for president directly. North Carolina had not yet ratified the Constitution and took no part.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1790 census did not count aliens. Immigration was small (a few thousand a year), naturalization was a state matter until the 1790 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bGeneral Washington\\b|\\bWashington\\b",
+      "the former commander-in-chief"
+    ],
+    [
+      "\\b(?:John )?Adams\\b",
+      "a Massachusetts diplomat"
+    ],
+    [
+      "\\bJohn Jay\\b|\\bJay\\b",
+      "the Confederation's foreign secretary"
+    ],
+    [
+      "\\b(?:George )?Clinton\\b",
+      "the governor of New York"
+    ],
+    [
+      "\\b(?:John )?Hancock\\b",
+      "the governor of Massachusetts"
+    ],
+    [
+      "\\b(?:Alexander )?Hamilton\\b",
+      "a New York delegate to the Convention"
+    ],
+    [
+      "\\b(?:James )?Madison\\b",
+      "a Virginia delegate to the Convention"
+    ],
+    [
+      "\\b(?:Thomas )?Jefferson\\b",
+      "the minister to France"
+    ],
+    [
+      "\\bPatrick Henry\\b",
+      "a leading Virginia opponent of the Constitution"
+    ],
+    [
+      "\\b(?:John )?Rutledge\\b",
+      "a South Carolina delegate to the Convention"
+    ],
+    [
+      "\\bAnti-?Federalists?\\b",
+      "opponents of the Constitution"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "supporters of the Constitution"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

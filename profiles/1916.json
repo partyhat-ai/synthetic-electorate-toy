@@ -1,0 +1,102 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Hughes",
+  "D": "Wilson",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Charles Evans Hughes",
+  "D": "Woodrow Wilson"
+ },
+ "descriptors": {
+  "R": "nominee of the party out of power since 1913, which held the presidency for the sixteen years before that and has drawn back most of the voters who bolted it in 1912",
+  "D": "nominee of the party in office since 1913, renominating the sitting President"
+ },
+ "compile_desc": {
+  "R": "the party out of power since 1913",
+  "D": "the party in office since 1913",
+  "president": "Wilson"
+ },
+ "third": null,
+ "label_pool": [
+  "G",
+  "K",
+  "N",
+  "Q",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist and a Prohibition nominee (answer \"other\").",
+ "plank_order": [
+  "war in Europe",
+  "preparedness",
+  "Mexico",
+  "tariff",
+  "labor",
+  "women"
+ ],
+ "names_re": "\\b(Hughes|Wilson|Fairbanks|Marshall|Benson|Hanly|Roosevelt|Taft|Bryan|Republican|Democrat|Progressive party|Bull Moose|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Hughes, Wilson, Fairbanks, Marshall, Benson, Hanly, Theodore Roosevelt, Taft or Bryan",
+ "corpus": null,
+ "platforms": "context/platforms_1916.json",
+ "ev_label": "277–254",
+ "slice_sources": {
+  "men": "1910 and 1920 censuses interpolated to November 1916; men 21+ outside the eleven Southern states, citizens plus the first-paper aliens a few states still let vote; American Indians only where citizens (about a third were not, before 1924); calibrated to certified 1916 returns.",
+  "women": "1910–1920 interpolation to November 1916, women 21+ outside the South; only women in the twelve states with presidential suffrage (Arizona, California, Colorado, Idaho, Illinois, Kansas, Montana, Nevada, Oregon, Utah, Washington, Wyoming) could vote, so elsewhere their turnout is zero.",
+  "south-white": "1910–1920 interpolation to November 1916, white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); men only, as no Southern state let women vote; calibrated to certified 1916 returns.",
+  "black-south": "1910–1920 interpolation to November 1916, Black men 21+ in the eleven former Confederate states; disfranchised by poll tax, literacy test and the white primary; the 1920 Goodman regression of 1916 turnout on Black share supplies turnout, and the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1910–1920 interpolation to November 1916, foreign-born white adults who were aliens or had only first papers; first-paper men could still vote in a few states."
+ },
+ "masks": [
+  [
+   "\\b(?:President )?(?:Woodrow )?Wilson\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Justice |Mr\\. )?(?:Charles (?:E\\. |Evans )?)?Hughes\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Vice[- ]President )?(?:Thomas R\\. )?Marshall\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Charles W\\. )?Fairbanks\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Theodore |Colonel )?Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\b(?:William H(?:oward|\\.) )?Taft\\b",
+   "a former President"
+  ],
+  [
+   "\\bBull Moose\\b|\\bProgressive [Pp]arty\\b",
+   "the 1912 third party"
+  ],
+  [
+   "\\b(?:Allan L\\. )?Benson\\b|\\b(?:J\\. Frank )?Hanly\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:William Jennings )?Bryan\\b",
+   "the former Secretary of State"
+  ]
+ ]
+}

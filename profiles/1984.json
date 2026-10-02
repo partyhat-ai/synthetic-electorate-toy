@@ -1,0 +1,96 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Reagan",
+  "D": "Mondale",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Ronald Reagan",
+  "D": "Walter F. Mondale"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1981, which also holds a majority in the Senate",
+  "D": "nominee of the party that held the presidency from 1977 to 1981 and holds a majority in the House"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1981, which also holds a majority in the Senate",
+  "D": "the party that held the presidency from 1977 to 1981 and holds a majority in the House",
+  "president": "Reagan"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "N",
+  "P",
+  "Q",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including Libertarian and Citizens Party nominees and an independent (answer \"other\").",
+ "plank_order": [
+  "economy",
+  "deficits",
+  "taxes",
+  "defense",
+  "Social Security",
+  "Central America",
+  "Equal Rights Amendment",
+  "abortion"
+ ],
+ "names_re": "\\b(Reagan|Mondale|Bush|Ferraro|Carter|Hart|Jackson|Glenn|Bergland|LaRouche|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Reagan, Mondale, Bush, Ferraro, Carter, Hart, Jackson, Glenn, Bergland or LaRouche",
+ "corpus": null,
+ "platforms": "context/platforms_1984.json",
+ "ev_label": "525–13",
+ "slice_sources": {
+  "men": "1980 and 1990 censuses interpolated to November 1984; men who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1984 returns.",
+  "women": "1980 and 1990 censuses interpolated to November 1984; women who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1984 returns.",
+  "south-white": "1980 and 1990 censuses interpolated to November 1984; citizens 18+ in the eleven former Confederate states other than Black US-born (white non-Hispanic US-born, naturalized of any race, and US-born Hispanic, Asian, Native American and other); calibrated to certified 1984 returns.",
+  "black-south": "1980 and 1990 censuses interpolated to November 1984; Black US-born citizens 18+ in the eleven former Confederate states; Voting Rights Act coverage continues (amended 1982). Any shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1980 and 1990 censuses interpolated to November 1984; noncitizen adults of any race, who could not vote in any state."
+ },
+ "masks": [
+  [
+   "\\bPresident Reagan\\b|\\bReagan\\b",
+   "the President"
+  ],
+  [
+   "\\bMondale\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Vice President )?Bush\\b",
+   "the Vice President"
+  ],
+  [
+   "\\bFerraro\\b",
+   "a running mate"
+  ],
+  [
+   "\\bCarter\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Hart|Jackson|Glenn)\\b",
+   "a rival for the nomination of the party out of power"
+  ],
+  [
+   "\\b(?:Bergland|LaRouche)\\b",
+   "a minor candidate"
+  ]
+ ]
+}

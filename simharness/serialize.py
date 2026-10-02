@@ -19,6 +19,16 @@ from typing import Any
 import numpy as np
 
 PARTY_TO_KEY = {0: 'A', 1: 'B', 2: 'O'}   # R → A (Harding), D → B (Cox)
+DEM_WON = {0: 'B', 1: 'A', 2: 'O'}        # a D win (1960, 1964, 1976…): D → A, R → B
+
+
+def key_map(base_ev_point) -> dict:
+    """Party index → page key: A is the historical winner (history.js), B the other major party."""
+    return DEM_WON if base_ev_point[1] > base_ev_point[0] else PARTY_TO_KEY
+
+
+def _abo(d: dict) -> dict:
+    return {k: d[k] for k in 'ABO' if k in d}
 
 SLICES = [
     ('men', 'Men outside the South'),
@@ -37,7 +47,8 @@ def slice_of(row) -> str:
     return 'men' if row.sex == 'M' else 'women'
 
 
-def slices(fit, world, point: int, sources: dict) -> list[dict]:
+def slices(fit, world, point: int, sources: dict, labels: dict | None = None, key_of: dict = PARTY_TO_KEY) -> list[dict]:
+    """labels: the era's slice labels (agentlayer.groups_for(year)['slices']); default SLICES."""
     c = fit.cells
     keys = c.apply(slice_of, axis=1).to_numpy()
     out = []
@@ -46,6 +57,7 @@ def slices(fit, world, point: int, sources: dict) -> list[dict]:
     t = world.t[point]
     sh = world.share[point]
     for key, label in SLICES:
+        label = (labels or {}).get(key, label)
         m = keys == key
         n = a[m].sum()
         if n <= 0:
@@ -53,7 +65,7 @@ def slices(fit, world, point: int, sources: dict) -> list[dict]:
         barred = (a[m] * (1 - can[m])).sum() / n
         voted = a[m] * can[m] * t[m]
         home = (a[m] * can[m] * (1 - t[m])).sum() / n
-        by_key = {PARTY_TO_KEY[p]: (voted * sh[m, p]).sum() / n for p in range(3)}
+        by_key = {key_of[p]: (voted * sh[m, p]).sum() / n for p in range(3)}
         A, B, O = by_key['A'], by_key['B'], by_key['O']
         out.append({
             'key': key, 'label': label, 'adults': round(n / 1e6, 3),
@@ -64,10 +76,10 @@ def slices(fit, world, point: int, sources: dict) -> list[dict]:
     return out
 
 
-def states(names: list, summary: dict, base_winner: list) -> list[dict]:
+def states(names: list, summary: dict, base_winner: list, key_of: dict = PARTY_TO_KEY) -> list[dict]:
     out = []
     for i, code in enumerate(names):
-        won = PARTY_TO_KEY[summary['state_winner_point'][i]]
+        won = key_of[summary['state_winner_point'][i]]
         out.append({
             'code': code,
             'won': won,
@@ -80,24 +92,24 @@ def states(names: list, summary: dict, base_winner: list) -> list[dict]:
     return out
 
 
-def result(*, names, summary, base_winner, slices_out, text, confidence, applied, extras) -> dict:
-    ev = {PARTY_TO_KEY[i]: int(round(v)) for i, v in enumerate(summary['ev_point'])}
+def result(*, names, summary, base_winner, slices_out, text, confidence, applied, extras, key_of: dict = PARTY_TO_KEY) -> dict:
+    ev = _abo({key_of[i]: int(round(v)) for i, v in enumerate(summary['ev_point'])})
     nat = max(ev, key=ev.get) if max(ev.values()) > sum(ev.values()) / 2 else None
     return {
         'ev': ev,
         'winner': nat,
-        'states': states(names, summary, base_winner),
+        'states': states(names, summary, base_winner, key_of),
         'slices': slices_out,
         'summary': text,
         'confidence': confidence,
         'applied': applied,
         'unknown': None,
         # additive
-        'range': {PARTY_TO_KEY[i]: [int(round(x)) for x in summary['ev_range'][p]] for i, p in enumerate('RDO')},
-        'drawsWon': {PARTY_TO_KEY[i]: summary['draws_won'][p] for i, p in enumerate('RDO')} | {
+        'range': _abo({key_of[i]: [int(round(x)) for x in summary['ev_range'][p]] for i, p in enumerate('RDO')}),
+        'drawsWon': _abo({key_of[i]: summary['draws_won'][p] for i, p in enumerate('RDO')}) | {
             'none': summary['draws_no_majority'], 'of': summary['draws']},
-        'popular': {PARTY_TO_KEY[i]: int(round(v)) for i, v in enumerate(summary['popular_point'])},
-        'popularRange': {PARTY_TO_KEY[i]: [int(round(x)) for x in summary['popular_range'][i]] for i in range(3)},
+        'popular': _abo({key_of[i]: int(round(v)) for i, v in enumerate(summary['popular_point'])}),
+        'popularRange': _abo({key_of[i]: [int(round(x)) for x in summary['popular_range'][i]] for i in range(3)}),
         **extras,
     }
 
@@ -110,7 +122,10 @@ def closest(names, state_names, summary, base_winner, flipped_only=False):
     """The state the change squeezed most: smallest point margin among states
     whose winner didn't change (or did, if flipped_only)."""
     best = None
+    novote = summary.get('state_no_vote_point') or [False] * len(names)
     for i, code in enumerate(names):
+        if novote[i]:
+            continue  # the legislature chose the electors: no margin to speak of
         f = summary['state_winner_point'][i] != base_winner[i]
         if f != flipped_only:
             continue
@@ -120,13 +135,22 @@ def closest(names, state_names, summary, base_winner, flipped_only=False):
     return best
 
 
-def headline_ev(summary) -> str:
-    """Electoral votes, R–D(–O)."""
-    a, b, o = (int(round(x)) for x in summary['ev_point'])
+def headline_ev(summary, key_of: dict = PARTY_TO_KEY) -> str:
+    """Electoral votes, the historical winner's party first (R–D(–O) when R won)."""
+    by_key = {key_of[i]: int(round(x)) for i, x in enumerate(summary['ev_point'])}
+    a, b, o = by_key['A'], by_key['B'], by_key['O']
     return f'{a}–{b}' + (f'–{o}' if o else '')
 
 
-def verdict(*, lead: str, names, state_names, cand, summary, base_summary, base_winner) -> str:
+def winner_ev(summary, winner: int) -> str:
+    """Electoral votes with the new winner first: "272–129" when the result flips."""
+    ev = [int(round(x)) for x in summary['ev_point']]
+    rest = sorted((i for i in range(3) if i != winner), key=lambda i: (i == 2, -ev[i]))
+    out = [ev[winner]] + [ev[i] for i in rest if i != 2 or ev[i]]
+    return '–'.join(str(x) for x in out)
+
+
+def verdict(*, lead: str, names, state_names, cand, summary, base_summary, base_winner, key_of: dict = PARTY_TO_KEY) -> str:
     """The robot's sentence: what changed in people, then what it did."""
     flips = [names[i] for i in range(len(names)) if summary['state_winner_point'][i] != base_winner[i]]
     won = summary['draws_won']
@@ -141,17 +165,18 @@ def verdict(*, lead: str, names, state_names, cand, summary, base_summary, base_
         parts.append(f'Every one of my {D} reruns reproduces it exactly.')
         return ' '.join(parts)
     if nat_point != base_nat:
-        parts.append(f'{cand[nat_point]} wins, {headline_ev(summary)}.')
+        parts.append(f'{cand[nat_point]} wins, {winner_ev(summary, nat_point)}.')
     elif flips:
         who = ', '.join(state_names[s] for s in flips[:4]) + (f' and {len(flips) - 4} more' if len(flips) > 4 else '')
-        parts.append(f'{who} {"flip" if len(flips) > 1 else "flips"}, but {cand[base_nat]} still wins, {headline_ev(summary)}.')
+        parts.append(f'{who} {"flip" if len(flips) > 1 else "flips"}, but {cand[base_nat]} still wins, {headline_ev(summary, key_of)}.')
     else:
-        parts.append(f'No state flips. {cand[base_nat]} wins, {headline_ev(summary)}.')
+        parts.append(f'No state flips. {cand[base_nat]} wins, {headline_ev(summary, key_of)}.')
     near = closest(names, state_names, summary, base_winner)
     if near and near[1] < 10:
         parts.append(f'The closest call is {state_names[near[0]]}, which holds for {cand[near[2]]} by {near[1]:.1f} points.')
     loser = 1 - base_nat if base_nat in (0, 1) else 1
-    parts.append(f'{cand[loser]} wins in {won["RDO"[loser]]} of {D} draws.')
+    if cand[loser] != 'no candidate':  # an unopposed year (1789, 1792, 1820) has no runner-up
+        parts.append(f'{cand[loser]} wins in {won["RDO"[loser]]} of {D} draws.')
     return ' '.join(parts)
 
 
@@ -319,7 +344,7 @@ class Bundle:
     ev: dict[str, int]
     historyWinner: dict[str, str]
     words: list[Words]
-    # The briefs record: optional, so a bundle without it still parses.
+    # Bundles published before the briefs record (1916, 1924) lack these three.
     pre: dict | None = None
     told: dict = field(default_factory=dict)
     reading: list = field(default_factory=list)

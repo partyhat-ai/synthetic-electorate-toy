@@ -1,0 +1,107 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:F:native_white",
+   "label": "Native-born white women, south",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 2,
+   "agent_turnout": 0.4266666666666667,
+   "backbone_turnout": 0.7455345364406231,
+   "agent_r2": 0.36551724137931035,
+   "backbone_r2": 0.0,
+   "bias_logit": 13.264012894466855,
+   "tvd": 0.24553453644062306,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:F:native_white",
+   "label": "Native-born white women, northeast",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.8480381609174326,
+   "agent_r2": 0.5473217219848833,
+   "backbone_r2": 0.5604339581661878,
+   "bias_logit": -0.05306832064978598,
+   "tvd": 0.15196183908256744,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.9247163972648694,
+   "agent_r2": 0.7494000406752085,
+   "backbone_r2": 0.5296505884509686,
+   "bias_logit": 0.9766733857510295,
+   "tvd": 0.5102234160384023,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 2,
+    "sd_R2": 0.31402439024390244,
+    "modal_share": 0.5,
+    "backbone_r2": 0.5604339581661878,
+    "homogenized": false
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 2,
+    "sd_R2": 0.02058823529411763,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5296505884509686,
+    "homogenized": true
+   }
+  ],
+  "homogenization_index": 0.5,
+  "eligible_cohorts": 2
+ },
+ "a4": {
+  "audited": 10,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {}
+}

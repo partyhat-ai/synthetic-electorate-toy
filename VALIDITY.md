@@ -38,7 +38,7 @@ Each election is about 600 cells: state × sex × group (native-born white, natu
 > adults × share who could vote × share who turned out × the split between candidates
 
 It is built from four kinds of input:
-- **Census counts:** 1920 from the census volumes; 1924 is the 1920 count aged along each cell's trend (C13).
+- **Census counts:** 1920 from the census volumes; other years from NHGIS (C17).
 - **Each state's voting rules:** Gray–Jenkins, Teele.
 - **Certified returns:** Algara–Amlani, Clerk of the House, NARA.
 - **A source of identification for group differences:** what lets the model tell how groups differed.
@@ -209,6 +209,7 @@ Clean statistics on a biased record give clean-looking bias.
 
 1. **Who was counted:**
    - **Census undercount.** The census undercounted Black, immigrant and poor rural people. Population draws add noise by group (e.g. 5% for Black adults) but not a directional correction.
+   - **Changing categories.** 1930 counted "Mexican" as a race (C17), which changes what `other` means across years.
 2. **Who could vote, and who is invisible:**
    - **Disenfranchised groups.** Black Southerners and non-citizens appear mostly as "couldn't vote". Their political preferences are borrowed from other groups ("split like Black voters outside the South").
    - **Borrowing is an assumption.** It is the harness's assumption, not something observed.
@@ -231,7 +232,7 @@ Clean statistics on a biased record give clean-looking bias.
 | Claim | Status |
 |---|---|
 | The unchanged rerun reproduces each election | **True by construction;** verified every run |
-| The population, voting rules and returns are the documented record | **True, with sources.** Each file has its provenance; the 1920 tables match their printed totals (C5) |
+| The population, voting rules and returns are the documented record | **True, with sources.** NHGIS 1920 reproduces the hand-keyed table exactly (C17) |
 | The split of each state's vote between groups is right | **Partly tested.** Women's turnout is within about 3–4 points in five states (1920 and 1924); other groups are mostly untested |
 | Franchise and population what-ifs are reliable | **As reliable as their stated borrowing assumption** (e.g. "split like Black voters outside the South"). High confidence is about the arithmetic, not the assumption |
 | Issue, event and candidate what-ifs reflect 1920 voters | **Not shown.** They reflect a knowledgeable model reasoning about documented circumstances, with contamination measured, partly cancelled and disclosed |
