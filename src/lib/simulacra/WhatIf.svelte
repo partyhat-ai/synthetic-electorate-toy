@@ -163,7 +163,7 @@
     --label-2: rgba(60, 60, 67, 0.6);
     --label-3: rgba(60, 60, 67, 0.3);
     --separator: #c6c6c8;
-    --fill: #f2f2f7;             /* systemGray6: hovers */
+    --fill: #f2f2f7;             /* systemGray6: chips at rest, hovers */
     --fill-press: #e5e5ea;       /* systemGray5: press */
     --tint: #007aff;
   }

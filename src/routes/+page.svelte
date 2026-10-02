@@ -510,8 +510,8 @@
     transition: color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .seg button:hover:not(:disabled) { color: #000; }
-  /* The selected label, in ink on the white indicator. */
-  .seg button.on, .seg button.on:hover { color: #000; }
+  /* The selected label sits on the blue indicator. */
+  .seg button.on, .seg button.on:hover { color: #fff; }
   .seg button:disabled { opacity: 0.45; cursor: default; }
   .seg button:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   .seg-thumb {
@@ -521,8 +521,8 @@
     width: calc(50% - 3px);
     height: calc(100% - 6px);
     border-radius: 20px;
-    background: #fff;
-    box-shadow: inset 0 -0.5px 0 rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 10%);   /* lit edge along the bottom */
+    background: #007aff;                              /* = Rerun (WhatIf .run) */
+    box-shadow: inset 0 -0.5px 0 rgb(0 0 0 / 20%);   /* lit edge along the bottom */
     transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
   }

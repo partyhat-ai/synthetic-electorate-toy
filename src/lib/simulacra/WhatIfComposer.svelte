@@ -124,9 +124,11 @@
   .run:hover { background: #0071eb; }
   .run:active { background: #0062cc; }
   .run:disabled { opacity: 0.35; cursor: default; background: var(--tint); }
-  /* Nothing new to run: at rest, the button dims (pressing it shows the
-     rerun already made). It brightens as soon as there's a change. */
-  .run.rest { opacity: 0.6; }
+  /* Nothing new to run: at rest, a gray button (pressing it shows the rerun
+     already made). It fills blue again as soon as there's a change. */
+  .run.rest { background: var(--fill); color: var(--label); }
+  .run.rest:hover { background: var(--fill-press); }
+  .run.rest:active { background: #d1d1d6; }
   /* Reset: a plain text button in the tint. */
   .reset {
     height: 36px;

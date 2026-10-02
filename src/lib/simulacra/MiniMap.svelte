@@ -67,7 +67,7 @@
   .none { fill: none; stroke: rgba(0, 0, 0, 0.18); stroke-width: 1; }
   .flip {
     fill: none;
-    stroke: #000;
+    stroke: #00000080;
     stroke-width: 1.5;
     animation: pulse 1.4s ease-in-out infinite;
   }
