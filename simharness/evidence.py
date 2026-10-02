@@ -102,7 +102,7 @@ Report, in this order:
 3. Named people. For any real person the scenario names, what they actually said or did about the relevant questions on or before the scenario's date, with dates. Describe it; don't quote at length.
 4. Limits. Why each analogue might not carry over.
 
-Cite every factual sentence. Give changes in percentage points where you can. If you find nothing reliable, say so plainly. Don't stretch a weak source into a strong claim."""
+Search before you write: run at least two searches, and more for anything you'd otherwise state from memory. A claim without a citation will be thrown away, however well you know it. Cite every factual sentence. Give changes in percentage points where you can. If you find nothing reliable, say so plainly. Don't stretch a weak source into a strong claim."""
 
 
 def research_prompt(spec: dict, election: dict) -> str:
@@ -145,18 +145,23 @@ def research(client, spec: dict, election: dict, model: str, max_uses: int = 4, 
     if 'haiku' not in model:
         params['output_config'] = {'effort': effort}
     usage, searches = {'input_tokens': 0, 'output_tokens': 0, 'cache_read_input_tokens': 0, 'cache_creation_input_tokens': 0}, 0
-    assistant = []
-    for _ in range(4):
-        messages = [{'role': 'user', 'content': user}] + ([{'role': 'assistant', 'content': assistant}] if assistant else [])
-        msg = _create(client, messages=messages, **params)
-        assistant += list(msg.content)
-        u = msg.usage
-        for k in usage:
-            usage[k] += getattr(u, k, 0) or 0
-        stu = getattr(u, 'server_tool_use', None)
-        searches += (getattr(stu, 'web_search_requests', 0) or 0) if stu else 0
-        if msg.stop_reason != 'pause_turn':
-            break
+    for attempt in range(2):
+        assistant = []
+        ask = user if attempt == 0 else user + ('\n\nSearch first. Your last answer ran no searches, so none of it could be '
+                                                'used: every claim needs a citation to a page the search returns.')
+        for _ in range(4):
+            messages = [{'role': 'user', 'content': ask}] + ([{'role': 'assistant', 'content': assistant}] if assistant else [])
+            msg = _create(client, messages=messages, **params)
+            assistant += list(msg.content)
+            u = msg.usage
+            for k in usage:
+                usage[k] += getattr(u, k, 0) or 0
+            stu = getattr(u, 'server_tool_use', None)
+            searches += (getattr(stu, 'web_search_requests', 0) or 0) if stu else 0
+            if msg.stop_reason != 'pause_turn':
+                break
+        if any(getattr(b, 'type', None) == 'web_search_tool_result' for b in assistant):
+            break  # a turn without a single search is retried once, then kept as it is
     sources, by_url, queries, parts = [], {}, [], []
 
     def src(url, title, page_age=None):
@@ -208,8 +213,10 @@ def research_estimate(model: str, max_uses: int, max_tokens: int = 6000) -> dict
 EXTRACT_SYSTEM = """You turn a research assistant's notes into structured findings for an election simulation.
 
 Rules:
-- Extract the claims in the notes that carry a source marker like [S3], say something about how people voted or turned out, and rest on a reliable source: peer-reviewed work, official statistics or archives. Leave out claims resting on Wikipedia or popular sites, and analogies too loose to carry over.
+- Extract every claim in the notes that carries a source marker like [S3] and says something about how people voted or turned out, including the loose analogues. Don't judge reliability yourself: the pipeline grades each source and each match afterwards and weights them. A finding resting on Wikipedia is still a finding.
 - Copy the source ids exactly. Add nothing from your own knowledge.
+- At most 12 findings, the most informative first; merge claims about the same situation. Keep each claim under 35 words, situation and limits under 20.
+- Keep loose analogues too, graded by match ("distant" when the situation only loosely resembles the scenario): they are weighted down, not thrown away. Leave out only claims that say nothing about how people voted or turned out.
 - population: the group the finding is about. Use "any" where the finding doesn't narrow it.
 - match: how close the finding's situation is to the scenario. "same-event": this very change, in this very election. "same-period-similar": a similar situation within about a dozen years. "other-period-similar": a similar situation further away. "distant": a loose analogy.
 - effects: numbers only when the notes give them, as percentage-point changes caused by the situation: "turnout" (share of eligible adults voting), "r2" (the Republican share of the two-party vote; positive means more Republican), "other" (the share of all votes going to a third candidate or party). pm is the plus-or-minus the notes give or imply; use half the effect's size when they give none. Leave effects empty when the notes give no number.

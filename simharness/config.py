@@ -48,7 +48,7 @@ class ResearchConfig:
     """The compile → research → extract calls behind a typed what-if (scenario.py, evidence.py)."""
     compile_model: str = 'claude-sonnet-5-5'
     research_model: str = 'claude-sonnet-5-5'
-    extract_model: str = 'claude-haiku-4-5'
+    extract_model: str = 'claude-sonnet-5-5'  # Haiku judged every analogue unreliable and extracted none (D15)
     max_searches: int = 4              # web_search max_uses per research call
     research_max_tokens: int = 4000
     whatif_dollars: float = 0.5        # hard stop for one typed what-if, all stages together

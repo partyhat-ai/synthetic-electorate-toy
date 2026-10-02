@@ -123,8 +123,13 @@ class AnthropicBackend(Backend):
                     return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False,
                             'error': f'refusal: {getattr(msg.stop_details, "category", None)}', 'usage': msg.usage.model_dump()}
                 text = next(b.text for b in msg.content if b.type == 'text')
+                try:
+                    data = json.loads(text)
+                except json.JSONDecodeError as e:  # truncated at max_tokens: paid for, so keep the usage
+                    return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False,
+                            'error': f'{msg.stop_reason}: {e}', 'usage': msg.usage.model_dump()}
                 return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': True,
-                        'data': json.loads(text), 'usage': msg.usage.model_dump(), 'raw': text}
+                        'data': data, 'usage': msg.usage.model_dump(), 'raw': text}
             except a.RateLimitError:
                 time.sleep(2 ** attempt + random.random())
             except a.BadRequestError as e:

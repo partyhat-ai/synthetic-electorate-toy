@@ -80,7 +80,7 @@ H=~/.venvs/simharness/bin/python
 $H -m simharness.run whatif --text "charlie chaplin ran as an independent" --config configs/live-1920.json
 $H -m simharness.run whatif --queue --config configs/live-1920.json     # what the page couldn't model
 $H -m simharness.run research --config configs/live-1920.json           # evidence for the config's what-ifs
-$H -m simharness.run research --key league --refresh                     # one what-if; search again
+$H -m simharness.run research --key league --refresh | --reextract ...  # one what-if; search again, or re-read saved notes
 ```
 
 How a typed what-if is modelled:
@@ -91,7 +91,7 @@ How a typed what-if is modelled:
 2. **Research** (Sonnet + web search): scholarship, official statistics and
    archives on the change itself, the same groups in the most similar
    situations, and any named person's record before the context date.
-3. **Extract** (Haiku, structured): findings grounded in the sources the
+3. **Extract** (Sonnet, structured): findings grounded in the sources the
    search returned. Each is graded by source tier × match.
 4. **Interview**: the usual paired control/counterfactual briefs. A candidate
    gets a third labelled ballot line (p4). Identical earlier requests are

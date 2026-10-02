@@ -29,11 +29,12 @@ def main(argv=None):
     ap.add_argument('--limit', type=int, default=3, help='whatif --queue: at most this many texts')
     ap.add_argument('--refresh', action='store_true', help='research again even if evidence is saved')
     ap.add_argument('--key', help='research: only this what-if')
+    ap.add_argument('--reextract', action='store_true', help='research: extract findings again from the saved notes (no search)')
     args = ap.parse_args(argv)
     if args.stage in ('research', 'whatif'):
         from . import intake
         if args.stage == 'research':
-            out = intake.research_config(args.config, args.refresh, args.key)
+            out = intake.research_config(args.config, args.refresh, args.key, args.reextract)
         elif args.queue:
             out = intake.process_queue(args.config, args.limit)
         elif args.text:

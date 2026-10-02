@@ -99,11 +99,24 @@ def compile_text(text: str, cfg: RunConfig, budget: Budget) -> dict:
     return raw
 
 
-def research(spec: dict, cfg: RunConfig, budget: Budget, refresh: bool = False) -> dict:
-    """Evidence for one what-if (cached in whatifs/evidence/<key>.json)."""
+def reextract(spec: dict, cfg: RunConfig, budget: Budget, have: dict) -> dict:
+    """Extraction again from the saved notes (no new search)."""
+    notes = {'text': have['notes'], 'sources': have['sources']}
+    rc = cfg.research
+    extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', spec['key'])
+    ev = {**have, **evidence.ground(extracted, notes), 'models': {**have.get('models', {}), 'extract': rc.extract_model},
+          'reextracted_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')}
+    scenario.save_evidence(spec['key'], ev)
+    return ev
+
+
+def research(spec: dict, cfg: RunConfig, budget: Budget, refresh: bool = False, again: bool = False) -> dict:
+    """Evidence for one what-if (cached in whatifs/evidence/<key>.json). again: re-extract the saved notes."""
     import anthropic
     key = spec['key']
     have = scenario.load_evidence(key)
+    if have and again and have.get('notes'):
+        return reextract(spec, cfg, budget, have)
     if have and not refresh:
         return have
     rc = cfg.research
@@ -118,7 +131,7 @@ def research(spec: dict, cfg: RunConfig, budget: Budget, refresh: bool = False) 
     budget.add(notes['dollars'], 'research', None, key)
     print(f'  {len(notes["queries"])} searches, {len(notes["sources"])} sources '
           f'({sum(s["tier"] == "A" for s in notes["sources"])} scholarly or official), ${notes["dollars"]}', flush=True)
-    extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 4000, budget, 'extract', key)
+    extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', key)
     ev = evidence.ground(extracted, notes)
     ev.update({'key': key, 'version': evidence.EVIDENCE_VERSION,
                'researched_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
@@ -210,14 +223,14 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
             'report': report(cfg.election, spec['key'])}
 
 
-def research_config(config_path: str | Path, refresh: bool = False, only: str | None = None) -> dict:
+def research_config(config_path: str | Path, refresh: bool = False, only: str | None = None, again: bool = False) -> dict:
     """Evidence for every what-if in a config that lacks it (pre-registered ones included: there it grades confidence only)."""
     cfg = RunConfig.load(config_path)
     keys = [k for k in cfg.what_ifs if not only or k == only]
     budget = Budget(cfg.research.whatif_dollars * max(1, len(keys)))
     out = {}
     for k in keys:
-        ev = research({**REGISTRY[k], 'key': k}, cfg, budget, refresh)
+        ev = research({**REGISTRY[k], 'key': k}, cfg, budget, refresh, again)
         out[k] = {'strength': evidence.strength(ev)['level'], 'findings': len(ev['findings']), 'summary': ev['summary'][:200]}
     return {'what_ifs': out, 'dollars': round(budget.spent, 4)}
 

@@ -437,3 +437,25 @@ of them gets a different question. The live config
 (`configs/live-1920.json`) keeps rung 1's six cohorts so answers stay
 comparable and cached. Fix before widening: key the paraphrase on the
 agent id.
+
+**D15 · Medium · fixed · evidence extraction**
+- **Haiku extracted nothing.** Given rich research notes (Christensen's
+  19% in Washington, Roosevelt 1912, La Follette 1924), it returned zero
+  findings. It judged every analogue unreliable itself.
+- **Sonnet ran out of room.** At 4,000 tokens its JSON was truncated, and
+  the crash lost the call's usage. About $0.052 is entered in the ledger as
+  an estimate.
+
+Now: Sonnet with 8,000 tokens, at most 12 findings, and an instruction not
+to judge reliability, since the pipeline grades it. A truncated answer keeps
+its usage.
+
+**D16 · Medium · fixed · research without searching**
+The first League research call ran no searches and answered from memory
+($0.02). Grounding correctly dropped every claim, since none had a source.
+The prompt now requires at least two searches, and a turn with none is
+retried once.
+
+**G6 · Low · open · spend ledger**
+`sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
+backfilled from runs' usage.
