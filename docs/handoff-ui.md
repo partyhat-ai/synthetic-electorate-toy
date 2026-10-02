@@ -178,6 +178,8 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
 ## Checking your work
 
 - `pnpm lint && pnpm check && pnpm size && pnpm test`.
+- The sample model's outcomes for every story what-if:
+  `pnpm dlx tsx scripts/model-check.ts`.
 - **Look at it** with the dev server on `?sample=1&year=1896`.
 
 ## Rough edges (good first tasks)
