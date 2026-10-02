@@ -24,7 +24,10 @@ import random
 # p5: news about one nominee sits on that nominee's ballot line, and those counterfactuals
 # carry a manipulation check (news_about) (DISCLOSURES D21). Briefs without such news are
 # byte-identical to p4's.
-PROMPT_VERSION = 'p5'
+# p6: a staged compiled what-if (world.py) carries its consequences among the settled facts, the
+# dated items it contradicts removed and up to two in-world items added (DISCLOSURES D33). Every
+# other brief is byte-identical to p5's.
+PROMPT_VERSION = 'p6'
 
 NEWS_CHECK = ('Also fill news_about: the label of the candidate the recent news on the ballot concerns, '
               '"neither" if it concerns neither, or "unsure".')

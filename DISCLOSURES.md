@@ -1068,3 +1068,64 @@ byte-identical, except 1924's compile prompt: its list of existing what-ifs
 now includes `no-19th`. Each typed 1924 text misses the compile cache once
 (about $0.02); no brief changes. Legacy 1916–1924 data still goes through
 the untouched loaders.
+
+**D33 · High · fixed (p6) · interviews that didn't measure the change**
+A 1916 what-if ("war after the Lusitania") showed the interviews mostly never
+took the change in: voters at war since 1915 still praised the President for
+keeping the country out of war, because the real 1916 newspapers in their
+briefs said so (non-1920 years could drop no item: `drop_topics` only knows
+1920's codes). Half the twelve slots went to women who could not vote in either
+world, no German-American, Irish-American or Western voter was asked (the
+live configs' `only_cohorts`), cohorts nobody was interviewed in got exactly
+zero effect, and one or two people per cohort bootstrapped to almost no spread
+("Hughes wins in 0 of 100 draws"). Compiled what-ifs now get, in the live
+configs:
+- **Stronger once-per-change passes.** Compile and extract on Opus at high
+  effort; research on Sonnet at medium. They run once per change, not once
+  per voter, so they are the cheapest place to buy judgement.
+- **Staging** (`world.py`, Opus, high): the year's items the change makes
+  false leave the counterfactual brief (by id, any year); up to two in-world
+  items ("a local newspaper") and up to three consequences join it; a belief
+  check is designed; the groups history says the change moves are named.
+- **A belief check, asked first** in each counterfactual interview (p6). Its
+  two worlds must answer it differently, or it is discarded. A wrong answer
+  leaves the interview out.
+- **An audit** (Opus, medium) of each counterfactual answer's reason and
+  quote, without its vote: reasoning from the world as it was leaves the
+  interview out, whichever way it voted.
+- **Escalation**: a bulk-model (Haiku) answer that fails either check is
+  asked again, control and counterfactual, on Sonnet; the pair is compared
+  within itself as always. Failures are counted and shown as confidence
+  reasons whether or not escalation rescued them.
+- **No wasted slots**: someone who cannot vote in either world is replaced by
+  the next person drawn from the cohort (the first draws are unchanged), so
+  each cohort's effect describes the people it can move, which is where the
+  backbone applies it.
+- **Focus cohorts**: up to six cohorts the staging pass names are interviewed
+  for that what-if even when `only_cohorts` leaves them out.
+- **Borrowed cohorts**: a cohort the change reaches but nobody was asked in
+  takes the interviewed cohorts' effect (same sex and group first), per draw,
+  plus between-cohort noise (their spread, at least 0.15 logit), and the
+  evidence prior applies to it.
+- **Spread from who was drawn**: each cohort's draws are widened to at least
+  the person-to-person spread of a mean of its n people, estimated from every
+  pair in the run.
+Pre-registered what-ifs and runs are unchanged: every new behaviour is off in
+the config defaults and gated to compiled what-ifs. Costs: about $1–2 per
+typed what-if instead of about $0.50. The same day every dollar ceiling was
+removed: the daily cap (SIMULACRA_DAILY_DOLLARS), the per-what-if cap
+(`whatif_dollars`) and the interview caps (`max_dollars`, `max_requests`).
+Every paid call is still priced first and recorded in sessions/spend.jsonl,
+and a stage costing over 1.5x its estimate still stops.
+
+**D35 · Medium · fixed (staging w2) · focus slots and an easy check**
+In the first staged run (1940, "Britain Falls"), the six focus slots all went to
+the first named group ("anyone in the Northeast"), and two of them to
+non-citizen cohorts that yield no interviews: the Pacific Coast and the
+Midwest's naturalized immigrants, also named, were never asked. The slots now
+go round the named groups in turn (largest cohort first), and a cohort in
+which no one can vote takes no slot. The belief check was answered right by
+30 of 30 because its answer was printed in the brief; it now asks about a
+consequence the brief never states, with three or four plausible options. The
+audit now counts a passing phrase that relies on a state of affairs the change
+ended (an ally "still fighting" after it surrendered) as contradicting it.

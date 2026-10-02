@@ -73,7 +73,11 @@ def briefs_record(run_dir: Path) -> dict:
             facts = max((c.get('facts', []) for c in ch), key=lambda f: sum(c.get('facts', []) == f for c in ch))
             t = {'facts': facts,
                  'added': sorted({p['text'] for c in ch for p in c.get('added_planks', [])}),
-                 'dropped': sorted({p for c in ch for p in c.get('dropped_planks', [])})}
+                 'dropped': sorted({p for c in ch for p in c.get('dropped_planks', [])}),
+                 # D33: staged in-world news, and how many real items the change made false
+                 'items': sorted({(i['date'], i['text']) for c in ch for i in c.get('added_items', [])}),
+                 'removed': len({i for c in ch for i in c.get('dropped_sources', [])})}
+            t['items'] = [{'date': d, 'text': x} for d, x in t['items']]
             sp = scenario.spec_path(wk)
             spec = json.loads(sp.read_text()) if sp.exists() else REGISTRY.get(wk, {})
             news = spec.get('nominee_news') or []

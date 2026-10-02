@@ -41,17 +41,24 @@ class AgentConfig:
     max_requests: int | None = None   # hard cap on requests per run
     max_dollars: float | None = None  # hard stop, checked against the dry-run estimate
     max_tokens: int = 4000            # per-request output ceiling (also the estimate's worst case)
+    # Compiled what-ifs only; the default leaves pre-registered runs as they were (D33):
+    focus_cohorts: int = 0            # extra cohorts the staging pass names as the change's decisive groups
 
 
 @dataclass
 class ResearchConfig:
-    """The compile → research → extract calls behind a typed what-if (scenario.py, evidence.py)."""
+    """The once-per-what-if calls behind a typed what-if: compile → research → extract → stage
+    (scenario.py, evidence.py, world.py). They run once per change, not once per voter, so they
+    can afford the strongest model and effort (D33)."""
     compile_model: str = 'claude-sonnet-5-5'
     research_model: str = 'claude-sonnet-5-5'
     extract_model: str = 'claude-sonnet-5-5'  # Haiku judged every analogue unreliable and extracted none (D15)
     max_searches: int = 4              # web_search max_uses per research call
     research_max_tokens: int = 4000
     whatif_dollars: float = 0.5        # hard stop for one typed what-if, all stages together
+    world_model: str | None = None     # the staging pass (world.py); None skips it
+    world_effort: str = 'high'
+    pass_max_tokens: int = 3000        # stage output ceiling; Opus thinking counts toward it
 
 
 @dataclass

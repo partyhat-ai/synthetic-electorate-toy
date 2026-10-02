@@ -80,6 +80,18 @@ export const Interviews = z.object({
   byWhatIf: z.record(z.string(), z.array(z.unknown())).optional()
 });
 
+/** What a what-if's voters were told: settled facts, news on a nominee's line, planks added and
+ *  dropped, and (staged what-ifs, D33) in-world items and how many real items the change made false. */
+export const Told = z.looseObject({
+  facts: z.array(z.string()).optional(),
+  news: z.array(z.string()).optional(),
+  added: z.array(z.string()).optional(),
+  dropped: z.array(z.string()).optional(),
+  items: z.array(z.object({ date: z.string(), text: z.string() })).optional(),
+  removed: z.number().optional()
+});
+export type Told = z.infer<typeof Told>;
+
 export const Bundle = z.object({
   year: z.number().int(),
   runId: z.string(),
@@ -93,7 +105,7 @@ export const Bundle = z.object({
   words: z.array(z.object({ key: z.string(), words: z.array(z.string()) })),
   // Bundles published before the briefs record (1916, 1924) lack these three.
   pre: z.record(z.string(), z.unknown()).nullable().optional(),
-  told: z.record(z.string(), z.record(z.string(), z.array(z.string()))).optional(),
+  told: z.record(z.string(), Told).optional(),
   reading: z.array(z.record(z.string(), z.unknown())).optional()
 });
 export type Bundle = z.infer<typeof Bundle>;

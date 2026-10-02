@@ -293,7 +293,8 @@ def backend(name: str, folder: Path | None = None, effort: str = 'low', max_toke
 # live API answers are cached; transcript (subagent) and mock answers never are.
 
 def request_key(r: dict) -> str:
-    blob = json.dumps([r['model'], r['system'], r['user'], r['schema']], sort_keys=True)
+    # A request's own effort is part of the instrument; requests without one keep their old keys.
+    blob = json.dumps([r['model'], r['system'], r['user'], r['schema']] + ([r['effort']] if r.get('effort') else []), sort_keys=True)
     return hashlib.sha256(blob.encode()).hexdigest()
 
 

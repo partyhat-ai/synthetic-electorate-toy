@@ -429,7 +429,11 @@ def make_facts(spec: dict):
     reach = spec.get('reach') or {}
 
     def facts(agent: dict, inp, year: int = 1920) -> dict:
-        out = {'facts': list(spec.get('facts_text') or []), 'eligibility': None,
+        # A staged world (world.py) adds its consequences to the settled facts and drops,
+        # by id, the dated items the change makes false.
+        world = spec.get('world') or {}
+        out = {'facts': list(spec.get('facts_text') or []) + list(world.get('consequences') or []), 'eligibility': None,
+               'drop_items': {c['id'] for c in world.get('contradicted') or []}, 'world': world or None,
                'about': spec.get('about'), 'nominee_news': list(spec.get('nominee_news') or []),
                'withdraws': spec.get('withdraws'),
                'drop_topics': set(spec.get('drop_topics') or []), 'drop_planks': set(spec.get('drop_planks') or []),

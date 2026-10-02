@@ -31,7 +31,7 @@ __all__ = ['CONF', 'KIND_ORDER', 'LEGISLATURE_EV', 'SOURCES', 'Run', 'briefs_rec
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'verify', 'dryrun', 'all', 'id',
-                                      'research', 'whatif'])
+                                      'research', 'whatif', 'stage'])
     ap.add_argument('--config', default=str(ROOT / 'configs/prototype-1920.json'))
     ap.add_argument('--year', type=int, help='use configs/live-<year>.json (instead of --config)')
     ap.add_argument('--samples', type=int, default=1, help='dryrun: briefs to print per slice and per what-if')
@@ -46,10 +46,12 @@ def main(argv=None):
     args = ap.parse_args(argv)
     if args.year:
         args.config = str(ROOT / f'configs/live-{args.year}.json')
-    if args.stage in ('research', 'whatif'):
+    if args.stage in ('research', 'whatif', 'stage'):
         from . import intake
         if args.stage == 'research':
             out = intake.research_config(args.config, args.refresh, args.key, args.reextract)
+        elif args.stage == 'stage':
+            out = intake.stage_config(args.config, args.key, args.refresh)
         elif args.queue:
             out = intake.process_queue(args.config, args.limit)
         elif args.text:

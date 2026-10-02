@@ -12,9 +12,12 @@ Stages, each priced before it is sent and recorded in sessions/spend.jsonl:
 2. research  (research.research_model + web search): notes with citations.
 3. extract   (research.extract_model, structured): graded findings, each
              grounded in a source the search returned.
-4. register  whatifs/<key>.json and whatifs/evidence/<key>.json; the key
+4. stage     (research.world_model, structured; D33, world.py): the year's
+             newspaper items the change makes false, in-world news, downstream
+             facts, and the groups to interview.
+5. register  whatifs/<key>.json and whatifs/evidence/<key>.json; the key
              joins the config's what_ifs.
-5. run       backbone → plan → ask (identical earlier requests reused) →
+6. run       backbone → plan → ask (identical earlier requests reused) →
              analyze → publish → serve/bundles/<year>.json.
 
 Money: a typed what-if stops at research.whatif_dollars across all stages
@@ -95,7 +98,13 @@ class Budget:
 
 
 # Typical output tokens by call (measured: a compile answer ran ~1,300 tokens on Sonnet 5.5).
-TYPICAL_OUT = {'compile': 1600, 'compile-retry': 1600, 'extract': 3000}
+TYPICAL_OUT = {'compile': 1600, 'compile-retry': 1600, 'extract': 3000, 'stage': 2500}
+# Thinking at higher effort multiplies output [I]; generous, since a stage over 1.5x its typical stops the pipeline.
+EFFORT_OUT = {'low': 1.0, 'medium': 3.0, 'high': 6.0, 'xhigh': 7.0, 'max': 8.0}
+
+
+def typical_out(stage: str, effort: str, max_tokens: int) -> int:
+    return int(min(TYPICAL_OUT.get(stage, 600) * EFFORT_OUT.get(effort, 1.0), 0.75 * max_tokens))
 
 
 def _structured(req: dict, max_tokens: int, budget: Budget, stage: str, note: str = '') -> dict:
@@ -105,15 +114,21 @@ def _structured(req: dict, max_tokens: int, budget: Budget, stage: str, note: st
     if hit:
         print(f'{stage}: reused an identical earlier answer', flush=True)
         return hit['data']
-    est = llm.estimate([req], max_tokens, typical_out=TYPICAL_OUT.get(stage, 600))
-    print(f'{stage}: ~${est["typical"]} typical, ${est["worst"]} worst ({req["model"]})', flush=True)
+    effort = req.get('effort') or 'low'
+    est = llm.estimate([req], max_tokens, typical_out=typical_out(stage, effort, max_tokens))
+    print(f'{stage}: ~${est["typical"]} typical, ${est["worst"]} worst ({req["model"]}, {effort} effort)', flush=True)
     budget.check(est['worst'], stage)
-    ans = llm.AnthropicBackend(effort='low', max_tokens=max_tokens)._one(req)
+    ans = llm.AnthropicBackend(effort=effort, max_tokens=max_tokens)._one(req)
     cache.put(req, ans | {'backend': 'anthropic'})
     budget.add(llm.cost(req['model'], ans.get('usage') or {}), stage, est['typical'], note)
     if not ans.get('ok'):
         raise SystemExit(f'{stage} failed: {ans.get("error")}')
     return ans['data']
+
+
+def _with_effort(req: dict, effort: str) -> dict:
+    # 'low' keeps the request byte-identical to before D33, so its cached answers still match.
+    return req | {'effort': effort} if effort and effort != 'low' else dict(req)
 
 
 def compile_text(text: str, cfg: RunConfig, budget: Budget) -> dict:
@@ -128,6 +143,41 @@ def compile_text(text: str, cfg: RunConfig, budget: Budget) -> dict:
         raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, note, prof), 3000, budget,
                           'compile-retry', text)
     return raw
+
+
+def stage(spec: dict, cfg: RunConfig, budget: Budget, ev: dict | None = None) -> dict | None:
+    """D33: stage the what-if's world (world.py) and keep it on the spec. Agent-mode what-ifs only:
+    a backbone-mode change's interviews are a cross-check and move no numbers."""
+    from . import data, profiles, world
+    rc = cfg.research
+    if not rc.world_model or spec.get('mode') != 'agents':
+        return None
+    prof = profiles.get(cfg.election)
+    rel = prof.get('corpus') or ('sources/corpus_1920.jsonl' if cfg.election == 1920 else None)
+    corpus = data.corpus(cfg.context_cutoff, rel, profiles.names_re(cfg.election)) if rel else []
+    req = _with_effort(world.stage_request(spec, prof, cfg.context_cutoff, corpus, rc.world_model, rc.world_effort, ev),
+                       rc.world_effort)
+    raw = _structured(req, max(4000, rc.pass_max_tokens), budget, 'stage', spec['key'])
+    spec['world'] = world.finalize(raw, spec, prof, cfg.context_cutoff, corpus, rc.world_model, rc.world_effort)
+    return spec['world']
+
+
+def stage_config(config_path: str | Path, only: str | None = None, refresh: bool = False) -> dict:
+    """Stage every compiled agent-mode what-if in a config that hasn't been (D33), and save its spec."""
+    cfg = RunConfig.load(config_path)
+    keys = [k for k in cfg.what_ifs if (not only or k == only) and REGISTRY.get(k, {}).get('generated')
+            and REGISTRY[k].get('mode') == 'agents' and (refresh or not REGISTRY[k].get('world'))]
+    budget = Budget(cfg.research.whatif_dollars * max(1, len(keys)))
+    out = {}
+    for k in keys:
+        spec = {kk: v for kk, v in REGISTRY[k].items() if kk not in ('apply', 'facts')}
+        w = stage(spec, cfg, budget, scenario.load_evidence(k))
+        if w is None:
+            continue
+        scenario.save_spec(spec)
+        REGISTRY[k] = scenario.bind(spec)
+        out[k] = {'contradicted': len(w['contradicted']), 'items': len(w['items']), 'focus': [f['why'] for f in w['focus']]}
+    return {'staged': out, 'dollars': round(budget.spent, 4)}
 
 
 def reextract(spec: dict, cfg: RunConfig, budget: Budget, have: dict) -> dict:
@@ -259,6 +309,13 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
     progress.step(f'Clarifying historical context: {n or "no"} finding{"" if n == 1 else "s"}.')
     if spec['kind'] == 'candidate' and spec['candidate']['positions_source'] != 'documented':
         documented_positions(spec, ev, cfg.context_cutoff)
+    if cfg.research.world_model and spec['mode'] == 'agents':
+        progress.step(f'Staging the autumn of {cfg.election} so nothing in it contradicts the change.')
+        w = stage(spec, cfg, budget, ev)
+        if w:
+            gone, new = len(w['contradicted']), len(w['items'])
+            progress.step(f'Took out {gone or "no"} newspaper item{"" if gone == 1 else "s"} the change makes false; '
+                          f'wrote {new} from the changed world.')
     scenario.save_spec(spec)
     REGISTRY[spec['key']] = scenario.bind(spec)
     _add_to_config(config_path, spec['key'])

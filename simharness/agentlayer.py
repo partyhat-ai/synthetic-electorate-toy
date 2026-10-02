@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import random
 
-from . import prompts, scenario
+from . import prompts, scenario, world
 from .agents import persona_lines, sample_agents
 from .geo import SOUTH, STATE_NAME
 from .whatifs import ELECTION_YEARS  # noqa: F401 (re-exported: the table of election years)
@@ -272,19 +272,54 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     agents, reqs = [], []
     asof = cfg.context_cutoff  # p1 used '1920-10-30' with items to 1 Nov
     no_popular = set(getattr(inp, 'no_popular', None) or ())
-    for key in sorted(cohorts):
-        if ag.only_cohorts and key not in ag.only_cohorts:
-            continue
+    this_year = [wk for wk in cfg.what_ifs if wk in registry and registry[wk]['facts'] is not None
+                 and year in (registry[wk].get('years') or [registry[wk].get('year', 1920)])]
+
+    def draw(key: str) -> list[dict]:
+        """The people interviewed in one cohort (none where no one can be)."""
         co = cohorts[key]
         if co['group'] not in era_groups['interview']:
-            continue  # 1868–1968: too few adults per region for a cohort; counted by the backbone only
+            return []  # 1868–1968: too few adults per region for a cohort; counted by the backbone only
         if no_popular:
             # No one votes for president where the legislature chose the electors: nobody to interview there.
             by_state = {s: n for s, n in co['adults_by_state'].items() if s not in no_popular}
             if not by_state:
-                continue
+                return []
             co = {**co, 'adults_by_state': by_state}
-        agents += sample_agents(co, ag.per_cohort, corpus, cfg.seed, extras['urban'], year=year, min_age=era_groups['min_age'])
+        return sample_agents(co, ag.per_cohort, corpus, cfg.seed, extras['urban'], year=year, min_age=era_groups['min_age'])
+
+    for key in sorted(cohorts):
+        if not ag.only_cohorts or key in ag.only_cohorts:
+            agents += draw(key)
+
+    # D33: the groups a staged what-if names as decisive are interviewed for it even when
+    # only_cohorts leaves them out. The focus_cohorts slots go round the named groups in turn
+    # (newest what-if first; within a group, its largest cohort first), so every named group
+    # is reached before any gets a second.
+    if ag.focus_cohorts and ag.only_cohorts:
+        queues = []
+        for wk in reversed(this_year):
+            for f in (registry[wk].get('world') or {}).get('focus') or []:
+                queues.append((wk, sorted((k for k, c in cohorts.items() if k not in ag.only_cohorts
+                                           and c['group'] != 'foreign_white_alien' and world.cohort_matches(c, f)),
+                                          key=lambda k: -cohorts[k]['adults'])))
+        chosen, drawn = {}, {}
+        while len(chosen) < ag.focus_cohorts and any(q for _, q in queues):
+            for wk, q in queues:
+                while q and len(chosen) < ag.focus_cohorts:
+                    k = q.pop(0)
+                    if k in chosen:
+                        chosen[k].add(wk)  # already named by another group: it counts for this what-if too
+                        continue
+                    if k not in drawn:
+                        drawn[k] = draw(k)
+                    if drawn[k]:
+                        chosen[k] = {wk}
+                        break
+        for k, wks in chosen.items():
+            for a in drawn[k]:
+                a['focus_for'] = sorted(wks)
+            agents += drawn[k]
     for n, a in enumerate(agents):
         rng = random.Random(f'{cfg.seed}:{a["id"]}')
         label_of, order = prompts.assign_labels(rng, keys, prof['label_pool'])
@@ -336,14 +371,22 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
                 continue
             if a['group'] == 'foreign_white_alien' and spec['mode'] == 'agents':
                 continue  # can't vote in either world; no effect to measure
+            if a.get('focus_for') and wk not in a['focus_for']:
+                continue  # interviewed only for the what-if that named this group as decisive (D33)
             f = spec['facts'](a, inp, year=year)
             if not f['facts'] and f.get('eligibility') is None and not f.get('nominee_news'):
                 continue
             items = items_for(a, f.get('drop_topics', set()), f.get('drop_after'))
+            staged = f.get('world') or {}
+            if f.get('drop_items'):
+                items = [i for i in items if i['id'] not in f['drop_items']]  # D33: items the change makes false
+            added = world.items_for_agent(staged, a, STATE_NAME.get(a['state'], a['state'])) if staged else []
+            items = items + added
             drop_planks = set(f.get('drop_planks') or ()) or ({'League of Nations'} if 'platform_override' in f else frozenset())
             change = {'what_if': wk, 'facts': f['facts'], 'eligibility': f.get('eligibility'),
                       'dropped_sources': [i['id'] for i in ctl_items if i not in items], 'dropped_planks': sorted(drop_planks),
-                      'added_planks': list(f.get('add_planks') or [])}
+                      'added_planks': list(f.get('add_planks') or []),
+                      **({'added_items': [{'id': i['id'], 'date': i['date'], 'text': i['text']} for i in added]} if added else {})}
             about = f.get('about') if f.get('about') in ('R', 'D') else None
             news = {about: f['nominee_news']} if about and f.get('nominee_news') else None
             ballot, cf_labels, extra = parties(drop_planks, add=f.get('add_planks') or (), news=news), labels, {}

@@ -41,7 +41,8 @@ import {
   RunRequest,
   type Slice,
   type Step,
-  type TableRow
+  type TableRow,
+  type Told
 } from './bundle';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -74,7 +75,7 @@ export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraO
 
 /** The result the page receives: a bundle result plus the brief and interviews behind it. */
 export type RunResult = Result & {
-  told?: Record<string, Record<string, string[]>>;
+  told?: Record<string, Told>;
   reading?: Record<string, unknown>[];
   pre?: Record<string, unknown>;
   interview?: { questions: string[] | undefined; byWhatIf: { whatIf: string; answers: unknown[] }[] };
