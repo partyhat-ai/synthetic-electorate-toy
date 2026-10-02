@@ -7,6 +7,9 @@ name = "synthetic-voters-toy-harness"
 version = "0.1.0"
 description = "The simulation harness behind Simulacra Americana: a calibrated backbone decides the counts, LLM agents supply paired changes and quotes."
 requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.2",
+]
 
 [project.optional-dependencies]
 test = ["pytest>=8.0"]
