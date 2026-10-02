@@ -20,6 +20,7 @@
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
+  import { hoverPlaces } from '$lib/simulacra/places';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
@@ -180,7 +181,7 @@
     </header>
 
     <main class="main" bind:this={mainEl}>
-      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
+      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} highlight={$hoverPlaces} />
 
       <section class="groups" aria-labelledby="sa-groups" bind:this={groupsEl} style:min-height={groupsHold ? `${groupsHold}px` : null}>
         <div class="groups-head">

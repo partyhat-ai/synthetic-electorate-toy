@@ -65,6 +65,7 @@ All under `src/lib/simulacra/` unless noted.
 | The bubble's message type, kind labels, step splitting | `whatif.ts` |
 | Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
 | ⓘ About popover | `InfoPopover.svelte` |
+| Places in text that light the map | `Places.svelte`, `places.ts` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |
 | Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
@@ -218,6 +219,8 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
   `run.done` / `run.total` are available.
 - In the History view after a rerun, the run's suggestions still show as
   chosen.
+- "Washington, D.C." in text lights Washington state, not D.C.
+  (`places.ts`: the D.C. rule's trailing `\b` can't follow a period).
 - Missouri (1820) and Michigan (1836) cast electoral votes in `history.ts`
   before `geo.ts`'s `first` year for them, so their map tiles are empty in
   those years.

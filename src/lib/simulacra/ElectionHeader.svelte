@@ -6,6 +6,7 @@
   import { alsoRanOf, mapLabelOf, type Paints } from './header';
   import type { Election } from './history';
   import MiniMap from './MiniMap.svelte';
+  import Places from './Places.svelte';
   import Portrait from './Portrait.svelte';
   import type { ShownRun } from './state';
   import type { Names } from './types';
@@ -17,9 +18,11 @@
     paints: Paints;
     names: Names;
     light: boolean;
+    /** State codes to light on the map (places named in the text being read). */
+    highlight: readonly string[];
   }
 
-  let { election: e, year, rerun, paints, names, light }: Props = $props();
+  let { election: e, year, rerun, paints, names, light, highlight }: Props = $props();
 
   const A = $derived(e.candidates[0]);
   const B = $derived(e.candidates[1] ?? null);
@@ -54,13 +57,13 @@
       {#if k === 'A'}
         <div class="center">
           <h1 id="sa-year" class="year">{year}</h1>
-          <MiniMap {year} states={mapStates} {colors} {names} label={mapLabel} tile={12} />
+          <MiniMap {year} states={mapStates} {colors} {names} label={mapLabel} tile={12} {highlight} />
           <p class="needed">{e.majority} to win{#if flips}<span class="flips">{` · `}<span class="dot" aria-hidden="true"></span>{`${flips} flipped`}</span>{/if}</p>
         </div>
       {/if}
     {/each}
   </div>
-  {#if e.note}<p class="note">{e.note}</p>{/if}
+  {#if e.note}<p class="note"><Places text={e.note} /></p>{/if}
   {#if alsoRan}<p class="also">Also ran: {alsoRan}</p>{/if}
 </section>
 

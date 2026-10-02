@@ -3,6 +3,7 @@
   // a mark per step; finished and opened, label / text rows), and, opened,
   // the interviews behind the rerun and what it drew on.
   import { Check } from 'lucide-svelte';
+  import Places from './Places.svelte';
   import type { InterviewAnswer, WhatIf } from './schemas';
   import { day, type Message, peopleIn, splitStep } from './whatif';
 
@@ -36,7 +37,7 @@
         <li class={st.state} class:bare={!s.label}>
           {#if working}<span class="mark" aria-hidden="true">{#if st.state === 'done'}<Check size={11} strokeWidth={2.6} />{:else}<i></i>{/if}</span>{/if}
           {#if s.label}<span class="k">{s.label}</span>{/if}
-          <span class="v">{s.body}</span>
+          <span class="v"><Places text={s.body} /></span>
         </li>
       {/each}
     </ol>
@@ -63,14 +64,14 @@
                 {@const moved = a.after.choice !== a.before.choice}
                 <li class:misread={a.misread}>
                   <p class="iv-who">
-                    <span><b>{a.name}</b> {a.line} · {a.cohort}</span>
+                    <span><b>{a.name}</b> <Places text={a.line} /> · <Places text={a.cohort} /></span>
                     {#if a.misread}<em class="iv-flag">Misread the news</em>{:else if moved}<em class="iv-flag moved">Changed</em>{/if}
                   </p>
                   <dl class="iv-rows">
                     {#each sides(a) as { tag, x } (tag)}
                       <dt>{tag}</dt>
                       <dd class="iv-c">{x.choice}{#if x.pVote != null}<small>{x.pVote}% likely</small>{/if}</dd>
-                      <dd class="iv-say">“{x.quote}”</dd>
+                      <dd class="iv-say">“<Places text={x.quote} />”</dd>
                     {/each}
                   </dl>
                 </li>
@@ -95,7 +96,7 @@
         <h4 class="src-h">Newspapers the voters read<span class="sec-n">{src.reading.length}</span></h4>
         <ul class="src-l">
           {#each src.reading as r, i (i)}
-            <li><span class="src-k">{day(r.date)}</span><span class="src-v">{r.summary || r.newspaper}<small>{r.newspaper}, {r.place}</small></span></li>
+            <li><span class="src-k">{day(r.date)}</span><span class="src-v"><Places text={r.summary || r.newspaper} /><small>{r.newspaper}, {r.place}</small></span></li>
           {/each}
         </ul>
       </div>
@@ -105,7 +106,7 @@
         <h4 class="src-h">Research<span class="sec-n">{src.research.length} findings</span></h4>
         <ul class="src-l">
           {#each src.research as r, i (i)}
-            <li><span class="src-k">{r.when}</span><span class="src-v">{r.text}</span></li>
+            <li><span class="src-k">{r.when}</span><span class="src-v"><Places text={r.text} /></span></li>
           {/each}
         </ul>
       </div>
@@ -207,6 +208,9 @@
   .src-v small { display: block; margin-top: 1px; font-size: 12px; line-height: 1.35; color: var(--label-2); }
   .src-l.plain { grid-template-columns: minmax(0, 1fr); row-gap: 5px; }
   .src-l.plain .src-v { grid-column: 1; font-size: 12.5px; color: var(--label-2); }
+  /* In the working (steps, interviews) every place is dotted in the text's own
+     colour; blue is kept for states in the message itself. */
+  :global(.sa .whatif) .steps :global(.place), :global(.sa .whatif) .iv :global(.place), :global(.sa .whatif) .src :global(.place) { text-decoration-color: currentColor; }
   @media (prefers-reduced-motion: reduce) {
     .steps .k, .steps .v, .steps .mark { animation: none; }
     .steps .mark i { animation: none; }

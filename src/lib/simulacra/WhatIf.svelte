@@ -6,6 +6,8 @@
   // bubble's working is WhatIfWorking; the chips, field and Rerun are
   // WhatIfComposer.
   import { onDestroy, untrack } from 'svelte';
+  import Places from './Places.svelte';
+  import { hoverPlaces } from './places';
   import type { WhatIf } from './schemas';
   import type { Message, Still } from './whatif';
   import WhatIfComposer from './WhatIfComposer.svelte';
@@ -146,12 +148,13 @@
   const working = $derived(!!message.busy);
   const tucked = $derived(!working && !!(message.steps?.length || message.interview?.byWhatIf.length));
   const canMore = $derived(over || tucked);
-  // A new message folds the bubble.
+  // A new message folds the bubble and lets go of any lit place.
   $effect.pre(() => {
     void msgKey;
     untrack(() => {
       opened = false;
       closing = false;
+      hoverPlaces.set([]);
       queueMicrotask(measure);
     });
   });
@@ -221,11 +224,11 @@
       <WhatIfWorking {message} {whatIfs} {working} {opened} />
       {#key msgKey}<div class="lines">
       {#if message.quote}
-        <blockquote>“{message.quote}”</blockquote>
-        {#if message.by}<p class="by">{message.by}</p>{/if}
+        <blockquote>“<Places text={message.quote} />”</blockquote>
+        {#if message.by}<p class="by"><Places text={message.by} /></p>{/if}
       {/if}
-      {#if message.text}<p class="say" class:after={!!message.quote}>{message.text}</p>{/if}
-      {#if message.detail}<p class="aside">{message.detail}</p>{/if}
+      {#if message.text}<p class="say" class:after={!!message.quote}><Places text={message.text} /></p>{/if}
+      {#if message.detail}<p class="aside"><Places text={message.detail} /></p>{/if}
       {#if message.actions?.length}
         <div class="acts">
           {#each message.actions as a (a.key)}
