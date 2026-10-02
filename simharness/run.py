@@ -4,6 +4,8 @@ Stages (each writes into runs/<run id>/ and can be rerun alone):
   backbone   population + backbone fit + the unchanged-run reproduction check
   plan       sample agents and write every model request (no calls)
   ask        send pending requests through the configured backend
+  refine     staged what-ifs (D33): audit the answers' reasoning, re-ask failed checks on
+             agents.escalate_model, audit those
   analyze    paired effects, leakage probes, label swap, bias, audit, quotes
   publish    every what-if combination → the page's result shape + bundle
   evaluate   pre-registered checks → validation.json (+ EVAL table rows); 1920 only
@@ -30,8 +32,8 @@ __all__ = ['CONF', 'KIND_ORDER', 'LEGISLATURE_EV', 'SOURCES', 'Run', 'briefs_rec
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'verify', 'dryrun', 'all', 'id',
-                                      'research', 'whatif', 'stage'])
+    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'refine', 'analyze', 'publish', 'evaluate', 'verify', 'dryrun', 'all',
+                                      'id', 'research', 'whatif', 'stage'])
     ap.add_argument('--config', default=str(ROOT / 'configs/prototype-1920.json'))
     ap.add_argument('--year', type=int, help='use configs/live-<year>.json (instead of --config)')
     ap.add_argument('--samples', type=int, default=1, help='dryrun: briefs to print per slice and per what-if')
@@ -62,9 +64,9 @@ def main(argv=None):
         return
     cfg = RunConfig.load(args.config)
     if args.all_cohorts:
-        cfg.agents.only_cohorts, cfg.agents.arms, cfg.agents.max_requests = None, None, None
+        cfg.agents.only_cohorts, cfg.agents.arms = None, None
     run = Run(cfg)
-    stages = ['backbone', 'plan', 'ask', 'analyze', 'evaluate', 'publish'] if args.stage == 'all' else [args.stage]
+    stages = ['backbone', 'plan', 'ask', 'refine', 'analyze', 'evaluate', 'publish'] if args.stage == 'all' else [args.stage]
     for s in stages:
         if s == 'id':
             print(run.id)

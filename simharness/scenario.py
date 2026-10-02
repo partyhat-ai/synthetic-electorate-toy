@@ -38,7 +38,7 @@ from .geo import REGIONS, SOUTH
 
 WHATIFS_DIR = ROOT / 'whatifs'
 EVIDENCE_DIR = WHATIFS_DIR / 'evidence'
-COMPILER_VERSION = 'c3'  # c3: about + nominee_news (D21)  # c2: drop_topics only for contradicted topics (DISCLOSURES D17)
+COMPILER_VERSION = 'c4'  # c4: as asked, never a silent substitute (D34)  # c3: about + nominee_news (D21)  # c2: drop_topics only for contradicted topics (DISCLOSURES D17)
 
 KINDS = ['franchise', 'population', 'issue', 'event', 'candidate']
 GROUPS = ['native_white', 'foreign_white_naturalized', 'foreign_white_alien', 'black']
@@ -64,7 +64,10 @@ Kinds of change:
 - event: something that happened or didn't: a scandal, war, strike, economic shock, a person acting differently.
 - candidate: a named person on the ballot as an independent or third-party candidate.
 
+Model what the reader asked, as they asked it. If their words describe something that could not have happened by the context date (it needs events that in reality came later, or a different course of history), never swap in a nearer or more plausible change. Write the world in which it did happen by the context date: state as settled fact the earlier departures from history it requires (a war entered sooner and lost sooner, a law passed years early), and grade it "a-stretch" or "fantastical". Choose another reading only when the words genuinely allow several, and then the one closest to them.
+
 Write:
+- fidelity: "as-asked" when the change you model is the one the reader's words describe; "reinterpreted" when it is a different change (another reading, a narrower or a substitute change). reinterpretation: when reinterpreted, one sentence the reader sees first, saying what they asked, what is modelled instead, and why; otherwise "".
 - withdraws: "O" when the change is that the labelled third candidate on this year's ballot (if there is one) does not run or withdraws; otherwise "none". Then kind is "candidate", and facts say when and how he left the race, without naming him.
 - about: "R" or "D" when the change concerns one of the two major nominees personally (something he did, said, revealed or suffered); otherwise "none".
 - nominee_news (only when about is R or D): one or two sentences of recent news about that nominee, in the third person ("He announced…", "Editors have denounced him…"), never naming him or his party. They are printed on his own line of the ballot, so no reader has to work out whom they concern. Then facts carry only the wider world, and never refer to the nominee again; facts may be empty.
@@ -74,7 +77,7 @@ Write:
 - drop_topics: dated newspaper topics the settled facts would make false, from: {json.dumps(TOPICS)}. Only those: never drop a topic because the change would crowd it out of the news. Usually this list is empty.
 - drop_planks: platform plank topics the change would remove, from {PLANK_TOPICS}. add_planks: a plank a party would add, in a neutral paraphrase.
 - plausibility: "documented" (it nearly happened, or it did in some form), "within-reach" (plausible in 1920), "a-stretch" (possible only with large changes), "fantastical" (impossible in 1920). anachronism: true if it needs things that didn't exist in 1920; say what in anachronism_note.
-- label: a Title Case name of three to six words. detail: one sentence a reader sees. assumption: the modelling assumption, plainly.
+- label: a Title Case name of three to six words, naming the change you model. detail: one sentence a reader sees. assumption: the modelling assumption, plainly.
 - words: three to eight lowercase words or phrases a reader might type for this change.
 - research_questions: two to four questions a historian could answer about how these people behaved in the same or the most similar situation.
 - same_as: the key of an existing what-if if the reader asked for exactly that change in other words; otherwise "".
@@ -160,6 +163,7 @@ COMPILE_SCHEMA = {
     'type': 'object',
     'properties': {
         'modelable': {'type': 'boolean'}, 'why_not': {'type': 'string'}, 'same_as': {'type': 'string'},
+        'fidelity': {'type': 'string', 'enum': ['as-asked', 'reinterpreted']}, 'reinterpretation': {'type': 'string'},
         'kind': {'type': 'string', 'enum': KINDS},
         'about': {'type': 'string', 'enum': ['R', 'D', 'none']},
         'withdraws': {'type': 'string', 'enum': ['O', 'none']},
@@ -188,7 +192,7 @@ COMPILE_SCHEMA = {
         'words': {'type': 'array', 'items': {'type': 'string'}},
         'research_questions': {'type': 'array', 'items': {'type': 'string'}},
     },
-    'required': ['modelable', 'why_not', 'same_as', 'kind', 'about', 'withdraws', 'nominee_news', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
+    'required': ['modelable', 'why_not', 'same_as', 'fidelity', 'reinterpretation', 'kind', 'about', 'withdraws', 'nominee_news', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
                  'anachronism_note', 'facts', 'reach', 'drop_topics', 'drop_planks', 'add_planks', 'candidate', 'franchise',
                  'population_scale', 'words', 'research_questions'],
     'additionalProperties': False,
@@ -304,7 +308,12 @@ def finalize(raw: dict, text: str, registry: dict, model: str, year: int = 1920)
         if kind == 'candidate' else None,
         'franchise': raw['franchise'] if kind == 'franchise' else None,
         'population_scale': raw['population_scale'] if kind == 'population' else None,
-        'words': sorted({w.lower().strip() for w in raw['words'] if len(w.strip()) >= 3}),
+        # D34: a reinterpreted change never claims the reader's own words, so typing them again
+        # reaches the compiler instead of being served the substitute.
+        'fidelity': raw.get('fidelity', 'as-asked'),
+        'reinterpretation': (raw.get('reinterpretation') or '') if raw.get('fidelity') == 'reinterpreted' else '',  # reader-facing: unmasked
+        'words': sorted({w.lower().strip() for w in raw['words'] if len(w.strip()) >= 3
+                         and not (raw.get('fidelity') == 'reinterpreted' and _same_words(w, text))}),
         'research_questions': raw['research_questions'],
         'slices': slices_reached(reach),
         'borrowed': describe_reach(raw['franchise']['borrow'], year) if kind == 'franchise' and raw['franchise']['action'] == 'enfranchise' else None,
@@ -312,6 +321,11 @@ def finalize(raw: dict, text: str, registry: dict, model: str, year: int = 1920)
         'compiled': {'model': model, 'version': COMPILER_VERSION, 'at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')},
     }
     return spec
+
+
+def _same_words(a: str, b: str) -> bool:
+    norm = lambda t: ' '.join(re.sub(r'[^a-z0-9 ]', ' ', t.lower()).split())
+    return norm(a) == norm(b) or norm(a) in norm(b)
 
 
 def slices_reached(reach: dict) -> list[str]:

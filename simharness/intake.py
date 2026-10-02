@@ -14,15 +14,20 @@ Stages, each priced before it is sent and recorded in sessions/spend.jsonl:
              grounded in a source the search returned.
 4. stage     (research.world_model, structured; D33, world.py): the year's
              newspaper items the change makes false, in-world news, downstream
-             facts, and the groups to interview.
+             facts, a belief check, and the groups to interview.
 5. register  whatifs/<key>.json and whatifs/evidence/<key>.json; the key
              joins the config's what_ifs.
 6. run       backbone → plan → ask (identical earlier requests reused) →
-             analyze → publish → serve/bundles/<year>.json.
+             refine (audit, escalate) → analyze → publish → serve/bundles/<year>.json.
 
-Money: a typed what-if stops at research.whatif_dollars across all stages
-(default $0.50), and every stage also checks the daily cap
-(SIMULACRA_DAILY_DOLLARS, default $2). A stage whose actual cost exceeds 1.5×
+Model and effort (D33): the once-per-what-if calls (compile, extract, stage,
+audit) are where a stronger model buys the most per dollar: each runs once,
+and each decides whether the interviews measure the change at all. The live
+configs run them on Opus at high effort; the per-voter interviews stay on the
+bulk model, with only the answers that fail a check re-asked on a stronger one.
+
+Money: every stage is priced before it is sent and recorded after; there is no
+dollar ceiling (since removed). A stage whose actual cost exceeds 1.5×
 its typical estimate stops the pipeline and says so.
 """
 from __future__ import annotations
@@ -78,14 +83,10 @@ class Progress:
 
 
 class Budget:
-    def __init__(self, cap: float):
-        self.cap, self.spent, self.lines = cap, 0.0, []
+    """What a typed what-if has spent, stage by stage (no ceiling)."""
 
-    def check(self, worst: float, what: str):
-        if self.spent + worst > self.cap:
-            raise SystemExit(f'refusing {what}: ${self.spent:.3f} spent on this what-if + ${worst:.3f} worst case > '
-                             f'${self.cap:.2f} (research.whatif_dollars)')
-        llm.guard_daily(worst, what)
+    def __init__(self):
+        self.spent, self.lines = 0.0, []
 
     def add(self, dollars: float, stage: str, typical: float | None = None, note: str = '', record: bool = True):
         self.spent += dollars
@@ -117,7 +118,6 @@ def _structured(req: dict, max_tokens: int, budget: Budget, stage: str, note: st
     effort = req.get('effort') or 'low'
     est = llm.estimate([req], max_tokens, typical_out=typical_out(stage, effort, max_tokens))
     print(f'{stage}: ~${est["typical"]} typical, ${est["worst"]} worst ({req["model"]}, {effort} effort)', flush=True)
-    budget.check(est['worst'], stage)
     ans = llm.AnthropicBackend(effort=effort, max_tokens=max_tokens)._one(req)
     cache.put(req, ans | {'backend': 'anthropic'})
     budget.add(llm.cost(req['model'], ans.get('usage') or {}), stage, est['typical'], note)
@@ -126,22 +126,25 @@ def _structured(req: dict, max_tokens: int, budget: Budget, stage: str, note: st
     return ans['data']
 
 
-def _with_effort(req: dict, effort: str) -> dict:
+def _with_effort(req: dict, effort: str, fast: bool = False) -> dict:
     # 'low' keeps the request byte-identical to before D33, so its cached answers still match.
-    return req | {'effort': effort} if effort and effort != 'low' else dict(req)
+    # Fast mode changes only how quickly the answer comes (and its price), so it isn't part of the cache key.
+    out = req | {'effort': effort} if effort and effort != 'low' else dict(req)
+    return out | {'speed': 'fast'} if fast and llm.fast_ok(req['model']) else out
 
 
 def compile_text(text: str, cfg: RunConfig, budget: Budget) -> dict:
     from . import profiles
     rc, prof = cfg.research, profiles.get(cfg.election)
-    raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, prof=prof), 3000, budget,
-                      'compile', text)
+    mt = max(3000, rc.pass_max_tokens)
+    raw = _structured(_with_effort(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, prof=prof),
+                                   rc.compile_effort, rc.fast), mt, budget, 'compile', text)
     bad = scenario.naming_violations(raw, cfg.election) if raw.get('modelable') else []
     if bad:
         note = ('These sentences name a nominee, a party or the President, which the blinded briefs cannot show. '
                 'Rewrite them with the descriptions given: ' + json.dumps(bad))
-        raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, note, prof), 3000, budget,
-                          'compile-retry', text)
+        raw = _structured(_with_effort(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, note, prof),
+                                       rc.compile_effort, rc.fast), mt, budget, 'compile-retry', text)
     return raw
 
 
@@ -156,7 +159,7 @@ def stage(spec: dict, cfg: RunConfig, budget: Budget, ev: dict | None = None) ->
     rel = prof.get('corpus') or ('sources/corpus_1920.jsonl' if cfg.election == 1920 else None)
     corpus = data.corpus(cfg.context_cutoff, rel, profiles.names_re(cfg.election)) if rel else []
     req = _with_effort(world.stage_request(spec, prof, cfg.context_cutoff, corpus, rc.world_model, rc.world_effort, ev),
-                       rc.world_effort)
+                       rc.world_effort, rc.fast)
     raw = _structured(req, max(4000, rc.pass_max_tokens), budget, 'stage', spec['key'])
     spec['world'] = world.finalize(raw, spec, prof, cfg.context_cutoff, corpus, rc.world_model, rc.world_effort)
     return spec['world']
@@ -167,7 +170,7 @@ def stage_config(config_path: str | Path, only: str | None = None, refresh: bool
     cfg = RunConfig.load(config_path)
     keys = [k for k in cfg.what_ifs if (not only or k == only) and REGISTRY.get(k, {}).get('generated')
             and REGISTRY[k].get('mode') == 'agents' and (refresh or not REGISTRY[k].get('world'))]
-    budget = Budget(cfg.research.whatif_dollars * max(1, len(keys)))
+    budget = Budget()
     out = {}
     for k in keys:
         spec = {kk: v for kk, v in REGISTRY[k].items() if kk not in ('apply', 'facts')}
@@ -176,7 +179,8 @@ def stage_config(config_path: str | Path, only: str | None = None, refresh: bool
             continue
         scenario.save_spec(spec)
         REGISTRY[k] = scenario.bind(spec)
-        out[k] = {'contradicted': len(w['contradicted']), 'items': len(w['items']), 'focus': [f['why'] for f in w['focus']]}
+        out[k] = {'contradicted': len(w['contradicted']), 'items': len(w['items']), 'check': (w['check'] or {}).get('question'),
+                  'focus': [f['why'] for f in w['focus']]}
     return {'staged': out, 'dollars': round(budget.spent, 4)}
 
 
@@ -184,7 +188,8 @@ def reextract(spec: dict, cfg: RunConfig, budget: Budget, have: dict) -> dict:
     """Extraction again from the saved notes (no new search)."""
     notes = {'text': have['notes'], 'sources': have['sources']}
     rc = cfg.research
-    extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', spec['key'])
+    extracted = _structured(_with_effort(evidence.extract_request(spec, notes, rc.extract_model), rc.extract_effort, rc.fast),
+                            max(8000, rc.pass_max_tokens), budget, 'extract', spec['key'])
     ev = {**have, **evidence.ground(extracted, notes, spec.get('about')), 'models': {**have.get('models', {}), 'extract': rc.extract_model},
           'reextracted_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')}
     scenario.save_evidence(spec['key'], ev)
@@ -204,15 +209,15 @@ def research(spec: dict, cfg: RunConfig, budget: Budget, refresh: bool = False, 
     est = evidence.research_estimate(rc.research_model, rc.max_searches, rc.research_max_tokens)
     print(f'research {key}: ~${est["typical"]} typical, ${est["worst"]} worst ({rc.research_model}, '
           f'≤{rc.max_searches} searches)', flush=True)
-    budget.check(est['worst'], 'research')
     client = anthropic.Anthropic(api_key=llm.api_key())
     notes = evidence.research(client, spec, {'year': cfg.election, 'day': cfg.election_day}, rc.research_model,
-                              rc.max_searches, 'low', rc.research_max_tokens)
+                              rc.max_searches, rc.research_effort, rc.research_max_tokens)
     # Priced against the estimate only after the notes are saved (a stop mustn't waste them).
     budget.add(notes['dollars'], 'research', None, key)
     print(f'  {len(notes["queries"])} searches, {len(notes["sources"])} sources '
           f'({sum(s["tier"] == "A" for s in notes["sources"])} scholarly or official), ${notes["dollars"]}', flush=True)
-    extracted = _structured(evidence.extract_request(spec, notes, rc.extract_model), 8000, budget, 'extract', key)
+    extracted = _structured(_with_effort(evidence.extract_request(spec, notes, rc.extract_model), rc.extract_effort, rc.fast),
+                            max(8000, rc.pass_max_tokens), budget, 'extract', key)
     ev = evidence.ground(extracted, notes, spec.get('about'))
     ev.update({'key': key, 'version': evidence.EVIDENCE_VERSION,
                'researched_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
@@ -260,8 +265,12 @@ def run_pipeline(config_path: Path, budget: Budget, publish_only: bool = False, 
             run.backbone()
         run.plan()
         progress.step(f'Interviewing voters in your {run.cfg.election}, with the real one as a control.')
-        asked = run.ask(cap=max(0.0, budget.cap - budget.spent))
+        asked = run.ask()
         budget.add(asked['dollars'], 'ask', None, record=False)  # ask records its own spend
+        if run.cfg.research.audit_model or run.cfg.agents.escalate_model:
+            progress.step('Checking that each voter took the change as true.')
+            refined = run.refine()
+            budget.add(refined['dollars'], 'refine', None, record=False)  # audit and ask record their own spend
         progress.step('Comparing the interviews with the historical record.')
         run.analyze()
     progress.step(f'Rerunning the {run.cfg.election} election 100 times.')
@@ -285,7 +294,7 @@ def report(year: int, key: str) -> dict:
 def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
     config_path = Path(config_path)
     cfg = RunConfig.load(config_path)
-    budget = Budget(cfg.research.whatif_dollars)
+    budget = Budget()
     progress = Progress(text)
     progress.step('Turning your words into a change I can model.')
     raw = compile_text(text, cfg, budget)
@@ -303,6 +312,8 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
         return {'status': 'keyword', 'key': key, **out, 'dollars': round(budget.spent, 4), 'costs': budget.lines,
                 'report': report(cfg.election, key)}
     spec = scenario.finalize(raw, text, REGISTRY, cfg.research.compile_model, cfg.election)
+    if spec.get('reinterpretation'):
+        progress.step(spec['reinterpretation'])
     progress.step(f'Setting the scene: autumn {cfg.election}…')
     ev = research(spec, cfg, budget, refresh)
     n = len(ev.get('findings', []))
@@ -315,7 +326,7 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
         if w:
             gone, new = len(w['contradicted']), len(w['items'])
             progress.step(f'Took out {gone or "no"} newspaper item{"" if gone == 1 else "s"} the change makes false; '
-                          f'wrote {new} from the changed world.')
+                          f'wrote {new} from the changed world{" and a question to check each voter believes it" if w["check"] else ""}.')
     scenario.save_spec(spec)
     REGISTRY[spec['key']] = scenario.bind(spec)
     _add_to_config(config_path, spec['key'])
@@ -329,7 +340,7 @@ def research_config(config_path: str | Path, refresh: bool = False, only: str | 
     """Evidence for every what-if in a config that lacks it (pre-registered ones included: there it grades confidence only)."""
     cfg = RunConfig.load(config_path)
     keys = [k for k in cfg.what_ifs if not only or k == only]
-    budget = Budget(cfg.research.whatif_dollars * max(1, len(keys)))
+    budget = Budget()
     out = {}
     for k in keys:
         ev = research({**REGISTRY[k], 'key': k}, cfg, budget, refresh, again)

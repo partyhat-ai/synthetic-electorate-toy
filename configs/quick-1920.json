@@ -3,11 +3,28 @@
   "election_day": "1920-11-02",
   "context_cutoff": "1920-11-01",
   "mode": "truth",
-  "what_ifs": ["no-19th", "fifteenth", "league"],
+  "what_ifs": [
+    "no-19th",
+    "fifteenth",
+    "league"
+  ],
   "seed": 1920,
   "draws": 100,
   "prompt_version": "p1",
-  "holdout": ["CA", "FL", "ID", "IN", "LA", "MI", "MO", "MT", "NC", "NY", "OH", "OK"],
+  "holdout": [
+    "CA",
+    "FL",
+    "ID",
+    "IN",
+    "LA",
+    "MI",
+    "MO",
+    "MT",
+    "NC",
+    "NY",
+    "OH",
+    "OK"
+  ],
   "agents": {
     "bulk_model": "claude-haiku-4-5",
     "check_model": "claude-haiku-4-5",
@@ -17,10 +34,16 @@
     "effort": "low",
     "backend": "anthropic",
     "max_cohorts": 36,
-    "only_cohorts": ["midwest:F:native_white", "south:F:black"],
-    "arms": ["control", "cf", "swap", "probe"],
-    "max_requests": 16,
-    "max_dollars": 0.5,
+    "only_cohorts": [
+      "midwest:F:native_white",
+      "south:F:black"
+    ],
+    "arms": [
+      "control",
+      "cf",
+      "swap",
+      "probe"
+    ],
     "max_tokens": 1500
   }
 }

@@ -270,6 +270,9 @@ class Publisher:
                 parts.append(f'With the treaty settled, the voters I interviewed lean {abs(shift):.1f} points further toward {toward} '
                              'than the same people did in the world as it was.')
             elif REGISTRY[k].get('generated'):
+                # D34: a reinterpreted change says so before anything else.
+                if REGISTRY[k].get('reinterpretation'):
+                    parts.append(REGISTRY[k]['reinterpretation'])
                 parts.append(self._lead_generated(REGISTRY[k], base, world, p, change))
         return ' '.join(parts)
 
@@ -300,6 +303,8 @@ class Publisher:
         lines = []
         for k in combo:
             spec = self.spec(k)
+            if spec.get('reinterpretation'):
+                lines.append(f'Not quite what you asked: {spec["reinterpretation"]}')
             lines.append(f'What changed: {spec["detail"]}')
             if spec.get('borrowed'):
                 lines.append(f'New voters borrow the behaviour of {spec["borrowed"]}.')
@@ -368,8 +373,12 @@ class Publisher:
         for wk in [''] + list(eff['pairs']):
             answers = {}
             for aid, a in agents.items():
-                c_id = f'control|{aid}|{self.bulk}'
-                f_id = f'cf:{wk}|{aid}|{self.bulk}' if wk else c_id
+                if wk and aid in (eff.get('dropped') or {}).get(wk, {}):
+                    continue  # D33: failed the belief check or the audit on every model asked
+                # The pair the analysis kept: the escalated model's, when the bulk answer failed a check.
+                model = (eff.get('kept') or {}).get(wk, {}).get(aid, self.bulk) if wk else self.bulk
+                c_id = f'control|{aid}|{model}'
+                f_id = f'cf:{wk}|{aid}|{model}' if wk else c_id
                 chk = reqs[f_id]['meta'].get('news_check') if f_id in reqs else None
                 if chk and f_id in ans and ans[f_id]['data'].get('news_about') != chk['expected']:
                     continue  # misread whom the news was about (p5 check)
@@ -438,14 +447,19 @@ class Publisher:
         for wk in eff['pairs']:
             rows = []
             for aid, a in agents.items():
-                c_id, f_id = f'control|{aid}|{self.bulk}', f'cf:{wk}|{aid}|{self.bulk}'
+                model = (eff.get('kept') or {}).get(wk, {}).get(aid, self.bulk)
+                c_id, f_id = f'control|{aid}|{model}', f'cf:{wk}|{aid}|{model}'
                 if c_id not in ans or f_id not in ans:
                     continue
                 lab = {v: k for k, v in reqs[c_id]['meta']['label_of'].items()}
                 chk = reqs[f_id]['meta'].get('news_check')
+                why = (eff.get('dropped') or {}).get(wk, {}).get(aid)
                 rows.append({
                     # additive: took the news to be about the other candidate; left out of the counts
                     **({'misread': True} if chk and ans[f_id]['data'].get('news_about') != chk['expected'] else {}),
+                    # additive (D33): disbelieved the change or reasoned from the world as it was; left out
+                    **({'excluded': why} if why else {}),
+                    **({'model': model} if model != self.bulk else {}),
                     'question': a['paraphrase'], 'name': a['name'], 'cohort': cohorts[a['cohort']]['label'],
                     'line': f'{a["age"]}, {"a city or town" if a["urban"] else "the countryside"}, {STATE_NAME.get(a["state"], a["state"])}',
                     'before': one(c_id, a, lab), 'after': one(f_id, a, lab),

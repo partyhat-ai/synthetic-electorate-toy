@@ -28,7 +28,8 @@ from pathlib import Path
 
 from .config import ROOT
 
-# $ per million tokens: input, output, cache read. Batch is half of each.
+# $ per million tokens: input, output, cache read. Batch is half of each; fast mode (Opus 5.5 only) twice.
+FAST_BETA = 'fast-mode-2026-02-01'
 PRICES = {
     'claude-sonnet-5-5': (2.00, 10.00, 0.20),
     'claude-opus-5-5': (4.00, 20.00, 0.20),
@@ -43,7 +44,12 @@ def cost(model: str, usage: dict, batch: bool = False) -> float:
     written = usage.get('cache_creation_input_tokens', 0)
     out = usage.get('output_tokens', 0)
     dollars = (fresh * p_in + written * p_in * 1.25 + cached * p_cache + out * p_out) / 1e6
-    return dollars * (0.5 if batch else 1.0)
+    return dollars * (0.5 if batch else 1.0) * (2.0 if usage.get('speed') == 'fast' else 1.0)
+
+
+def fast_ok(model: str) -> bool:
+    """Fast mode runs on Opus 5.5 only (Claude API, not batches)."""
+    return model == 'claude-opus-5-5'
 
 
 KEY_FILE = Path.home() / '.config/simulacra/anthropic.env'
@@ -67,8 +73,9 @@ def estimate(requests: list[dict], max_tokens: int, batch: bool = False, typical
     typical = worst = 0.0
     for r in requests:
         tin = (len(r['system']) + len(r['user']) + len(json.dumps(r['schema']))) / 4
-        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(typical_out, max_tokens)}, batch)
-        worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens}, batch)
+        speed = {'speed': r.get('speed')} if r.get('speed') else {}
+        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(typical_out, max_tokens), **speed}, batch)
+        worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens, **speed}, batch)
     return {'requests': len(requests), 'typical': round(typical, 4), 'worst': round(worst, 4)}
 
 
@@ -106,7 +113,8 @@ class AnthropicBackend(Backend):
             'system': [{'type': 'text', 'text': r['system'], 'cache_control': {'type': 'ephemeral'}}],
             'messages': [{'role': 'user', 'content': r['user']}],
             'output_config': {
-                'effort': self.effort,
+                # A request may carry its own effort (the once-per-what-if passes run higher than the voices).
+                'effort': r.get('effort') or self.effort,
                 'format': {'type': 'json_schema', 'schema': r['schema']},
             },
         }
@@ -116,9 +124,15 @@ class AnthropicBackend(Backend):
 
     def _one(self, r: dict) -> dict:
         a = self.anthropic
+        # Fast mode (a request's speed: "fast"): the beta endpoint, Opus 5.5 only. It has its own rate
+        # limit; a 429 there falls back to standard speed rather than waiting.
+        fast = r.get('speed') == 'fast' and fast_ok(r['model'])
         for attempt in range(5):
             try:
-                msg = self.client.messages.create(**self.params(r))
+                if fast:
+                    msg = self.client.beta.messages.create(**self.params(r), speed='fast', betas=[FAST_BETA])
+                else:
+                    msg = self.client.messages.create(**self.params(r))
                 if msg.stop_reason == 'refusal':
                     return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False,
                             'error': f'refusal: {getattr(msg.stop_details, "category", None)}', 'usage': msg.usage.model_dump()}
@@ -131,6 +145,9 @@ class AnthropicBackend(Backend):
                 return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': True,
                         'data': data, 'usage': msg.usage.model_dump(), 'raw': text}
             except a.RateLimitError:
+                if fast:
+                    fast = False
+                    continue
                 time.sleep(2 ** attempt + random.random())
             except a.BadRequestError as e:
                 return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False, 'error': str(e)}
@@ -343,10 +360,9 @@ class AnswerCache:
             f.write(json.dumps({'key': k, 'answer': answer}) + '\n')
 
 
-# ── Spend ledger: every paid call, for the daily cap ──
+# ── Spend ledger: every paid call, for the record (sessions-report) ──
 
 LEDGER = ROOT / 'sessions/spend.jsonl'
-DAILY_DOLLARS = float(os.environ.get('SIMULACRA_DAILY_DOLLARS', '2.0'))
 
 
 def record_spend(stage: str, dollars: float, run: str = '', note: str = ''):
@@ -357,16 +373,3 @@ def record_spend(stage: str, dollars: float, run: str = '', note: str = ''):
         f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%S'), 'day': time.strftime('%Y-%m-%d'),
                             'stage': stage, 'dollars': round(dollars, 5), 'run': run, 'note': note}) + '\n')
 
-
-def spent_today() -> float:
-    if not LEDGER.exists():
-        return 0.0
-    day = time.strftime('%Y-%m-%d')
-    return sum(json.loads(l)['dollars'] for l in LEDGER.read_text().splitlines() if l.strip() and json.loads(l)['day'] == day)
-
-
-def guard_daily(worst: float, what: str):
-    today = spent_today()
-    if today + worst > DAILY_DOLLARS:
-        raise SystemExit(f'refusing {what}: ${today:.2f} spent today + ${worst:.2f} worst case > daily cap ${DAILY_DOLLARS:.2f} '
-                         '(SIMULACRA_DAILY_DOLLARS)')

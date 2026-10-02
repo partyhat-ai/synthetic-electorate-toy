@@ -511,6 +511,27 @@ def confidence(spec: dict, ev: dict | None, agree: dict | None, agent: dict | No
                 t = 0
             elif wrong / checked > 0.25:
                 t -= 1
+        # D33: the belief check and the reasoning audit. Every failure counts here, including bulk-model
+        # answers later re-asked on a stronger model; only answers that failed on every model are dropped.
+        bc, bf = agent.get('belief_checked') or 0, agent.get('belief_failed') or 0
+        if bc and bf:
+            flags.append('disbelieved-change')
+            q = agent.get('question')
+            reasons.append(f'{bf} of {bc} interviews didn\'t take the change as true'
+                           + (f' (asked first: "{q}")' if q else '') + '; their answers were left out'
+                           + (f', and {agent.get("escalated")} re-asked on a stronger model were kept instead.' if agent.get('escalated') else '.'))
+            if bf / bc >= 0.5:
+                t -= 1
+        ac, af = agent.get('audit_checked') or 0, agent.get('audit_failed') or 0
+        if ac and af:
+            flags.append('reasoned-off-premise')
+            reasons.append(f'{af} of {ac} answers reasoned from the world as it really was; they were left out.')
+            if af / ac >= 0.5:
+                t -= 1
+        if agent.get('borrowed'):
+            flags.append('borrowed-groups')
+            reasons.append(f'{agent["borrowed"]} group{"s" if agent["borrowed"] != 1 else ""} the change reaches weren\'t interviewed; '
+                           'they borrow the interviewed groups\' effect, with extra uncertainty.')
         if agent.get('n', 99) < 6:
             t -= 1
             flags.append('few-interviews')

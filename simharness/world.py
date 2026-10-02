@@ -1,10 +1,10 @@
-"""Staging a compiled what-if's world before the interviews (D33).
+"""Staging a compiled what-if's world, and auditing whether the voices lived in it (D33).
 
-A once-per-what-if pass on the strongest model, at high effort. It runs once
-per change rather than once per voter, so it costs little next to the
-interviews, and it decides whether the interviews measure the change at all.
+Two once-per-what-if passes on the strongest model, at high effort. They run
+once per change rather than once per voter, so they cost little next to the
+interviews, and they decide whether the interviews measure the change at all.
 
-**Stage** (before the interviews). The compiler wrote the change as a few
+1. **Stage** (before the interviews). The compiler wrote the change as a few
    settled facts; staging makes the rest of the person's world agree with them:
    - `contradicted`: the year's dated newspaper items the change makes false
      (neutrality news in a world at war). They leave the counterfactual brief.
@@ -18,9 +18,15 @@ interviews, and it decides whether the interviews measure the change at all.
      newspaper", never as a real masthead.
    - `check`: one multiple-choice question about the world (not the vote) that
      a person who took the change as true answers one way and a person in the
-     world as it was answers the other.
+     world as it was answers the other. Asked first in every counterfactual
+     interview; a wrong answer leaves that interview out (and escalates it).
    - `focus`: the groups whose votes the change most plausibly moves, from
      history: interviewed even when the config's only_cohorts leaves them out.
+
+2. **Audit** (after the interviews). Each counterfactual answer's reason and
+   quote, without its vote, judged on one question: does the reasoning treat
+   the change as true? An answer that reasons from the world as it was ("he
+   kept us out of war" in a world at war) is left out, whichever way it voted.
 
 Nothing staged reaches a brief unmasked: names are masked like compiled
 facts, and a sentence that still names a nominee or party is dropped.
@@ -34,7 +40,7 @@ import re
 
 from .scenario import REGION_KEYS, mask_names
 
-WORLD_VERSION = 'w2'  # w2: the check asks a consequence the brief never states
+WORLD_VERSION = 'w2'  # w2: the check asks a consequence the brief never states; the audit counts passing slips (D35)
 
 WORLD_SYSTEM = """You are a historian staging a counterfactual for an election simulation. A change has been written into the world of the {year} United States presidential election as settled fact. Invented voters will be interviewed with a brief dated {cutoff}: their circumstances, a few dated newspaper items from that autumn, and the ballot. The simulation compares each person's answer in the world as it was with their answer in the changed world, so the changed world must hang together: nothing in a person's brief may contradict the change, and the change must be as present in daily life as it would really be.
 
@@ -48,6 +54,11 @@ Fill the JSON:
 - focus: up to four groups whose votes the change most plausibly moves, from what historians know of how such people behaved: sex (M, F), group (from {groups}) and region (from {regions}); empty lists mean any. why: one sentence.
 
 Never name {never_name}, and never write a party's name: call them {parties}. Write in the third person, never addressing the reader."""
+
+AUDIT_SYSTEM = """You audit interviews from an election simulation. Each interview asked an invented voter, living in a world where a change had happened, what they would do on election day. You see the change, and each answer's stated reason and the line the voter said aloud, but not how they voted.
+
+For each answer, judge only this: does the reasoning treat the change as true? An answer is "contradicts" if any part of it, even a passing phrase, relies on a state of affairs the change has ended or ruled out (for a country at war since 1915, praising the President for keeping the country out of war; after an ally has surrendered, speaking of helping that ally keep fighting). It is "consistent" if it reasons within the changed world, or simply doesn't touch the change (a voter who thinks only of farm prices is consistent). Use "unclear" when you cannot tell. Do not judge whether the vote is sensible, whether the voter is persuaded, or which way the change should move them."""
+
 
 def _schema(groups: list[str]) -> dict:
     reach = {'type': 'object', 'properties': {
@@ -74,6 +85,16 @@ def _schema(groups: list[str]) -> dict:
         'required': ['contradicted', 'consequences', 'items', 'check', 'focus'],
         'additionalProperties': False,
     }
+
+
+AUDIT_SCHEMA = {
+    'type': 'object',
+    'properties': {'verdicts': {'type': 'array', 'items': {'type': 'object', 'properties': {
+        'n': {'type': 'integer'}, 'verdict': {'type': 'string', 'enum': ['consistent', 'contradicts', 'unclear']},
+        'why': {'type': 'string'}}, 'required': ['n', 'verdict', 'why'], 'additionalProperties': False}}},
+    'required': ['verdicts'],
+    'additionalProperties': False,
+}
 
 
 def _prof_bits(prof: dict) -> tuple[str, str]:
@@ -182,6 +203,17 @@ def cohort_matches(cohort: dict, f: dict) -> bool:
     if f.get('group') and cohort['group'] not in f['group']:
         return False
     return not (f.get('region') and not set(cohort.get('regions') or [cohort.get('region')]) & set(f['region']))
+
+
+def audit_request(spec: dict, rows: list[dict], model: str, effort: str) -> dict:
+    """rows: [{n, reason, quote}] — one what-if's counterfactual answers, without their votes."""
+    world = spec.get('world') or {}
+    lines = ['The change in these voters\' world:'] + [f'- {x}' for x in change_lines(spec)]
+    lines += [f'- Settled fact: {x}' for x in world.get('consequences', [])]
+    lines += ['', 'Answers:'] + [f'[{r["n"]}] Reason: {r["reason"]} Said: "{r["quote"]}"' for r in rows]
+    user = '\n'.join(lines)
+    return {'id': f'audit|{spec["key"]}|{hashlib.sha256(user.encode()).hexdigest()[:10]}', 'model': model, 'effort': effort,
+            'system': AUDIT_SYSTEM, 'user': user, 'schema': AUDIT_SCHEMA, 'meta': {'kind': 'audit'}}
 
 
 BARRED = re.compile(r'cannot vote|bars them from voting|no one in .* votes for president', re.I)

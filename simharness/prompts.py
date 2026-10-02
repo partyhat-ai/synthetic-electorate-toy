@@ -24,13 +24,20 @@ import random
 # p5: news about one nominee sits on that nominee's ballot line, and those counterfactuals
 # carry a manipulation check (news_about) (DISCLOSURES D21). Briefs without such news are
 # byte-identical to p4's.
-# p6: a staged compiled what-if (world.py) carries its consequences among the settled facts, the
-# dated items it contradicts removed and up to two in-world items added (DISCLOSURES D33). Every
-# other brief is byte-identical to p5's.
+# p6: a staged compiled what-if (world.py) carries a belief check, answered first (world_check),
+# its consequences among the settled facts, the dated items it contradicts removed and up to two
+# in-world items added (DISCLOSURES D33). Every other brief is byte-identical to p5's.
 PROMPT_VERSION = 'p6'
 
 NEWS_CHECK = ('Also fill news_about: the label of the candidate the recent news on the ballot concerns, '
               '"neither" if it concerns neither, or "unsure".')
+
+
+def world_check_line(check: dict) -> str:
+    """The belief check, asked before the election question: what the person takes to be true."""
+    opts = '; '.join(f'"{o}"' for o in check['options'])
+    return (f'Before anything else, fill world_check: as this person understands things on this date, {check["question"].rstrip("?")}? '
+            f'Answer with one of: {opts}.')
 
 # No H(arding), C(ox), D(ebs), R(epublican), D(emocrat), S(ocialist),
 # F(armer-Labor), W(ilson), L(eague).
@@ -82,9 +89,15 @@ PROBE_QUESTION = (
 )
 
 
-def answer_schema(labels: list[str], news_check: bool = False) -> dict:
+def answer_schema(labels: list[str], news_check: bool = False, world_options: list[str] | None = None) -> dict:
     choice_props = {l: {'type': 'integer'} for l in labels}
     choice_props['other'] = {'type': 'integer'}
+    if world_options:
+        # p6: the belief check comes first, so the person settles what is true before choosing.
+        s = answer_schema(labels, news_check)
+        s['properties'] = {'world_check': {'type': 'string', 'enum': list(world_options)}, **s['properties']}
+        s['required'] = ['world_check'] + s['required']
+        return s
     if news_check:
         s = answer_schema(labels)
         s['properties']['news_about'] = {'type': 'string', 'enum': labels + ['neither', 'unsure']}

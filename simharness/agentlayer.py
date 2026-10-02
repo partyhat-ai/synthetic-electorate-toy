@@ -274,6 +274,19 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     no_popular = set(getattr(inp, 'no_popular', None) or ())
     this_year = [wk for wk in cfg.what_ifs if wk in registry and registry[wk]['facts'] is not None
                  and year in (registry[wk].get('years') or [registry[wk].get('year', 1920)])]
+    def can_vote_somewhere(a: dict) -> bool:
+        """D33: whether this person can vote in the world as it was or in some what-if's world."""
+        describe_agent(a, fr, year, inp)
+        if not world.barred(eligibility_line(a, fr, year, inp)):
+            return True
+        for wk in this_year:
+            try:
+                e = registry[wk]['facts'](a, inp, year=year).get('eligibility')
+            except Exception:
+                continue
+            if e and not world.barred(e):
+                return True
+        return False
 
     def draw(key: str) -> list[dict]:
         """The people interviewed in one cohort (none where no one can be)."""
@@ -286,7 +299,17 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             if not by_state:
                 return []
             co = {**co, 'adults_by_state': by_state}
-        return sample_agents(co, ag.per_cohort, corpus, cfg.seed, extras['urban'], year=year, min_age=era_groups['min_age'])
+        if not ag.replace_barred:
+            return sample_agents(co, ag.per_cohort, corpus, cfg.seed, extras['urban'], year=year, min_age=era_groups['min_age'])
+        # D33: a slot spent on someone who can't vote in either world measures nothing (the
+        # backbone already counts them as barred), so draw on until per_cohort people can.
+        # The first draws are the same people as before; the cohort's effect then describes
+        # the people it can move, which is where the backbone applies it.
+        pool = sample_agents(co, ag.per_cohort * 8, corpus, cfg.seed, extras['urban'], year=year, min_age=era_groups['min_age'])
+        got = [a for a in pool if can_vote_somewhere(a)][:ag.per_cohort]
+        for a in got:
+            a['weight'] = co['adults'] / len(got)
+        return got
 
     for key in sorted(cohorts):
         if not ag.only_cohorts or key in ag.only_cohorts:
@@ -295,7 +318,7 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     # D33: the groups a staged what-if names as decisive are interviewed for it even when
     # only_cohorts leaves them out. The focus_cohorts slots go round the named groups in turn
     # (newest what-if first; within a group, its largest cohort first), so every named group
-    # is reached before any gets a second.
+    # is reached before any gets a second; a cohort no one in which can vote takes no slot.
     if ag.focus_cohorts and ag.only_cohorts:
         queues = []
         for wk in reversed(this_year):
@@ -376,6 +399,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             f = spec['facts'](a, inp, year=year)
             if not f['facts'] and f.get('eligibility') is None and not f.get('nominee_news'):
                 continue
+            if ag.replace_barred and world.barred(elig) and world.barred(f.get('eligibility') or elig):
+                continue  # D33: can't vote in either world; no effect to measure
             items = items_for(a, f.get('drop_topics', set()), f.get('drop_after'))
             staged = f.get('world') or {}
             if f.get('drop_items'):
@@ -395,6 +420,12 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
                 # p5 manipulation check: whose news did the person take it to be?
                 extra = {'news_check': {'expected': label_of[about], 'about': about}}
                 q_cf = f'{q} {prompts.NEWS_CHECK}'
+            check = staged.get('check')
+            if check:
+                # p6 belief check (D33), asked first: does the person take the change as true?
+                extra = {**extra, 'world_check': {'expected': check['expected'], 'control': check['control'],
+                                                  'question': check['question']}}
+                q_cf = f'{prompts.world_check_line(check)} {q_cf}'
             if f.get('withdraws') and f['withdraws'] in label_of:
                 # The third candidate leaves the race: his line comes off this ballot (labels and order otherwise kept).
                 gone = label_of[f['withdraws']]
@@ -412,7 +443,9 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             for model in (models if spec['mode'] == 'agents' else [ag.bulk_model]):
                 reqs.append(request(f'cf:{wk}', model, f.get('eligibility') or elig, {'facts': f['facts']}, items,
                                     ballot, cf_labels, question=q_cf,
-                                    schema=prompts.answer_schema(cf_labels, news_check=True) if news else None,
+                                    schema=prompts.answer_schema(cf_labels, news_check=bool(news),
+                                                                 world_options=check['options'] if check else None)
+                                    if news or check else None,
                                     meta={'change': change, **extra}))
         # L2: the platform descriptions trade labels, and the display order flips.
         if n % 2 == 0 and 'R' in label_of and 'D' in label_of:

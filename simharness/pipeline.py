@@ -1,6 +1,6 @@
 """The pipeline's stages other than publish (publish.py): backbone, plan, ask,
-analyze, verify, dryrun and evaluate. Each writes into runs/<run id>/ and can be
-rerun alone; run.py is the command line.
+refine, analyze, verify, dryrun and evaluate. Each writes into runs/<run id>/ and
+can be rerun alone; run.py is the command line.
 """
 from __future__ import annotations
 
@@ -11,12 +11,15 @@ import time
 
 import numpy as np
 
-from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, evidence, llm, paired, quotes, scenario, serialize
+from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, evidence, llm, paired, quotes, scenario, serialize, world
 from .config import RUNS, RunConfig
 from .geo import STATE_NAME
 from .publish import Publisher
 from .stats import logit
 from .whatifs import REGISTRY, apply_effects, for_year
+
+# What analyze reports about the checks on a what-if's interviews (agent_stats; evidence.confidence reads them).
+STAT_KEYS = ('checked', 'misread', 'belief_checked', 'belief_failed', 'audit_checked', 'audit_failed', 'escalated', 'dropped', 'question')
 
 
 class Run(Publisher):
@@ -29,7 +32,8 @@ class Run(Publisher):
         # Short model names in request ids; the analysis pairs on these, not on a hardcoded 'sonnet'.
         self.bulk = agentlayer.SHORT.get(cfg.agents.bulk_model, cfg.agents.bulk_model)
         self.check = agentlayer.SHORT.get(cfg.agents.check_model, cfg.agents.check_model)
-        self.models = tuple(dict.fromkeys((self.bulk, self.check)))
+        self.escalated = agentlayer.SHORT.get(cfg.agents.escalate_model, cfg.agents.escalate_model) if cfg.agents.escalate_model else None
+        self.models = tuple(dict.fromkeys(m for m in (self.bulk, self.check, self.escalated) if m))
         # The election's profile: names, sources and how the robot speaks of it.
         self.prof = self.extras['profile']
         self.year = cfg.election
@@ -92,8 +96,7 @@ class Run(Publisher):
     def requests(self):
         return [json.loads(l) for l in (self.dir / 'agents/all_requests.jsonl').read_text().splitlines() if l.strip()]
 
-    def ask(self, cap: float | None = None):
-        """cap: an extra dollar ceiling from the caller (a typed what-if's remaining budget)."""
+    def ask(self):
         ag = self.cfg.agents
         be = llm.backend(ag.backend, self.dir / 'agents/transcript', ag.effort, ag.max_tokens)
         reqs = self.requests()
@@ -111,17 +114,11 @@ class Run(Publisher):
         reused = [c for c in (cache.get(r) for r in todo) if c] if cache else []
         todo = [r for r in todo if r['id'] not in {c['id'] for c in reused}]
         batch = ag.backend == 'anthropic-batch'
-        est = llm.estimate(todo, ag.max_tokens, batch)
+        # Thinking (every model but Haiku) multiplies an answer's output; the 1.5x stop is measured against this.
+        est = llm.estimate(todo, ag.max_tokens, batch,
+                           typical_out=600 if 'haiku' in ag.bulk_model else int(600 * {'low': 1.5, 'medium': 3, 'high': 5}.get(ag.effort, 3)))
         print(f"estimate: {est['requests']} requests, ~${est['typical']} typical, ${est['worst']} worst case"
               f" ({len(reused)} reused from identical earlier requests)", flush=True)
-        if ag.max_requests is not None and len(todo) > ag.max_requests:
-            raise SystemExit(f'refusing: {len(todo)} requests > max_requests {ag.max_requests}')
-        if ag.max_dollars is not None and est['worst'] > ag.max_dollars:
-            raise SystemExit(f"refusing: worst case ${est['worst']} > max_dollars {ag.max_dollars}")
-        if cap is not None and est['worst'] > cap:
-            raise SystemExit(f"refusing: worst case ${est['worst']} > ${cap:.3f} left for this what-if")
-        if live and todo:
-            llm.guard_daily(est['worst'], 'ask')
         t0 = time.time()
         got = be.run(todo) if todo else []
         spent = sum(llm.cost(g['model'], g.get('usage') or {}, batch) for g in got)
@@ -150,6 +147,120 @@ class Run(Publisher):
                     g = json.loads(l)
                     if g.get('ok'):
                         out[g['id']] = g
+        return out
+
+    # ── refine (D33): audit the reasoning, re-ask failures on a stronger model ──
+    def audit_verdicts(self) -> dict:
+        p = self.dir / 'audit.json'
+        return json.loads(p.read_text()) if p.exists() else {}
+
+    @staticmethod
+    def failed_check(req: dict, data: dict, audit: dict) -> str | None:
+        """Why an answered counterfactual is left out, or None: it took the news to be about
+        the other candidate (p5), it got the belief check wrong (p6), or its reasoning
+        contradicts the change (the audit)."""
+        m = req['meta']
+        if m.get('news_check') and data.get('news_about') != m['news_check']['expected']:
+            return 'misread'
+        if m.get('world_check') and data.get('world_check') != m['world_check']['expected']:
+            return 'disbelieved'
+        if (audit.get(req['id']) or {}).get('verdict') == 'contradicts':
+            return 'off-premise'
+        return None
+
+    def audit(self) -> dict:
+        """One call per staged what-if: each counterfactual answer's reason and quote, without
+        its vote, judged on whether it treats the change as true (world.AUDIT_SYSTEM)."""
+        rc = self.cfg.research
+        if not rc.audit_model:
+            return {'audited': 0, 'dollars': 0.0}
+        reqs, ans, done = self.requests(), self.answers(), self.audit_verdicts()
+        by_wk = {}
+        for r in reqs:
+            if r['meta']['kind'] != 'cf' or r['id'] not in ans or r['id'] in done:
+                continue
+            wk = r['meta']['change']['what_if']
+            spec = REGISTRY.get(wk) or {}
+            if spec.get('generated') and spec.get('mode') == 'agents' and spec.get('world'):
+                by_wk.setdefault(wk, []).append(r['id'])
+        cache, spent, n = llm.AnswerCache(RUNS), 0.0, 0
+        for wk, ids in by_wk.items():
+            rows = [{'n': i + 1, 'reason': ans[rid]['data'].get('reason', ''), 'quote': ans[rid]['data'].get('quote', '')}
+                    for i, rid in enumerate(ids)]
+            req = world.audit_request(REGISTRY[wk], rows, rc.audit_model, rc.audit_effort)
+            if rc.fast and llm.fast_ok(req['model']):
+                req['speed'] = 'fast'
+            got = cache.get(req)
+            if not got:
+                got = llm.AnthropicBackend(effort=rc.audit_effort, max_tokens=rc.pass_max_tokens)._one(req)
+                d = llm.cost(req['model'], got.get('usage') or {})
+                spent += d
+                llm.record_spend('audit', d, self.id, wk)
+                cache.put(req, got | {'backend': 'anthropic'})
+            if not got.get('ok'):
+                print(f'audit {wk}: {got.get("error")} (its answers stay unaudited)', flush=True)
+                continue
+            verdicts = {v['n']: v for v in got['data'].get('verdicts', [])}
+            for i, rid in enumerate(ids):
+                v = verdicts.get(i + 1) or {'verdict': 'unclear', 'why': 'not returned'}
+                done[rid] = {'verdict': v['verdict'], 'why': v['why'], 'model': rc.audit_model}
+                n += 1
+        (self.dir / 'audit.json').write_text(json.dumps(done, indent=1))
+        return {'audited': n, 'dollars': round(spent, 4)}
+
+    def escalate(self) -> int:
+        """Plan control + counterfactual again, on escalate_model, for every bulk-model
+        counterfactual that failed a check. Same brief, same person; only the model
+        changes, and the pair is compared within itself as always. Returns the count."""
+        ag = self.cfg.agents
+        if not ag.escalate_model or ag.escalate_model == ag.bulk_model:
+            return 0
+        reqs, ans, audit = self.requests(), self.answers(), self.audit_verdicts()
+        by_id = {r['id']: r for r in reqs}
+        new = []
+        for r in reqs:
+            if len(new) >= ag.escalate_max:
+                break
+            if r['meta']['kind'] != 'cf' or r['model'] != ag.bulk_model or r['id'] not in ans:
+                continue
+            if not self.failed_check(r, ans[r['id']]['data'], audit):
+                continue
+            ctl = by_id.get(f'control|{r["meta"]["agent"]}|{self.bulk}')
+            if not ctl:
+                continue
+            for base in (ctl, r):
+                nid = base['id'].rsplit('|', 1)[0] + f'|{self.escalated}'
+                if nid not in by_id:
+                    by_id[nid] = {**base, 'id': nid, 'model': ag.escalate_model, 'meta': {**base['meta'], 'escalated': True},
+                                  **({'speed': 'fast'} if ag.fast and llm.fast_ok(ag.escalate_model) else {})}
+                    new.append(by_id[nid])
+        if new:
+            with open(self.dir / 'agents/all_requests.jsonl', 'a') as f:
+                for r in new:
+                    f.write(json.dumps(r) + '\n')
+        return len(new)
+
+    def refine(self) -> dict:
+        """audit → escalate → ask the escalations → audit them. A step that stops (the 1.5x cost
+        check) is skipped, not fatal: unaudited answers stay in, unanswered escalations are left out."""
+        out, spent = {}, 0.0
+
+        def step(name, fn):
+            nonlocal spent
+            try:
+                out[name] = fn()
+                spent += out[name]['dollars']
+            except SystemExit as e:
+                out[name] = {'skipped': str(e)}
+                print(f'refine: {name} skipped: {e}', flush=True)
+                return False
+            return True
+
+        step('audit', self.audit)
+        out['escalated'] = self.escalate()
+        if out['escalated'] and step('ask', self.ask):
+            step('audit2', self.audit)
+        out['dollars'] = round(spent, 4)
         return out
 
     # ── analysis ──
@@ -236,41 +347,65 @@ class Run(Publisher):
               'platform_rate': float(np.mean([s['follows_platform'] for s in swaps])) if swaps else None}
 
         # Paired effects per what-if (agent-mode what-ifs apply them; others are cross-checks)
-        effects, pairs_out = {}, {}
+        effects, pairs_out, kept, dropped = {}, {}, {}, {}
+        audit = self.audit_verdicts()
         for wk in self.cfg.what_ifs:
-            pairs, checks = {}, []
+            pairs, checks, beliefs, audits, escalated = {}, [], [], [], 0
+            kept_wk, dropped_wk = {}, {}
             for aid, a in agents.items():
                 if a['group'] == 'foreign_white_alien' and REGISTRY[wk]['mode'] == 'backbone':
                     continue  # planned in error for p1 (brief contradicted itself); excluded, see EVAL.md
                 for model in self.models:
                     fid = f'cf:{wk}|{aid}|{model}'
                     c, f = norm(f'control|{aid}|{model}'), norm(fid)
-                    chk = reqs[fid]['meta'].get('news_check') if fid in reqs else None
-                    if c and f and chk:
-                        # p5 manipulation check: a person who took the news to be about the
-                        # other candidate answered a different question; left out, and counted.
-                        got = ans[fid]['data'].get('news_about')
-                        checks.append({'agent': aid, 'expected': chk['expected'], 'got': got, 'ok': got == chk['expected']})
-                        if got != chk['expected']:
-                            continue
-                    if c and f:
-                        pairs.setdefault(a['cohort'], []).append((c, f, a['paraphrase'], model))
-            misread = {'checked': len(checks), 'misread': sum(not x['ok'] for x in checks), 'rows': checks}
-            if not pairs and checks:
+                    if not (c and f):
+                        continue
+                    m, data = reqs[fid]['meta'], ans[fid]['data']
+                    # p5: took the news to be about the other candidate. p6 (D33): got the belief
+                    # check wrong, or reasoned from the world as it was (the audit). Each answered a
+                    # different question than the one asked: left out, and counted.
+                    if m.get('news_check'):
+                        got = data.get('news_about')
+                        checks.append({'agent': aid, 'expected': m['news_check']['expected'], 'got': got,
+                                       'ok': got == m['news_check']['expected']})
+                    if m.get('world_check'):
+                        got = data.get('world_check')
+                        beliefs.append({'agent': aid, 'model': model, 'got': got, 'ok': got == m['world_check']['expected']})
+                    if fid in audit:
+                        audits.append({'agent': aid, 'model': model, 'verdict': audit[fid]['verdict'], 'why': audit[fid]['why']})
+                    why = self.failed_check(reqs[fid], data, audit)
+                    if why:
+                        dropped_wk.setdefault(aid, why)
+                        continue
+                    pairs.setdefault(a['cohort'], []).append((c, f, a['paraphrase'], model))
+                    kept_wk[aid] = model
+                    escalated += bool(m.get('escalated'))
+            kept[wk] = kept_wk
+            dropped[wk] = {aid: why for aid, why in dropped_wk.items() if aid not in kept_wk}
+            misread = {'checked': len(checks), 'misread': sum(not x['ok'] for x in checks), 'rows': checks,
+                       'belief_checked': len(beliefs), 'belief_failed': sum(not x['ok'] for x in beliefs),
+                       'audit_checked': len(audits), 'audit_failed': sum(x['verdict'] == 'contradicts' for x in audits),
+                       'escalated': escalated, 'dropped': len(dropped[wk]),
+                       'question': next((reqs[f'cf:{wk}|{x["agent"]}|{x["model"]}']['meta']['world_check']['question']
+                                         for x in beliefs), None),
+                       'belief_rows': beliefs, 'audit_rows': audits}
+            if not pairs and (checks or beliefs or audits):
                 # Everyone misread the change: nothing was measured, so nothing moves.
                 zero = {k: {'mean': 0.0, 'lo': 0.0, 'hi': 0.0} for k in ('dt', 'dr', 'do')}
                 effects[wk] = {'cohorts': {}, 'regions': {}, 'national': zero, 'national_bias': 0.0, 'by_paraphrase': {},
                                'by_model': {}, 'manipulation': misread, 'blended': False,
                                'agreement': {'verdict': 'untested', 'detail': 'Every interview misread the change.', 'measures': []},
                                'agent_stats': {'n': 0, 'measure': 'dr', 'spans_zero': True, 'paraphrase_flip': False,
-                                               'exposed': nationally_exposed, 'checked': misread['checked'], 'misread': misread['misread']}}
+                                               'exposed': nationally_exposed, **{k: misread[k] for k in STAT_KEYS}}}
                 pairs_out[wk] = {}
                 continue
             if not pairs:
                 continue
             region_of = {k: cohorts[k]['region'] for k in pairs}
+            generated = bool(REGISTRY[wk].get('generated'))
             eff = paired.effects(pairs, backbone_r2, region_of, 200, rng, exposed=exposed if not nationally_exposed else set(pairs),
-                                 weights={k: cohorts[k]['adults'] for k in pairs})
+                                 weights={k: cohorts[k]['adults'] for k in pairs}, floor=generated)
+            borrowed = self._borrow(eff, cohorts, REGISTRY[wk], rng) if generated and REGISTRY[wk]['mode'] == 'agents' else []
             # A3: paraphrase and model spread of the national two-party effect
             by_para, by_model = {}, {}
             for k, ps in pairs.items():
@@ -298,7 +433,7 @@ class Run(Publisher):
             eff['agent_stats'] = {'n': sum(len(ps) for ps in pairs.values()), 'measure': mkey,
                                   'spans_zero': bool(eff['national'][mkey]['lo'] < 0 < eff['national'][mkey]['hi']),
                                   'paraphrase_flip': len(signs) > 1, 'exposed': nationally_exposed,
-                                  'checked': misread['checked'], 'misread': misread['misread']}
+                                  'borrowed': len(borrowed), **{k: misread[k] for k in STAT_KEYS}}
             eff['manipulation'] = misread
             eff['agreement'] = evidence.agreement(ev, eff['national'], nat_base, spec['kind'])
             if spec.get('withdraws'):
@@ -365,8 +500,43 @@ class Run(Publisher):
         (self.dir / 'analysis.json').write_text(json.dumps(result, indent=1, default=float))
         with open(self.dir / 'effects.pkl', 'wb') as f:
             pickle.dump({'effects': effects, 'pairs': pairs_out, 'exposed': exposed,
-                         'nationally_exposed': nationally_exposed}, f)
+                         'nationally_exposed': nationally_exposed, 'kept': kept, 'dropped': dropped}, f)
         return result
+
+    def _borrow(self, eff: dict, cohorts: dict, spec: dict, rng) -> list[str]:
+        """D33: a cohort the change reaches but nobody in it was interviewed (only_cohorts
+        left it out) used to get no effect at all, with no uncertainty: the 1916 West, where
+        the election was decided. It now borrows the effect of the interviewed cohorts of its
+        own sex and group (else its group, else everyone), adult-weighted, per draw, plus
+        between-cohort noise: the spread of the interviewed cohorts' own effects, at least
+        0.15 logit. The evidence prior (evidence.blend) then applies to it like any cohort."""
+        have = eff['cohorts']
+        if not have:
+            return []
+        reach = spec.get('reach') or {}
+        tau = {key: max(0.15, float(np.std([c[key] for c in have.values()]))) if len(have) > 1 else 0.3
+               for key in ('dt', 'dr', 'do')}
+        interviewable = agentlayer.groups_for(self.year)['interview']
+        out = []
+        for k, c in cohorts.items():
+            if k in have or c['group'] == 'foreign_white_alien' or c['group'] not in interviewable:
+                continue
+            regions = set(c.get('regions') or [c.get('region')])
+            if (reach.get('sex') and c['sex'] not in reach['sex']) or (reach.get('group') and c['group'] not in reach['group']) \
+                    or (reach.get('region') and not regions & set(reach['region'])):
+                continue
+            for pick, what in ((lambda x: x['sex'] == c['sex'] and x['group'] == c['group'], 'its own sex and group'),
+                               (lambda x: x['group'] == c['group'], 'its group'), (lambda x: True, 'everyone interviewed')):
+                src = [kk for kk in have if not have[kk].get('borrowed') and pick(cohorts[kk])]
+                if src:
+                    break
+            w = np.array([cohorts[kk]['adults'] for kk in src], float)
+            draws = {key: np.average([have[kk]['draws'][key] for kk in src], axis=0, weights=w) for key in ('dt', 'dr', 'do')}
+            draws = {key: d + rng.normal(0.0, tau[key], len(d)) for key, d in draws.items()}
+            have[k] = {'control': None, 'counterfactual': None, 'n': 0, 'bias': 0.0, 'bias_used': 0.0, 'weight': 0.0,
+                       'exposed': False, 'borrowed': what, **{key: float(np.mean(d)) for key, d in draws.items()}, 'draws': draws}
+            out.append(k)
+        return out
 
     def uncertainty_budget(self, what_if: str, draws: int = 200) -> dict:
         """Spread of the what-if's national R two-party share and Harding EV:

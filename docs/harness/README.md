@@ -75,8 +75,8 @@ python3 -m simharness.run publish       # every what-if combination → publishe
 python3 -m pytest -q                    # fast unit checks (tests/)
 ```
 
-Typed what-ifs and historical evidence (all paid stages priced first; $0.50 per
-what-if, $2 a day via `SIMULACRA_DAILY_DOLLARS`; see `simharness/intake.py`):
+Typed what-ifs and historical evidence (all paid stages priced first and recorded in
+`sessions/spend.jsonl`, with no dollar ceiling; see `simharness/intake.py`):
 
 ```sh
 H=~/.venvs/simharness/bin/python

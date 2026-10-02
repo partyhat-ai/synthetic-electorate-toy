@@ -38,27 +38,34 @@ class AgentConfig:
     max_cohorts: int = 40             # cost cap; the merge rule folds the smallest
     arms: list | None = None          # subset of control, cf, swap, probe; None sends all
     only_cohorts: list | None = None  # cohort keys to interview; None interviews all
-    max_requests: int | None = None   # hard cap on requests per run
-    max_dollars: float | None = None  # hard stop, checked against the dry-run estimate
     max_tokens: int = 4000            # per-request output ceiling (also the estimate's worst case)
-    # Compiled what-ifs only; the default leaves pre-registered runs as they were (D33):
+    # Compiled what-ifs only; the defaults leave pre-registered runs as they were (D33):
+    replace_barred: bool = False      # someone who can't vote in either world takes no interview slot
     focus_cohorts: int = 0            # extra cohorts the staging pass names as the change's decisive groups
+    escalate_model: str | None = None  # re-ask, on this model, anyone whose answer didn't take the change as true
+    escalate_max: int = 24            # cap on escalated requests per run
+    fast: bool = False                # fast mode for this layer's Opus requests (escalations); 2x price
 
 
 @dataclass
 class ResearchConfig:
     """The once-per-what-if calls behind a typed what-if: compile → research → extract → stage
-    (scenario.py, evidence.py, world.py). They run once per change, not once per voter, so they
-    can afford the strongest model and effort (D33)."""
+    (scenario.py, evidence.py, world.py), and the audit of the interviews' reasoning. They run
+    once per change, not once per voter, so they can afford the strongest model and effort (D33)."""
     compile_model: str = 'claude-sonnet-5-5'
     research_model: str = 'claude-sonnet-5-5'
     extract_model: str = 'claude-sonnet-5-5'  # Haiku judged every analogue unreliable and extracted none (D15)
+    world_model: str | None = None     # the staging pass (world.py); None skips it
+    audit_model: str | None = None     # the reasoning audit (world.py); None skips it
+    compile_effort: str = 'low'
+    research_effort: str = 'low'
+    extract_effort: str = 'low'
+    world_effort: str = 'high'
+    audit_effort: str = 'medium'
+    pass_max_tokens: int = 3000        # compile/stage/audit output ceiling; Opus thinking counts toward it
+    fast: bool = False                 # fast mode for the Opus passes (compile, extract, stage, audit); 2x price
     max_searches: int = 4              # web_search max_uses per research call
     research_max_tokens: int = 4000
-    whatif_dollars: float = 0.5        # hard stop for one typed what-if, all stages together
-    world_model: str | None = None     # the staging pass (world.py); None skips it
-    world_effort: str = 'high'
-    pass_max_tokens: int = 3000        # stage output ceiling; Opus thinking counts toward it
 
 
 @dataclass
@@ -79,8 +86,9 @@ class RunConfig:
     @classmethod
     def load(cls, path: str | Path) -> 'RunConfig':
         raw = json.loads(Path(path).read_text())
-        agents = AgentConfig(**raw.pop('agents', {}))
-        research = ResearchConfig(**raw.pop('research', {}))
+        # Spending caps were removed; older configs that still carry them load as before.
+        agents = AgentConfig(**{k: v for k, v in raw.pop('agents', {}).items() if k not in ('max_requests', 'max_dollars')})
+        research = ResearchConfig(**{k: v for k, v in raw.pop('research', {}).items() if k != 'whatif_dollars'})
         return cls(**raw, agents=agents, research=research)
 
     def to_dict(self) -> dict:

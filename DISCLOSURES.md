@@ -1129,3 +1129,18 @@ which no one can vote takes no slot. The belief check was answered right by
 consequence the brief never states, with three or four plausible options. The
 audit now counts a passing phrase that relies on a state of affairs the change
 ended (an ally "still fighting" after it surrendered) as contradicting it.
+
+**D34 · High · fixed (compiler c4) · a typed what-if silently replaced**
+"America loses WW2", typed into 1940, was compiled as "Britain Falls, America
+Stands Alone": the United States wasn't at war by that election, and the
+compile prompt (never decline; no way to say "not what you asked") let the
+model substitute the nearest possible change and rename it. Everything after
+compile measured the substitute; only the "What changed" line hinted at it.
+Since c4 the compiler models the change as asked: a change that could not have
+happened by the context date gets the world in which it did, with the earlier
+departures from history it needs stated as fact, graded a-stretch or
+fantastical. It records `fidelity`; a reinterpreted change leads its result,
+its "how I got this" and the progress steps with a sentence saying what was
+asked and what was modelled, and never takes the reader's own words as its
+keywords. The 1940 substitute is kept as its own what-if, marked
+reinterpreted, without the words "america loses ww2".
