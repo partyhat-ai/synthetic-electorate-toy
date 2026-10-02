@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ELECTION_YEARS, STATE_BY_CODE } from './geo';
-import { electionOf, FEATURED } from './history';
+import { electionOf, FEATURED, wikiUrl } from './history';
 
 // Years whose per-state electoral votes don't sum to the electoral votes cast,
 // with the per-state sum the table holds: these list the electors each state
@@ -63,5 +63,20 @@ describe('electionOf', () => {
         expect(c.portrait, `${y} ${c.key}`).toMatch(/^https:\/\/upload\.wikimedia\.org\//);
       }
     }
+  });
+
+  test('every candidate links to the Wikipedia article titled with their name', () => {
+    for (const y of ELECTION_YEARS) {
+      for (const c of electionOf(y)?.candidates ?? []) {
+        expect(c.wiki, `${y} ${c.key}`).toMatch(/^https:\/\/en\.wikipedia\.org\/wiki\/[^\s/?#]+$/);
+        if (c.id !== 'stevenson') expect(decodeURIComponent(c.wiki.slice(30)).replace(/_/g, ' ')).toBe(c.name);
+      }
+    }
+  });
+
+  test('a name that titles a disambiguation page links to the right article', () => {
+    expect(electionOf(1952)?.candidates[1]?.wiki).toBe('https://en.wikipedia.org/wiki/Adlai_Stevenson_II');
+    expect(wikiUrl(null, 'Adlai Stevenson')).toBe('https://en.wikipedia.org/wiki/Adlai_Stevenson');
+    expect(wikiUrl('lincoln', 'Abraham Lincoln')).toBe('https://en.wikipedia.org/wiki/Abraham_Lincoln');
   });
 });
