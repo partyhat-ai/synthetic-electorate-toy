@@ -39,6 +39,12 @@ denominator):
 Each change was made after seeing the output it fixes. Each is listed with
 its effect. None changes a threshold.
 
+1. **B2 predictor bug.** The holdout turnout predictor counted old-suffrage
+   states' 1916 votes, which included women's, as men's.
+   - First value: 16.90 (fail).
+   - Fixed to project turnout per eligible adult by κ, as the backbone does:
+     2.92 (pass).
+   - Both values are reported here.
 2. **N1 denominator.** Corder–Wolbrecht's "eligible" counts equal the census
    21+ totals, non-citizens included. The backbone had divided by citizens.
    - Citizen-denominator result: MAE 9.6, coverage 40%.

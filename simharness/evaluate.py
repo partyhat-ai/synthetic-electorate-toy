@@ -59,6 +59,11 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
     rho = np.clip(W / np.maximum(F20[:, tr_new], 1) / m20[:, tr_new], 0.05, 1.5)
     rho_d = rho[np.arange(D), rng.integers(0, len(tr_new), D)]
     votes_hat = m20 * M20 + np.where(closed, 0, rho_d[:, None] * m20 * F20)
+    # Old states: 1916 votes already included women's, so project turnout per
+    # eligible adult by κ, as the backbone's T1 does. (Fixed after the first
+    # evaluation used men's-only m16 here; see EVAL.md, deviations.)
+    t_old = expit(logit(T16[None, :] / E16) + kap) * E20
+    votes_hat = np.where(old[None, :], t_old, votes_hat)
     sidx = np.array([idx[s] for s in fit.cells.state])
     A = np.zeros((D, len(states)))
     np.add.at(A, (slice(None), sidx), fit.world.adults)
