@@ -1,9 +1,8 @@
 <script lang="ts">
   // The timeline along the bottom: every election from 1789 to 2024 as a
   // detent on one slider. Drag or click anywhere on it (it snaps to the
-  // nearest election), step with the buttons or the arrow keys, or roll the
-  // dice. The story years are the taller ticks.
-  import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-svelte';
+  // nearest election), or step with the arrow keys (Home and End for the
+  // ends). The story years are the taller ticks.
 
   interface Props {
     years?: readonly number[];
@@ -14,12 +13,10 @@
     disabled?: boolean;
     /** The Rerun view: iOS dark colours. */
     dark?: boolean;
-    /** A year was picked (dragged to, clicked, stepped, keyed). */
+    /** A year was picked (dragged to, clicked, keyed). */
     onchange?: (year: number) => void;
     /** Dragging started (true) or stopped (false). */
     onscrub?: (on: boolean) => void;
-    /** The dice. */
-    onshuffle?: () => void;
   }
   let {
     years = [],
@@ -30,7 +27,6 @@
     dark = false,
     onchange,
     onscrub,
-    onshuffle,
   }: Props = $props();
 
   const LABELS = [1800, 1850, 1900, 1950, 2000];
@@ -98,14 +94,6 @@
 </script>
 
 <div class="bar" class:disabled class:dark>
-  <div class="steps">
-    <button type="button" class="icon" aria-label="Previous Election" title="Previous Election" disabled={disabled || value === first} onclick={() => step(-1)}>
-      <ChevronLeft size={19} strokeWidth={2} aria-hidden="true" />
-    </button>
-    <button type="button" class="icon" aria-label="Next Election" title="Next Election" disabled={disabled || value === last} onclick={() => step(1)}>
-      <ChevronRight size={19} strokeWidth={2} aria-hidden="true" />
-    </button>
-  </div>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="slider" class:dragging onpointerdown={down} onpointermove={move} onpointerup={up} onpointercancel={up} onpointerleave={leave}>
     <div class="rail" bind:this={rail}>
@@ -135,9 +123,6 @@
       {/if}
     </div>
   </div>
-  <button type="button" class="icon" aria-label="Random Election" title="Random Election" {disabled} onclick={() => onshuffle?.()}>
-    <Shuffle size={17} strokeWidth={2} aria-hidden="true" />
-  </button>
 </div>
 
 <style>
@@ -158,24 +143,6 @@
     padding: 0 16px;
     height: var(--bar-height);
   }
-  .steps { display: flex; gap: 2px; }
-  .icon {
-    width: 34px;
-    height: 34px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-    border: none;
-    border-radius: 999px;
-    background: transparent;
-    color: #007aff;              /* bar buttons take the tint (HIG) */
-    cursor: pointer;
-  }
-  .icon:hover:not(:disabled) { background: rgba(0, 122, 255, 0.08); }
-  .icon:active:not(:disabled) { opacity: 0.5; }
-  .icon:disabled { opacity: 0.3; cursor: default; }
-  .icon:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   /* The hit area is the whole band, not just the rail. */
   .slider {
     position: relative;
@@ -251,8 +218,6 @@
   .disabled .slider { cursor: default; opacity: 0.5; }
   /* Dark (Rerun): the same parts in iOS dark system colours — systemBlue
      #0A84FF, the dark systemFill track, separator ticks, secondaryLabel. */
-  .dark .icon { color: #0a84ff; }
-  .dark .icon:hover:not(:disabled) { background: rgba(10, 132, 255, 0.14); }
   .dark .rail { background: rgba(120, 120, 128, 0.36); }
   .dark .fill { background: #0a84ff; }
   .dark .tick { background: rgba(84, 84, 88, 0.65); }

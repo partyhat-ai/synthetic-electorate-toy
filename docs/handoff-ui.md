@@ -63,7 +63,7 @@ All under `src/lib/simulacra/` unless noted.
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
 | What-if chips | `KindChips.svelte` |
 | The bubble's message type, kind labels, step splitting | `whatif.ts` |
-| Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
+| Time bar (just the slider) | `TimeBar.svelte` |
 | ⓘ About popover (on `<body>`, above everything) and its cited sources | `InfoPopover.svelte`, `AboutSources.svelte` |
 | The tab icon in each chest blast's colour | `tabIcon.ts` |
 | Places in text that light the map | `Places.svelte`, `places.ts` |
@@ -80,7 +80,7 @@ Components take callback props instead of dispatching events. What was
 is the callback's argument.
 
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
-- `TimeBar`: `onchange(year)`, `onscrub(on)`, `onshuffle()`.
+- `TimeBar`: `onchange(year)`, `onscrub(on)`.
 - `RobotStage`: `ontap()` (the robot pressed and let go without turning it);
   `blast(color)` fires its chest reactor.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,

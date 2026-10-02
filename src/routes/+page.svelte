@@ -264,7 +264,7 @@
 
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
-    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} onscrub={scrub} />
+    onchange={(y) => page.setYear(y)} onscrub={scrub} />
 </div>
 
 <style>
