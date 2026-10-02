@@ -2,7 +2,8 @@
 
 This covers the harness behind `/api/simulacra`.
 
-- **This document:** every assumption, data source, equation and limitation.
+- **This document:** every assumption, data source, equation and limitation,
+  plus the confidence tier for each kind of what-if.
 - **`EVAL.md`:** what the 1920 prototype got right and wrong.
 
 Tags follow the research package:
@@ -216,7 +217,8 @@ For draw d, "adults" means legally eligible adults.
   intercept are solved by iterative scaling. Each state's R, D and other votes
   then match the certified returns to within 1e-7 of the vote.
 - **C3b: Black Southern voters.** They split like Black voters outside the
-  South. The split is limited to parties on the state's certified ledger.
+  South: the same borrowed group `fifteenth` uses. The split is limited to
+  parties on the state's certified ledger.
   - **Accounting bound.** Their votes for either party may not exceed 80% of
     that party's certified vote in the state.
   - Where the bound binds, their turnout is lowered, the difference is
@@ -249,12 +251,133 @@ returns against census makeup, post-stratified exactly.
   post-stratified exactly to certified state returns.
 - **Before 1936: ecological inference** (this document).
 
-## C. Uncertainty
+## C. The agents
+
+### C.1 Persona
+
+An agent carries:
+- its cohort's real attributes: state, sex, race/nativity/citizenship;
+- an age and urban/rural status drawn within the cohort;
+- a household economy [I] (persona diversity only);
+- its legal and practical eligibility, stated in plain words;
+- two to four dated items from the corpus, preferring its own state.
+
+The person is invented and the circumstances are documented. Names come from a
+plain list and carry no information.
+
+### C.2 The control question (leakage-controlled)
+
+- **Blinding.**
+  - Candidates are neutral letters (K M N P T V: no candidate's or party's
+    initial), assigned at random per agent, in random display order.
+  - Party *positions* and the circumstances of the day stay:
+    - "the party that has held a majority in Congress since the 1918 elections"
+    - "the party of the administration in office since 1913"
+    - platform planks paraphrased from the 1920 platforms (APP) [V]
+  - Items that name a candidate or party are excluded from the brief.
+- **Cutoff.** Every item is dated on or before 1 November 1920 (Chronicling
+  America, date-filtered). The brief is dated Saturday, 30 October 1920. Every
+  answer records its context date and the ids of the items it saw.
+- **The prompt says:** the person "does not know anything that happens after
+  [the date], including how any election turns out".
+- **Recall probe (L1).** A separate instance, a different system prompt and
+  the same brief. It asks for the year, the real candidates behind the labels,
+  and the winner.
+  - If more than half the probes in a cohort name the winner, the cohort is
+    "memorization-exposed". Its control answers are left out of its own bias
+    estimate, and its quotes carry the flag.
+- **Label swap (L2).** The same agent's brief is repeated with:
+  - the two platforms attached to the opposite labels;
+  - the display order flipped.
+
+  If the choice follows the label rather than the platform, the answer is
+  tracking something other than the positions.
+
+Blinding can't stop a model from knowing 1920. The paired design is what makes
+that tolerable: a constant "I know who won" bias cancels in the control-minus-
+counterfactual difference, and the probe measures how much there is.
+
+### C.3 The counterfactual (non-hypothetical)
+
+The counterfactual brief is the control brief with one settled fact changed:
+- The change is written into the person's world as fact: "In March 1920 the
+  Senate ratified the peace treaty with its reservations…". It is never framed
+  as a question or a supposition.
+- Anything it would contradict is removed:
+  - dated items about the treaty fight;
+  - both parties' League planks;
+  - for women in a no-19th world, items about registering after 18 August.
+- Everything else is identical: persona, labels, order, paraphrase, model and
+  seed.
+- The exact change is logged in the request's `meta.change` for audit, and
+  never shown to the model as a change:
+  - the what-if key
+  - the facts
+  - the eligibility line
+  - the dropped sources and planks
+
+**Causal consistency** is handled by `whatifs.facts_*`:
+- The world facts are written to be internally consistent.
+- The `fifteenth` world names a mechanism: a Supreme Court ruling plus federal
+  registrars. It is invented, and it is marked counterfactual in the log.
+
+### C.4 From answers to counts
+
+For cohort k, both arms are answered by the same agents. The change is taken
+on the logit scale.
+
+- **Turnout:** `Δt_k = logit(E[p_vote] cf) − logit(E[p_vote] control)`
+- **Two-party share:** `Δr_k = logit(R2 cf) − logit(R2 control)`, where
+  `R2 = Σ p_vote·p_R / Σ p_vote·(p_R+p_D)`
+- **Minor parties:** `Δo_k`, likewise.
+- **Bias:** `b_k = logit(R2 control) − logit(r_k backbone)`
+
+**Smoothing.** Cohort means are half-count smoothed (Jeffreys-style) before
+the logit, so a cohort whose agents all say "won't vote" can't produce an
+infinite difference. This was added after the first analysis showed −10 logit
+artifacts.
+
+**The national effect** is the adult-weighted mean of cohort effects.
+
+**Shrinkage**: `w_k = n/(n+8) · 1/(1+b²)`. The effect is
+shrunk toward the regional effect, and the regional effect toward the national
+effect, in the same way.
+
+**Uncertainty:** the cohort effect's draws come from bootstrapping agents
+within the cohort, which carries paraphrase and model variation because they
+are mixed in the sample.
+
+**Applying the effect:** `logit t' = logit t + Δt*`, `logit R2' = logit R2 + Δr*`
+and `logit O' = logit O + Δo*`, applied cell by cell to the calibrated
+baseline in every draw.
+
+**Franchise what-ifs** use no agent effect. The backbone computes them, and new
+voters borrow a named, observed group:
+- `fifteenth`: turnout like white Southerners of the same state and sex, and
+  choice like Black voters outside the South, per draw.
+- `everyone`: non-citizens choose like naturalized citizens of the same state
+  and sex.
+
+Agent answers for these what-ifs are cross-checks and quotes only.
+
+### C.5 Known LLM failure modes
+
+| Failure | Measured by | Corrected by |
+|---|---|---|
+| Variance compression and homogenized subgroups (Bisbee et al.) | A2: within-cohort SD of stated Republican probability; the homogenization index | Persona diversity within the cohort. Sonnet 5.5 rejects non-default temperature, so temperature isn't a lever. Levels never come from agents. |
+| Ideological drift and left bias (Santurkar et al.; Parikh, Cen & Podimata 2026) | A1: control vs calibrated backbone, per cohort | The paired difference cancels the common part; shrinkage by \|b_k\| |
+| Prompt sensitivity | A3: three paraphrases rotated across agents; Opus 5.5 on a 20% subsample | Spread reported; effect draws pool paraphrases and models |
+| Stereotype voting | A4: audit of reasons for label-driven logic (heuristic first pass, then read) | Persona lines state circumstances, not traits; the system prompt forbids answering "as a type" |
+| Memorization | L1, L2 | Paired difference; exposure flags on quotes |
+
+## D. Uncertainty
 
 A draw is:
 1. a population draw (A.4);
 2. a backbone parameter draw: κ, the old-state ratio, t_rel, δ, β_B and
    residual noise;
+3. for issue what-ifs, an agent-bootstrap draw, which mixes paraphrases and
+   models.
 
 There are 400 draws per run. Reported:
 - `result.range`: the central 80% of each candidate's EV.
@@ -265,7 +388,13 @@ There are 400 draws per run. Reported:
 The unchanged run is exact in every draw. Its range is a point, by
 construction.
 
-## D. Validation
+**Uncertainty budget.** `EVAL.md` reports how much of the EV and margin
+spread each source contributes. It reruns with each source frozen:
+- population only
+- backbone parameters only
+- agents only
+
+## E. Validation
 
 The metrics and thresholds are in `simharness/evaluate.py` and `benchmarks.py`;
 `EVAL.md` has the results.
@@ -279,9 +408,40 @@ The metrics and thresholds are in `simharness/evaluate.py` and `benchmarks.py`;
 - **L1–L2:** leakage.
 - **A1–A4:** agent-layer failure modes.
 
-Failures are published in `result.validation` and in `EVAL.md`.
+Failures are published in `result.validation`, in `EVAL.md` and here (§G).
 
-## E. Known limitations (read before citing)
+## F. Quotes
+
+- **Selection** (`quotes.py`):
+  - A cohort is drawn in proportion to its adults.
+  - Within the cohort, the agent whose change is nearest the cohort median is
+    chosen.
+  - At least one person whose vote didn't change is shown across a run's
+    picks.
+- **Every quote carries:**
+  - its cohort and the adults it stands for
+  - both answers
+  - its context date
+  - the dated items it cites, with loc.gov URLs
+  - its model and prompt version
+  - whether it is memorization-exposed
+  - `namesRestored: true`: the interview was blinded, and "Candidate K" is
+    replaced with "Harding" afterwards
+- **Real people appear only as events.** Candidates are letters in the
+  interview, and briefs never have a real person speak.
+- **Tone** (the system prompt): plain period English, specific to the person's
+  circumstances, no slurs, no melodrama. Slavery, disenfranchisement and
+  violence are described plainly.
+
+## G. Confidence tiers, and what each kind of what-if rests on
+
+| Kind | Tier | What it rests on | What could make it wrong |
+|---|---|---|---|
+| Franchise (who can vote) | High | Census counts; certified returns; one named borrowed group | The borrowed group's behaviour (T4, C2), i.e. `fifteenth` rests on β_B, whose prior dominates. `no-19th` rests on the women's-turnout split (N1 tests it). |
+| Population (who lives where) | Medium | Census counts moved between states; reapportionment (Huntington–Hill for the 1940s on; Webster, as used in 1911, for 1910s-style counts) | How movers would vote where they arrive. Not in the 1920 prototype. |
+| Issue (what people cared about) | Low | Agent paired differences, shrunk by bias | Everything in C.5. In 1920, memorization. |
+
+## H. Known limitations (read before citing)
 
 1. **State-level only.**
    - There is no county composition without NHGIS registration.
@@ -297,3 +457,16 @@ Failures are published in `result.validation` and in `EVAL.md`.
 5. **Truth mode.**
    - The 1920 census postdates the election.
    - Strict mode (1910 aged) is designed, not run.
+6. **1920 is memorized by every current model.** The control answers are
+   "memorization-exposed" if L1 says so. Only the paired difference is used.
+7. **The prototype's agents were answered through the transcript backend,
+   by 9 Claude Code subagents**, not the Messages API:
+   - batched prompts, 18–59 per context;
+   - the Claude Code system prompt around them;
+   - schemas checked on merge, not enforced per request;
+   - some answers produced with helper scripts.
+
+   `EVAL.md` (deviation 10) says which. The production path is
+   `anthropic-batch`, and the agent-layer numbers should be rerun there
+   before they are cited.
+8. **The household economy is imputed** until the IPUMS full count is pulled.

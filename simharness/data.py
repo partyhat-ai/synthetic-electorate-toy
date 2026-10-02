@@ -9,6 +9,7 @@ Files (all under config.CACHE; provenance in each folder's PROVENANCE-*.md):
   franchise/state_franchise_1920.csv       poll tax, literacy test, alien voting
   franchise/women_suffrage_pre19th.csv     women's presidential suffrage before the 19th
   sources/corpus_1920.jsonl                dated Chronicling America items
+  context/platforms_1920.json              verified platform planks
 """
 from __future__ import annotations
 
@@ -40,10 +41,6 @@ GROUP_MAP = {
     # 1910 women: citizenship wasn't asked of women in 1910.
     'foreign_white_citizenship_not_tabulated': 'foreign_white_unknown',
 }
-
-FILES = ['labels/state_pres_1916_1920_1924.csv', 'population/adults_1920_by_state.csv',
-         'population/adults_1910_by_state.csv', 'franchise/state_franchise_1920.csv',
-         'franchise/women_suffrage_pre19th.csv', 'sources/corpus_1920.jsonl']
 
 
 def manifest(paths: list) -> dict:
@@ -170,16 +167,25 @@ def corpus(cutoff: str) -> list[dict]:
     return rows
 
 
+def platforms() -> dict:
+    path = CACHE / 'context/platforms_1920.json'
+    return json.loads(path.read_text()) if path.exists() else {}
+
+
 def load(cfg) -> tuple[Inputs, dict]:
     ret, ev = returns()
     cells = population()
     fr = franchise()
     inp = Inputs(cells=cells, returns=ret, women16=fr['women16'], women_pre19=fr['women_pre19'],
                  closed_1920=fr['closed_1920'], alien_voting=fr['alien_voting'], ev=ev)
+    files = ['labels/state_pres_1916_1920_1924.csv', 'population/adults_1920_by_state.csv',
+             'population/adults_1910_by_state.csv', 'franchise/state_franchise_1920.csv',
+             'franchise/women_suffrage_pre19th.csv', 'sources/corpus_1920.jsonl', 'context/platforms_1920.json']
     extras = {
         'franchise': fr,
         'urban': urban_share(),
         'corpus': corpus(cfg.context_cutoff),
-        'manifest': manifest(FILES),
+        'platforms': platforms(),
+        'manifest': manifest(files),
     }
     return inp, extras
