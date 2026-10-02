@@ -68,7 +68,7 @@
   const UI_Y = 0;
   const BOT_Y = 0;
   // …and the robot's resting turn there, degrees (a wide window: ROBOT_YAW, 40).
-  const NARROW_YAW = -30;
+  const NARROW_YAW = 43;
   const TUNE_MIN = -2000;
   const TUNE_MAX = 800;
   const tuning = new URLSearchParams(location.search).has('tune');

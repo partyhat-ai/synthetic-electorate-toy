@@ -343,7 +343,7 @@
     /* Narrow: Who voted, then the robot, then the bubble, the chips and the
        field, top to bottom; the robot 12px under the last group and 12px over
        the bubble, whatever the screen. Its visible top is 42px under its slot's
-       top and its toes 15px under the slot's floor (measured at its -30deg
+       top and its toes 15px under the slot's floor (measured at its 43deg
        rest; the feet anchor sits 6px over the floor, the toes reach lower). */
     .whatif.stage {
       display: flex;
@@ -359,9 +359,9 @@
     }
     /* 12px under the last group's dots, measured on screen (its dots draw
        past its box, the robot's head starts well inside its slot). */
-    .stage .bot { width: 200px; height: 236px; margin: -37px 0 0; align-self: center; transform: translateY(var(--bot-y, 0px)); }
+    .stage .bot { width: 200px; height: 236px; margin: -38px 0 0; align-self: center; transform: translateY(var(--bot-y, 0px)); }
     /* 12px under the toes, measured on screen (they reach under the slot's floor). */
-    .talk { position: relative; z-index: 1; min-width: 0; margin-top: 29px; transform: translateY(var(--ui-y, 0px)); }
+    .talk { position: relative; z-index: 1; min-width: 0; margin-top: 20px; transform: translateY(var(--ui-y, 0px)); }
     /* The bubble's room is its folded most and it sits at the room's top, just
        under the robot, so the robot's 12px holds for any message; a shorter one
        leaves the room under it, so the chips and field never move. Opened, it
