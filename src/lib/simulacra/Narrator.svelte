@@ -28,6 +28,8 @@
     /** A finished rerun's steps are still coming out. */
     revealing?: boolean;
     onaction: (key: string) => void;
+    /** The year in words ("1920 · Harding over Cox"), shown under the opening message on a narrow window. */
+    caption?: string;
   }
   let {
     page,
@@ -40,6 +42,7 @@
     closed,
     revealing = $bindable(false),
     onaction,
+    caption = '',
   }: Props = $props();
 
   // The ChatPro harness's face, cropped as the robot overlay crops it: where
@@ -117,4 +120,5 @@
   onstop={() => page.stop()}
   onreset={() => page.reset()}
   {onaction}
+  {caption}
 />

@@ -51,6 +51,8 @@
     /** A bubble action's key. */
     onaction?: (key: string) => void;
     onfocus?: (on: boolean) => void;
+    /** The year in words, shown under the opening message on a narrow window. */
+    caption?: string;
   }
   let {
     name = 'Harness',
@@ -78,6 +80,7 @@
     onreset,
     onaction,
     onfocus,
+    caption = '',
   }: Props = $props();
 
   // A long bubble: the Test Chat's More / Less (MechaHud .msg). Past CLAMP
@@ -240,6 +243,8 @@
       </div>
       {#if canMore}<button type="button" class="more" aria-expanded={opened} onclick={more}>{opened ? 'Less' : 'More'}</button>{/if}
     </div>
+    <!-- Narrow only: the time bar's tooltip, held here under the opening message. -->
+    {#if message.opening && caption}<span class="year-pill" aria-hidden="true">{caption}</span>{/if}
     </div>
     {#if !closed}
       <WhatIfComposer {name} {whatIfs} {selected} {slice} {ran} bind:value bind:input {running} {canRun} {canReset} {dirty}
@@ -329,7 +334,7 @@
      longer line never moves either while the time bar is scrubbed; a long
      bubble grows the column downward, like any message. */
   .stage .talk { align-self: stretch; }
-  .composer-room { display: none; }
+  .composer-room, .year-pill { display: none; }
   /* Narrow windows (phones, or a narrow desktop window): the robot stands
      behind a full-width what-if instead of beside it. Both share one grid
      cell: the what-if on top, the robot centred with its feet 23px above the
@@ -369,6 +374,23 @@
     .hold { min-height: 190px; justify-content: flex-start; }
     .hold.lifted .bubble { top: 0; bottom: auto; }
     .composer-room { display: block; height: 82px; }
+    /* The time bar's tooltip (TimeBar .tip, same size, padding and look),
+       solid under the opening message instead of floating over the bar.
+       It fits in the bubble's room, so nothing moves when it goes. */
+    .year-pill {
+      display: inline-block;
+      align-self: center;
+      margin-top: 8px;
+      padding: 4px 9px;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+    }
     /* A newline in the bubble's aside breaks here (a wide window reads it as a space). */
     .aside { white-space: pre-line; }
     /* The tail pointed at the robot beside the bubble; it stands behind now. */

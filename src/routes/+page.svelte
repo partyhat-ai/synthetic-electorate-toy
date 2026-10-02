@@ -335,7 +335,8 @@
       </section>
 
       <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} stage={stageMode} {robotShown}
-        still={STILLS[page.view === 'whatif' ? 'rerun' : 'history']} chips={composer.chips} closed={composer.closed} onaction={act} />
+        still={STILLS[page.view === 'whatif' ? 'rerun' : 'history']} chips={composer.chips} closed={composer.closed} onaction={act}
+        caption={describe(page.year)} />
     </main>
   </div>
 </div>

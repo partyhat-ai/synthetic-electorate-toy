@@ -299,6 +299,7 @@ export function say(i: SayInput): Message {
   if (res && show === 'whatif') return verdict(res, i.sample);
   if (res) return { text: `This is ${y} as it happened. Switch to Rerun to see yours.` };
   return {
+    opening: true,
     text: `Change one thing about ${y} and I’ll rerun it.`,
     // The newline breaks on a narrow window only (WhatIf .aside); a wide one reads it as a space.
     detail: 'Pick a counterfactual or type your own.\nTap a group to meet someone in it.',

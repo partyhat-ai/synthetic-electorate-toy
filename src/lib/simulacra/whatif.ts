@@ -34,6 +34,8 @@ export interface Message {
   readonly busy?: boolean;
   readonly interview?: Interview | null;
   readonly sources?: BubbleSources | null;
+  /** The year's opening invitation ("Change one thing about …"). */
+  readonly opening?: boolean;
 }
 
 /**

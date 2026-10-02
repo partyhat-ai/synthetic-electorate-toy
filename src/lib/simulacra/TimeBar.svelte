@@ -224,6 +224,11 @@
   .dark .tick.story { background: rgba(235, 235, 245, 0.6); }
   .dark .label { color: rgba(235, 235, 245, 0.6); }
   .dark .tip { background: #2c2c2e; color: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.08); }
+  /* A narrow window shows the year under the robot's opening message
+     instead (WhatIf .year-pill), not floating over the bar. */
+  @media (max-width: 760px) {
+    .tip { display: none; }
+  }
   @media (max-width: 560px) {
     .bar { gap: 4px; padding: 0 8px; }
     .label.minor { display: none; }
