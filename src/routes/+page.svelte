@@ -25,7 +25,6 @@
   import { hoverPlaces } from '$lib/simulacra/places';
   import AbsentRow from '$lib/simulacra/AbsentRow.svelte';
   import { isAbsent, withAbsent } from '$lib/simulacra/groups';
-  import RevisitOnDesktop from '$lib/simulacra/RevisitOnDesktop.svelte';
   import { ROBOT_YAW } from '$lib/robot/stage';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
@@ -58,12 +57,9 @@
   let robotShown = $state(false);
   let tabIcon = $state<TabIcon | null>(null);
   let revealing = $state(false);
-  // Phone-width windows got RevisitOnDesktop instead of the page. Stubbed
-  // out: phones get the page (and the robot). Set true to bring it back.
-  const REVISIT_ON_DESKTOP = false;
+  // Phone-width and narrow desktop windows: the robot's resting turn differs there.
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
-  const revisit = $derived(REVISIT_ON_DESKTOP && narrow);
   // The robot's resting turn, degrees: 43 on a narrow window, ROBOT_YAW (40) on a wide one.
   const NARROW_YAW = 43;
   const restYaw = $derived(narrow ? NARROW_YAW : ROBOT_YAW);
@@ -90,7 +86,7 @@
   const reached = $derived(new Set(page.selected.flatMap((k) => page.whatIfs.find((w) => w.key === k)?.slices ?? [])));
   const hasOthers = $derived(slices.some((s) => s.O > 0.005));
   // The 3D robot is drawn at every width, in the slot below the what-if.
-  const stageMode = $derived(!revisit);
+  const stageMode = true;
 
   // The composer's chips and field, held from the last loaded year while a
   // scrubbed-to year is still loading.
@@ -105,7 +101,6 @@
 
   $effect(() => {
     const y = page.year;
-    if (revisit) return;
     untrack(() => void page.loadSim(y));
   });
   $effect(() => {
@@ -201,9 +196,6 @@
 </svelte:head>
 <svelte:window onkeydown={onKey} />
 
-{#if revisit}
-  <RevisitOnDesktop />
-{:else}
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
@@ -285,15 +277,10 @@
   </div>
 </div>
 
-{/if}
-
-<!-- Its own block: toBody moves it, so it must not be the edge of the one above. -->
-{#if !revisit}
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
     onchange={(y) => page.setYear(y)} onscrub={scrub} />
 </div>
-{/if}
 
 <style>
   /* The page's own layout. The scrolling layer, the Rerun view's invert and
