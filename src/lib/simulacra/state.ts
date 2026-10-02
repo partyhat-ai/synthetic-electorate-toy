@@ -61,6 +61,25 @@ export function randomStory(not?: number, random: () => number = Math.random): n
   return pool[Math.floor(random() * pool.length)] ?? FEATURED[0] ?? ELECTION_YEARS[0] ?? 1789;
 }
 
+/** The chip on the far left wherever the year has it, until a new chip is added. */
+export const LEAD_CHIP = 'no-19th';
+
+/**
+ * The year's what-ifs in chip order: chips added this visit first (newest
+ * first), then LEAD_CHIP, then the rest in the server's order.
+ */
+export function chipOrder(whatIfs: readonly WhatIf[], added: readonly string[] = []): WhatIf[] {
+  const rank = (w: WhatIf): number => {
+    const i = added.indexOf(w.key);
+    if (i >= 0) return i;
+    return w.key === LEAD_CHIP ? added.length : added.length + 1;
+  };
+  return whatIfs
+    .map((w, i) => ({ w, i }))
+    .sort((a, b) => rank(a.w) - rank(b.w) || a.i - b.i)
+    .map(({ w }) => w);
+}
+
 /** The year a visit opens on without ?year=. */
 export const OPENING_YEAR = 1920;
 

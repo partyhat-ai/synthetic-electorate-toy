@@ -11,6 +11,7 @@ import type { Voter } from './schemas';
 import {
   addEdit,
   askOf,
+  chipOrder,
   electionFor,
   isDirty,
   type Server,
@@ -46,6 +47,8 @@ export class PageState {
   /** Dots dragged by hand, per year: each group's change in its fractions, summed over drags. */
   readonly edits = new SvelteMap<number, Edits>();
   readonly results = new SvelteMap<number, ShownRun>();
+  /** Chips added this visit, per year, newest first: they lead the row. */
+  readonly added = new SvelteMap<number, readonly string[]>();
   /** Bumped by Reset, so the rows drop any drag in hand. */
   editEpoch = $state(0);
   typed = $state('');
@@ -60,7 +63,7 @@ export class PageState {
 
   readonly election = $derived(electionFor(this.year));
   readonly sim = $derived(this.sims.get(this.year) ?? null);
-  readonly whatIfs = $derived(this.sim?.whatIfs ?? []);
+  readonly whatIfs = $derived(chipOrder(this.sim?.whatIfs ?? [], this.added.get(this.year)));
   readonly selected = $derived(this.chosen.get(this.year) ?? []);
   readonly result = $derived(this.results.get(this.year) ?? null);
   /** The rerun on show: the year's result in the Rerun view. */
@@ -94,8 +97,11 @@ export class PageState {
         this.run = r;
       },
       reloadSim: async (y) => {
+        const before = new Set((this.sims.get(y)?.whatIfs ?? []).map((w) => w.key));
         this.sims.delete(y);
         await this.loadSim(y, true);
+        const fresh = (this.sims.get(y)?.whatIfs ?? []).map((w) => w.key).filter((k) => !before.has(k));
+        if (fresh.length) this.added.set(y, [...fresh, ...(this.added.get(y) ?? [])]);
       },
       whatIfsOf: (y) => this.sims.get(y)?.whatIfs ?? [],
       finished: (f) => this.#finish(f),
