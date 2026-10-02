@@ -1,6 +1,7 @@
-"""Held-out benchmarks. Only the validation stage (Run.evaluate) imports this
-module; the backbone, the agents and the publisher never do (checked by
-test_benchmarks_isolated in tests/test_prereg.py, which greps the package).
+"""Held-out benchmarks. Only the validation stages (Run.evaluate, and
+Run.verify's Corder–Wolbrecht comparison) import this module; the backbone,
+the agents and the publisher never do (checked by test_benchmarks_isolated in
+tests/test_prereg.py, which greps the package).
 """
 from __future__ import annotations
 
@@ -11,6 +12,12 @@ from .config import CACHE
 from .evaluate import check
 
 CW_STATES = ['CT', 'IL', 'MA', 'MI', 'NY']
+
+
+def corder_wolbrecht_any_year() -> pd.DataFrame:
+    """Every year and state in the Corder–Wolbrecht file (for `run verify`); empty when it isn't in the cache."""
+    f = CACHE / 'benchmarks/corder_wolbrecht_turnout_by_sex.csv'
+    return pd.read_csv(f) if f.exists() else pd.DataFrame(columns=['year', 'state'])
 
 
 def corder_wolbrecht() -> pd.DataFrame:

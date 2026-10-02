@@ -117,14 +117,15 @@ def _structured(req: dict, max_tokens: int, budget: Budget, stage: str, note: st
 
 
 def compile_text(text: str, cfg: RunConfig, budget: Budget) -> dict:
-    rc = cfg.research
-    raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model), 3000, budget,
+    from . import profiles
+    rc, prof = cfg.research, profiles.get(cfg.election)
+    raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, prof=prof), 3000, budget,
                       'compile', text)
-    bad = scenario.naming_violations(raw) if raw.get('modelable') else []
+    bad = scenario.naming_violations(raw, cfg.election) if raw.get('modelable') else []
     if bad:
         note = ('These sentences name a nominee, a party or the President, which the blinded briefs cannot show. '
                 'Rewrite them with the descriptions given: ' + json.dumps(bad))
-        raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, note), 3000, budget,
+        raw = _structured(scenario.compile_request(text, REGISTRY, cfg.context_cutoff, rc.compile_model, note, prof), 3000, budget,
                           'compile-retry', text)
     return raw
 
@@ -187,7 +188,7 @@ def documented_positions(spec: dict, ev: dict, cutoff: str):
             m = re.search(r'\b(1[6-9]\d\d)\b', d)
             ok = bool(m) and int(m.group(1)) < int(cutoff[:4])
         if ok:
-            keep.append(scenario.clean_position(p['text']))
+            keep.append(scenario.clean_position(p['text'], int(cutoff[:4])))
     if keep:
         spec['candidate']['positions'] = keep[:3]
         spec['candidate']['positions_source'] = 'documented'
@@ -240,7 +241,7 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
     if not raw['modelable']:
         progress.finish()
         return {'status': 'not-modelable', 'why': raw['why_not'], 'dollars': round(budget.spent, 4)}
-    if raw['same_as'] in REGISTRY:
+    if raw['same_as'] in REGISTRY and cfg.election in (REGISTRY[raw['same_as']].get('years') or [REGISTRY[raw['same_as']].get('year', 1920)]):
         key = raw['same_as']
         scenario.add_words(key, raw['words'] + [text.lower().strip()[:80]])
         in_config = key in cfg.what_ifs
@@ -250,7 +251,7 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
         progress.finish()
         return {'status': 'keyword', 'key': key, **out, 'dollars': round(budget.spent, 4), 'costs': budget.lines,
                 'report': report(cfg.election, key)}
-    spec = scenario.finalize(raw, text, REGISTRY, cfg.research.compile_model)
+    spec = scenario.finalize(raw, text, REGISTRY, cfg.research.compile_model, cfg.election)
     progress.step(f'Setting the scene: autumn {cfg.election}…')
     ev = research(spec, cfg, budget, refresh)
     n = len(ev.get('findings', []))
@@ -293,12 +294,20 @@ def _pid_alive(pid: int) -> bool:
 
 
 def _config_for(year: int, fallback: Path | None = None) -> Path | None:
-    """The worker's own config when it is that year's; None when the year isn't simulated."""
+    """configs/live-<year>.json for a simulated year (1920, 1924), or the worker's own
+    config when it is that year's; None when the year isn't simulated."""
+    from . import profiles
+    if year not in profiles.years():
+        return None
+    p = ROOT / f'configs/live-{year}.json'
+    if p.exists():
+        return p
     return fallback if fallback and Path(fallback).exists() and RunConfig.load(fallback).election == year else None
 
 
 def process_queue(config_path: str | Path, limit: int = 3) -> list[dict]:
-    """Model up to `limit` distinct queued (year, text) pairs, oldest first, within the caps."""
+    """Model up to `limit` distinct queued (year, text) pairs, oldest first, within the caps.
+    Each is modelled in its own year's live config."""
     SESSIONS.mkdir(exist_ok=True)
     if LOCK.exists() and _pid_alive(int(LOCK.read_text().strip() or 0)):
         return [{'status': 'busy', 'pid': LOCK.read_text().strip()}]

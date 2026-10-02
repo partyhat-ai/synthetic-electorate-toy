@@ -30,14 +30,14 @@ def party_planks(platforms: dict, party: str, drop_topics: set = frozenset(), k:
     return [p['neutral_paraphrase'].rstrip('.') + '.' for p in planks]
 
 
-def eligibility_line(agent: dict, fr: dict) -> str:
+def eligibility_line(agent: dict, fr: dict, year: int = 1920) -> str:
     s, name = agent['state'], STATE_NAME.get(agent['state'], agent['state'])
     table = fr['table']
     poll = bool(table.loc[s].get('poll_tax', 0)) if s in table.index else False
     lit = bool(table.loc[s].get('literacy_test', 0)) if s in table.index else False
     if agent['group'] == 'foreign_white_alien' and s not in fr.get('alien_voting', set()):
         return 'This person is not a United States citizen and cannot vote.'
-    if agent['sex'] == 'F' and s in fr.get('closed_1920', ()):
+    if agent['sex'] == 'F' and s in fr.get('closed_1920', ()) and year == 1920:
         return f'Registration in {name} closed before women could enrol, so this person cannot vote for president this year.'
     parts = []
     devices = ' and '.join(x for x, on in (('a poll tax', poll), ('a literacy or "understanding" test', lit)) if on)
@@ -48,7 +48,11 @@ def eligibility_line(agent: dict, fr: dict) -> str:
         else:
             line += f' In {name}'
         return line + ' and in this county few Black citizens have been allowed to register or vote.'
-    if agent['sex'] == 'F':
+    if agent['sex'] == 'F' and year > 1920:
+        y = fr['pres_year'].get(s)
+        since = int(y) if s in fr['women_pre19'] and y and y == y and int(y) <= 1920 else 1920
+        parts.append(f'Women have voted for president in {name} since {since}.')
+    elif agent['sex'] == 'F':
         y = fr['pres_year'].get(s)
         if s in fr['women_pre19'] and y and y == y and int(y) <= 1916:
             parts.append(f'Women have voted for president in {name} since {int(y)}.')
@@ -79,10 +83,11 @@ def items_for(agent: dict, drop_topics=frozenset(), drop_after: str | None = Non
 def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tuple[list, list]:
     ag = cfg.agents
     fr, corpus, platforms = extras['franchise'], [c for c in extras['corpus'] if not c['identifying']], extras['platforms']
-    prof = extras.get('profile') or {'year': 1920, 'descriptors': {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR},
+    prof = extras.get('profile') or {'year': 1920, 'descriptors': {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR}, 'third': None,
                                      'label_pool': prompts.LABEL_POOL, 'others_line': prompts.OTHERS_1920,
                                      'plank_order': ORDER_1920, 'day_phrase': 'Tuesday, 2 November'}
-    keys = ['R', 'D']
+    keys = ['R', 'D'] + ([prof['third']] if prof['third'] else [])
+    year = prof['year']
     qs = prompts.questions(prof['day_phrase'])
     agents, reqs = [], []
     asof = cfg.context_cutoff  # p1 used '1920-10-30' with items to 1 Nov
@@ -99,7 +104,7 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         labels = [label_of[p] for p in order]
         a['label_of'] = label_of
         a['paraphrase'] = n % ag.paraphrases
-        elig = eligibility_line(a, fr)
+        elig = eligibility_line(a, fr, year)
         a['eligibility'] = elig
         q = qs[a['paraphrase']]
 
@@ -136,13 +141,13 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         # Counterfactuals: the same persona, labels, order, paraphrase and model.
         for wk in cfg.what_ifs:
             spec = registry[wk]
-            if spec['facts'] is None:
+            if spec['facts'] is None or year not in (spec.get('years') or [spec.get('year', 1920)]):
                 continue
             if spec['mode'] == 'backbone' and not reached(spec, a, wk):
                 continue
             if a['group'] == 'foreign_white_alien' and spec['mode'] == 'agents':
                 continue  # can't vote in either world; no effect to measure
-            f = spec['facts'](a, inp)
+            f = spec['facts'](a, inp, year=year)
             if not f['facts'] and f.get('eligibility') is None and not f.get('nominee_news'):
                 continue
             items = items_for(a, f.get('drop_topics', set()), f.get('drop_after'))
@@ -158,6 +163,12 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
                 # p5 manipulation check: whose news did the person take it to be?
                 extra = {'news_check': {'expected': label_of[about], 'about': about}}
                 q_cf = f'{q} {prompts.NEWS_CHECK}'
+            if f.get('withdraws') and f['withdraws'] in label_of:
+                # The third candidate leaves the race: his line comes off this ballot (labels and order otherwise kept).
+                gone = label_of[f['withdraws']]
+                ballot = [p for p in ballot if p['key'] != f['withdraws']]
+                cf_labels = [l for l in labels if l != gone]
+                extra = {**extra, 'withdrawn': {'label': gone, 'party': f['withdraws']}}
             cand = f.get('candidate')
             if cand:
                 # p4: a third labelled line, after the two parties (their order and labels as in the control).

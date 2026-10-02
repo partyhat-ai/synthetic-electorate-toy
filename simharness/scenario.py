@@ -65,6 +65,7 @@ Kinds of change:
 - candidate: a named person on the ballot as an independent or third-party candidate.
 
 Write:
+- withdraws: "O" when the change is that the labelled third candidate on this year's ballot (if there is one) does not run or withdraws; otherwise "none". Then kind is "candidate", and facts say when and how he left the race, without naming him.
 - about: "R" or "D" when the change concerns one of the two major nominees personally (something he did, said, revealed or suffered); otherwise "none".
 - nominee_news (only when about is R or D): one or two sentences of recent news about that nominee, in the third person ("He announced…", "Editors have denounced him…"), never naming him or his party. They are printed on his own line of the ballot, so no reader has to work out whom they concern. Then facts carry only the wider world, and never refer to the nominee again; facts may be empty.
 - facts: one to three sentences stating the change as settled fact in the world on the context date, dated on or before it, in plain, neutral wording of the period. Never phrase it as a hypothesis ("what if", "imagine", "suppose", "would have"). Never name Harding, Cox, Coolidge, Franklin Roosevelt, Debs, Christensen or Wilson, and never write "Republican", "Democrat", "Democratic" or "G.O.P.". Call the Republicans "{R_DESC}" and the Democrats "{D_DESC}"; call Wilson "the President".
@@ -79,6 +80,30 @@ Write:
 - same_as: the key of an existing what-if if the reader asked for exactly that change in other words; otherwise "".
 - modelable: false only if the text isn't a change to the 1920 election at all, or asks for something hateful or harmful; then give why_not. A fantastical change is still modelable: it will be flagged as extremely low confidence."""
 
+def compile_system(prof: dict | None = None) -> str:
+    """COMPILE_SYSTEM (1920) with another year's names, descriptors, topics and planks."""
+    if not prof or prof['year'] == 1920:
+        return COMPILE_SYSTEM
+    y, cd = str(prof['year']), prof['compile_desc']
+    s = COMPILE_SYSTEM.replace('1920', y)
+    s = s.replace('Harding, Cox, Coolidge, Franklin Roosevelt, Debs, Christensen or Wilson', prof['never_name'])
+    s = s.replace(R_DESC, cd['R']).replace(D_DESC, cd['D']).replace('call Wilson "the President"', f'call {cd["president"]} "the President"')
+    if prof.get('third'):
+        s = s.replace('call ' + cd['president'] + ' "the President".',
+                      f'call {cd["president"]} "the President"; call {prof["names"]["O"]} "the independent Progressive candidate".')
+    s = s.replace(json.dumps(TOPICS), '[] (this year has no dated newspaper items: always an empty list)')
+    return s.replace(str(PLANK_TOPICS), str(prof['plank_order']))
+
+
+def compile_schema(prof: dict | None = None) -> dict:
+    if not prof or prof['year'] == 1920:
+        return COMPILE_SCHEMA
+    s = json.loads(json.dumps(COMPILE_SCHEMA))
+    s['properties']['drop_topics']['items']['enum'] = ['none']
+    s['properties']['drop_planks']['items']['enum'] = list(prof['plank_order'])
+    return s
+
+
 REACH = {'type': 'object', 'properties': {
     'sex': {'type': 'array', 'items': {'type': 'string', 'enum': ['M', 'F']}},
     'group': {'type': 'array', 'items': {'type': 'string', 'enum': GROUPS}},
@@ -91,6 +116,7 @@ COMPILE_SCHEMA = {
         'modelable': {'type': 'boolean'}, 'why_not': {'type': 'string'}, 'same_as': {'type': 'string'},
         'kind': {'type': 'string', 'enum': KINDS},
         'about': {'type': 'string', 'enum': ['R', 'D', 'none']},
+        'withdraws': {'type': 'string', 'enum': ['O', 'none']},
         'nominee_news': {'type': 'array', 'items': {'type': 'string'}},
         'label': {'type': 'string'}, 'detail': {'type': 'string'}, 'assumption': {'type': 'string'},
         'plausibility': {'type': 'string', 'enum': ['documented', 'within-reach', 'a-stretch', 'fantastical']},
@@ -116,39 +142,48 @@ COMPILE_SCHEMA = {
         'words': {'type': 'array', 'items': {'type': 'string'}},
         'research_questions': {'type': 'array', 'items': {'type': 'string'}},
     },
-    'required': ['modelable', 'why_not', 'same_as', 'kind', 'about', 'nominee_news', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
+    'required': ['modelable', 'why_not', 'same_as', 'kind', 'about', 'withdraws', 'nominee_news', 'label', 'detail', 'assumption', 'plausibility', 'anachronism',
                  'anachronism_note', 'facts', 'reach', 'drop_topics', 'drop_planks', 'add_planks', 'candidate', 'franchise',
                  'population_scale', 'words', 'research_questions'],
     'additionalProperties': False,
 }
 
 
-def compile_request(text: str, registry: dict, cutoff: str, model: str, retry_note: str | None = None) -> dict:
-    existing = '\n'.join(f'- {k}: {v["label"]}. {v["detail"]}' for k, v in registry.items())
-    user = f'Context date: {cutoff}. Election day: Tuesday, 2 November 1920.\n\nExisting what-ifs:\n{existing}\n\nThe reader typed: "{text}"'
+def compile_request(text: str, registry: dict, cutoff: str, model: str, retry_note: str | None = None, prof: dict | None = None) -> dict:
+    year = prof['year'] if prof else 1920
+    existing = '\n'.join(f'- {k}: {v["label"]}. {v["detail"]}' for k, v in registry.items() if year in (v.get('years') or [v.get('year', 1920)]))
+    day = prof['day_phrase'] if prof else 'Tuesday, 2 November'
+    user = f'Context date: {cutoff}. Election day: {day} {year}.\n\nExisting what-ifs:\n{existing}\n\nThe reader typed: "{text}"'
     if retry_note:
         user += f'\n\n{retry_note}'
-    return {'id': f'compile|{hashlib.sha256(text.encode()).hexdigest()[:10]}', 'model': model, 'system': COMPILE_SYSTEM,
-            'user': user, 'schema': COMPILE_SCHEMA, 'meta': {'kind': 'compile', 'compiler_version': COMPILER_VERSION}}
+    return {'id': f'compile|{year}|{hashlib.sha256(text.encode()).hexdigest()[:10]}', 'model': model, 'system': compile_system(prof),
+            'user': user, 'schema': compile_schema(prof), 'meta': {'kind': 'compile', 'compiler_version': COMPILER_VERSION, 'year': year}}
 
 
-def naming_violations(spec: dict) -> list[str]:
+def naming_violations(spec: dict, year: int = 1920) -> list[str]:
     from .profiles import names_re
-    NAMES = names_re(1920)
+    NAMES = names_re(year)
     texts = list(spec.get('facts', [])) + list(spec.get('nominee_news', [])) + [p['text'] for p in spec.get('add_planks', [])]
     c = spec.get('candidate') or {}
     texts += [c.get('descriptor', '')] + list(c.get('positions', []))
     return [t for t in texts if NAMES.search(t)]
 
 
-MASKS = ((r'\bPresident Wilson\b|\bWilson\b', 'the President'), (r'\bG\.\s?O\.\s?P\.?', 'the congressional majority party'),
-         (r'\bRepublicans?\b', 'the congressional majority party'), (r'\bDemocrat(?:s|ic)?\b', 'the administration party'),
-         (r'\bHarding\b', 'the majority party\'s nominee'), (r'\bCox\b', 'the administration party\'s nominee'),
-         (r'\b(?:Coolidge|Roosevelt|Debs|Christensen)\b', 'a nominee'))
+MASKS = {
+    1920: ((r'\bPresident Wilson\b|\bWilson\b', 'the President'), (r'\bG\.\s?O\.\s?P\.?', 'the congressional majority party'),
+           (r'\bRepublicans?\b', 'the congressional majority party'), (r'\bDemocrat(?:s|ic)?\b', 'the administration party'),
+           (r'\bHarding\b', 'the majority party\'s nominee'), (r'\bCox\b', 'the administration party\'s nominee'),
+           (r'\b(?:Coolidge|Roosevelt|Debs|Christensen)\b', 'a nominee')),
+    1924: ((r'\bPresident Coolidge\b|\bCoolidge\b', 'the President'), (r'\bLa ?Follette\b', 'the independent Progressive candidate'),
+           (r'\bG\.\s?O\.\s?P\.?', 'the administration party'), (r'\bRepublicans?\b', 'the administration party'),
+           (r'\bDemocrat(?:s|ic)?\b', 'the party out of power'), (r'\bDavis\b', 'the nominee of the party out of power'),
+           (r'\bHarding\b', 'the late President'), (r'\bWilson\b', 'the former President'),
+           (r'\b(?:Dawes|Bryan|Wheeler)\b', 'a running mate')),
+}
 
 
-def mask_names(text: str) -> str:
-    for pat, rep in MASKS:
+def mask_names(text: str, year: int = 1920) -> str:
+    for pat, rep in MASKS[year]:
         text = re.sub(pat, rep, text)
     return text
 
@@ -156,12 +191,17 @@ def mask_names(text: str) -> str:
 ANNOTATION = re.compile(r'\s*\((?:documented|inferred|source|note)[^)]*\)', re.I)
 
 
-def clean_position(text: str) -> str:
+def clean_position(text: str, year: int = 1920) -> str:
     """A ballot position as voters read it: names masked, modelling notes stripped."""
-    return ANNOTATION.sub('', mask_names(text)).strip()
+    return ANNOTATION.sub('', mask_names(text, year)).strip()
 
 
-def finalize(raw: dict, text: str, registry: dict, model: str) -> dict:
+def _third(year: int) -> bool:
+    from . import profiles
+    return bool(profiles.get(year).get('third'))
+
+
+def finalize(raw: dict, text: str, registry: dict, model: str, year: int = 1920) -> dict:
     """Compiled answer → a registry-shaped spec (JSON-safe; `apply`/`facts` are bound at load)."""
     from .evidence import slug
     kind = raw['kind']
@@ -175,13 +215,15 @@ def finalize(raw: dict, text: str, registry: dict, model: str) -> dict:
         'key': key, 'label': raw['label'], 'kind': 'issue' if kind == 'event' else kind, 'subkind': kind, 'mode': mode,
         'detail': raw['detail'], 'assumption': raw['assumption'], 'plausibility': raw['plausibility'],
         'anachronism': raw['anachronism'], 'anachronism_note': raw['anachronism_note'],
-        'facts_text': [mask_names(f) for f in raw['facts']], 'reach': reach,
+        'year': year, 'years': [year],
+        'withdraws': 'O' if raw.get('withdraws') == 'O' and _third(year) else None,
+        'facts_text': [mask_names(f, year) for f in raw['facts']], 'reach': reach,
         'about': raw.get('about') if raw.get('about') in ('R', 'D') else None,
-        'nominee_news': [mask_names(n) for n in raw.get('nominee_news', [])] if raw.get('about') in ('R', 'D') else [],
-        'drop_topics': [t for t in raw['drop_topics'] if t in TOPICS], 'drop_planks': raw['drop_planks'],
-        'add_planks': [p | {'text': mask_names(p['text'])} for p in raw['add_planks']],
-        'candidate': (raw['candidate'] | {'descriptor': mask_names(raw['candidate']['descriptor']),
-                                          'positions': [clean_position(p) for p in raw['candidate']['positions']][:3]})
+        'nominee_news': [mask_names(n, year) for n in raw.get('nominee_news', [])] if raw.get('about') in ('R', 'D') else [],
+        'drop_topics': [t for t in raw['drop_topics'] if t in TOPICS] if year == 1920 else [], 'drop_planks': raw['drop_planks'],
+        'add_planks': [p | {'text': mask_names(p['text'], year)} for p in raw['add_planks']],
+        'candidate': (raw['candidate'] | {'descriptor': mask_names(raw['candidate']['descriptor'], year),
+                                          'positions': [clean_position(p, year) for p in raw['candidate']['positions']][:3]})
         if kind == 'candidate' else None,
         'franchise': raw['franchise'] if kind == 'franchise' else None,
         'population_scale': raw['population_scale'] if kind == 'population' else None,
@@ -282,12 +324,13 @@ def make_apply(spec: dict):
 def make_facts(spec: dict):
     reach = spec.get('reach') or {}
 
-    def facts(agent: dict, inp) -> dict:
+    def facts(agent: dict, inp, year: int = 1920) -> dict:
         out = {'facts': list(spec.get('facts_text') or []), 'eligibility': None,
                'about': spec.get('about'), 'nominee_news': list(spec.get('nominee_news') or []),
+               'withdraws': spec.get('withdraws'),
                'drop_topics': set(spec.get('drop_topics') or []), 'drop_planks': set(spec.get('drop_planks') or []),
                'add_planks': spec.get('add_planks') or []}
-        if spec['kind'] == 'candidate' and spec.get('candidate'):
+        if spec['kind'] == 'candidate' and spec.get('candidate') and not spec.get('withdraws'):
             out['candidate'] = spec['candidate']
         if spec['kind'] == 'franchise' and agent_reached(spec, agent):
             f = spec.get('franchise') or {}

@@ -13,7 +13,7 @@ import numpy as np
 
 from . import aggregate, evidence, paired, prompts, quotes, scenario, serialize
 from .geo import STATE_NAME
-from .whatifs import REGISTRY, apply_effects
+from .whatifs import REGISTRY, apply_effects, for_year, withdraw
 
 CONF = {'franchise': 'high', 'population': 'medium', 'issue': 'low', 'candidate': 'low'}
 KIND_ORDER = ['franchise', 'population', 'issue', 'candidate']
@@ -37,7 +37,7 @@ class Publisher:
         co = json.loads((self.dir / 'agents/cohorts.json').read_text()) if (self.dir / 'agents/cohorts.json').exists() else None
         cell_to = [co['cell_to'][str(i)] for i in range(len(fit.cells))] if co else []
 
-        available = [k for k in self.cfg.what_ifs if REGISTRY[k]['mode'] == 'backbone' or k in eff['effects']]
+        available = [k for k in for_year(self.cfg.what_ifs, self.year) if REGISTRY[k]['mode'] == 'backbone' or k in eff['effects']]
         available += ['everyone'] if 'everyone' not in available else []
         runs, tables, results_meta = {}, {}, {}
         for n in range(0, min(len(available), self.cfg.max_combo) + 1):
@@ -51,6 +51,8 @@ class Publisher:
                     spec = REGISTRY[k]
                     if spec['mode'] == 'backbone':
                         world = spec['apply'](fit, world, self.inp)
+                    elif spec.get('withdraws') and 'transfer' in eff['effects'][k]:
+                        world = withdraw(fit, world, eff['effects'][k]['transfer'], self._third_frac(fit))
                     else:
                         world = apply_effects(fit, world, cell_to, eff['effects'][k]['cohorts'])
                 sv = aggregate.by_state(world, sidx, len(states))
@@ -63,6 +65,14 @@ class Publisher:
         pub.mkdir(exist_ok=True)
         (pub / f'{self.cfg.election}.json').write_text(json.dumps(bundle, indent=1, default=float))
         return {k: {'ev': v[1]['ev_point'], 'drawsWon': v[1]['draws_won']} for k, v in runs.items()}
+
+    def _third_frac(self, fit):
+        """Per cell: the labelled third candidate's part of the state's `other` vote."""
+        r, yy = self.inp.returns, self.year % 100
+        if f'P{yy}' not in r:
+            return np.ones(len(fit.cells))
+        frac = (r[f'P{yy}'] / r[f'O{yy}'].clip(lower=1)).clip(0, 1)
+        return fit.cells.state.map(frac).fillna(0).to_numpy()
 
     def _bundle(self, fit, states, runs, base_sum, base_winner, eff):
         sources_by_slice = self.prof['slice_sources']
@@ -99,7 +109,7 @@ class Publisher:
             lead = ' '.join(single[k] for k in combo) if combo else self._lead([], fit, runs[''][0], world, summ)
             cand = dict(self.cand)
             for k in combo:
-                if REGISTRY[k]['kind'] == 'candidate' and REGISTRY[k].get('candidate'):
+                if REGISTRY[k]['kind'] == 'candidate' and REGISTRY[k].get('candidate') and not REGISTRY[k].get('withdraws'):
                     cand[2] = REGISTRY[k]['candidate']['name']
             text = serialize.verdict(lead=lead, names=states, state_names=STATE_NAME, cand=cand, summary=summ,
                                      base_summary=base_sum, base_winner=base_winner)
@@ -180,6 +190,9 @@ class Publisher:
             return r / (r + d) * 100, o / (r + d + o) * 100
         (r2_0, o_0), (r2_1, o_1) = shares(base), shares(world)
         toward = self.cand[1] if r2_1 < r2_0 else self.cand[0]
+        if spec.get('withdraws'):
+            return (f'With {self.cand[2]} out of the race, candidates outside the two parties take {o_1:.1f}% of the vote, '
+                    f'against {o_0:.1f}% in {self.year}, and the two-party split moves {abs(r2_1 - r2_0):.1f} points toward {toward}.')
         if spec['kind'] == 'candidate':
             name = spec['candidate']['name']
             return (f'With {name} on the ballot, candidates outside the two parties take {o_1:.1f}% of the vote, against {o_0:.1f}% '
@@ -205,7 +218,9 @@ class Publisher:
                 n, level = len(ev.get('findings', [])), evidence.strength(ev)['level']
                 count = f' ({n} finding{"s" if n != 1 else ""}, {level} evidence)' if n else ''
                 lines.append(f'What historians found{count}: {ev["summary"]}')
-        lines.append(f'The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces {self.year} exactly before the change.')
+        census = ('1920 census voting-age tables' if self.year == 1920 else
+                  f'{self.prof["base"]} census voting-age tables aged to {self.year}')
+        lines.append(f'The numbers: the {census} and certified returns; every draw reproduces {self.year} exactly before the change.')
         lines.append(f'How sure: I reran it {summ["draws"]} times with different population and parameter draws.')
         if tier and tier['tier'] in ('low', 'very-low') and combo:
             lines.append(f'{tier["label"]}: ' + ' '.join(tier['reasons'][:3]))
@@ -350,7 +365,13 @@ class Publisher:
 
 
 def sources_for(year: int) -> list[dict]:
-    return SOURCES
+    if year == 1920:
+        return SOURCES
+    return [SOURCES[0], SOURCES[1],
+            {'title': f'National Archives, {year} Electoral College results', 'url': f'https://www.archives.gov/electoral-college/{year}'},
+            SOURCES[4], SOURCES[5],
+            {'title': f'American Presidency Project, {year} party platforms (Republican, Democratic, Progressive)',
+             'url': 'https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms'}]
 
 
 SOURCES = [

@@ -6,7 +6,9 @@ Stages (each writes into runs/<run id>/ and can be rerun alone):
   ask        send pending requests through the configured backend
   analyze    paired effects, leakage probes, label swap, bias, audit, quotes
   publish    every what-if combination → the page's result shape + bundle
-  evaluate   pre-registered checks → validation.json (+ EVAL table rows)
+  evaluate   pre-registered checks → validation.json (+ EVAL table rows); 1920 only
+  verify     the unchanged rerun reproduces every state's R/D/O (R1), plus
+             Corder–Wolbrecht where it exists (1924)
   all        backbone → plan → ask → analyze → publish → evaluate
 """
 from __future__ import annotations
@@ -21,7 +23,7 @@ from .pipeline import Run
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'all', 'id',
+    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'verify', 'all', 'id',
                                       'research', 'whatif'])
     ap.add_argument('--config', default=str(ROOT / 'configs/prototype-1920.json'))
     ap.add_argument('--text', help='whatif: the words a reader typed')

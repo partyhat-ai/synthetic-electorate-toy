@@ -86,9 +86,44 @@ def apply_effects(fit, world: World, cohort_of_cell: list, eff: dict) -> World:
     return w
 
 
+def withdraw(fit, world: World, tr: dict, frac: np.ndarray) -> World:
+    """A labelled third candidate leaves the race. His share of each cell's
+    voters (the cell's `other` share × his part of the state's `other` vote)
+    goes to R, D or home in the proportions the interviews' La Follette
+    voters moved (tr: draws of R, D, home summing to 1). Other minor parties
+    keep their votes."""
+    w = world.copy()
+    D = w.t.shape[0]
+    j = np.arange(D) % len(tr['R'])
+    tR, tD, tH = tr['R'][j][:, None], tr['D'][j][:, None], tr['home'][j][:, None]
+    lf = w.share[:, :, 2] * frac[None, :]
+    stay = 1 - lf * tH
+    share = np.stack([w.share[:, :, 0] + lf * tR, w.share[:, :, 1] + lf * tD, w.share[:, :, 2] - lf], axis=2)
+    w.share = share / np.maximum(stay, 1e-9)[..., None]
+    w.t = w.t * stay
+    return w
+
+
+def transfer(pairs: list, draws: int, rng) -> dict:
+    """Where a withdrawing candidate's voters go: over paired interviews, the
+    change in expected R, D and staying home, per unit of expected vote the
+    candidate had in the control. Bootstrapped over people."""
+    nz = lambda x: 0.0 if x != x else x  # noqa: E731 (NaN → 0: an answer with no leanings)
+
+    def one(rs):
+        m = sum(c['p_vote'] * nz(c['O']) for c, f in rs)
+        v = np.array([sum(f['p_vote'] * nz(f['R']) - c['p_vote'] * nz(c['R']) for c, f in rs),
+                      sum(f['p_vote'] * nz(f['D']) - c['p_vote'] * nz(c['D']) for c, f in rs),
+                      sum(c['p_vote'] - f['p_vote'] for c, f in rs)]).clip(0, None)
+        return v / v.sum() if v.sum() > 0 and m > 0 else np.array([1 / 3, 1 / 3, 1 / 3])
+    point = one(pairs)
+    boot = np.array([one([pairs[i] for i in rng.integers(0, len(pairs), len(pairs))]) for _ in range(draws)])
+    return {'R': boot[:, 0], 'D': boot[:, 1], 'home': boot[:, 2], 'point': point.tolist(), 'n': len(pairs)}
+
+
 # ── Facts written into a counterfactual brief (never phrased as a change) ──
 
-def facts_no_19th(agent: dict, inp) -> dict:
+def facts_no_19th(agent: dict, inp, year: int = 1920) -> dict:
     s = agent['state']
     facts = ['In August the Tennessee legislature voted the woman suffrage amendment down, and it has not been ratified.']
     elig = None
@@ -103,7 +138,7 @@ def facts_no_19th(agent: dict, inp) -> dict:
     return {'facts': facts, 'eligibility': elig, 'drop_topics': drop, 'drop_after': '1920-08-18'}
 
 
-def facts_fifteenth(agent: dict, inp) -> dict:
+def facts_fifteenth(agent: dict, inp, year: int = 1920) -> dict:
     s = agent['state']
     if s not in SOUTH:
         return {'facts': [], 'eligibility': None, 'drop_topics': set()}
@@ -111,7 +146,7 @@ def facts_fifteenth(agent: dict, inp) -> dict:
              'federal registrars were sent to every Southern county, Black citizens register and vote on the same '
              'terms as white citizens.']
     elig = None
-    closed = getattr(inp, 'closed_1920', set())
+    closed = getattr(inp, 'closed_1920', set()) if year == 1920 else set()
     if agent['group'] == 'black':
         if agent['sex'] == 'F' and s in closed:
             elig = f'Registration in {STATE_NAME.get(s, s)} closed before women could enrol, so this person cannot vote for president this year.'
@@ -120,7 +155,7 @@ def facts_fifteenth(agent: dict, inp) -> dict:
     return {'facts': facts, 'eligibility': elig, 'drop_topics': {'T5'} if agent['group'] == 'black' else set()}
 
 
-def facts_league(agent: dict, inp) -> dict:
+def facts_league(agent: dict, inp, year: int = 1920) -> dict:
     return {
         'facts': ['In March 1920 the Senate ratified the peace treaty with its reservations, and the United States '
                   'took its seat in the League of Nations this spring. The treaty is settled, and neither party '
@@ -133,7 +168,7 @@ def facts_league(agent: dict, inp) -> dict:
 
 REGISTRY = {
     'no-19th': {
-        'label': 'The 19th Amendment Fails', 'kind': 'franchise', 'mode': 'backbone', 'apply': no_19th,
+        'label': 'The 19th Amendment Fails', 'kind': 'franchise', 'mode': 'backbone', 'apply': no_19th, 'years': [1920],
         'facts': facts_no_19th, 'slices': ['women'],
         'detail': 'Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.',
         'assumption': 'Women in states without their own presidential suffrage can\'t vote. Everyone else turns out and chooses exactly as in 1920; men\'s votes don\'t change.',
@@ -142,7 +177,7 @@ REGISTRY = {
                                'In states where women already voted for president before 1920, did their votes change the result or the parties\' shares?'],
     },
     'fifteenth': {
-        'label': 'Enforce the 15th Amendment', 'kind': 'franchise', 'mode': 'backbone', 'apply': fifteenth,
+        'label': 'Enforce the 15th Amendment', 'kind': 'franchise', 'mode': 'backbone', 'apply': fifteenth, 'years': [1920, 1924],
         'facts': facts_fifteenth, 'slices': ['black-south'],
         'detail': 'Black Southerners vote as freely as white Southerners: no literacy tests, poll taxes or terror.',
         'assumption': 'Black adults in the eleven former Confederate states turn out at the rate white adults of their own state and sex did in 1920, and split like Black voters outside the South in 1920.',
@@ -151,7 +186,7 @@ REGISTRY = {
                                'When Black Southerners could vote (Reconstruction; after 1965), how did turnout and party choice compare with white Southerners?'],
     },
     'league': {
-        'label': 'The Senate Ratifies the League', 'kind': 'issue', 'mode': 'agents', 'apply': None,
+        'label': 'The Senate Ratifies the League', 'kind': 'issue', 'mode': 'agents', 'apply': None, 'years': [1920],
         'facts': facts_league, 'slices': ['men', 'women', 'south-white', 'immigrants'],
         'detail': 'The Senate ratifies the peace treaty with its reservations in March 1920, and the League is no longer a campaign issue.',
         'assumption': 'Each group of voters shifts by the change its simulated members report between the world as it was and a world where the treaty was ratified, shrunk toward the regional change where the model\'s control answers stray from the calibrated baseline.',
@@ -160,13 +195,18 @@ REGISTRY = {
                                'Which groups (German, Irish and Italian Americans; Midwestern farmers) moved against the administration over the treaty, and by how much?'],
     },
     'everyone': {
-        'label': 'Everyone Votes', 'kind': 'franchise', 'mode': 'backbone', 'apply': everyone,
+        'label': 'Everyone Votes', 'kind': 'franchise', 'mode': 'backbone', 'apply': everyone, 'years': [1920, 1924],
         'facts': None, 'slices': [],
         'detail': 'Every adult can vote, and turns out.',
         'assumption': 'Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1920.',
         'borrowed': 'naturalized citizens of the same state and sex; Black voters outside the South',
     },
 }
+
+def for_year(keys, year: int) -> list:
+    """The keys whose what-if applies to this election year."""
+    return [k for k in keys if k in REGISTRY and year in (REGISTRY[k].get('years') or [REGISTRY[k].get('year', 1920)])]
+
 
 # Compiled what-ifs (harness/whatifs/*.json, exploratory) join the registry
 # after the pre-registered ones, never replacing them.

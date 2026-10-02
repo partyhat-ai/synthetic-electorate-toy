@@ -525,3 +525,53 @@ nominee.
   Jackson and Lillian Jones each chose Cox but quoted "the Republican" with
   approval. This is D19 again: "the Republican" in a blinded quote is the
   model guessing which label is which.
+
+**C13 · Medium · by design · 1924 population**
+There is no 1924 census. Each cell's 1920 count is aged to 4 November 1924
+along its own 1910→1920 trend (`data.population(1924)`). Things this misses:
+- the Cable Act (1922, married women's citizenship);
+- naturalizations after 1920;
+- the Indian Citizenship Act (June 1924).
+
+**C14 · Medium · by design · 1924 backbone (`backbone.carry_forward`)**
+1924 has no natural experiment of its own, so it carries 1920's structure
+forward:
+- the 1920 fit's per-cell turnout, women's tilt δ, Black voters' β_B and
+  Black Southern exclusion;
+- one turnout shift per state, across all groups;
+- the same exact share calibration as 1920.
+
+Checks:
+- **Reproduction:** every 1924 state within 0.41 votes, 382–136–13 in
+  every draw.
+- **Held-out benchmark:** Corder–Wolbrecht 1924 women's turnout on their
+  denominator gives MAE 3.6 points, against 3.2 for 1920. CT and MA women
+  run high and men low, as in 1920.
+
+Within a state, La Follette's share is spread evenly across groups. Who
+his voters were inside a state isn't identified.
+
+**C15 · Medium · open · 1924 briefs have no dated newspaper items**
+There is no 1924 corpus yet, so 1924 people know only their circumstances
+and the ballot. Pulling Chronicling America items for October 1924 is the
+next step.
+
+**C16 · Low · open · 1924 platforms (`context/platforms_1924.json`)**
+- Quotes come from American Presidency Project pages and the paraphrases
+  were written by the harness session.
+- The Progressive platform's date is entered as 4 July 1924 (the
+  Cleveland conference). APP files it under 4 November [I].
+- The fetched Republican text had no Prohibition passage.
+
+**D24 · Medium · open · 1924 withdrawal transfer**
+"No La Follette" moves his voters by one national transfer, estimated from
+12 people: 80% to Davis, 8% to Coolidge, 11% stay home. The same transfer
+is applied in every state.
+
+The record is mixed:
+- In 1920 the upper-Midwest farm and labor vote was heavily Republican.
+- In 1928 his former voters split between the parties.
+
+So the Davis share is probably too high, and region matters. The evidence
+check says "untested" because no source gives a number. Fix: regional
+transfers, plus a prior from the 1928 split.

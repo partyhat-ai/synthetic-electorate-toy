@@ -1,0 +1,75 @@
+{
+  "run_id": "1924-bfdb1d995e",
+  "config": {
+    "election": 1924,
+    "election_day": "1924-11-04",
+    "context_cutoff": "1924-11-03",
+    "mode": "truth",
+    "what_ifs": [
+      "fifteenth",
+      "no-independent-progressive-candidate"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "CA",
+      "FL",
+      "ID",
+      "IN",
+      "LA",
+      "MI",
+      "MO",
+      "MT",
+      "NC",
+      "NY",
+      "OH",
+      "OK"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_1916_1920_1924.csv": "39b0dbc19249663a",
+    "population/adults_1920_by_state.csv": "3a760fb7fb5f976b",
+    "population/adults_1910_by_state.csv": "78ec7a0ca2094430",
+    "franchise/state_franchise_1920.csv": "e70f04ec2c75e644",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "franchise/grayjenkins_state_franchise_1916_1920_1924.csv": "d44863262189ad80",
+    "context/platforms_1924.json": "ea5d833f1550d9f5",
+    "whatifs/no-independent-progressive-candidate.json": "2ed8b5afc7b477e4",
+    "whatifs/evidence/no-independent-progressive-candidate.json": "5393b777401bf9db"
+  }
+}

@@ -38,9 +38,9 @@ server. The contract changes the page could use are described in
 | `simharness/scenario.py` | Any typed what-if → a spec of one of five kinds (franchise, population, issue/event, candidate) with generic mechanics |
 | `simharness/evidence.py` | Historical evidence: web-search research, grounded extraction, source tiers, agreement, blend, confidence tiers |
 | `simharness/intake.py` | Typed what-if intake: compile → research → register → run → `serve/bundles/`; the router's queue |
-| `simharness/profiles.py` | One profile per election (names, blinded descriptors, label letters, ballot wording, sources): 1920 |
+| `simharness/profiles.py` | One profile per election (names, blinded descriptors, label letters, ballot wording, sources): 1920 and 1924 |
 | `simharness/run.py` | The command line (`python3 -m simharness.run <stage>`) |
-| `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, evaluate (`Run`) |
+| `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, verify, evaluate (`Run`) |
 | `simharness/publish.py` | The publish stage: every what-if combination → the bundle |
 | `serve/simulacra.ts`, `serve/index.ts` | The Express router that serves the bundles, and the server that mounts it at `/api/simulacra` next to the static page |
 | `serve/bundles/<year>.json` | The bundles the server serves (`SIMULACRA_BUNDLES` overrides the folder) |
@@ -122,3 +122,12 @@ The `ask` stage depends on the backend:
 Serve the bundles:
 1. `pnpm build` (the static page, into `build/`), then `pnpm serve` (`serve/index.ts`, `PORT`, default 8787).
 2. The router reads `serve/bundles/<year>.json`; set `SIMULACRA_BUNDLES` to serve another folder, such as `runs/<id>/published`.
+
+## Years
+
+- **1920** is the original fit, identified by the 1916→1920 suffrage
+  experiment.
+- **1924** is carried forward from it (`backbone.carry_forward`; DISCLOSURES
+  C13–C16). It has its own `configs/live-1924.json`.
+- `run verify` checks 1924: exact reproduction, plus Corder–Wolbrecht 1924.
+  `evaluate` stays 1920's pre-registered set.

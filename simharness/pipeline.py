@@ -1,5 +1,5 @@
 """The pipeline's stages other than publish (publish.py): backbone, plan, ask,
-analyze and evaluate. Each writes into runs/<run id>/ and can be
+analyze, verify and evaluate. Each writes into runs/<run id>/ and can be
 rerun alone; run.py is the command line.
 """
 from __future__ import annotations
@@ -41,7 +41,12 @@ class Run(Publisher):
 
     # ── backbone ──
     def backbone(self):
-        fit = backbone.fit(self.inp, self.cfg.draws, self.cfg.seed)
+        if self.extras.get('base_inp') is not None:
+            # A carried-forward year: fit the base year, then recalibrate to this year's returns.
+            base = backbone.fit(self.extras['base_inp'], self.cfg.draws, self.cfg.seed)
+            fit = backbone.carry_forward(base, self.inp, self.year, self.cfg.seed)
+        else:
+            fit = backbone.fit(self.inp, self.cfg.draws, self.cfg.seed)
         with open(self.dir / 'fit.pkl', 'wb') as f:
             pickle.dump(fit, f)
         return fit
@@ -179,7 +184,7 @@ class Run(Publisher):
             backbone_turn[k] = float(np.median(vv.sum(axis=1) / np.maximum(elig, 1e-9)))
             backbone_o[k] = float(np.median((vv * w.share[:, idx, 2]).sum(axis=1) / np.maximum(vv.sum(axis=1), 1e-9)))
 
-        # L1 recall probe (the winner is Harding)
+        # L1 recall probe (the winner is the historical one: Harding in 1920, Coolidge in 1924)
         won = 0
         probes = []
         for rid, r in reqs.items():
@@ -289,6 +294,9 @@ class Run(Publisher):
                                   'checked': misread['checked'], 'misread': misread['misread']}
             eff['manipulation'] = misread
             eff['agreement'] = evidence.agreement(ev, eff['national'], nat_base, spec['kind'])
+            if spec.get('withdraws'):
+                from .whatifs import transfer
+                eff['transfer'] = transfer([(c, f) for ps in pairs.values() for c, f, _, _ in ps], 200, rng)
             eff['blended'] = False
             if ev and spec.get('evidence_mode') == 'blend':
                 eff['cohorts'] = {k: evidence.blend(c, evidence.prior(ev, cohorts[k], {'turnout': backbone_turn[k], 'r2': backbone_r2[k],
@@ -344,6 +352,7 @@ class Run(Publisher):
                                    'shared_subsample': e.get('shared_subsample'),
                                    'agent_stats': e.get('agent_stats'), 'agreement': e.get('agreement'), 'blended': e.get('blended'),
                                    'manipulation': e.get('manipulation'),
+                                   'transfer': {'point': e['transfer']['point'], 'n': e['transfer']['n']} if e.get('transfer') else None,
                                    'cohorts': {k: {kk: vv for kk, vv in c.items() if kk != 'draws'} for k, c in e['cohorts'].items()}}
                               for wk, e in effects.items()}}
         (self.dir / 'analysis.json').write_text(json.dumps(result, indent=1, default=float))
@@ -378,7 +387,9 @@ class Run(Publisher):
 
         full = measure(fit, fit.world)
         zero = {k: 0.0 for k in backbone.GROUPS}
-        no_pop = backbone.fit(self.inp, draws, self.cfg.seed, pop_cv=zero)
+        no_pop = backbone.fit(self.extras.get('base_inp') or self.inp, draws, self.cfg.seed, pop_cv=zero)
+        if self.extras.get('base_inp') is not None:
+            no_pop = backbone.carry_forward(no_pop, self.inp, self.year, self.cfg.seed)
         params_only = measure(no_pop, no_pop.world)
         agents_only = None
         if spec['mode'] == 'agents' and eff and what_if in eff['effects']:
@@ -390,9 +401,55 @@ class Run(Publisher):
         return {'what_if': what_if, 'full': full, 'backbone_params_only': params_only, 'agents_only': agents_only,
                 'note': 'SD in points of the national R two-party share and in Harding EV. Population share ≈ full − params-only (variances).'}
 
+    # ── verify ──
+    def verify(self):
+        """The unchanged rerun reproduces every state's certified votes (R1), and,
+        for a carried-forward year, the held-out women's turnout benchmark."""
+        fit = self.fit()
+        states, sidx = self.state_index(fit)
+        sv = aggregate.by_state(fit.world, sidx, len(states))
+        yy = self.year % 100
+        cert = np.array(self.inp.returns.reindex(states)[[f'R{yy}', f'D{yy}', f'O{yy}']].fillna(0), dtype=float)
+        out = aggregate.outcome(sv, self.inp.ev.reindex(states).fillna(0).to_numpy())
+        err = np.abs(sv - cert[None, :, :])
+        worst = float(err.max()) if err.size else 0.0
+        by_state = err.max(axis=(0, 2))
+        res = {'year': self.year, 'R1_worst_vote_error': worst, 'R1_pass': bool(worst <= 0.5), 'R1_states': len(states),
+               'R1_worst_states': [{'state': s, 'error': round(float(e), 3)}
+                                   for s, e in sorted(zip(states, by_state), key=lambda x: -x[1])[:3]],
+               'ev_by_draw': sorted({tuple(int(x) for x in e) for e in out['ev']})[:3]}
+        from . import benchmarks  # validation stage: the held-out Corder–Wolbrecht turnout
+        cw = benchmarks.corder_wolbrecht_any_year()
+        cw = cw[(cw.year == self.year) & cw.state.isin(states)].set_index('state')
+        if len(cw):
+            # Corder–Wolbrecht's denominator: every adult 21+ of the sex, non-citizens included (EVAL.md N1).
+            w = fit.world
+            female = (fit.cells.sex == 'F').to_numpy()
+
+            def rate(m):
+                votes, adults = np.zeros((w.t.shape[0], len(states))), np.zeros((w.t.shape[0], len(states)))
+                np.add.at(votes, (slice(None), sidx[m]), (w.adults * w.can * w.t)[:, m])
+                np.add.at(adults, (slice(None), sidx[m]), w.adults[:, m])
+                return votes / np.maximum(adults, 1)
+            wt, mt = rate(female), rate(~female)
+            rows = []
+            for s in cw.index:
+                i = states.index(s)
+                rows.append({'state': s, 'women_model': round(float(np.median(wt[:, i])) * 100, 1),
+                             'women_cw': round(float(cw.loc[s, 'women_turnout']) * 100, 1),
+                             'men_model': round(float(np.median(mt[:, i])) * 100, 1),
+                             'men_cw': round(float(cw.loc[s, 'men_turnout']) * 100, 1)})
+            res['corder_wolbrecht'] = rows
+            res['women_mae_points'] = round(float(np.mean([abs(r['women_model'] - r['women_cw']) for r in rows])), 1) if rows else None
+        (self.dir / 'check.json').write_text(json.dumps(res, indent=1, default=float))
+        return res
+
     # ── evaluate ──
     def evaluate(self):
         from . import benchmarks
+        if self.year != 1920:
+            raise SystemExit('evaluate: the pre-registered checks are 1920\'s; 1924 is checked by '
+                             '`run verify` (reproduction, and Corder–Wolbrecht 1924).')
         fit = self.fit()
         states, sidx = self.state_index(fit)
         base_votes = aggregate.by_state(fit.world, sidx, len(states))

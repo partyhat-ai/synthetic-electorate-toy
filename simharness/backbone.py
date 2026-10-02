@@ -94,7 +94,7 @@ def _solve(v, shift, tR, tO, iters=300):
 def _black_south_bound(D, S, sidx, south_state, black, south_cell, female, votes_cell, share, can_eff, t, R, Dm, O, T, shift_R):
     """C3b (in place): Black Southern voters split like Black voters outside the
     South, bounded by the state's certified ledger; the rest of the state is
-    re-calibrated. Returns how many draws hit the bound, per state."""
+    re-calibrated (fit, carry_forward). Returns how many draws hit the bound, per state."""
     nsb, bsc = black & ~south_cell, black & south_cell
     bound_hits = np.zeros(S)
     for d in range(D):
@@ -142,7 +142,8 @@ def legal_can(inp: Inputs, year: int) -> tuple[np.ndarray, list]:
     """Fraction of each cell legally able to vote, and the reason for the rest.
 
     Aliens only where inp.alien_voting; 'other' × inp.other_citizen. Women:
-    1916 by women16, 1920 barred only where registration closed (closed_1920)."""
+    1916 by women16, 1920 barred only where registration closed (closed_1920);
+    from 1924 everywhere (the 19th Amendment)."""
     c = inp.cells
     can = np.ones(len(c))
     reason = [''] * len(c)
@@ -349,4 +350,102 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
         'E16': E16, 'E20': E20, 'T16': T16[0], 'T20': T20[0], 'm16': m16,
         'votes_F': votes_F, 'votes_M': votes_M, 'F20': F20, 'M20': M20,
     }
+    return Fit(world=world, cells=cells, params=params, diagnostics=diag)
+
+
+def carry_forward(base: Fit, inp: Inputs, year: int, seed: int) -> Fit:
+    """A later election with no natural experiment of its own (1924): the base
+    year's fit supplies the group structure, and the new year's returns
+    calibrate it exactly.
+
+    Per draw d (the base fit's draw d):
+      P   adults: the base cells aged to election day (data.population) with
+          fresh census noise.
+      X   Black Southern exclusion: the base year's relative turnout t_bs.
+      T   turnout: the base year's cell turnout in logits, plus one shift per
+          state (all groups and both sexes alike) solved so the state's total
+          votes match. So the base year's women-to-men and group ratios carry
+          forward [I]; Corder–Wolbrecht 1924 is held out to check that.
+          Cells that couldn't vote in the base year (Georgia and Mississippi
+          women in 1920) start from their state's men times the median
+          women-to-men turnout ratio of the other Southern states.
+      C   choice: the base year's tilts (women δ, Black voters β_B), then the
+          same exact calibration (C3, C3b) to the year's R, D and other votes.
+          A third candidate's vote (La Follette) is spread evenly across a
+          state's groups: within-state differences in it aren't identified.
+    """
+    rng = np.random.default_rng(seed + year)
+    c = inp.cells.reset_index(drop=True)
+    assert (c[['state', 'sex', 'group']].to_numpy() == base.cells[['state', 'sex', 'group']].to_numpy()).all()
+    states = base.diagnostics['states']
+    S, C = len(states), len(c)
+    D = base.world.t.shape[0]
+    sidx = np.array([states.index(s) for s in c.state])
+    female = (c.sex == 'F').to_numpy()
+    black = (c.group == 'black').to_numpy()
+    south_state = np.array([s in SOUTH for s in states])
+    south_cell = south_state[sidx]
+    y = year % 100
+    ret = inp.returns.loc[states]
+    T, R, Dm, O = (ret[f'{k}{y}'].to_numpy() for k in ('T', 'R', 'D', 'O'))
+
+    def per_state(x):
+        out = np.zeros((x.shape[0], S))
+        np.add.at(out, (slice(None), sidx), x)
+        return out
+
+    cv = {'native_white': 0.02, 'foreign_white_naturalized': 0.04, 'foreign_white_alien': 0.05, 'black': 0.05, 'other': 0.08}
+    cv_c = c.group.map(cv).to_numpy()
+    a = c.adults20.to_numpy()[None, :] * np.exp(rng.normal(0, 1, (D, C)) * cv_c - cv_c ** 2 / 2)
+
+    can1, reason = legal_can(inp, year)
+    can = np.broadcast_to(can1, (D, C)).copy()
+    t_bs = base.params['t_black_south_rel']
+    excluded = np.zeros((D, C))
+    bs = black & south_cell
+    excluded[:, bs] = can[:, bs] * (1 - t_bs[:, None])
+    can_eff = can - excluded
+
+    # T: turnout prior from the base year, one logit shift per state.
+    t0 = base.world.t.copy()
+    male_of = {(r.state, r.group): i for i, r in c.iterrows() if r.sex == 'M'}
+    mate = np.array([male_of.get((r.state, r.group), i) for i, r in c.iterrows()])
+    sw = female & south_cell & (t0.mean(axis=0) > 0)
+    ratio = np.median(np.where(sw[None, :], t0 / np.maximum(t0[:, mate], 1e-6), np.nan)[:, sw], axis=1)
+    gap = (t0 <= 0) & (can_eff > 0) & female[None, :]
+    t0 = np.where(gap, t0[:, mate] * ratio[:, None], t0)
+    lt = logit(np.clip(t0, 1e-4, 0.995))
+    elig = a * can_eff
+    lo, hi = np.full((D, S), -8.0), np.full((D, S), 8.0)
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        v = per_state(elig * expit(lt + mid[:, sidx]))
+        over = v > T[None, :]
+        hi, lo = np.where(over, mid, hi), np.where(over, lo, mid)
+    k = (lo + hi) / 2
+    t = np.where(elig > 0, expit(lt + k[:, sidx]), 0.0)
+    votes_cell = elig * t
+
+    # C: the base year's tilts, recalibrated exactly.
+    delta, beta_B = base.params['delta'], base.params['beta_B']
+    shift_R = female[None, :] * delta[:, None] + black[None, :] * beta_B[:, None]
+    share = np.zeros((D, C, 3))
+    for d in range(D):
+        for s in range(S):
+            idx = np.where(sidx == s)[0]
+            v = votes_cell[d, idx]
+            if v.sum() <= 0:
+                continue
+            pR, pO = _solve(v, shift_R[d, idx], R[s] / T[s] * v.sum(), O[s] / T[s] * v.sum())
+            share[d, idx, 0], share[d, idx, 2], share[d, idx, 1] = pR, pO, 1 - pR - pO
+    bound_hits = _black_south_bound(D, S, sidx, south_state, black, south_cell, female, votes_cell, share, can_eff, t,
+                                    R, Dm, O, T, shift_R)
+    world = World(adults=a, can=can_eff, t=t, share=share, barred_by={'legal': 1 - can, 'excluded': can - can_eff})
+    cells = c.assign(region=c.state.map(REGION_OF), south=south_cell, legal_reason=reason)
+    F = per_state(a * can_eff * female[None, :])
+    diag = {'states': states, 'base_year': base.diagnostics.get('year', 1920), 'turnout_shift': k,
+            'women_turnout': per_state(votes_cell * female[None, :]) / np.maximum(F, 1),
+            'men_turnout': per_state(votes_cell * ~female[None, :]) / np.maximum(per_state(a * can_eff * ~female[None, :]), 1),
+            'black_south_bound_share': dict(zip(states, (bound_hits / D).tolist())), 'gap_ratio': ratio}
+    params = {'delta': delta, 'beta_B': beta_B, 't_black_south_rel': t_bs, 'turnout_shift': k}
     return Fit(world=world, cells=cells, params=params, diagnostics=diag)
