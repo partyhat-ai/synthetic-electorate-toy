@@ -36,3 +36,22 @@ def test_blend_weak_evidence_barely_moves():
     d = np.full(200, 0.3) + np.linspace(-0.05, 0.05, 200)
     out = blend({'draws': {'dt': d.copy(), 'dr': d.copy(), 'do': d.copy()}}, {'dr': (2.0, 5.0, 1)})
     assert abs(out['draws']['dr'].mean() - 0.3) < 0.01 and out['evidence_blend']['dr']['evidence_weight'] < 0.01
+
+
+def test_misread_forces_very_low():
+    """When half or more of the people interviewed took the news to be about the
+    other candidate, the tier is very-low whatever it started at; fewer misreads
+    only flag it (and over a quarter costs one step)."""
+    spec = {'kind': 'franchise', 'mode': 'agents', 'plausibility': 'documented'}
+    steady = {'n': 40, 'spans_zero': False, 'paraphrase_flip': False, 'exposed': False}
+    assert confidence(spec, None, None, steady | {'checked': 40, 'misread': 0}, False)['tier'] == 'high'
+    for wrong in (20, 31, 40):
+        c = confidence(spec, None, None, steady | {'checked': 40, 'misread': wrong}, False)
+        assert c['tier'] == 'very-low', (wrong, c)
+        assert 'misread-change' in c['flags']
+    c = confidence(spec, None, None, steady | {'checked': 40, 'misread': 4}, False)
+    assert c['tier'] == 'high' and 'misread-change' in c['flags']
+    assert confidence(spec, None, None, steady | {'checked': 40, 'misread': 12}, False)['tier'] == 'medium'
+    # A combination is as sure as its least sure what-if.
+    assert combine_tiers([confidence(spec, None, None, steady | {'checked': 4, 'misread': 2}, False),
+                          confidence(spec, None, None, steady, False)])['tier'] == 'very-low'
