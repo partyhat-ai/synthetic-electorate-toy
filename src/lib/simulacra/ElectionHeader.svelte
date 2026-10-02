@@ -95,7 +95,7 @@
     font-variant-numeric: tabular-nums;
   }
   .needed { margin: -2px 0 0; font-size: 12px; color: rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; }
-  /* The key to the map's flip mark, in its colour (black at 50%). */
+  /* The key to the map's flip mark: the same dot (black at 50%). */
   .flips .dot { display: inline-block; width: 7px; height: 7px; margin: 0 4px 0 1px; border-radius: 999px; background: #00000080; vertical-align: 0.5px; }
   .note { margin: 12px 0 0; max-width: 60ch; font-size: 15px; line-height: 1.45; color: rgba(0, 0, 0, 0.72); }
   .also { margin: 6px 0 0; max-width: 70ch; font-size: 12px; line-height: 1.45; color: rgba(0, 0, 0, 0.5); }

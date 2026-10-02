@@ -27,7 +27,7 @@ being ported next and its route may differ.
    person from that group.
 4. **History / Rerun.** After a rerun, this switch in the toolbar flips the
    portraits, map and dots between history and the rerun. Flipped states
-   pulse on the map.
+   carry a dot on the map.
 5. **The time bar** along the bottom moves between all 60 elections.
 
 Cameron's brief was one focused flow, ultra minimal. The version before this
@@ -54,7 +54,7 @@ All under `src/lib/simulacra/` unless noted.
 |---|---|
 | Page state, loading, reruns, what the robot says (`say()`), keys, layout CSS | the page (being ported) |
 | Portrait, winner ring and check, initials fallback, dark-mode photo fix | `Portrait.svelte` |
-| Tile map and flip marks | `MiniMap.svelte` (grid in `geo.ts`) |
+| Tile map and flip dots | `MiniMap.svelte` (grid in `geo.ts`) |
 | A group's row of 50 dots, its caption and "was …" line | `SliceRow.svelte` |
 | Robot slot and bubble | `WhatIf.svelte` |
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
