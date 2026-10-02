@@ -82,6 +82,8 @@
   /* The suggestions above, the field and Rerun beneath: both rows the
      column's full width, so the chip row ends at Rerun's right edge. */
   .compose { display: flex; flex-direction: column; align-items: stretch; gap: 8px; min-width: 0; }
+  /* On the stage the composer pins to the column's floor (WhatIf.svelte). */
+  :global(.whatif.stage) .compose { margin-top: auto; }
   .ask { display: flex; align-items: center; gap: 8px; min-width: 0; }
   /* The field: white on a hairline, a caret in the tint, its ring turning
      the tint while typing (the creator-rows search field's behaviour). */

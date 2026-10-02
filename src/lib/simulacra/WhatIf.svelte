@@ -117,8 +117,8 @@
     align-items: start;
     gap: 12px;
   }
-  /* Room for the robot to stand in. */
-  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); min-height: 220px; }
+  /* Room for the robot to stand in, feet on the field's baseline. */
+  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); align-items: end; min-height: 220px; }
   .bot {
     position: relative;
     height: 44px;
@@ -162,6 +162,11 @@
     --tint: #3876b7;
   }
   .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  /* On the stage the talk column fills the robot's height: the bubble pins to
+     the top and the composer to the floor, so a year with more chips or a
+     longer line never moves either while the time bar is scrubbed; a long
+     bubble grows the column downward, like any message. */
+  .stage .talk { align-self: stretch; }
   /* The robot's bubble: Messages' shape and tail, flat (no shadow). */
   .bubble {
     position: relative;

@@ -14,7 +14,7 @@
   import { replaceState } from '$app/navigation';
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
   import RobotFrame from '$lib/robot/RobotFrame.svelte';
-  import { type Nudge, nudgeToSlot, sameStage, stageInSlot } from '$lib/robot/stage';
+  import { type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
   import ElectionHeader from '$lib/simulacra/ElectionHeader.svelte';
@@ -82,20 +82,24 @@
   // window). The page measures the slot and stands the robot in it; once
   // drawn, the robot's anchors nudge its box once, so its feet sit on the
   // slot's floor. ──
-  /** The robot's box. */
-  let stage = $state<RobotStage | null>(null);
+  /** The robot's box, before its turn. */
+  let box = $state<RobotStage | null>(null);
   let measureFrame = 0;
   let nudge: Nudge = { x: 0, y: 0 };
   let nudged = false;
 
+  // The robot turns a little with the time bar (yawForYear), eased in the renderer.
+  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(page.year), ELECTION_YEARS.length));
+  const stage = $derived(box ? { ...box, yaw: yawNow } : null);
+
   function measureStage(): void {
     measureFrame = 0;
     if (!stageMode || !slotEl) {
-      stage = null;
+      box = null;
       return;
     }
-    const next = stageInSlot(new DOMRect(0, 0, innerWidth, innerHeight), slotEl.getBoundingClientRect(), nudge);
-    if (!sameStage(stage, next)) stage = next;
+    const next = stageInSlot(new DOMRect(0, 0, innerWidth, innerHeight), slotEl.getBoundingClientRect(), nudge, 0);
+    if (!sameStage(box, next)) box = next;
   }
 
   /** Measures on the next frame (once, however often it's asked). */
@@ -118,7 +122,7 @@
   function onRobot(anchors: RobotAnchors | null): void {
     const on = !!anchors;
     if (on !== robotShown) robotShown = on;
-    if (!anchors || nudged || !slotEl || !stage) return;
+    if (!anchors || nudged || !slotEl || !box) return;
     const d = nudgeToSlot(slotEl.getBoundingClientRect(), anchors);
     nudged = true;
     if (Math.abs(d.x) > 3 || Math.abs(d.y) > 3) {

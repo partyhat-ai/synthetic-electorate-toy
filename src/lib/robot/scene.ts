@@ -5,7 +5,9 @@ import {
   ACESFilmicToneMapping,
   Box3,
   type BufferGeometry,
+  Group,
   type Material,
+  MathUtils,
   Mesh,
   MeshStandardMaterial,
   type Object3D,
@@ -27,6 +29,7 @@ import { ATLAS, type Character } from './characters';
 import { createLighting, REACTOR_POWER } from './lighting';
 import type { RobotAnchors, RobotStage } from './messages';
 import { createMotion, type Motion } from './motion';
+import { easeToward } from './stage';
 
 export interface MountOptions {
   readonly canvas: HTMLCanvasElement;
@@ -90,6 +93,10 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
   composer.addPass(new RenderPass(scene, camera));
   composer.addPass(new OutputPass());
 
+  // The robot's turntable: mirrored and turned with the stage.
+  const hero = new Group();
+  scene.add(hero);
+
   const target = new Vector3();
   const lens: LensShift = { x: 0, y: 0 };
   const float = createFloat();
@@ -106,7 +113,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
   }
 
   function resetCamera(): void {
-    const framing = computeFraming(character, camera.aspect);
+    const framing = computeFraming(character, camera.aspect, stage().mirror);
     target.copy(framing.target);
     camera.position.copy(framing.position);
     lens.x = framing.shift.x;
@@ -164,7 +171,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
     root.scale.setScalar(scale);
     const center = box.getCenter(new Vector3());
     root.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale);
-    scene.add(root);
+    hero.add(root);
     modelHeight = size.y * scale;
 
     const materials = new Set<Material>();
@@ -200,6 +207,13 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       restagePending = false;
       fitRenderer();
     }
+    const s = stage();
+    const mirror = s.mirror ? -1 : 1;
+    if (hero.scale.x !== mirror) {
+      hero.scale.x = mirror;
+      if (model) resetCamera();
+    }
+    hero.rotation.y = easeToward(hero.rotation.y, MathUtils.degToRad(s.yaw), dt);
     motion?.update(dt);
     const glow = REACTOR_POWER * (1 + Math.sin(time * 2.3) * 0.06);
     for (const { mat, intensity } of emitters) mat.emissiveIntensity = intensity * glow;

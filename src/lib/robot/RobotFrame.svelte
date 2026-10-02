@@ -5,7 +5,8 @@
   //
   // Props
   //   stage    RobotStage | null  The box the robot stands in, CSS px from the
-  //                               window's bottom-right corner.
+  //                               window's bottom-right corner, with
+  //                               mirror and yaw (degrees, eased in the frame).
   //                               null: the frame's default corner box.
   //                               See stageInSlot in ./stage.ts.
   //   visible  boolean = true      false hides the frame and stops its render loop.

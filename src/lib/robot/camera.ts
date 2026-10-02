@@ -41,6 +41,17 @@ export interface Box {
 
 const UP = new Vector3(0, 1, 0);
 
+/** Azimuth reflected with the stage: a mirrored shot swings the other way. */
+export function mirroredAzimuth(azimuth: number, mirrored: boolean): number {
+  return mirrored ? -azimuth : azimuth;
+}
+
+/** A world-space camera offset reflected with the stage (x only). */
+export function mirroredOffset(offset: readonly [number, number, number], mirrored: boolean): [number, number, number] {
+  const [x, y, z] = offset;
+  return [mirrored ? -x : x, y, z];
+}
+
 /** Unit vector from the target to the camera: azimuth about world up from +Z, polar down from overhead (degrees). */
 export function orbitDirection(azimuth: number, polar: number): Vector3 {
   const az = MathUtils.degToRad(azimuth);
@@ -88,8 +99,8 @@ export function biasFraming(position: Vector3, target: Vector3, layout: Layout, 
   return pivotOnAxis(biased.clone().addScaledVector(direction, distance), direction, right, up, target.y, fov, aspect);
 }
 
-/** The character's framed shot for a stage of the given aspect. */
-export function computeFraming(character: Character, aspect: number): Framing {
+/** The character's framed shot for a stage of the given aspect, mirrored or not. */
+export function computeFraming(character: Character, aspect: number, mirrored: boolean): Framing {
   const layout = { ...DOCK_LAYOUT, zoom: DOCK_LAYOUT.zoom * character.zoom };
   const base = biasFraming(
     new Vector3(...BASE_SHOT.position),
@@ -102,9 +113,10 @@ export function computeFraming(character: Character, aspect: number): Framing {
   if (character.orbit) {
     const [azimuth, polar] = character.orbit;
     const depth = base.position.distanceTo(base.target);
-    position = base.target.clone().addScaledVector(orbitDirection(azimuth, polar), depth);
+    position = base.target.clone().addScaledVector(orbitDirection(mirroredAzimuth(azimuth, mirrored), polar), depth);
   }
-  const offset = new Vector3(...character.camOffset);
+  const [x, y, z] = mirroredOffset(character.camOffset, mirrored);
+  const offset = new Vector3(x, y, z);
   return { position: position.clone().add(offset), target: base.target.clone().add(offset), shift: base.shift };
 }
 

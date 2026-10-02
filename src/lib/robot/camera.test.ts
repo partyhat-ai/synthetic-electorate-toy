@@ -1,8 +1,51 @@
 import { PerspectiveCamera, Vector3 } from 'three';
 import { describe, expect, test } from 'vitest';
-import { BASE_SHOT, biasFraming, createFloat, orbitDirection, stageRect, viewOffset } from './camera';
+import {
+  BASE_SHOT,
+  biasFraming,
+  computeFraming,
+  createFloat,
+  mirroredAzimuth,
+  mirroredOffset,
+  orbitDirection,
+  stageRect,
+  viewOffset,
+} from './camera';
+import { ATLAS } from './characters';
 
 const ASPECT = 200 / 260;
+
+describe('mirroring', () => {
+  test('a mirrored stage swings the orbit the other way', () => {
+    expect(mirroredAzimuth(29.8, true)).toBe(-29.8);
+    expect(mirroredAzimuth(29.8, false)).toBe(29.8);
+  });
+
+  test('a mirrored stage reflects only the camera offset’s x', () => {
+    expect(mirroredOffset([3.3, 1, -2], true)).toEqual([-3.3, 1, -2]);
+    expect(mirroredOffset([3.3, 1, -2], false)).toEqual([3.3, 1, -2]);
+  });
+
+  test('the mirrored framing is the unmirrored one reflected in x', () => {
+    const plain = computeFraming(ATLAS, ASPECT, false);
+    const mirrored = computeFraming(ATLAS, ASPECT, true);
+    expect(mirrored.position.x - plain.position.x).toBeCloseTo(-2 * ATLAS.camOffset[0], 10);
+    expect(mirrored.target.x - plain.target.x).toBeCloseTo(-2 * ATLAS.camOffset[0], 10);
+    expect(mirrored.position.y).toBeCloseTo(plain.position.y, 10);
+    expect(mirrored.shift).toEqual(plain.shift);
+  });
+
+  test('a mirrored orbit is the plain orbit reflected in x', () => {
+    const withOrbit = { ...ATLAS, orbit: [30, 80] as const };
+    const plain = computeFraming(withOrbit, ASPECT, false);
+    const mirrored = computeFraming(withOrbit, ASPECT, true);
+    const plainDir = plain.position.clone().sub(plain.target);
+    const mirroredDir = mirrored.position.clone().sub(mirrored.target);
+    expect(mirroredDir.x).toBeCloseTo(-plainDir.x, 10);
+    expect(mirroredDir.y).toBeCloseTo(plainDir.y, 10);
+    expect(mirroredDir.z).toBeCloseTo(plainDir.z, 10);
+  });
+});
 
 describe('orbitDirection', () => {
   test('azimuth 0 at the horizon looks from the front (+Z)', () => {
@@ -59,7 +102,7 @@ describe('biasFraming', () => {
 });
 
 describe('stage box and lens', () => {
-  const stage = { right: 300, bottom: 40, width: 200, height: 260 };
+  const stage = { right: 300, bottom: 40, width: 200, height: 260, mirror: true, yaw: 40 };
 
   test('stageRect measures from the canvas’s bottom-right', () => {
     expect(stageRect(stage, 1200, 900)).toEqual({ left: 700, top: 600, width: 200, height: 260 });

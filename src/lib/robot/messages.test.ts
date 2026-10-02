@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { parseFrameMessage, parseHostMessage } from './messages';
 
-const stage = { right: 312, bottom: 40, width: 200, height: 260 };
+const stage = { right: 312, bottom: 40, width: 200, height: 260, mirror: true, yaw: 37.4 };
 
 describe('page → frame', () => {
   test.each([
@@ -21,7 +21,7 @@ describe('page → frame', () => {
 
   test.each([
     ['a string for a flag', { type: 'robot:walk', on: 'true' }],
-    ['a stage missing its height', { type: 'robot:stage', stage: { ...stage, height: undefined } }],
+    ['a stage missing its yaw', { type: 'robot:stage', stage: { ...stage, yaw: undefined } }],
     ['a stage with zero width', { type: 'robot:stage', stage: { ...stage, width: 0 } }],
     ['a stage with an infinite edge', { type: 'robot:stage', stage: { ...stage, right: Number.POSITIVE_INFINITY } }],
     ['a stage with NaN', { type: 'robot:stage', stage: { ...stage, bottom: Number.NaN } }],

@@ -15,13 +15,17 @@ const finite = z.number();
 
 /**
  * The box the robot is framed into, in CSS px inside the frame: `right` and
- * `bottom` from the frame's bottom-right corner.
+ * `bottom` from the frame's bottom-right corner. `mirror` reflects the robot
+ * (and the camera's sideways moves) left-right; `yaw` turns it about its
+ * vertical axis in degrees, eased toward in the renderer.
  */
 export const RobotStageSchema = z.object({
   right: finite,
   bottom: finite,
   width: finite.positive(),
   height: finite.positive(),
+  mirror: z.boolean(),
+  yaw: finite,
 });
 export type RobotStage = z.infer<typeof RobotStageSchema>;
 
