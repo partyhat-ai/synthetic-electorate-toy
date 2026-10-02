@@ -12,10 +12,13 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
     "lint": "biome lint --error-on-warnings .",
     "size": "node --experimental-strip-types scripts/size-check.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:py": "python3 -m pytest -q",
+    "gate": "pnpm lint && pnpm check && pnpm size && pnpm test && pnpm test:py"
   },
   "dependencies": {
-    "lucide-svelte": "^0.562.0"
+    "lucide-svelte": "^0.562.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",
