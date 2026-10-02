@@ -1,17 +1,16 @@
 import { describe, expect, test } from 'vitest';
+import { electionOf } from './history';
 import { candidateHues, onPaint, paint } from './palette';
 
 describe('candidateHues', () => {
   test('parties keep their colour; the 4th candidate and beyond fold into Other', () => {
     // 1860: Lincoln (R), Breckinridge (Southern Democrat), Bell, Douglas.
+    const e = electionOf(1860);
+    expect(e).not.toBeNull();
+    if (!e) return;
     const hues = candidateHues(
-      [
-        { key: 'A', party: 'republican' },
-        { key: 'B', party: 'democratic' },
-        { key: 'C', party: null },
-        { key: 'D', party: 'democratic' },
-      ],
-      { A: 180, B: 72, C: 39, D: 12 },
+      e.candidates.map((c) => ({ key: c.key, party: c.family })),
+      Object.fromEntries(e.candidates.map((c) => [c.key, c.ev])),
     );
     expect(hues.get('A')).toBe('red');
     expect(hues.get('B')).toBe('blue');
