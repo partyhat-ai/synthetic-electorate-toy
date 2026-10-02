@@ -133,6 +133,9 @@ returns the parsed answer or throws a `SimError` with a `reason`:
 - **Controls:**
   - Controls are 34–36px high, with a `#3876b7` focus ring.
   - `prefers-reduced-motion` turns off the dot, map and fade transitions.
+  - The time bar's sizes are CSS custom properties at the top of
+    `TimeBar.svelte`'s `.bar` (the tuned values; the old `?tuneTimeline`
+    panel is gone).
 - **Accessibility:** every control has a label; keep them meaningful.
 
 ## The robot

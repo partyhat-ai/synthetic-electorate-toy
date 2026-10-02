@@ -85,9 +85,9 @@
   /* On the stage the composer pins to the column's floor (WhatIf.svelte). */
   :global(.whatif.stage) .compose { margin-top: auto; }
   .ask { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  /* The field: the bubble's grey on a hairline, a caret in the tint, its
-     ring turning the tint while typing (the creator-rows search field's
-     behaviour). */
+  /* The field: Messages' entry capsule — white, an opaqueSeparator
+     hairline, a blue caret — whose ring turns the tint while typing (the
+     creator-rows search field's behaviour). */
   input {
     flex: 1;
     min-width: 0;
@@ -95,7 +95,7 @@
     padding: 0 14px;
     border: 1px solid var(--separator);
     border-radius: 999px;
-    background: var(--bubble);
+    background: #fff;
     color: var(--label);
     caret-color: var(--tint);
     font: inherit;
@@ -105,7 +105,7 @@
   input::placeholder { color: var(--label-3); }
   input:focus { outline: none; border-color: var(--tint); }
   input:disabled { opacity: 0.6; }
-  /* Rerun: the one filled accent, in the brand blue (white label, 4.7:1). */
+  /* Rerun: the send button — filled systemBlue, white, regular weight. */
   .run {
     display: inline-flex;
     align-items: center;
@@ -114,32 +114,32 @@
     padding: 0 18px;
     border: none;
     border-radius: 999px;
-    background: #3876b7;
+    background: var(--tint);
     color: #fff;
     font: inherit;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
   }
-  .run:hover { background: #2f66a0; }
-  .run:active { background: #285a8e; }
-  .run:disabled { opacity: 0.35; cursor: default; background: #3876b7; }
+  .run:hover { background: #0071eb; }
+  .run:active { background: #0062cc; }
+  .run:disabled { opacity: 0.35; cursor: default; background: var(--tint); }
   /* Nothing new to run: at rest, the button dims (pressing it shows the
      rerun already made). It brightens as soon as there's a change. */
   .run.rest { opacity: 0.6; }
-  /* Reset sits on the page's light grey, beside the dark field: text only. */
+  /* Reset: a plain text button in the tint. */
   .reset {
     height: 36px;
     padding: 0 10px;
     border: none;
     background: transparent;
-    color: #3876b7;
+    color: var(--tint);
     font: inherit;
     font-size: 12px;
     cursor: pointer;
     border-radius: 10px;
   }
-  .reset:hover { background: rgba(56, 118, 183, 0.08); }
+  .reset:hover { background: rgba(0, 122, 255, 0.08); }
   .reset:active { opacity: 0.6; }
   .run:focus-visible, .reset:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
 </style>

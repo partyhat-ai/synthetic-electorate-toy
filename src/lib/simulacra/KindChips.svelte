@@ -98,10 +98,9 @@
   .chips.l { --fl: var(--band); }
   .chips.r { --fr: var(--band); }
   .chips .chip { flex: none; }
-  /* The what-ifs: raised grey capsules with a lit top edge, glyphs in
-     --label-2. Hover lifts one a hair and lights its glyph; chosen, it sinks
-     to the bubble's grey with a tint ring and a check, so a choice reads
-     without competing with Rerun. */
+  /* The what-ifs: Messages' white capsules at rest, label text, glyphs in
+     the tint; hover lifts one a hair onto a soft shadow; a press dims it to
+     systemGray5. Chosen is filled: the tint, a white label and a check. */
   .chip {
     display: inline-flex;
     align-items: center;
@@ -110,9 +109,8 @@
     padding: 0 14px 0 12px;
     border: none;
     border-radius: 999px;
-    background: var(--fill);
+    background: #fff;
     color: var(--label);
-    box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
     font: inherit;
     font-size: 13px;
     font-weight: 500;
@@ -120,21 +118,20 @@
     cursor: pointer;
     transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3), opacity 0.15s ease, color 0.12s ease;
   }
-  .chip :global(svg) { color: var(--label-2); flex: none; transition: color 0.18s ease; }
-  /* Hover (pointers only): the chip lifts a hair onto a deeper shadow. */
+  .chip :global(svg) { color: var(--tint); flex: none; transition: color 0.18s ease; }
+  /* Hover (pointers only): the chip lifts a hair onto a soft shadow. */
   @media (hover: hover) {
     .chip:hover:not(:disabled):not(.on) {
-      background: var(--fill-press);
-      box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.1), 0 6px 14px -6px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 14px -6px rgba(0, 0, 0, 0.18);
       transform: translateY(-1px);
     }
-    .chip:hover:not(:disabled):not(.on) :global(svg) { color: var(--tint); }
   }
   .chip:active:not(:disabled):not(.on) { background: var(--fill-press); transform: scale(0.97); box-shadow: none; }
-  .chip.on { background: var(--bubble); color: #fff; box-shadow: inset 0 0 0 1.5px var(--tint); }
-  .chip.on :global(svg) { color: var(--tint); }
-  /* Chosen, not run yet: still raised, ringed in the tint, a dot in it. */
-  .chip.on.pending { background: var(--fill); }
+  .chip.on { background: var(--tint); color: #fff; }
+  .chip.on :global(svg) { color: #fff; }
+  /* Chosen, not run yet: still the rest white, ringed in the tint, a dot in it. */
+  .chip.on.pending { background: #fff; color: var(--label); box-shadow: inset 0 0 0 1.5px var(--tint); }
+  .chip.on.pending :global(svg) { color: var(--tint); }
   .chip.dim { opacity: 0.45; }
   .chip:disabled { cursor: default; }
   .chip:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }

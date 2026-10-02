@@ -147,22 +147,25 @@
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
-  /* The what-if section's controls are dark on the light page: the robot's
-     voice and the controls you answer it with, in the Test Chat's dark
-     materials (iOS system greys), so talking to the harness reads as a
-     different place from the record above it. Tokens, read by the pieces too:
-       --label / --label-2 / --label-3   text on the dark greys (92 / 62 / 42% white)
-       --separator                       hairlines
-       --tint                            #3876b7 lifted for dark surfaces (4.6:1 on --fill-press) */
+  /* The what-if section in HIG light mode, after iOS Messages: the robot's
+     bubble is an incoming message, the what-ifs and field are Messages'
+     white capsules and hairlines, and the one accent is iMessage blue
+     (#007AFF), on Rerun as on the send button. Messages sets its grey
+     incoming bubble (#E9E9EB) on white; this page is already about that
+     grey (#e5e5e5, systemGray5), so the bubble takes the white step up
+     instead. Tokens (iOS system colours), read by the pieces too:
+       --label / --label-2 / --label-3   label, secondaryLabel, tertiaryLabel
+       --separator                       opaqueSeparator
+       --tint                            systemBlue */
   .whatif {
-    --bubble: #262628;           /* iOS dark incoming bubble */
-    --label: rgba(255, 255, 255, 0.92);
-    --label-2: rgba(255, 255, 255, 0.62);
-    --label-3: rgba(255, 255, 255, 0.42);
-    --separator: rgba(255, 255, 255, 0.14);
-    --fill: #2c2c2e;             /* raised: chips at rest */
-    --fill-press: #3a3a3c;       /* raised further: hovers */
-    --tint: #6ea8e0;
+    --bubble: #fff;
+    --label: #000;
+    --label-2: rgba(60, 60, 67, 0.6);
+    --label-3: rgba(60, 60, 67, 0.3);
+    --separator: #c6c6c8;
+    --fill: #f2f2f7;             /* systemGray6: hovers */
+    --fill-press: #e5e5ea;       /* systemGray5: press */
+    --tint: #007aff;
   }
   .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   /* On the stage the talk column fills the robot's height: the bubble pins to
@@ -184,7 +187,7 @@
   }
   .bubble.busy { opacity: 0.85; }
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
-     filled with --bubble (#262628). */
+     filled with --bubble (#fff). */
   .bubble::after {
     content: '';
     position: absolute;
@@ -193,7 +196,7 @@
     width: 14px;
     height: 8px;
     transform: scaleX(-1);
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 93 76'%3E%3Cpath d='M-0.000,27.000 C12.839,31.371 39.956,53.698 40.1000,53.1000 C47.980,58.824 74.560,73.398 80.000,75.000 C85.440,76.602 89.403,76.321 92.156,73.836 C92.113,73.760 94.162,69.566 91.1000,64.1000 C88.060,59.218 84.265,53.211 82.000,49.000 C78.871,45.122 75.825,34.278 76.000,30.000 C75.936,25.444 77.127,19.864 78.1000,15.1000 C80.494,12.811 79.838,10.855 87.1000,2.1000 C64.644,-3.831 32.484,7.267 -0.000,27.000 Z' fill='%23262628'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 93 76'%3E%3Cpath d='M-0.000,27.000 C12.839,31.371 39.956,53.698 40.1000,53.1000 C47.980,58.824 74.560,73.398 80.000,75.000 C85.440,76.602 89.403,76.321 92.156,73.836 C92.113,73.760 94.162,69.566 91.1000,64.1000 C88.060,59.218 84.265,53.211 82.000,49.000 C78.871,45.122 75.825,34.278 76.000,30.000 C75.936,25.444 77.127,19.864 78.1000,15.1000 C80.494,12.811 79.838,10.855 87.1000,2.1000 C64.644,-3.831 32.484,7.267 -0.000,27.000 Z' fill='%23fff'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
     pointer-events: none;
   }
   .lines { animation: float-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
@@ -204,24 +207,23 @@
   .by { margin: 6px 0 0; font-size: 12.5px; color: var(--label-2); }
   .aside { margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--label-2); }
   .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  /* In the bubble: text buttons on a hairline; the primary is the one
-     light thing, white on the dark. */
+  /* In the bubble: tinted text buttons on a hairline, the primary filled. */
   .act {
     height: 30px;
     padding: 0 13px;
     border: 1px solid var(--separator);
     border-radius: 999px;
     background: transparent;
-    color: var(--label);
+    color: var(--tint);
     font: inherit;
     font-size: 13px;
     cursor: pointer;
   }
   .act:hover { background: var(--fill); }
   .act:active { background: var(--fill-press); }
-  .act.primary { background: #fff; border-color: #fff; color: #000; }
-  .act.primary:hover { background: #e5e5ea; }
-  .act.primary:active { background: #d1d1d6; }
+  .act.primary { background: var(--tint); border-color: var(--tint); color: #fff; }
+  .act.primary:hover { background: #0071eb; }
+  .act.primary:active { background: #0062cc; }
   .act:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) {
     .bubble { transition: none; }

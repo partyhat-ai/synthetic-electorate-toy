@@ -133,14 +133,22 @@
 </div>
 
 <style>
+  /* The tuned sizes (settled with the old ?tuneTimeline panel), in one place. */
   .bar {
+    --thumb: 28px;
+    --track: 4px;
+    --tick: 4px;
+    --story-tick: 8px;
+    --label-size: 11px;
+    --label-gap: 20px;
+    --bar-height: 68px;
     display: flex;
     align-items: center;
     gap: 14px;
     max-width: 980px;
     margin: 0 auto;
     padding: 0 16px;
-    height: 68px;
+    height: var(--bar-height);
   }
   .steps { display: flex; gap: 2px; }
   .icon {
@@ -153,10 +161,11 @@
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: rgba(255, 255, 255, 0.75);
+    color: #007aff;              /* bar buttons take the tint (HIG) */
     cursor: pointer;
   }
-  .icon:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  .icon:hover:not(:disabled) { background: rgba(0, 122, 255, 0.08); }
+  .icon:active:not(:disabled) { opacity: 0.5; }
   .icon:disabled { opacity: 0.3; cursor: default; }
   .icon:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   /* The hit area is the whole band, not just the rail. */
@@ -177,41 +186,42 @@
   .rail {
     position: relative;
     width: 100%;
-    height: 4px;
+    height: var(--track);
     margin-top: -12px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(120, 120, 128, 0.2);   /* systemFill: the track */
   }
-  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.7); }
+  /* The minimum track, in the tint (UISlider). */
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: #007aff; }
   .tick {
     position: absolute;
     top: 9px;
     width: 1px;
-    height: 4px;
+    height: var(--tick);
     margin-left: -0.5px;
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(60, 60, 67, 0.29);    /* separator */
     pointer-events: none;
   }
-  .tick.story { height: 8px; width: 2px; margin-left: -1px; background: rgba(255, 255, 255, 0.55); border-radius: 1px; }
+  .tick.story { height: var(--story-tick); width: 2px; margin-left: -1px; background: rgba(60, 60, 67, 0.6); border-radius: 1px; }
   .label {
     position: absolute;
-    top: 20px;
+    top: var(--label-gap);
     transform: translateX(-50%);
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: var(--label-size);
+    color: rgba(60, 60, 67, 0.6);           /* secondaryLabel */
     font-variant-numeric: tabular-nums;
     pointer-events: none;
   }
   .thumb {
     position: absolute;
     top: 50%;
-    width: 22px;
-    height: 22px;
-    margin: -11px 0 0 -11px;
+    /* UISlider's thumb: 28pt, white, a hairline and a soft double shadow. */
+    width: var(--thumb);
+    height: var(--thumb);
+    margin: calc(var(--thumb) / -2) 0 0 calc(var(--thumb) / -2);
     border-radius: 999px;
-    /* White on the dark bar: the inverse of the page it sits on. */
     background: #fff;
-    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 3px 8px rgba(0, 0, 0, 0.15), 0 3px 1px rgba(0, 0, 0, 0.06);
     cursor: grab;
   }
   .thumb:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
@@ -228,6 +238,7 @@
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
   }
   .disabled .slider { cursor: default; opacity: 0.5; }
   @media (max-width: 560px) {
