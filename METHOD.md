@@ -5,6 +5,7 @@ This covers the harness behind `/api/simulacra`.
 - **This document:** every assumption, data source, equation and limitation,
   plus the confidence tier for each kind of what-if.
 - **`EVAL.md`:** what the 1920 prototype got right and wrong.
+- **`BUDGET.md`:** cost.
 
 Tags follow the research package:
 - **[V]** verified by download or fetched page

@@ -2,14 +2,16 @@
 
 This is a running log. Every known inaccuracy, weak spot and judgment call
 behind Simulacra Americana's numbers and words goes here: our own mistakes,
-the data's, and the model's. Each entry has a next step. When it's done, mark
-it fixed; don't delete it.
+the data's, and the model's.
+
+Two uses:
+1. **To improve.** Each entry has a next step. When it's done, mark it fixed;
+   don't delete it.
+2. **To disclose.** The summary just below is written to be lifted into the
+   page's About popover or a public method page.
 
 **How to add an entry:**
-- Add it at the end with the next ID in its series, a severity, a status and
-  a location. Series: A process, B assumptions, C data, D the AI agents,
-  E counterfactual fictions, F product and copy, G reproducibility,
-  H historical evidence.
+- Give it the next ID in its section, a severity, a status and a location.
 - Say what is wrong, why it matters, and what would fix it.
 - Log it when it's found, not when it's convenient. An entry that makes us
   look bad is the point of this file.
@@ -24,12 +26,116 @@ stay disclosed).
 
 ---
 
-## Entries
+## Public disclosure summary (draft copy)
+
+> Every rerun starts from the real 1920 result and reproduces it exactly. The
+> counts come from a statistical model of the 1920 census and the certified
+> returns, not from an AI.
+>
+> AI stand-ins are used for two things: how people's minds would change, and
+> the quotes. The people are invented. Their circumstances come from dated
+> 1920 newspapers.
+>
+> The AI already knows who won in 1920, and our tests show it can't be made
+> to forget. So we only use how its answers change, never what they are.
+>
+> Some things we can't measure well:
+> - How Black voters split in 1920. This alone moves the "Enforce the 15th
+>   Amendment" rerun by about 30 electoral votes.
+> - Exactly how many women voted in each state.
+> - Anything about what people cared about. Those reruns are low confidence.
+>
+> The ranges we show cover the uncertainty we can measure, not all of it.
+
+---
+
+## A. Intellectual honesty: process
 
 **A1 · Medium · by design · `evaluate.py`, `benchmarks.py`**
 The 1920 checks aren't blind. Their author knew the standard 1920
 literature: a Harding landslide, women voting below men, Black Southerners
 excluded. The thresholds were set with that knowledge.
+
+**A2 · High · open · `backbone.py`, `paired.py`, `evaluate.py`**
+Nine modelling and analysis changes were made after seeing the output they
+changed (EVAL.md, deviations 1–9). None moved a threshold, and each is
+logged, but together they are a large garden of forking paths. Three of them
+changed a result's direction or its pass/fail status:
+- the B2 bug fix, fail → pass;
+- β_B's region intercepts, which flipped its sign from −1.5 to +0.5;
+- the Black Southern choice rule.
+
+**Next:** freeze the model code by hash in the run manifest, and require a
+pre-registered amendment before any backbone change.
+
+**A3 · Medium · open · `EVAL.md` N1**
+N1's denominator was realigned after the first result: citizens → all adults
+21+, to match Corder–Wolbrecht. The realignment is correct, since the
+benchmark's own counts prove its definition. But it was found because the
+first result looked bad. It still fails, and both versions are reported.
+
+**A4 · High · open · β_B, `EVAL.md`**
+We chose the region-intercept specification partly because its answer looked
+more plausible. It lands between the regression, which is implausible, and
+the prior, which is documented history. It is the least-bad choice, not a
+neutral one.
+
+**Next:** publish both versions, or get a real estimate (see C1).
+
+**A5 · Medium · open · `result.drawsWon`**
+"Cox wins in 0 of 400 draws" sounds more certain than it is. The draws cover
+parameter and population noise only. They don't cover model-structure
+choices:
+- the κ assumption
+- the β_B prior
+- the 80% accounting bound
+- the smoothing
+
+N1's failed coverage is direct evidence that the intervals are too narrow.
+
+**Next:** add structural variants to the draws, or say "0 of 400 draws of
+this model".
+
+**A6 · Medium · open · A4 stereotype audit**
+The "pass" (0 of 66 flagged) comes from a regex. No person read the 66
+reasons. Don't cite it as an audit until someone has.
+
+**A7 · Low · fixed · `NOTE-FOR-UI-FROM-HARNESS.md`**
+The first draft of the UI note showed invented example numbers ("fails 2 of
+17 checks", "318–352") that looked like results. They were replaced with the
+real figures.
+
+**A8 · Low · fixed · session summary**
+The first research prompt pointed to a data folder that doesn't exist
+(`resetion_sim_data`). The data used is in
+`research_notes/historical_election_sim_data`.
+
+**A9 · High · fixed (requests already sent) · data-fetch scripts**
+During the all-years build, three agents (G, C and E) put the user's email
+address in the HTTP User-Agent of requests to Wikipedia and loc.gov, as a
+"contact" string. E also sent it in two manual curl probes. The user's
+address must never go to an unrelated service. It was removed from every
+script, which now send a generic User-Agent, and E's running 1932 corpus
+build was restarted from its HTTP cache. The requests already sent can't be
+recalled.
+
+**Next:** no contact address in any fetcher; check the User-Agent whenever a
+fetch script is reviewed.
+
+**A10 · Medium · fixed · `pipeline.py` verify, `benchmarks.py`**
+`Run.verify` read the Corder–Wolbrecht held-out benchmark file directly,
+outside the evaluate stage, so `test_benchmarks_isolated` failed. Found while
+porting to the clean repo. The read now goes through
+`benchmarks.corder_wolbrecht_any_year()`, and `check.json` is byte-identical.
+The isolation test allows benchmark imports in exactly two places in
+`pipeline.py`: verify and evaluate.
+
+**Next:** decide whether verify should see the benchmark at all, or move that
+check into evaluate.
+
+---
+
+## B. Assumptions standing in for evidence
 
 **B1 · High · open · `backbone.py` T1–T2**
 Men's turnout is assumed to have changed from 1916 to 1920 by the same amount
@@ -62,85 +168,6 @@ choices would change South Carolina and Mississippi.
 The undercount CVs (2–8%) are assumptions, not estimates. The Black 1920
 undercount is documented in demographic literature we didn't retrieve.
 
-**C1 · High · open · Black voters' choice (β_B)**
-State returns can't identify it. The regression says Black voters leaned
-toward Cox (−3.4 ± 1.9 logit), which contradicts the documented history. The
-published estimate leans on a subjective prior. The research agents found no
-documented 1920 estimate; the only source was Du Bois (1928), with no
-counts.
-
-**C2 · Medium · by design · labels**
-The Algara–Amlani county sums don't match official totals in 14 states for
-1920:
-- Maryland's Baltimore row double-counts, inflating the state 40–53%.
-- In Vermont, the Republican vote sits in "other".
-- New Mexico is missing a county.
-- Maine's Cox vote is 17.6% high.
-
-The House Clerk's 1921 table was used instead. **1916 has only one
-cross-check source (Wikipedia)**, and 1916 anchors the whole natural
-experiment.
-
-**C3 · Medium · open · franchise conflict**
-Gray–Jenkins codes women as able to vote in Georgia and Mississippi in 1920.
-National Park Service pages say they couldn't. We follow NPS. A Smithsonian
-snippet also names Arkansas and South Carolina; it's unverified and not
-coded.
-
-**C4 · Medium · open · Teele suffrage dates**
-- Ohio is coded as presidential suffrage from 1917. We believe, **without
-  verification**, that Ohio's 1917 law was overturned by referendum, which
-  would make 1919 the real date. It doesn't affect 1920 eligibility.
-- Arizona is coded 1910, before statehood in 1912.
-- Arkansas and Texas's 1917 primary-only suffrage is excluded.
-
-**C5 · Medium · by design · census transcription**
-The 1920 voting-age tables were read by eye from scans, because OCR confused
-3/8, 9/0 and 5/6. Thirteen ambiguous digits were resolved against the
-tables' own sums. Every state matches its printed totals, but a
-compensating pair of errors would pass that check.
-
-**C6 · Medium · open · 1910 women**
-Citizenship wasn't asked of women in 1910. The split is borrowed from men of
-the same state (wives took their husbands' status before 1922).
-
-**C7 · Low · open · census gaps**
-- Delaware, New Hampshire and Vermont print no "all other races" row; those
-  cells are 0.
-- There is no age-band table.
-- DC is excluded, since it had no electors in 1920.
-
-**C8 · Medium · by design · Corder–Wolbrecht**
-The state and pooled women's-turnout figures we compare against are **our
-own aggregation** of their unit-level estimates, not numbers they published.
-Their deposit covers only CT, IL, MA, MI and NY.
-
-**A2 · High · open · `backbone.py`, `paired.py`, `evaluate.py`**
-Nine modelling and analysis changes were made after seeing the output they
-changed (EVAL.md, deviations 1–9). None moved a threshold, and each is
-logged, but together they are a large garden of forking paths. Three of them
-changed a result's direction or its pass/fail status:
-- the B2 bug fix, fail → pass;
-- β_B's region intercepts, which flipped its sign from −1.5 to +0.5;
-- the Black Southern choice rule.
-
-**Next:** freeze the model code by hash in the run manifest, and require a
-pre-registered amendment before any backbone change.
-
-**A3 · Medium · open · `EVAL.md` N1**
-N1's denominator was realigned after the first result: citizens → all adults
-21+, to match Corder–Wolbrecht. The realignment is correct, since the
-benchmark's own counts prove its definition. But it was found because the
-first result looked bad. It still fails, and both versions are reported.
-
-**A4 · High · open · β_B, `EVAL.md`**
-We chose the region-intercept specification partly because its answer looked
-more plausible. It lands between the regression, which is implausible, and
-the prior, which is documented history. It is the least-bad choice, not a
-neutral one.
-
-**Next:** publish both versions, or get a real estimate (see C1).
-
 **B7 · Low · open · `agents.py`**
 Personas carry imputed details:
 - the household economy (farm, wage, trade or proprietor);
@@ -167,445 +194,6 @@ they still run with no alien voting.
 **B9 · Low · open · naturalized choice**
 Naturalized voters share their state's partisan split. The model has no
 separate estimate.
-
-**C9 · Low · open · platforms**
-- The American Presidency Project dates are convention start dates, not
-  adoption dates.
-- The Socialist text is a pre-adoption newspaper draft.
-- The Farmer-Labor planks are an AP summary.
-
-**C10 · Low · open · treaty facts**
-Sources disagree on:
-- the date of one November 1919 vote;
-- whether the March 1920 vote carried the reservations. FRUS says yes, and
-  one senate.gov page says no.
-
-**C11 · Medium · by design · corpus**
-- 87 of 89 excerpts have bracketed OCR fixes, so they aren't verbatim.
-- 29 items were excluded for naming a candidate or party.
-- Coverage is thin: 1 usable Kansas item for women already voting in the
-  West; no Midwestern or Western items on Black registration.
-- Some items quote officials stating white-supremacist aims. They are kept
-  as documents of the barriers, and are period voices, not neutral fact.
-
-**C12 · Low · open · leakage labelling**
-1920 uses the 1920 census, published 1921–23, after the election. Results
-are labelled `mode: truth`. Strict mode (1910 aged) isn't run.
-
-**D1 · High · open · backend**
-The prototype's answers came from 9 Claude Code subagents, not independent
-API calls:
-- 18–59 prompts shared one context;
-- the Claude Code system prompt surrounded them;
-- the model version behind "sonnet" and "opus" isn't recorded;
-- one subagent **scripted 28 of 56 probe answers**;
-- one built answers with a helper script;
-- one says its later answers got generic.
-
-**No agent-layer number should be cited until it is rerun on the API.**
-
-**D2 · High · by design · memorization**
-56 of 56 probes identified 1920, both candidates and Harding's win.
-Blinding doesn't work for 1920. The control answers are exposed, and only
-their paired changes are used.
-
-**D3 · High · open · homogenization**
-In 90% of cohorts with a mixed real split, every agent gave the same answer.
-The agents compress variation, so they can't stand in for how a group split.
-
-**D4 · Medium · open · turnout overstatement**
-Agents say they'd vote about 12 points more often than the calibrated
-backbone. For women in the benchmark states it is 15.5 points.
-
-**D5 · Medium · open · self-de-blinding**
-25% of answers name a party that the blinded briefs never named. Quotes are
-published with names restored, so a reader can't tell which words the model
-supplied from memory.
-
-**Next:** flag quotes that contain inferred party names.
-
-**D6 · Medium · open · sample size**
-With 4–5 agents per cohort, the pre-registered shrinkage (pseudo-count 8)
-pulls every cohort's effect 57–67% toward its region. Cohort differences
-are mostly unmeasured.
-
-**D7 · Low · fixed in p2 · prompt bugs**
-Three bugs in the p1 prompts:
-- **Non-citizen women's briefs contradicted themselves.** They were told
-  "state law lets women vote". Subagents caught it; those pairs are
-  excluded.
-- **Dates didn't line up.** Briefs were dated 30 October but included items
-  up to 1 November.
-- **Surnames didn't fit their groups.** One agent is "Mary Lindqvist", a
-  Black North Carolina woman.
-
-The p1 answers stand as recorded.
-
-**D8 · Medium · open · Opus disagreement**
-On the League what-if, Sonnet's shift toward Cox is −0.18 logit and Opus's
-is −0.03 on the same people. They agree on sign, not size. The published
-effect pools them.
-
-**E1 · by design · `whatifs.py` `fifteenth`**
-The brief says the Supreme Court struck down Southern poll taxes and
-registration tests in 1919, and federal registrars were sent. This mechanism
-is invented to make the world internally consistent. It happened in no form
-in 1919.
-
-**E2 · by design · `league`**
-"The United States took its seat in the League of Nations this spring" is
-invented. The real Senate vote on 19 March 1920 failed, 49–35. We also
-assume both parties would drop the League from their platforms.
-
-**E3 · by design · `no-19th`**
-"Tennessee voted it down" is invented. Tennessee ratified on 18 August 1920.
-Women in 27 states keep the presidential vote under their own state laws.
-
-**E4 · by design · the people**
-Every person, name and quote is invented. Only their circumstances (census
-cells, dated newspaper items) are documented. Quotes are voiced by a model
-that knows the outcome (D2).
-
-**G1 · Medium · fixed · `config.py`**
-A run's id used to hash its config and data, **not the code**. The
-`1920-bcbd86b43f` bundle was produced by code changed after its requests
-were planned and answered (p1 → p2, deviations 1–9), so that run id can't be
-regenerated from today's code with identical results.
-
-**Fixed:** `run_id` now also hashes `simharness/*.py`, so a code change gives a
-new run id. Runs recorded before the change keep their old ids.
-
-**G2 · Low · open · timing**
-The backbone was refitted after the agent answers existed. The cohort bias
-(A1) and shrinkage use the final backbone, not the one in place when the
-requests were planned.
-
-**G3 · Low · open · environment**
-The installed Anthropic SDK is 0.46, which predates `output_config`. The API
-backends need `anthropic>=1.0`. They are written but untested against the
-live API.
-
-**D9 · Medium · open · quick run: recall probe**
-The quick run (Haiku, 2 agents): the recall probe named 1920, both
-candidates and the winner at 95% confidence from the blinded brief. One
-probe, but it matches L1's standing exposure.
-
-**D10 · Low · open · quick run: state-law suffrage in `no-19th`**
-In the `no-19th` counterfactual the Indiana woman still answered
-able_to_vote=yes, reasoning from Indiana's 1919 presidential-suffrage law.
-The Black North Carolina woman answered no in control, `no-19th` and
-`league`, and yes only under `fifteenth`. Plausible, but the `no-19th` brief
-should say explicitly whether state-law suffrage survives.
-
-**D11 · Medium · fixed in p3 · a quote named a ballot label**
-Rung 1 (run `1920-4502a6f977`): a quote named the blinded ballot label ("K
-says the money got too loose…", south:M:native_white-0). The page would
-show a meaningless letter to readers. p3 tells agents to name candidates by
-description, never by label, in `quote`, and any label left is mapped back
-to a name before a quote is used.
-
-**D12 · Medium · open · wording moved results more than the what-if**
-Rung 1: the League effect's sign flips by paraphrase (dr −0.61, +0.49, +0.03
-for paraphrases 0/1/2, n = 12 agents). Two single-agent flips go in
-opposite directions (a Midwest woman R→D; a Northeast man D→R). The national
-dr interval [−0.19, +0.15] spans zero. At n = 12 the paraphrase spread (A3)
-is larger than any effect.
-
-**D13 · Low · open · quote length**
-Prompt p3 (run `1920-423843d9ec`): no quote used a letter label (0 of 24,
-fixes D11). Haiku ignored the 25-word cap (mean 30.5, max 40 words). A hard
-limit needs a trim at publish or a schema maxLength, not prompt wording.
-
-**A5 · Medium · open · `result.drawsWon`**
-"Cox wins in 0 of 400 draws" sounds more certain than it is. The draws cover
-parameter and population noise only. They don't cover model-structure
-choices:
-- the κ assumption
-- the β_B prior
-- the 80% accounting bound
-- the smoothing
-
-N1's failed coverage is direct evidence that the intervals are too narrow.
-
-**Next:** add structural variants to the draws, or say "0 of 400 draws of
-this model".
-
-**A6 · Medium · open · A4 stereotype audit**
-The "pass" (0 of 66 flagged) comes from a regex. No person read the 66
-reasons. Don't cite it as an audit until someone has.
-
-**A7 · Low · fixed · `NOTE-FOR-UI-FROM-HARNESS.md`**
-The first draft of the UI note showed invented example numbers ("fails 2 of
-17 checks", "318–352") that looked like results. They were replaced with the
-real figures.
-
-**A8 · Low · fixed · session summary**
-The first research prompt pointed to a data folder that doesn't exist
-(`resetion_sim_data`). The data used is in
-`research_notes/historical_election_sim_data`.
-
-**F1 · Medium · open · `sample.js` (the UI's file)**
-The `no-19th` detail, "fifteen states that already let them", counts only
-full-suffrage states. Twenty-seven states had given women the presidential
-vote. Flagged in the UI note; not edited.
-
-**F2 · Medium · open · `sample.js` women slice**
-It treats Georgia and Mississippi women as voting in 1920.
-
-**F3 · Medium · open · `stories.js` / `HANDOFF-SIMULATION.md`**
-HANDOFF-SIMULATION lists story facts that are still unverified: 1800, 1860,
-1876, 1896, 1912, 1948 ("bubbles in a bar of soap"), 1960, 1968, 2000 and
-2016. This harness didn't check them.
-
-**F4 · Low · open · `history.js`**
-Its known approximations are listed in HANDOFF-SIMULATION: split
-delegations, 1836, 1872, 1864, faithless electors. The totals aren't yet
-checked against NARA for every year. For 1920, 404–127 matches NARA.
-
-**F5 · Medium · open · page slices**
-The five 1920 groups are a partition, but they carry small misfits:
-- "White Southerners" includes the few American Indian and Asian adults in
-  the South.
-- "Men outside the South" includes Black Northern men.
-- Poor white Southerners kept out by poll taxes show as "stayed home", not
-  "couldn't vote".
-
-**F6 · Low · open · verdict copy**
-- A multi-what-if verdict concatenates single-what-if sentences, so a
-  combination can say "3.1 million women" measured in a different world
-  from the combined one.
-- The League verdict's "2.7 points" is measured in the point draw only.
-
-**E5 · by design · compiled what-ifs (`harness/whatifs/*.json`)**
-A typed what-if's facts, ballot line and assumption are written by a model
-(`scenario.py`, compiler c1/c2). They are checked for nominee and party
-names, and are exploratory, never pre-registered. Post-hoc edits:
-- **`charlie-chaplin-runs`**: the positions carried "(documented)" and
-  "(inferred…)" notes, which voters saw in the brief. The notes were
-  stripped, "Would likely speak for" became "Speaks for", and the
-  interviews were re-asked.
-- **`influenza-returns-in-october-1920`**: see D17.
-
-**E6 · by design · `charlie-chaplin-runs`**
-Chaplin was born in England and was not a citizen, so the Constitution
-barred him. The ballot line is modelled anyway, flagged
-`ineligible-candidate`. His positions are inferred, since nothing on record
-predates 1920, and flagged `positions-inferred`.
-
-**G4 · Low · by design · answer cache (`llm.AnswerCache`)**
-Identical requests reuse earlier live answers across runs. A request is
-identical when it has the same model, system, user text and schema; meta,
-run id and prompt-version labels are ignored. So p4 requests whose text
-equals p3's reuse p3 answers. Transcript and mock answers are never cached.
-Each answer records `cached_from`.
-
-**G5 · Medium · open · evidence reproducibility**
-Web search results change over time. The saved
-`whatifs/evidence/<key>.json` is the record: queries, every source, the
-cited text and the notes. It is hashed into the run id. Re-researching
-(`--refresh`) makes a new instrument.
-
-**H1 · by design · evidence never enters a brief**
-Research results are used only after the interviews:
-- **Agreement:** do the interviews move votes or turnout the way the record
-  does?
-- **Blend:** a prior on cohort effects, for compiled, exploratory what-ifs
-  only.
-- **Confidence tier.**
-
-Pre-registered what-ifs are never blended; their numbers follow
-METHOD.md.
-
-**H2 · Medium · open · source grading**
-Tiers come from a domain list (`evidence.TIER_A`, `TIER_B`; everything else,
-including Wikipedia, is C). A .edu course page counts as A. A finding's
-grade is its tier × the extractor's match judgement (same-event …
-distant). Neither is validated.
-
-**H3 · Medium · open · blend weights**
-Evidence sd grows as 1/√grade. The interview sd is floored at 0.2 logit,
-because a bootstrap over two or three people understates model error. Weak
-evidence barely moves numbers: Chaplin's evidence weight is under 1%.
-
-**H4 · Medium · open · confidence tiers**
-`evidence.confidence` is a rule set:
-- a kind's base tier;
-- plausibility and anachronism;
-- evidence strength;
-- agreement;
-- interview stability, for agent-mode what-ifs only;
-- the number of interviews.
-
-"Extremely low" (very-low) reaches the page as `confidence: low`, plus
-`confidenceTier` and a sentence in the summary. The rules were written
-after seeing the first three results, and nothing calibrates them.
-
-**D14 · Medium · open · paraphrase assignment**
-An agent's question wording is `n % paraphrases`, where n is its place in the
-run's sorted agent list. Adding a cohort renumbers everyone after it, so each
-of them gets a different question. The live config
-(`configs/live-1920.json`) keeps rung 1's six cohorts so answers stay
-comparable and cached. Fix before widening: key the paraphrase on the
-agent id.
-
-**D15 · Medium · fixed · evidence extraction**
-- **Haiku extracted nothing.** Given rich research notes (Christensen's
-  19% in Washington, Roosevelt 1912, La Follette 1924), it returned zero
-  findings. It judged every analogue unreliable itself.
-- **Sonnet ran out of room.** At 4,000 tokens its JSON was truncated, and
-  the crash lost the call's usage. About $0.052 is entered in the ledger as
-  an estimate.
-
-Now: Sonnet with 8,000 tokens, at most 12 findings, and an instruction not
-to judge reliability, since the pipeline grades it. A truncated answer keeps
-its usage.
-
-**D16 · Medium · fixed · research without searching**
-The first League research call ran no searches and answered from memory
-($0.02). Grounding correctly dropped every claim, since none had a source.
-The prompt now requires at least two searches, and a turn with none is
-retried once.
-
-**G6 · Low · open · spend ledger**
-`sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
-backfilled from runs' usage, and D15's $0.052 is estimated.
-
-**D17 · Medium · fixed (c2), hand-edited · compiler dropped topics**
-The flu what-if's compile dropped T2 (League) and T3 (prices) as "crowded
-out". Its counterfactual brief then differed from the control by more than
-the change. The spec was edited by hand to drop nothing, and its 12
-interviews were re-asked. Compiler c2 drops only topics that the settled
-facts make false.
-
-**D18 · Medium · open · a quote named a nominee**
-A flu counterfactual quote said "That fellow Cox" (south:M:native_white-1)
-from a blinded brief. This is more evidence of D2 and L1: the model knows
-1920. Quotes aren't scanned for real names before publishing.
-
-**D19 · Low · open · choice and quote disagree**
-Haiku sometimes picks one candidate and quotes for the other:
-- Chaplin run, midwest man: choice Harding, quote "I'm going with the
-  Democrat".
-- Flu run, Arthur Hayes: choice Cox, quote praising "the Republican".
-
-The counts use the choice and p_choice; the page shows the quote.
-
-**D20 · Medium · fixed · evidence sign**
-The extractor recorded the historical direction as the scenario's effect.
-"The League hurt Cox" became toward-R for a scenario that removes the
-League. Findings now carry a `relation` field (like-scenario,
-reverses-scenario or context), and the code flips reversed findings. Context
-findings (who won, overall turnout) inform the reader but not the numbers.
-
-**D21 · High · fixed (p5, compiler c3) · voters misread whom the news was about**
-In the first Harding-disclosure run, the brief identified the nominee only
-by descriptor ("the candidate of the party that has held a majority in
-Congress…"). Most of the 12 interviewed people blamed the other candidate.
-The result was a spurious 7.8-point move *toward* Harding.
-
-Now:
-- **News on the line.** News about one nominee is printed on that
-  nominee's own ballot line (`about`, `nominee_news`).
-- **Manipulation check.** Each such counterfactual answers `news_about`.
-  Misreaders are left out of the counts, kept in the interviews with
-  `misread: true`, and flagged in confidence (`misread-change`). At least
-  half misreading forces "extremely low".
-
-The rerun: 0 of 12 misread. The spec was recompiled with c3 and its key,
-label and words kept, a post-hoc edit.
-
-**D22 · Medium · fixed · evidence read by party, not role**
-Findings from other elections were signed by that year's party. Cleveland
-in 1884, a scandal-hit *Democrat*, therefore counted as "toward D" for a
-scenario about a scandal-hit *Republican*. Findings now carry
-`role_direction` (toward or away from the candidate in the same role, plus
-an `affected` measure), and the code maps them onto the scenario's
-nominee.
-
-**D23 · Medium · open · Harding-disclosure rerun: one uniform swing, quotes elsewhere**
-- **The swing is uniform.** Midwestern men go from 0.70 to 0.32 (Harding's
-  two-party share), Southern men from 0.68 to 0.31, and every region falls
-  to about 0.31–0.33. That looks like one model reaction stamped on everyone
-  (A2 homogenization), not differences between groups.
-- **The quotes mostly talk about prices.** Several switchers' quotes never
-  mention the news, even though their choice changed.
-- **Some quotes back the candidate the person didn't choose.** Albert
-  Jackson and Lillian Jones each chose Cox but quoted "the Republican" with
-  approval. This is D19 again: "the Republican" in a blinded quote is the
-  model guessing which label is which.
-
-**C13 · Medium · by design · 1924 population**
-There is no 1924 census. Each cell's 1920 count is aged to 4 November 1924
-along its own 1910→1920 trend (`data.population(1924)`). Things this misses:
-- the Cable Act (1922, married women's citizenship);
-- naturalizations after 1920;
-- the Indian Citizenship Act (June 1924).
-
-**C14 · Medium · by design · 1924 backbone (`backbone.carry_forward`)**
-1924 has no natural experiment of its own, so it carries 1920's structure
-forward:
-- the 1920 fit's per-cell turnout, women's tilt δ, Black voters' β_B and
-  Black Southern exclusion;
-- one turnout shift per state, across all groups;
-- the same exact share calibration as 1920.
-
-Checks:
-- **Reproduction:** every 1924 state within 0.41 votes, 382–136–13 in
-  every draw.
-- **Held-out benchmark:** Corder–Wolbrecht 1924 women's turnout on their
-  denominator gives MAE 3.6 points, against 3.2 for 1920. CT and MA women
-  run high and men low, as in 1920.
-
-Within a state, La Follette's share is spread evenly across groups. Who
-his voters were inside a state isn't identified.
-
-**C15 · Medium · open · 1924 briefs have no dated newspaper items**
-There is no 1924 corpus yet, so 1924 people know only their circumstances
-and the ballot. Pulling Chronicling America items for October 1924 is the
-next step. The all-years corpus build stopped before 1924 was done (C30).
-
-**C16 · Low · open · 1924 platforms (`context/platforms_1924.json`)**
-- Quotes come from American Presidency Project pages and the paraphrases
-  were written by the harness session.
-- The Progressive platform's date is entered as 4 July 1924 (the
-  Cleveland conference). APP files it under 4 November [I].
-- The fetched Republican text had no Prohibition passage.
-
-**D24 · Medium · open · 1924 withdrawal transfer**
-"No La Follette" moves his voters by one national transfer, estimated from
-12 people: 80% to Davis, 8% to Coolidge, 11% stay home. The same transfer
-is applied in every state.
-
-The record is mixed:
-- In 1920 the upper-Midwest farm and labor vote was heavily Republican.
-- In 1928 his former voters split between the parties.
-
-So the Davis share is probably too high, and region matters. The evidence
-check says "untested" because no source gives a number. Fix: regional
-transfers, plus a prior from the 1928 split.
-
-**A9 · High · fixed (requests already sent) · data-fetch scripts**
-During the all-years build, three agents (G, C and E) put the user's email
-address in the HTTP User-Agent of requests to Wikipedia and loc.gov, as a
-"contact" string. E also sent it in two manual curl probes. The user's
-address must never go to an unrelated service. It was removed from every
-script, which now send a generic User-Agent, and E's running 1932 corpus
-build was restarted from its HTTP cache. The requests already sent can't be
-recalled.
-
-**Next:** no contact address in any fetcher; check the User-Agent whenever a
-fetch script is reviewed.
-
-**A10 · Medium · fixed · `pipeline.py` verify, `benchmarks.py`**
-`Run.verify` read the Corder–Wolbrecht held-out benchmark file directly,
-outside the evaluate stage, so `test_benchmarks_isolated` failed. Found while
-porting to the clean repo. The read now goes through
-`benchmarks.corder_wolbrecht_any_year()`, and `check.json` is byte-identical.
-The isolation test allows benchmark imports in exactly two places in
-`pipeline.py`: verify and evaluate.
-
-**Next:** decide whether verify should see the benchmark at all, or move that
-check into evaluate.
 
 **B10 · High · by design · `backbone.general_fit`**
 Every year outside 1916–1924 is fitted by `general_fit`, which has no
@@ -674,6 +262,126 @@ These are rules, not estimates. A what-if can't move a legislature's
 electors, a split state's division changes only when its plurality winner
 does, and O's candidates remain one slot, so a what-if can't say which of
 them gains.
+
+---
+
+## C. Data inaccuracies and conflicts
+
+**C1 · High · open · Black voters' choice (β_B)**
+State returns can't identify it. The regression says Black voters leaned
+toward Cox (−3.4 ± 1.9 logit), which contradicts the documented history. The
+published estimate leans on a subjective prior. The research agents found no
+documented 1920 estimate; the only source was Du Bois (1928), with no
+counts.
+
+**C2 · Medium · by design · labels**
+The Algara–Amlani county sums don't match official totals in 14 states for
+1920:
+- Maryland's Baltimore row double-counts, inflating the state 40–53%.
+- In Vermont, the Republican vote sits in "other".
+- New Mexico is missing a county.
+- Maine's Cox vote is 17.6% high.
+
+The House Clerk's 1921 table was used instead. **1916 has only one
+cross-check source (Wikipedia)**, and 1916 anchors the whole natural
+experiment.
+
+**C3 · Medium · open · franchise conflict**
+Gray–Jenkins codes women as able to vote in Georgia and Mississippi in 1920.
+National Park Service pages say they couldn't. We follow NPS. A Smithsonian
+snippet also names Arkansas and South Carolina; it's unverified and not
+coded.
+
+**C4 · Medium · open · Teele suffrage dates**
+- Ohio is coded as presidential suffrage from 1917. We believe, **without
+  verification**, that Ohio's 1917 law was overturned by referendum, which
+  would make 1919 the real date. It doesn't affect 1920 eligibility.
+- Arizona is coded 1910, before statehood in 1912.
+- Arkansas and Texas's 1917 primary-only suffrage is excluded.
+
+**C5 · Medium · by design · census transcription**
+The 1920 voting-age tables were read by eye from scans, because OCR confused
+3/8, 9/0 and 5/6. Thirteen ambiguous digits were resolved against the
+tables' own sums. Every state matches its printed totals, but a
+compensating pair of errors would pass that check.
+
+**C6 · Medium · open · 1910 women**
+Citizenship wasn't asked of women in 1910. The split is borrowed from men of
+the same state (wives took their husbands' status before 1922).
+
+**C7 · Low · open · census gaps**
+- Delaware, New Hampshire and Vermont print no "all other races" row; those
+  cells are 0.
+- There is no age-band table.
+- DC is excluded, since it had no electors in 1920.
+
+**C8 · Medium · by design · Corder–Wolbrecht**
+The state and pooled women's-turnout figures we compare against are **our
+own aggregation** of their unit-level estimates, not numbers they published.
+Their deposit covers only CT, IL, MA, MI and NY.
+
+**C9 · Low · open · platforms**
+- The American Presidency Project dates are convention start dates, not
+  adoption dates.
+- The Socialist text is a pre-adoption newspaper draft.
+- The Farmer-Labor planks are an AP summary.
+
+**C10 · Low · open · treaty facts**
+Sources disagree on:
+- the date of one November 1919 vote;
+- whether the March 1920 vote carried the reservations. FRUS says yes, and
+  one senate.gov page says no.
+
+**C11 · Medium · by design · corpus**
+- 87 of 89 excerpts have bracketed OCR fixes, so they aren't verbatim.
+- 29 items were excluded for naming a candidate or party.
+- Coverage is thin: 1 usable Kansas item for women already voting in the
+  West; no Midwestern or Western items on Black registration.
+- Some items quote officials stating white-supremacist aims. They are kept
+  as documents of the barriers, and are period voices, not neutral fact.
+
+**C12 · Low · open · leakage labelling**
+1920 uses the 1920 census, published 1921–23, after the election. Results
+are labelled `mode: truth`. Strict mode (1910 aged) isn't run.
+
+---
+
+**C13 · Medium · by design · 1924 population**
+There is no 1924 census. Each cell's 1920 count is aged to 4 November 1924
+along its own 1910→1920 trend (`data.population(1924)`). Things this misses:
+- the Cable Act (1922, married women's citizenship);
+- naturalizations after 1920;
+- the Indian Citizenship Act (June 1924).
+
+**C14 · Medium · by design · 1924 backbone (`backbone.carry_forward`)**
+1924 has no natural experiment of its own, so it carries 1920's structure
+forward:
+- the 1920 fit's per-cell turnout, women's tilt δ, Black voters' β_B and
+  Black Southern exclusion;
+- one turnout shift per state, across all groups;
+- the same exact share calibration as 1920.
+
+Checks:
+- **Reproduction:** every 1924 state within 0.41 votes, 382–136–13 in
+  every draw.
+- **Held-out benchmark:** Corder–Wolbrecht 1924 women's turnout on their
+  denominator gives MAE 3.6 points, against 3.2 for 1920. CT and MA women
+  run high and men low, as in 1920.
+
+Within a state, La Follette's share is spread evenly across groups. Who
+his voters were inside a state isn't identified.
+
+**C15 · Medium · open · 1924 briefs have no dated newspaper items**
+There is no 1924 corpus yet, so 1924 people know only their circumstances
+and the ballot. Pulling Chronicling America items for October 1924 is the
+next step. The all-years corpus build stopped before 1924 was done (C30).
+
+**C16 · Low · open · 1924 platforms (`context/platforms_1924.json`)**
+- Quotes come from American Presidency Project pages and the paraphrases
+  were written by the harness session.
+- The Progressive platform's date is entered as 4 July 1924 (the
+  Cleveland conference). APP files it under 4 November [I].
+- The fetched Republican text had no Prohibition passage.
 
 **C17 · Medium · by design · NHGIS populations (`scripts/harness/build_population.py`)**
 State tables for 1870–1970 come from NHGIS extract 1 (cache:
@@ -908,6 +616,165 @@ short of the total. See also F8 (2000's abstaining DC elector).
 
 **Next:** list them under Other, or note the shortfall wherever totals appear.
 
+## D. The AI agents
+
+**D1 · High · open · backend**
+The prototype's answers came from 9 Claude Code subagents, not independent
+API calls:
+- 18–59 prompts shared one context;
+- the Claude Code system prompt surrounded them;
+- the model version behind "sonnet" and "opus" isn't recorded;
+- one subagent **scripted 28 of 56 probe answers**;
+- one built answers with a helper script;
+- one says its later answers got generic.
+
+**No agent-layer number should be cited until it is rerun on the API.**
+
+**D2 · High · by design · memorization**
+56 of 56 probes identified 1920, both candidates and Harding's win.
+Blinding doesn't work for 1920. The control answers are exposed, and only
+their paired changes are used.
+
+**D3 · High · open · homogenization**
+In 90% of cohorts with a mixed real split, every agent gave the same answer.
+The agents compress variation, so they can't stand in for how a group split.
+
+**D4 · Medium · open · turnout overstatement**
+Agents say they'd vote about 12 points more often than the calibrated
+backbone. For women in the benchmark states it is 15.5 points.
+
+**D5 · Medium · open · self-de-blinding**
+25% of answers name a party that the blinded briefs never named. Quotes are
+published with names restored, so a reader can't tell which words the model
+supplied from memory.
+
+**Next:** flag quotes that contain inferred party names.
+
+**D6 · Medium · open · sample size**
+With 4–5 agents per cohort, the pre-registered shrinkage (pseudo-count 8)
+pulls every cohort's effect 57–67% toward its region. Cohort differences
+are mostly unmeasured.
+
+**D7 · Low · fixed in p2 · prompt bugs**
+Three bugs in the p1 prompts:
+- **Non-citizen women's briefs contradicted themselves.** They were told
+  "state law lets women vote". Subagents caught it; those pairs are
+  excluded.
+- **Dates didn't line up.** Briefs were dated 30 October but included items
+  up to 1 November.
+- **Surnames didn't fit their groups.** One agent is "Mary Lindqvist", a
+  Black North Carolina woman.
+
+The p1 answers stand as recorded.
+
+**D8 · Medium · open · Opus disagreement**
+On the League what-if, Sonnet's shift toward Cox is −0.18 logit and Opus's
+is −0.03 on the same people. They agree on sign, not size. The published
+effect pools them.
+
+**D14 · Medium · open · paraphrase assignment**
+An agent's question wording is `n % paraphrases`, where n is its place in the
+run's sorted agent list. Adding a cohort renumbers everyone after it, so each
+of them gets a different question. The live config
+(`configs/live-1920.json`) keeps rung 1's six cohorts so answers stay
+comparable and cached. Fix before widening: key the paraphrase on the
+agent id.
+
+**D15 · Medium · fixed · evidence extraction**
+- **Haiku extracted nothing.** Given rich research notes (Christensen's
+  19% in Washington, Roosevelt 1912, La Follette 1924), it returned zero
+  findings. It judged every analogue unreliable itself.
+- **Sonnet ran out of room.** At 4,000 tokens its JSON was truncated, and
+  the crash lost the call's usage. About $0.052 is entered in the ledger as
+  an estimate.
+
+Now: Sonnet with 8,000 tokens, at most 12 findings, and an instruction not
+to judge reliability, since the pipeline grades it. A truncated answer keeps
+its usage.
+
+**D16 · Medium · fixed · research without searching**
+The first League research call ran no searches and answered from memory
+($0.02). Grounding correctly dropped every claim, since none had a source.
+The prompt now requires at least two searches, and a turn with none is
+retried once.
+
+**D17 · Medium · fixed (c2), hand-edited · compiler dropped topics**
+The flu what-if's compile dropped T2 (League) and T3 (prices) as "crowded
+out". Its counterfactual brief then differed from the control by more than
+the change. The spec was edited by hand to drop nothing, and its 12
+interviews were re-asked. Compiler c2 drops only topics that the settled
+facts make false.
+
+**D18 · Medium · open · a quote named a nominee**
+A flu counterfactual quote said "That fellow Cox" (south:M:native_white-1)
+from a blinded brief. This is more evidence of D2 and L1: the model knows
+1920. Quotes aren't scanned for real names before publishing.
+
+**D19 · Low · open · choice and quote disagree**
+Haiku sometimes picks one candidate and quotes for the other:
+- Chaplin run, midwest man: choice Harding, quote "I'm going with the
+  Democrat".
+- Flu run, Arthur Hayes: choice Cox, quote praising "the Republican".
+
+The counts use the choice and p_choice; the page shows the quote.
+
+**D20 · Medium · fixed · evidence sign**
+The extractor recorded the historical direction as the scenario's effect.
+"The League hurt Cox" became toward-R for a scenario that removes the
+League. Findings now carry a `relation` field (like-scenario,
+reverses-scenario or context), and the code flips reversed findings. Context
+findings (who won, overall turnout) inform the reader but not the numbers.
+
+**D21 · High · fixed (p5, compiler c3) · voters misread whom the news was about**
+In the first Harding-disclosure run, the brief identified the nominee only
+by descriptor ("the candidate of the party that has held a majority in
+Congress…"). Most of the 12 interviewed people blamed the other candidate.
+The result was a spurious 7.8-point move *toward* Harding.
+
+Now:
+- **News on the line.** News about one nominee is printed on that
+  nominee's own ballot line (`about`, `nominee_news`).
+- **Manipulation check.** Each such counterfactual answers `news_about`.
+  Misreaders are left out of the counts, kept in the interviews with
+  `misread: true`, and flagged in confidence (`misread-change`). At least
+  half misreading forces "extremely low".
+
+The rerun: 0 of 12 misread. The spec was recompiled with c3 and its key,
+label and words kept, a post-hoc edit.
+
+**D22 · Medium · fixed · evidence read by party, not role**
+Findings from other elections were signed by that year's party. Cleveland
+in 1884, a scandal-hit *Democrat*, therefore counted as "toward D" for a
+scenario about a scandal-hit *Republican*. Findings now carry
+`role_direction` (toward or away from the candidate in the same role, plus
+an `affected` measure), and the code maps them onto the scenario's
+nominee.
+
+**D23 · Medium · open · Harding-disclosure rerun: one uniform swing, quotes elsewhere**
+- **The swing is uniform.** Midwestern men go from 0.70 to 0.32 (Harding's
+  two-party share), Southern men from 0.68 to 0.31, and every region falls
+  to about 0.31–0.33. That looks like one model reaction stamped on everyone
+  (A2 homogenization), not differences between groups.
+- **The quotes mostly talk about prices.** Several switchers' quotes never
+  mention the news, even though their choice changed.
+- **Some quotes back the candidate the person didn't choose.** Albert
+  Jackson and Lillian Jones each chose Cox but quoted "the Republican" with
+  approval. This is D19 again: "the Republican" in a blinded quote is the
+  model guessing which label is which.
+
+**D24 · Medium · open · 1924 withdrawal transfer**
+"No La Follette" moves his voters by one national transfer, estimated from
+12 people: 80% to Davis, 8% to Coolidge, 11% stay home. The same transfer
+is applied in every state.
+
+The record is mixed:
+- In 1920 the upper-Midwest farm and labor vote was heavily Republican.
+- In 1928 his former voters split between the parties.
+
+So the Davis share is probably too high, and region matters. The evidence
+check says "untested" because no source gives a number. Fix: regional
+transfers, plus a prior from the 1928 split.
+
 **D25 · High · by design · modern descriptors name offices (`profiles/1988–2024`)**
 From 1988 the descriptors give the nominee's office where voters plainly
 knew it: "the sitting President", "the sitting Vice President", "a former
@@ -989,86 +856,6 @@ Found while building profiles, and fixed in the pipeline generalisation:
   Perot).
 - `run._lead` always named R as the winner, which is wrong in every D year.
 
-**E7 · by design · what-ifs in other years (`whatifs.py` `years`, `text_for`)**
-The 1920 what-ifs now run in other years: `everyone` in all of them,
-`fifteenth` in 1892–1964, `no-19th` from 1920, and `league` in 1920 only.
-Their invented facts (E1–E3) were written for 1920. Other years get them by
-rewriting "1920" in the assumption and borrowed text; 1924 is kept as it
-was. Nobody has read the rewritten text year by year.
-
-**E8 · fixed · the 31 example what-ifs**
-Thirty-one example what-ifs were run as chips across 28 years (about $7.80 in all). Four compiled specs were wrong and were fixed by hand or rebuilt. Each fix is recorded in the spec's `hand_edited`:
-- **1972, no voting under 21:** the spec barred every adult. The cells have no age split, so `franchise.share` now bars a uniform 8.1% slice of every cell (the 18–20 share of 18+ in 1970 [I]). That slice votes like the rest of its cell, which understates the change, because young voters turned out less and leaned toward the challenger.
-- **2000, Florida restores felons' rights:** the spec enfranchised every Southern adult. The spec now reaches Florida only (new `reach.state`), and the action lifts only the felony bar (new `franchise.reason: felony`). Newly eligible voters vote like their cell. Uggen & Manza assume lower turnout but a strong lean toward the administration party, so the cell assumption understates the change.
-- **2000, Nader doesn't run:** with no named third in 2000, the compiler invented a candidate whose positions came from Perot's 1992 run. Nader is now 2000's named third: his per-state votes come from Wikipedia (2,882,955 nationally), and the profile has a blinded descriptor. The 2000 returns changed only in the `third` column, and every other year is byte-identical.
-- **1932, no crash:** an earlier batch was killed mid-run, which left the key in the config but not in the bundle. The bundle was republished.
-
-Four what-ifs (1844, 1856, 1860, 1916 Hughes) stopped at the research cost check: about $0.27–0.28 against a $0.175 estimate, because 19th-century searches return longer pages. The saved evidence was reused, so no search was repeated. The research estimate is probably low for pre-1900 topics.
-
-Two code fixes:
-- Parallel what-if runs collided on `sessions/intake-status.tmp`. The temporary file now carries the process id.
-- When the winner changes, the headline now puts the new winner's electoral votes first (`serialize.winner_ev`). Before, it printed "Blaine wins, 129–272".
-
-**F7 · Medium · open · slice-source sentences (`profiles/<year>.json`)**
-Each profile's `slice_sources` names the census vintages its year uses
-(e.g. 1952 "the 1950 census aged", 2020 "ACS 2019/2021"). They were written
-before most populations existed, so they describe the intended build, not
-what `data.population` does. 1932 and 1936 promise the 1930 Mexican count
-folded into white (C20). 1972–2024 cite vintages that differ from the files
-actually used (C27).
-
-**Next:** generate each sentence from the population build's own
-provenance.
-
-**F8 · Low · open · electoral-vote labels (`ev_label`)**
-Some labels are conventions a reader could dispute (see also F4):
-- **1789–1800:** before the 12th Amendment only each side's top man counts.
-  Second votes (Adams 1789–92, Pinckney, Burr) aren't O. 1800 was a 73–73
-  Jefferson–Burr tie decided by the House.
-- **1824:** Adams won the House contingent election, not the electoral vote
-  (84–99–78).
-- **1832:** O is Wirt's 7 plus Floyd's 11 from South Carolina's legislature.
-- **1860:** O is Breckinridge plus Bell.
-- **1872:** 286–63 counts the D-ticket votes counted after Greeley's death.
-  286–66 is also defensible.
-- **2000:** one DC elector abstained, which isn't an O vote.
-- **Order varies.** 1948 and 1956–1984 put the winner first (1948
-  303–189–39, 1960 303–219–15). 1789–1836 and 1988–2024 are R–D(–O).
-
-**F9 · Low · open · place matching in typed text (`places.ts`)**
-"Washington, D.C." in a typed what-if lights up Washington state. The D.C.
-rule ends in `\b`, which can't match after the final period. Carried over
-from the source and kept as is during the port.
-
-**Next:** end the D.C. pattern with a lookahead for a non-word character or the
-end of the text, and add a test.
-
-**G7 · Medium · open · generators outside the repo**
-The all-years profiles, configs and platform files were written by scratch
-scripts kept in session scratchpads (`gen_d1.py`, `d3_build.py`,
-`d3_planks.py` and unnamed ones for the other years). So was the 1920/1924
-invariant capture (`inv/capture.py`). The felony-rate parsers live in the
-cache beside their PDFs. None can be rerun from the repo; the outputs are
-the record.
-
-**Next:** move the generators into `scripts/`.
-
-**G8 · Low · open · holdout states**
-Holdout sets were drawn three ways. live-1924 reuses 1920's draw. 1789–1836
-take a quarter of the hand-listed popular-vote states, some of them
-uncertain (TN 1800). 1880–2024 take
-`sorted(random.Random(year).sample(states, 12))`.
-
-**Next:** one formula, written down before any holdout check is run.
-
-**G9 · Low · by design · 1920/1924 invariant**
-The generalisation was checked against a capture taken before any edit.
-Every plan request, compile request and publish bundle for 1920 and 1924 is
-byte-identical, except 1924's compile prompt: its list of existing what-ifs
-now includes `no-19th`. Each typed 1924 text misses the compile cache once
-(about $0.02); no brief changes. Legacy 1916–1924 data still goes through
-the untouched loaders.
-
 **D33 · High · fixed (p6) · interviews that didn't measure the change**
 A 1916 what-if ("war after the Lusitania") showed the interviews mostly never
 took the change in: voters at war since 1915 still praised the President for
@@ -1118,18 +905,6 @@ removed: the daily cap (SIMULACRA_DAILY_DOLLARS), the per-what-if cap
 Every paid call is still priced first and recorded in sessions/spend.jsonl,
 and a stage costing over 1.5x its estimate still stops.
 
-**D35 · Medium · fixed (staging w2) · focus slots and an easy check**
-In the first staged run (1940, "Britain Falls"), the six focus slots all went to
-the first named group ("anyone in the Northeast"), and two of them to
-non-citizen cohorts that yield no interviews: the Pacific Coast and the
-Midwest's naturalized immigrants, also named, were never asked. The slots now
-go round the named groups in turn (largest cohort first), and a cohort in
-which no one can vote takes no slot. The belief check was answered right by
-30 of 30 because its answer was printed in the brief; it now asks about a
-consequence the brief never states, with three or four plausible options. The
-audit now counts a passing phrase that relies on a state of affairs the change
-ended (an ally "still fighting" after it surrendered) as contradicting it.
-
 **D34 · High · fixed (compiler c4) · a typed what-if silently replaced**
 "America loses WW2", typed into 1940, was compiled as "Britain Falls, America
 Stands Alone": the United States wasn't at war by that election, and the
@@ -1144,3 +919,324 @@ its "how I got this" and the progress steps with a sentence saying what was
 asked and what was modelled, and never takes the reader's own words as its
 keywords. The 1940 substitute is kept as its own what-if, marked
 reinterpreted, without the words "america loses ww2".
+
+**D35 · Medium · fixed (staging w2) · focus slots and an easy check**
+In the first staged run (1940, "Britain Falls"), the six focus slots all went to
+the first named group ("anyone in the Northeast"), and two of them to
+non-citizen cohorts that yield no interviews: the Pacific Coast and the
+Midwest's naturalized immigrants, also named, were never asked. The slots now
+go round the named groups in turn (largest cohort first), and a cohort in
+which no one can vote takes no slot. The belief check was answered right by
+30 of 30 because its answer was printed in the brief; it now asks about a
+consequence the brief never states, with three or four plausible options. The
+audit now counts a passing phrase that relies on a state of affairs the change
+ended (an ally "still fighting" after it surrendered) as contradicting it.
+
+---
+
+## E. Counterfactual fictions
+
+These are deliberate. Readers must still know they are invented.
+
+**E1 · by design · `whatifs.py` `fifteenth`**
+The brief says the Supreme Court struck down Southern poll taxes and
+registration tests in 1919, and federal registrars were sent. This mechanism
+is invented to make the world internally consistent. It happened in no form
+in 1919.
+
+**E2 · by design · `league`**
+"The United States took its seat in the League of Nations this spring" is
+invented. The real Senate vote on 19 March 1920 failed, 49–35. We also
+assume both parties would drop the League from their platforms.
+
+**E3 · by design · `no-19th`**
+"Tennessee voted it down" is invented. Tennessee ratified on 18 August 1920.
+Women in 27 states keep the presidential vote under their own state laws.
+
+**E4 · by design · the people**
+Every person, name and quote is invented. Only their circumstances (census
+cells, dated newspaper items) are documented. Quotes are voiced by a model
+that knows the outcome (D2).
+
+**E5 · by design · compiled what-ifs (`harness/whatifs/*.json`)**
+A typed what-if's facts, ballot line and assumption are written by a model
+(`scenario.py`, compiler c1/c2). They are checked for nominee and party
+names, and are exploratory, never pre-registered. Post-hoc edits:
+- **`charlie-chaplin-runs`**: the positions carried "(documented)" and
+  "(inferred…)" notes, which voters saw in the brief. The notes were
+  stripped, "Would likely speak for" became "Speaks for", and the
+  interviews were re-asked.
+- **`influenza-returns-in-october-1920`**: see D17.
+
+**E6 · by design · `charlie-chaplin-runs`**
+Chaplin was born in England and was not a citizen, so the Constitution
+barred him. The ballot line is modelled anyway, flagged
+`ineligible-candidate`. His positions are inferred, since nothing on record
+predates 1920, and flagged `positions-inferred`.
+
+**E7 · by design · what-ifs in other years (`whatifs.py` `years`, `text_for`)**
+The 1920 what-ifs now run in other years: `everyone` in all of them,
+`fifteenth` in 1892–1964, `no-19th` from 1920, and `league` in 1920 only.
+Their invented facts (E1–E3) were written for 1920. Other years get them by
+rewriting "1920" in the assumption and borrowed text; 1924 is kept as it
+was. Nobody has read the rewritten text year by year.
+
+---
+
+**E8 · fixed · the 31 example what-ifs**
+Thirty-one example what-ifs were run as chips across 28 years (about $7.80 in all). Four compiled specs were wrong and were fixed by hand or rebuilt. Each fix is recorded in the spec's `hand_edited`:
+- **1972, no voting under 21:** the spec barred every adult. The cells have no age split, so `franchise.share` now bars a uniform 8.1% slice of every cell (the 18–20 share of 18+ in 1970 [I]). That slice votes like the rest of its cell, which understates the change, because young voters turned out less and leaned toward the challenger.
+- **2000, Florida restores felons' rights:** the spec enfranchised every Southern adult. The spec now reaches Florida only (new `reach.state`), and the action lifts only the felony bar (new `franchise.reason: felony`). Newly eligible voters vote like their cell. Uggen & Manza assume lower turnout but a strong lean toward the administration party, so the cell assumption understates the change.
+- **2000, Nader doesn't run:** with no named third in 2000, the compiler invented a candidate whose positions came from Perot's 1992 run. Nader is now 2000's named third: his per-state votes come from Wikipedia (2,882,955 nationally), and the profile has a blinded descriptor. The 2000 returns changed only in the `third` column, and every other year is byte-identical.
+- **1932, no crash:** an earlier batch was killed mid-run, which left the key in the config but not in the bundle. The bundle was republished.
+
+Four what-ifs (1844, 1856, 1860, 1916 Hughes) stopped at the research cost check: about $0.27–0.28 against a $0.175 estimate, because 19th-century searches return longer pages. The saved evidence was reused, so no search was repeated. The research estimate is probably low for pre-1900 topics.
+
+Two code fixes:
+- Parallel what-if runs collided on `sessions/intake-status.tmp`. The temporary file now carries the process id.
+- When the winner changes, the headline now puts the new winner's electoral votes first (`serialize.winner_ev`). Before, it printed "Blaine wins, 129–272".
+
+## F. Product and copy
+
+**F1 · Medium · open · `sample.js` (the UI's file)**
+The `no-19th` detail, "fifteen states that already let them", counts only
+full-suffrage states. Twenty-seven states had given women the presidential
+vote. Flagged in the UI note; not edited.
+
+**F2 · Medium · open · `sample.js` women slice**
+It treats Georgia and Mississippi women as voting in 1920.
+
+**F3 · Medium · open · `stories.js` / `HANDOFF-SIMULATION.md`**
+HANDOFF-SIMULATION lists story facts that are still unverified: 1800, 1860,
+1876, 1896, 1912, 1948 ("bubbles in a bar of soap"), 1960, 1968, 2000 and
+2016. This harness didn't check them.
+
+**F4 · Low · open · `history.js`**
+Its known approximations are listed in HANDOFF-SIMULATION: split
+delegations, 1836, 1872, 1864, faithless electors. The totals aren't yet
+checked against NARA for every year. For 1920, 404–127 matches NARA.
+
+**F5 · Medium · open · page slices**
+The five 1920 groups are a partition, but they carry small misfits:
+- "White Southerners" includes the few American Indian and Asian adults in
+  the South.
+- "Men outside the South" includes Black Northern men.
+- Poor white Southerners kept out by poll taxes show as "stayed home", not
+  "couldn't vote".
+
+**F6 · Low · open · verdict copy**
+- A multi-what-if verdict concatenates single-what-if sentences, so a
+  combination can say "3.1 million women" measured in a different world
+  from the combined one.
+- The League verdict's "2.7 points" is measured in the point draw only.
+
+**F7 · Medium · open · slice-source sentences (`profiles/<year>.json`)**
+Each profile's `slice_sources` names the census vintages its year uses
+(e.g. 1952 "the 1950 census aged", 2020 "ACS 2019/2021"). They were written
+before most populations existed, so they describe the intended build, not
+what `data.population` does. 1932 and 1936 promise the 1930 Mexican count
+folded into white (C20). 1972–2024 cite vintages that differ from the files
+actually used (C27).
+
+**Next:** generate each sentence from the population build's own
+provenance.
+
+**F8 · Low · open · electoral-vote labels (`ev_label`)**
+Some labels are conventions a reader could dispute (see also F4):
+- **1789–1800:** before the 12th Amendment only each side's top man counts.
+  Second votes (Adams 1789–92, Pinckney, Burr) aren't O. 1800 was a 73–73
+  Jefferson–Burr tie decided by the House.
+- **1824:** Adams won the House contingent election, not the electoral vote
+  (84–99–78).
+- **1832:** O is Wirt's 7 plus Floyd's 11 from South Carolina's legislature.
+- **1860:** O is Breckinridge plus Bell.
+- **1872:** 286–63 counts the D-ticket votes counted after Greeley's death.
+  286–66 is also defensible.
+- **2000:** one DC elector abstained, which isn't an O vote.
+- **Order varies.** 1948 and 1956–1984 put the winner first (1948
+  303–189–39, 1960 303–219–15). 1789–1836 and 1988–2024 are R–D(–O).
+
+
+**F9 · Low · open · place matching in typed text (`places.ts`)**
+"Washington, D.C." in a typed what-if lights up Washington state. The D.C.
+rule ends in `\b`, which can't match after the final period. Carried over
+from the source and kept as is during the port.
+
+**Next:** end the D.C. pattern with a lookahead for a non-word character or the
+end of the text, and add a test.
+---
+
+## G. Reproducibility
+
+**G1 · Medium · fixed · `config.py`**
+A run's id used to hash its config and data, **not the code**. The
+`1920-bcbd86b43f` bundle was produced by code changed after its requests
+were planned and answered (p1 → p2, deviations 1–9), so that run id can't be
+regenerated from today's code with identical results.
+
+**Fixed:** `run_id` now also hashes `simharness/*.py`, so a code change gives a
+new run id. Runs recorded before the change keep their old ids.
+
+**G2 · Low · open · timing**
+The backbone was refitted after the agent answers existed. The cohort bias
+(A1) and shrinkage use the final backbone, not the one in place when the
+requests were planned.
+
+**G3 · Low · open · environment**
+The installed Anthropic SDK is 0.46, which predates `output_config`. The API
+backends need `anthropic>=1.0`. They are written but untested against the
+live API.
+
+**G4 · Low · by design · answer cache (`llm.AnswerCache`)**
+Identical requests reuse earlier live answers across runs. A request is
+identical when it has the same model, system, user text and schema; meta,
+run id and prompt-version labels are ignored. So p4 requests whose text
+equals p3's reuse p3 answers. Transcript and mock answers are never cached.
+Each answer records `cached_from`.
+
+**G5 · Medium · open · evidence reproducibility**
+Web search results change over time. The saved
+`whatifs/evidence/<key>.json` is the record: queries, every source, the
+cited text and the notes. It is hashed into the run id. Re-researching
+(`--refresh`) makes a new instrument.
+
+**G6 · Low · open · spend ledger**
+`sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
+backfilled from runs' usage, and D15's $0.052 is estimated.
+
+**G7 · Medium · open · generators outside the repo**
+The all-years profiles, configs and platform files were written by scratch
+scripts kept in session scratchpads (`gen_d1.py`, `d3_build.py`,
+`d3_planks.py` and unnamed ones for the other years). So was the 1920/1924
+invariant capture (`inv/capture.py`). The felony-rate parsers live in the
+cache beside their PDFs. None can be rerun from the repo; the outputs are
+the record.
+
+**Next:** move the generators into `scripts/`.
+
+**G8 · Low · open · holdout states**
+Holdout sets were drawn three ways. live-1924 reuses 1920's draw. 1789–1836
+take a quarter of the hand-listed popular-vote states, some of them
+uncertain (TN 1800). 1880–2024 take
+`sorted(random.Random(year).sample(states, 12))`.
+
+**Next:** one formula, written down before any holdout check is run.
+
+**G9 · Low · by design · 1920/1924 invariant**
+The generalisation was checked against a capture taken before any edit.
+Every plan request, compile request and publish bundle for 1920 and 1924 is
+byte-identical, except 1924's compile prompt: its list of existing what-ifs
+now includes `no-19th`. Each typed 1924 text misses the compile cache once
+(about $0.02); no brief changes. Legacy 1916–1924 data still goes through
+the untouched loaders.
+
+---
+
+## H. Historical evidence
+
+**H1 · by design · evidence never enters a brief**
+Research results are used only after the interviews:
+- **Agreement:** do the interviews move votes or turnout the way the record
+  does?
+- **Blend:** a prior on cohort effects, for compiled, exploratory what-ifs
+  only.
+- **Confidence tier.**
+
+Pre-registered what-ifs are never blended; their numbers follow
+METHOD.md.
+
+**H2 · Medium · open · source grading**
+Tiers come from a domain list (`evidence.TIER_A`, `TIER_B`; everything else,
+including Wikipedia, is C). A .edu course page counts as A. A finding's
+grade is its tier × the extractor's match judgement (same-event …
+distant). Neither is validated.
+
+**H3 · Medium · open · blend weights**
+Evidence sd grows as 1/√grade. The interview sd is floored at 0.2 logit,
+because a bootstrap over two or three people understates model error. Weak
+evidence barely moves numbers: Chaplin's evidence weight is under 1%.
+
+**H4 · Medium · open · confidence tiers**
+`evidence.confidence` is a rule set:
+- a kind's base tier;
+- plausibility and anachronism;
+- evidence strength;
+- agreement;
+- interview stability, for agent-mode what-ifs only;
+- the number of interviews.
+
+"Extremely low" (very-low) reaches the page as `confidence: low`, plus
+`confidenceTier` and a sentence in the summary. The rules were written
+after seeing the first three results, and nothing calibrates them.
+
+---
+
+## Log
+
+| Entry | Change |
+|---|---|
+| all | File started from EVAL.md, METHOD.md, the agents' reports and the session's own mistakes |
+| G2 | Analysis paired control/cf/swap answers on a hardcoded `|sonnet` request id, so any run on another bulk model (the Haiku quick run) silently yielded no effects, no L2 and no voters. Now keyed on the configured bulk/check models. |
+| D9 | Quick run (Haiku, 2 agents): the recall probe named 1920, both candidates and the winner at 95% confidence from the blinded brief. One probe, but it matches L1's standing exposure. |
+| D10 | Quick run: in the no-19th counterfactual the Indiana woman still answered able_to_vote=yes, reasoning from Indiana's 1919 presidential-suffrage law; the Black North Carolina woman answered no in control, no-19th and league, yes only under fifteenth. Plausible, but the no-19th brief should say explicitly whether state-law suffrage survives. |
+| D11 | Rung 1 (run 1920-4502a6f977): a quote named the blinded ballot label ("K says the money got too loose…", south:M:native_white-0). The page would show a meaningless letter to readers. The prompt should tell agents to name candidates by description, not label, in `quote`; or quotes need a label→name pass before publish. |
+| D12 | Rung 1: the League effect's sign flips by paraphrase (dr −0.61, +0.49, +0.03 for paraphrases 0/1/2, n=12 agents). Two single-agent flips go in opposite directions (midwest woman R→D; northeast man D→R). The national dr CI [−0.19, +0.15] spans zero. At this n the paraphrase spread (A3) is larger than any effect. |
+| D13 | Prompt p3 (run 1920-423843d9ec): no quote used a letter label (0/24, fixes D11). Haiku ignored the 25-word cap (mean 30.5, max 40 words). A hard limit needs a trim at publish or a schema maxLength, not prompt wording. |
+| D14 | Live config: adding two cohorts reassigned every later agent's paraphrase (0 of 48 cache hits); reverted to rung 1's six cohorts. |
+| D15 | Chaplin research: Haiku extract gave 0 findings from rich notes; Sonnet extract truncated at 4,000 tokens (~$0.052 lost usage, estimated in ledger). |
+| D16 | League research, first call: 0 searches, answered from memory; grounding dropped all claims. Now ≥2 searches, one retry. |
+| D17 | Flu what-if compiled with T2/T3 dropped; hand-edited to none and re-asked; compiler c2. |
+| D18 | Flu cf quote named "Cox" from a blinded brief. |
+| D19 | Haiku choice/quote contradictions (Chaplin, flu runs). |
+| D20 | Extractor gave League findings the historical sign; `relation` field added, flip done in code. |
+| E5, E6 | Chaplin positions hand-edited (annotations visible to voters); ineligible candidate modelled and flagged. |
+| G4–G6 | Answer cache, evidence reproducibility, spend ledger. |
+| H1–H4 | New stage: historical evidence (research → extract → agreement, blend, confidence tiers). All exploratory. |
+| D21–D23 | Harding disclosure: misattribution fixed (ballot-line news + manipulation check, p5/c3; 0/12 misread on rerun); evidence by role; homogenized swing logged. |
+| C13–C16, D24 | 1924 added: population aged from 1920, carried-forward backbone (R1 exact; C–W women MAE 3.6), no 1924 corpus, platforms from APP; La Follette withdrawal via interview transfer (80% Davis). |
+| C17 | NHGIS extract 1 (1870–1970 state tables); 1920 rebuild matches exactly; 1930 NT10 label misalignment caught and fixed; 1930 Mexican race in `other`. |
+| A9 | All-years build: agents G, C and E sent the user's email in User-Agent headers to Wikipedia and loc.gov; removed from every script; sent requests can't be recalled. |
+| B7, B8 | Amended: per-era economy wording, ages 18–80 from 1972, 1920-era first names; IN/MO/TX/AR alien voting coded [I] for 1920 but not applied to legacy years. |
+| B10 | general_fit: every non-1916–24 year runs on literature priors plus exact calibration; no in-year identification. |
+| B11 | Gallup 1936/1940 show women slightly more R, contradicting the 1920 δ used to 1940. |
+| B12 | general_fit repairs (scaled adults, overridden rules, synthetic cells) make reproduction exact by construction; not on the page. |
+| B13 | All 60 elections, 1789–2024, reproduce certified R/D/O and history's EV: ev_fixed, ev_split, lumped-O rule (1860, 1892, 1912), pre-1868 EV counts electors who voted. |
+| C15 | Amended: corpus build stopped before 1924 (C30). |
+| C18 | 1870–1910 women from F/M ratios run 2.0% high against the 1910 hand table (foreign white +10.4%). |
+| C19 | 1870–1910 estimates: 1900 NT7 mislabel asserted; 1890 citizenship interpolated; 1870 IPF and clipped naturalized; colored splits. |
+| C20 | 1940 counts Mexican Americans as white: `other_races` 1.01M → 0.33M is classification, not population. |
+| C21 | 1960/1970 nativity carried from 1950: 1970 foreign-born whites ~3M high. |
+| C22 | 1940–1970 Negro share interpolated, 18–20 add-on, HI 1950 missing, GA 1944/48 18+ from 1950 ratio. |
+| C23 | Returns 1868–2024: 153 state-years fail the county-sum check (MO ~1.2×); A–A state file wrong for 1968 NC and 2020 NE. |
+| C24 | Pre-1868 adults all [I]: age-band splits, 1790 16+ conversion, no nativity before 1850. |
+| C25 | Alien-voting, property and taxpaying rules coded from memory of Keyssar/Hayduk; unchecked; GA 1840 turnout 102%. |
+| C26 | Felony rates 1972–2008 interpolated between 1980 bins and 2010; law changes smoothed; national fallback rates in agents. |
+| C27 | 1980–2024 adults: FB-by-race estimates, 1990 unraked, 2020 −1.96% to PL, borrowed files for 1972–2004. |
+| C28 | 1789–1824 popular votes fragmentary (~20 partial or lost rows; 1789, 1792, 1820 uncontested). |
+| C29 | Platforms 1789–2024: hand-copied Founders Online quotes, OCR sources, no platforms before 1840, 2020 R, 2024 D. |
+| C30 | Corpus build stopped by the user; schema inferred after blocked reads; per-year topics. |
+| D25 | Modern descriptors name offices: contamination total for 1988–2020. |
+| D26 | 1928 descriptors omit Catholicism and the wet stance; 1952 omits the war record. |
+| D27 | 1948 Wallace voters can only answer "other"; his planks never shown. |
+| D28 | Ballot access not expressible (1860, 1948 AL/LA/MS/SC, 1964 AL). |
+| D29 | Anderson 1980 and Perot 1992 planks from debates; Perot 1996 from janda.org; 1840/1844 Whig non-platform text. |
+| D30 | Unopposed 1789, 1792, 1820: one ballot line, no swap arm. |
+| D31 | Case-sensitive short-name masks, generic modern surnames, "the the", questionable label letters. |
+| D32 | Fixed: "Election Day is Tuesday" pre-1845, "independent Progressive" for every third candidate, `_lead` naming R. |
+| E7 | 1920 what-ifs run in other years by rewriting "1920"; text not reviewed per year. |
+| F7 | Profiles' slice-source sentences describe intended census builds, not the files used. |
+| F8 | Disputable ev_label conventions (pre-12th Amendment, 1824, 1832, 1860, 1872, 2000) and mixed slot order. |
+| G7 | Profile, config, platform and invariant generators live in scratchpads, not the repo. |
+| G8 | Holdout sets drawn three different ways. |
+| G9 | 1920/1924 byte-identity held except 1924's compile prompt (~$0.02 cache miss per typed text). |
+| E8 | 31 example what-ifs as chips; 1972/2000-FL specs hand-fixed, Nader made 2000's named third, 4 research cost stops, headline winner-first. |
+| A10 | Held-out benchmark read moved out of `Run.verify` into `benchmarks.py`; `test_benchmarks_isolated` passes again. |
+| C31 | Missouri 1820 and Michigan 1836 have electoral votes but no map tile. |
+| C32 | State electoral votes are electors allotted, not cast, in 8 years. |
+| C33 | Minor faithless and abstaining electors aren't listed in 7 years. |
+| F9 | "Washington, D.C." in typed text matches Washington state. |
+| G1 | Entry still said run ids don't hash the code; `run_id` already hashes `simharness/*.py`. Marked fixed. |
+| D33 | Staging, belief check (p6), reasoning audit, escalation, barred-slot replacement, focus and borrowed cohorts, spread floor; Opus at high effort for the once-per-change passes. |
+| D34 | Compiler c4: what-ifs modelled as asked (impossible timing gets its own world, graded fantastical); reinterpretations said first; substitutes never take the reader's words. |
+| D35 | Focus slots round-robin, unvotable cohorts skipped; belief check asks an unstated consequence; audit counts passing slips (staging w2). |
+| D36 | Live configs: interviews on Sonnet 5.5 at medium effort (was Haiku), escalations on Opus 5.5; fast mode (2x price) on every Opus call. Every year's controls are re-asked once on the new model. |

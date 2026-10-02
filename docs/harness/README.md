@@ -8,7 +8,8 @@ documents stay at the root.
 - **The statistical backbone** decides the counts.
 - **LLM agents** supply the counterfactual response and the quotes.
 
-Read [`METHOD.md`](../../METHOD.md) first. Then read [`EVAL.md`](../../EVAL.md) (the 1920 prototype's results, failures included).
+Read [`METHOD.md`](../../METHOD.md) first. Then read [`EVAL.md`](../../EVAL.md) (the 1920 prototype's results, failures included) and
+[`BUDGET.md`](../../BUDGET.md) (cost).
 
 **[`VALIDITY.md`](../../VALIDITY.md)** takes stock of what the harness can and can't claim: contamination by the language model's knowledge, leakage, historical bias, the held-out checks that exist and the ones that don't, and the next steps in order.
 
