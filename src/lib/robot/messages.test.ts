@@ -12,6 +12,8 @@ describe('page → frame', () => {
     { type: 'robot:walk', on: true },
     { type: 'robot:paint', paint: 'history' },
     { type: 'robot:paint', paint: 'rerun' },
+    { type: 'robot:blast', color: '#ff3344' },
+    { type: 'robot:blast', color: '#FFFFFF' },
   ])('parses $type', (message) => {
     expect(parseHostMessage(message)).toEqual(message);
   });
@@ -29,6 +31,12 @@ describe('page → frame', () => {
     ['a stage with zero width', { type: 'robot:stage', stage: { ...stage, width: 0 } }],
     ['a stage with an infinite edge', { type: 'robot:stage', stage: { ...stage, right: Number.POSITIVE_INFINITY } }],
     ['a stage with NaN', { type: 'robot:stage', stage: { ...stage, bottom: Number.NaN } }],
+    ['a blast without a colour', { type: 'robot:blast' }],
+    ['a blast in a named colour', { type: 'robot:blast', color: 'red' }],
+    ['a blast in shorthand hex', { type: 'robot:blast', color: '#f34' }],
+    ['a blast in rgb()', { type: 'robot:blast', color: 'rgb(255, 51, 68)' }],
+    ['a blast with a colour and more', { type: 'robot:blast', color: '#ff3344; background: url(x)' }],
+    ['the old overlay blast', { type: 'mecha-overlay:blast', color: '#ff3344' }],
     ['the old overlay protocol', { type: 'mecha-overlay:paint', paint: 'rerun' }],
     ['a frame-bound message', { type: 'robot:ready' }],
     ['a devtools message', { source: 'react-devtools-bridge', payload: {} }],

@@ -41,6 +41,9 @@
         case 'robot:paint':
           app.setPaint(message.paint);
           break;
+        case 'robot:blast':
+          app.blast(message.color);
+          break;
         default:
           message satisfies never;
       }

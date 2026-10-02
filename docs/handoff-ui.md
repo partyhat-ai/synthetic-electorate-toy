@@ -80,6 +80,8 @@ is the callback's argument.
 
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
 - `TimeBar`: `onchange(year)`, `onscrub(on)`, `onshuffle()`.
+- `RobotStage`: `ontap()` (the robot pressed and let go without turning it);
+  `blast(color)` fires its chest reactor.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
   `onaction(key)`, `onfocus(on)`; `bind:slot`, `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
@@ -150,7 +152,7 @@ POST timed out after it may have landed: poll, don't resubmit), or
   places the robot over it. Once drawn, the robot's anchors nudge its box
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
-  field.
+  field. A tap also fires its chest reactor, red, white and blue by turns.
 - **Draggable:** dragged across, the robot turns with the pointer (0.6° per
   px, held to ±180°) and, let go, eases back. A turn alone never restages
   the frame; only a moved box does (`boxMoved` in `src/lib/robot/stage.ts`).

@@ -19,6 +19,10 @@
   //                               { centerX, feetY } in window CSS px: the
   //                               robot's centre line and the floor under its
   //                               feet. null while it loads or while hidden.
+  //
+  // Methods
+  //   blast(color)                 A shot from the chest reactor in #rrggbb.
+  //                               Nothing before the frame is ready.
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   import type { Paint } from './characters';
@@ -40,6 +44,10 @@
 
   function post(message: HostMessage): void {
     frame?.contentWindow?.postMessage(message, location.origin);
+  }
+
+  export function blast(color: string): void {
+    if (readyCount > 0 && visible) post({ type: 'robot:blast', color });
   }
 
   // $state.snapshot: a reactive proxy can't be structured-cloned.

@@ -5,8 +5,8 @@
   // happened. Below are the groups of voters that decided it, including the
   // ones who couldn't vote, each a row of fifty people. The narrator robot
   // stands beside the what-if field: tap a suggestion or type your own, and
-  // it reruns the election and says what changed. The timeline along the
-  // bottom moves between elections.
+  // it reruns the election and says what changed; tapped, it fires its chest
+  // reactor. The timeline along the bottom moves between elections.
   //
   // This file is composition and layout. State: $lib/simulacra/state(.svelte).ts;
   // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
@@ -110,6 +110,13 @@
     });
   });
 
+  // A tap on the robot: a shot from its chest, red, white and blue by turns.
+  const BLAST_COLORS = ['#ff3344', '#ffffff', '#2f6bff'];
+  let blasts = 0;
+  function blast() {
+    robot?.blast(BLAST_COLORS[blasts++ % BLAST_COLORS.length] ?? '#ffffff');
+  }
+
   function act(key: string) {
     if (key === 'sample') {
       const url = new URL(location.href);
@@ -169,7 +176,8 @@
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
-      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl} />
+      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
+      ontap={blast} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's

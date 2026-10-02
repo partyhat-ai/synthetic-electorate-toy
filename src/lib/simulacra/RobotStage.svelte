@@ -19,7 +19,9 @@
   // after the nudge) the layer stays invisible over the still, so its first
   // frames, drawn before the nudge, never show; then one cross-fade.
   //
-  // Dragged across, the robot turns with the pointer and, let go, eases back.
+  // Dragged across, the robot turns with the pointer and, let go, eases back;
+  // tapped (pressed and let go without turning it), it calls `ontap`, and the
+  // page fires its chest reactor with `blast`.
   import { onDestroy, untrack } from 'svelte';
   import type { Paint } from '$lib/robot/characters';
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
@@ -41,8 +43,10 @@
     observe?: HTMLElement | null;
     /** The robot is drawn, nudged and settled. */
     shown?: boolean;
+    /** The robot was tapped (not dragged). */
+    ontap?: () => void;
   }
-  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false) }: Props = $props();
+  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), ontap }: Props = $props();
 
   const SETTLE_MS = 150;
   let host = $state<HTMLElement | null>(null);
@@ -54,6 +58,7 @@
   let measureFrame = 0;
   let nudge: Nudge = { x: 0, y: 0 };
   let nudged = false;
+  let frame = $state<ReturnType<typeof RobotFrame> | null>(null);
   /** The turn from a drag across the robot, degrees; 0 when let go. */
   let dragYaw = $state(0);
   let dragFrom: number | null = null;
@@ -63,6 +68,11 @@
   // eased in the renderer.
   const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length) + dragYaw);
   const stage = $derived(box ? { ...box, yaw: yawNow } : null);
+
+  /** A shot from the robot's chest reactor in `color` (#rrggbb). */
+  export function blast(color: string): void {
+    frame?.blast(color);
+  }
 
   // Turning the robot by hand. Listened for on the window and hit-tested
   // against the slot: the frame lets clicks through, and the slot is a
@@ -84,6 +94,7 @@
   }
   function robotUp(): void {
     if (dragFrom === null) return;
+    if (!dragged) ontap?.();
     dragFrom = null;
     dragYaw = 0;
     // The click (if any) lands before this; a drag released off the page leaves none.
@@ -170,7 +181,7 @@
 <svelte:window onresize={measureSoon} onpointerdown={robotDown} onpointermove={robotMove} onpointerup={robotUp} onpointercancel={robotUp} onclickcapture={robotClick} />
 
 <div class="robot-host" class:ready={robotReady && robotShown} bind:this={host} aria-hidden="true">
-  <RobotFrame {stage} visible={stageMode && !!stage} {walking} {paint} {onRobot} />
+  <RobotFrame bind:this={frame} {stage} visible={stageMode && !!stage} {walking} {paint} {onRobot} />
 </div>
 
 <style>
