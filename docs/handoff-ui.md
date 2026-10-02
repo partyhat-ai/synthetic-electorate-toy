@@ -21,10 +21,10 @@ being ported next and its route may differ.
    voters fill in from the left, the runner-up's from the right, and third
    parties, people who stayed home and people who couldn't vote sit in the
    middle.
-3. **The harness** (its face, until the robot is ported) sits beside the
-   what-if field and talks in a bubble. You tap a suggestion or type your own
-   and press Rerun; it says what changed and how sure it is. Tapping a group
-   makes it quote one person from that group.
+3. **The harness robot** stands beside the what-if field and talks in a
+   bubble. You tap a suggestion or type your own and press Rerun; the robot
+   says what changed and how sure it is. Tapping a group makes it quote one
+   person from that group.
 4. **History / Rerun.** After a rerun, this switch in the toolbar flips the
    portraits, map and dots between history and the rerun. Flipped states
    pulse on the map.
@@ -56,7 +56,7 @@ All under `src/lib/simulacra/` unless noted.
 | Portrait, winner ring and check, initials fallback, dark-mode photo fix | `Portrait.svelte` |
 | Tile map and flip marks | `MiniMap.svelte` (grid in `geo.ts`) |
 | A group's row of 50 dots, its caption and "was …" line | `SliceRow.svelte` |
-| The harness's face and bubble | `WhatIf.svelte` |
+| Robot slot and bubble | `WhatIf.svelte` |
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
 | What-if chips | `KindChips.svelte` |
 | The bubble's message type and kind labels | `whatif.ts` |
@@ -65,6 +65,7 @@ All under `src/lib/simulacra/` unless noted.
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |
 | Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
+| Placing the robot in a page | `src/lib/robot/` (ported separately) |
 
 ## The components' contract (Svelte 5, runes)
 
@@ -75,7 +76,7 @@ is the callback's argument.
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
 - `TimeBar`: `onchange(year)`, `onshuffle()`.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
-  `onaction(key)`, `onfocus(on)`; `bind:value`, `bind:input`.
+  `onaction(key)`, `onfocus(on)`; `bind:slot`, `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
 
 Every simulation call (`api.ts`, and `sample.ts` with the same shape)
@@ -91,14 +92,15 @@ returns the parsed answer or throws a `SimError` with a `reason`:
     middle column holds the year (44px) and the map (12px tiles).
   - Note and "Also ran": about 40px.
   - Who voted: a heading and five rows of 42px each.
-  - Composer: the harness's face beside the bubble, suggestions and field.
+  - Composer: the robot slot (168×220) beside the bubble, suggestions and
+    field.
   - Time bar: 68px, fixed.
 - **The busiest state to check:** `?sample=1&year=1912`, tap Taft Steps
   Aside, then Rerun. With a three-line verdict, Rerun's bottom edge sat at
   791px and the time bar's top at 832px. Anything you add above the composer
   comes out of those 41px.
 - **Breakpoints:**
-  - ≤760px: the header stacks.
+  - ≤760px: the header stacks, and the face stands in for the robot.
   - ≤700px: each row's dots drop under its label.
   - ≤560px: the time bar hides its 1850 and 1950 labels.
 - **Scroll container:** the page scrolls inside `.sa`, a fixed layer.
@@ -111,7 +113,8 @@ returns the parsed answer or throws a `SimError` with a `reason`:
   - Author neutral colours once, in light values: `#fff` renders black.
   - Party colours come from `paint(hue, light)`, which is authored twice.
   - Photos need `filter: invert(1) hue-rotate(180deg) saturate(66.7%)` in dark
-    mode, as the portraits and the harness's face already have.
+    mode, as the portraits and the robot's face already have.
+  - The 3D robot is outside the filter, so it's always true colour.
 - **The colours are validated.** The dataviz validator was run in both modes
   against the page's surfaces (`#e5e5e5` light, `#1a1a1a` dark).
   - The red/blue, blue/orange, aqua/violet and blue/green pairs pass.
@@ -131,6 +134,18 @@ returns the parsed answer or throws a `SimError` with a `reason`:
   - Controls are 34–36px high, with a `#3876b7` focus ring.
   - `prefers-reduced-motion` turns off the dot, map and fade transitions.
 - **Accessibility:** every control has a label; keep them meaningful.
+
+## The robot
+
+- **Browser tab:** the page measures the `WhatIf` slot (`bind:slot`) and
+  places the robot over it. Once drawn, the robot's anchors nudge its box
+  once, so its feet sit on the slot's floor.
+- **Clickable:** the slot is a button, so pressing the robot focuses the
+  field.
+- **When the robot isn't drawn**, the harness's face stands in (`face`,
+  `faceStyle`): windows ≤760px wide, and before WebGL loads.
+- **If you move the slot:** keep `bind:slot` on `WhatIf`, and re-measure
+  after anything that moves it.
 
 ## What the robot says
 

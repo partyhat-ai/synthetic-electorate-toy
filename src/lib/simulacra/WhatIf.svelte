@@ -1,16 +1,24 @@
 <script lang="ts">
-  // Where you talk to the harness: its face at the left, what it's doing in
-  // its bubble, and a what-if — a suggestion tapped, or your own words — that
-  // reruns the election. The chips, field and Rerun are WhatIfComposer.
+  // Where you talk to the harness: it stands at the left (the page frames the
+  // 3D robot into the slot; a face stands in where the robot isn't drawn),
+  // says what it's doing in its bubble, and takes a what-if — a suggestion
+  // tapped, or your own words — and reruns the election with it. The chips,
+  // field and Rerun are WhatIfComposer.
   import type { WhatIf } from './schemas';
   import type { Message } from './whatif';
   import WhatIfComposer from './WhatIfComposer.svelte';
 
   interface Props {
     name?: string;
-    /** The harness's face. */
+    /** The harness's face, for where no robot is drawn. */
     face?: string;
     faceStyle?: string;
+    /** Reserve room for the drawn robot… */
+    stage?: boolean;
+    /** …and it's there. */
+    robotShown?: boolean;
+    /** The robot's spot (for the page to measure). */
+    slot?: HTMLElement | null;
     message?: Message;
     whatIfs?: readonly WhatIf[];
     selected?: readonly string[];
@@ -41,6 +49,9 @@
     name = 'Harness',
     face = '',
     faceStyle = '',
+    stage = false,
+    robotShown = false,
+    slot = $bindable(null),
     message = { text: '' },
     whatIfs = [],
     selected = [],
@@ -64,11 +75,12 @@
   const msgKey = $derived((message.text ?? '') + (message.quote ?? ''));
 </script>
 
-<section class="whatif" aria-label="What if">
-  <!-- The harness's face: pressing it is talking to it. -->
-  <button type="button" class="bot" aria-label="Election Sim Harness" title="Election Sim Harness"
+<section class="whatif" class:stage aria-label="What if">
+  <!-- The robot stands over this spot (drawn by the page's overlay, which
+       lets clicks through): pressing it is talking to it. -->
+  <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
     disabled={closed || running} onclick={() => input?.focus()}>
-    {#if face}
+    {#if !robotShown && face}
       <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
     {/if}
   </button>
@@ -105,6 +117,8 @@
     align-items: start;
     gap: 12px;
   }
+  /* Room for the robot to stand in. */
+  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); min-height: 220px; }
   .bot {
     position: relative;
     height: 44px;
@@ -116,6 +130,8 @@
   }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* The robot stands in the slot's full height, feet on its floor. */
+  .stage .bot { height: auto; align-self: stretch; }
   .face {
     position: absolute;
     left: 0;
@@ -129,6 +145,7 @@
   }
   /* The face is a photo: under dark mode's invert, turned back. */
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
+  .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
   /* The what-if section's colours, as tokens the pieces read too:
        --label / --label-2 / --label-3   text, secondary text, placeholder

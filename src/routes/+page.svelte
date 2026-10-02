@@ -3,15 +3,18 @@
   // fact changed. It opens on a real election (one of the ten with stories,
   // at random, or ?year=): the two candidates, who won, and the map as it
   // happened. Below are the groups of voters that decided it, including the
-  // ones who couldn't vote, each a row of fifty people. The harness's face
-  // sits beside the what-if field: tap a suggestion or type your own, and
+  // ones who couldn't vote, each a row of fifty people. The narrator robot
+  // stands beside the what-if field: tap a suggestion or type your own, and
   // it reruns the election and says what changed. The timeline along the
   // bottom moves between elections.
   //
-  // This file is composition and layout, and what the robot says. State:
-  // $lib/simulacra/state(.svelte).ts.
+  // This file is composition and layout, what the robot says and where it
+  // stands. State: $lib/simulacra/state(.svelte).ts.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
+  import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
+  import RobotFrame from '$lib/robot/RobotFrame.svelte';
+  import { type Nudge, nudgeToSlot, sameStage, stageInSlot } from '$lib/robot/stage';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
   import ElectionHeader from '$lib/simulacra/ElectionHeader.svelte';
@@ -41,7 +44,11 @@
     },
   });
 
+  let mainEl = $state<HTMLElement | null>(null);
+  let slotEl = $state<HTMLElement | null>(null);
   let inputEl = $state<HTMLInputElement | null>(null);
+  let robotShown = $state(false);
+  let narrow = $state(false);
 
   const e = $derived(page.election);
   const B = $derived(e.candidates[1] ?? null);
@@ -53,6 +60,9 @@
   const baseSlices = $derived(new Map((page.sim?.slices ?? []).map((s) => [s.key, s])));
   const reached = $derived(new Set(page.selected.flatMap((k) => page.whatIfs.find((w) => w.key === k)?.slices ?? [])));
   const hasOthers = $derived(slices.some((s) => s.O > 0.005));
+  // A browser tab draws the robot into the slot beside the field; a
+  // phone-width window shows its face.
+  const stageMode = $derived(!narrow);
 
   // The composer's chips, and whether there's nothing to rerun.
   const composer = $derived<{ chips: readonly WhatIf[]; closed: boolean }>({
@@ -68,6 +78,55 @@
     if (page.voterKey) page.fetchVoter();
   });
 
+  // ── The robot, framed into the WhatIf slot (RobotFrame, fixed over the
+  // window). The page measures the slot and stands the robot in it; once
+  // drawn, the robot's anchors nudge its box once, so its feet sit on the
+  // slot's floor. ──
+  /** The robot's box. */
+  let stage = $state<RobotStage | null>(null);
+  let measureFrame = 0;
+  let nudge: Nudge = { x: 0, y: 0 };
+  let nudged = false;
+
+  function measureStage(): void {
+    measureFrame = 0;
+    if (!stageMode || !slotEl) {
+      stage = null;
+      return;
+    }
+    const next = stageInSlot(new DOMRect(0, 0, innerWidth, innerHeight), slotEl.getBoundingClientRect(), nudge);
+    if (!sameStage(stage, next)) stage = next;
+  }
+
+  /** Measures on the next frame (once, however often it's asked). */
+  function measureSoon(): void {
+    if (!measureFrame) measureFrame = requestAnimationFrame(measureStage);
+  }
+
+  $effect(() => {
+    void stageMode;
+    void slotEl;
+    untrack(measureSoon);
+  });
+  $effect(() => {
+    if (!mainEl) return;
+    const ro = new ResizeObserver(measureSoon);
+    ro.observe(mainEl);
+    return () => ro.disconnect();
+  });
+
+  function onRobot(anchors: RobotAnchors | null): void {
+    const on = !!anchors;
+    if (on !== robotShown) robotShown = on;
+    if (!anchors || nudged || !slotEl || !stage) return;
+    const d = nudgeToSlot(slotEl.getBoundingClientRect(), anchors);
+    nudged = true;
+    if (Math.abs(d.x) > 3 || Math.abs(d.y) > 3) {
+      nudge = { x: nudge.x + d.x, y: nudge.y + d.y };
+      measureStage();
+    }
+  }
+
   function act(key: string) {
     if (key === 'sample') {
       const url = new URL(location.href);
@@ -80,7 +139,8 @@
   }
 
   // ── What the robot says, in the order docs/handoff-ui.md lists ──
-  // The ChatPro harness's face, cropped as the robot overlay crops it.
+  // The ChatPro harness's face, cropped as the robot overlay crops it: where
+  // no robot is drawn (narrow windows, before WebGL loads).
   const NAME = 'ChatPro';
   const FACE = '/harness-faces/atlas-09.png?v=5';
   const FACE_STYLE = 'transform: scale(1.213) translate(0%, 4%)';
@@ -246,6 +306,10 @@
   }
 
   onMount(() => {
+    const small = window.matchMedia('(max-width: 760px)');
+    const readSmall = () => (narrow = small.matches);
+    readSmall();
+    small.addEventListener('change', readSmall);
     // Dark mode follows the system: the page's invert (.sa.dark).
     const dark = window.matchMedia('(prefers-color-scheme: dark)');
     const readDark = () => (page.light = !dark.matches);
@@ -254,18 +318,27 @@
     void tick().then(() => {
       page.urlReady = true;
       page.syncUrl();
+      measureSoon();
     });
-    return () => dark.removeEventListener('change', readDark);
+    return () => {
+      small.removeEventListener('change', readSmall);
+      dark.removeEventListener('change', readDark);
+    };
   });
-  onDestroy(() => page.dispose());
+  onDestroy(() => {
+    page.dispose();
+    cancelAnimationFrame(measureFrame);
+  });
 </script>
 
 <svelte:head>
   <title>Simulacra Americana</title>
 </svelte:head>
-<svelte:window onkeydown={onKey} />
+<svelte:window onkeydown={onKey} onresize={measureSoon} />
 
-<div class="sa" class:dark={!page.light}>
+<RobotFrame {stage} visible={stageMode && !!stage} walking={page.running} {onRobot} />
+
+<div class="sa" class:dark={!page.light} onscroll={measureSoon}>
   <div class="page">
     <header class="top">
       <span class="brand">Simulacra Americana</span>
@@ -290,7 +363,7 @@
       </span>
     </header>
 
-    <main class="main">
+    <main class="main" bind:this={mainEl}>
       <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
 
       <section class="groups" aria-labelledby="sa-groups">
@@ -332,7 +405,7 @@
         {/if}
       </section>
 
-      <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} bind:input={inputEl}
+      <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} stage={stageMode} {robotShown} bind:slot={slotEl} bind:input={inputEl}
         {message} whatIfs={composer.chips} selected={page.selected} slice={page.openSlice} bind:value={page.typed}
         running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0 || !!page.edits}
         ran={page.result?.ran ?? []} dirty={page.dirty} closed={composer.closed}
