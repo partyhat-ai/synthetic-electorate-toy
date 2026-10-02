@@ -415,8 +415,9 @@ grade is its tier × the extractor's match judgement (same-event …
 distant). Neither is validated.
 
 **H3 · Medium · open · blend weights**
-Evidence sd grows as 1/√grade. Weak evidence barely moves numbers:
-Chaplin's evidence weight is under 1%.
+Evidence sd grows as 1/√grade. The interview sd is floored at 0.2 logit,
+because a bootstrap over two or three people understates model error. Weak
+evidence barely moves numbers: Chaplin's evidence weight is under 1%.
 
 **H4 · Medium · open · confidence tiers**
 `evidence.confidence` is a rule set:
@@ -467,3 +468,21 @@ out". Its counterfactual brief then differed from the control by more than
 the change. The spec was edited by hand to drop nothing, and its 12
 interviews were re-asked. Compiler c2 drops only topics that the settled
 facts make false.
+
+**D18 · Medium · open · a quote named a nominee**
+A flu counterfactual quote said "That fellow Cox" (south:M:native_white-1)
+from a blinded brief. This is more evidence of D2 and L1: the model knows
+1920. Quotes aren't scanned for real names before publishing.
+
+**D19 · Low · open · choice and quote disagree**
+Haiku sometimes picks one candidate and quotes for the other:
+- Chaplin run, midwest man: choice Harding, quote "I'm going with the
+  Democrat".
+- Flu run, Arthur Hayes: choice Cox, quote praising "the Republican".
+
+The counts use the choice and p_choice; the page shows the quote.
+
+**D20 · Medium · open · evidence sign**
+The extractor recorded the historical direction as the scenario's effect.
+"The League hurt Cox" became toward-R for a scenario that removes the
+League.

@@ -1,0 +1,81 @@
+{
+  "run_id": "1920-81fea0e377",
+  "config": {
+    "election": 1920,
+    "election_day": "1920-11-02",
+    "context_cutoff": "1920-11-01",
+    "mode": "truth",
+    "what_ifs": [
+      "no-19th",
+      "fifteenth",
+      "league",
+      "charlie-chaplin-runs",
+      "influenza-returns-in-october-1920"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p4",
+    "holdout": [
+      "CA",
+      "FL",
+      "ID",
+      "IN",
+      "LA",
+      "MI",
+      "MO",
+      "MT",
+      "NC",
+      "NY",
+      "OH",
+      "OK"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_1916_1920_1924.csv": "39b0dbc19249663a",
+    "population/adults_1920_by_state.csv": "3a760fb7fb5f976b",
+    "population/adults_1910_by_state.csv": "78ec7a0ca2094430",
+    "franchise/state_franchise_1920.csv": "e70f04ec2c75e644",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "sources/corpus_1920.jsonl": "4f7e4abc4cf3b7e0",
+    "context/platforms_1920.json": "7415a7d0c9c458ed",
+    "whatifs/evidence/league.json": "5ab927fba91b602b",
+    "whatifs/charlie-chaplin-runs.json": "c9f46ae245aebb1e",
+    "whatifs/evidence/charlie-chaplin-runs.json": "eb583bddffa9f97f",
+    "whatifs/influenza-returns-in-october-1920.json": "7ac4eddeb066f63b",
+    "whatifs/evidence/influenza-returns-in-october-1920.json": "45960a4ebb97181a"
+  }
+}

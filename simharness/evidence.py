@@ -337,9 +337,10 @@ def prior(ev: dict, cohort: dict, base: dict) -> dict:
             continue
         w = np.array([r[2] for r in rows])
         pp = float(np.average([r[0] for r in rows], weights=w))
+        spread = float(np.sqrt(np.average([(r[0] - pp) ** 2 for r in rows], weights=w)))
         pm = float(np.average([r[1] for r in rows], weights=w))
         g = float(min(1.0, w.max()))
-        sd_pp = np.sqrt(pm ** 2 + 3.0 ** 2) / np.sqrt(max(g, 0.05))
+        sd_pp = np.sqrt(pm ** 2 + spread ** 2 + 3.0 ** 2) / np.sqrt(max(g, 0.05))
         b = float(np.clip(b, 0.01, 0.99))
         new = float(np.clip(b + pp / 100, 0.005, 0.995))
         out[key] = (float(logit(new) - logit(b)), float(sd_pp / 100 / (b * (1 - b))), len(rows))
@@ -353,7 +354,9 @@ def blend(cohort_eff: dict, pri: dict) -> dict:
     used = {}
     for key, (mu_e, sd_e, n) in pri.items():
         d = draws[key]
-        mu_a, sd_a = float(d.mean()), float(d.std())
+        # A bootstrap over two or three people understates how wrong the model can be;
+        # floor it near the Sonnet–Opus disagreement on the same people (D8, ~0.15 logit).
+        mu_a, sd_a = float(d.mean()), max(float(d.std()), 0.2)
         prec_a, prec_e = 1 / sd_a ** 2, 1 / sd_e ** 2
         mu_p = (mu_a * prec_a + mu_e * prec_e) / (prec_a + prec_e)
         sd_p = (prec_a + prec_e) ** -0.5
@@ -384,7 +387,8 @@ def _agree_one(ev: dict, national: dict, measure: str, key: str, b: float) -> di
                           f'({agent_pp:+.1f} points), without numbers.'}
     w = np.array([r[2] for r in rows])
     ev_pp = float(np.average([r[0] for r in rows], weights=w))
-    ev_pm = float(np.average([max(r[1], 2.0) for r in rows], weights=w))
+    spread = float(np.sqrt(np.average([(r[0] - ev_pp) ** 2 for r in rows], weights=w)))
+    ev_pm = float(np.hypot(np.average([max(r[1], 2.0) for r in rows], weights=w), spread))  # the analogues disagree too
     overlap = not (hi < ev_pp - ev_pm or lo > ev_pp + ev_pm)
     same_sign = np.sign(ev_pp) == np.sign(agent_pp) or abs(ev_pp) < 1 or abs(agent_pp) < 0.5
     verdict = 'corroborated' if overlap and same_sign else 'consistent' if same_sign else 'contradicted'
