@@ -2,8 +2,8 @@
 
 **Run.** `runs/1920-bcbd86b43f`, seed 1920, 400 draws, truth mode, prompt p1.
 
-Every number below is copied from `runs/1920-bcbd86b43f/validation.json` and
-`analysis.json`.
+Every number below is copied from `runs/1920-bcbd86b43f/validation.json`,
+`analysis.json` and `published/1920.json`.
 
 ## Summary
 
@@ -31,7 +31,46 @@ Every number below is copied from `runs/1920-bcbd86b43f/validation.json` and
   - Its paired effect for the League what-if has a stable sign across three
     paraphrases and two models.
 - **The biggest uncertainty is β_B**, how Black voters split. The state
-  returns can't identify it (see "The biggest uncertainty" below).
+  returns can't identify it. It swings the `fifteenth` result from 416 to 449
+  Harding electoral votes (see "The biggest uncertainty" below).
+
+## What-if results (published bundle)
+
+Harding is A; Cox is B. Ranges are the central 80% of Harding's electoral
+votes across 400 draws.
+
+| What-if | Harding EV (point, 80% range) | Cox wins in | States flipped (point) | States with P(flip) > 10% | Popular vote, Harding / Cox |
+|---|---|---|---|---|---|
+| None (history) | 404 (404–404) | 0 / 400 | none | none | 60.2% / 34.1% of 26.80M |
+| `no-19th` (franchise, high) | 429 (417–429) | 0 / 400 | KY, NC | KY 0.99, NC 0.64 | 62.2% / 32.0% of 23.66M |
+| `fifteenth` (franchise, high) | 416 (404–475) | 0 / 400 | NC | NC 0.51, AR 0.29, VA 0.20, AL 0.19, FL 0.16, LA 0.16 | 60.8% / 33.6% of 27.41M |
+| `league` (issue, low) | 404 (392–404) | 0 / 400 | none (TN holds by 0.3 points) | TN 0.12 | 57.8% / 36.7% of 26.36M |
+| `everyone` (franchise) | 416 (392–455) | 0 / 400 | NC | NC 0.52, AL 0.20, VA 0.16 | 58.1% / 36.0% of 61.75M |
+
+Combinations are in the bundle. For example, `fifteenth+no-19th` gives 441
+(417–488) and flips KY, NC and VA.
+
+Verdicts as the robot says them:
+
+> **`no-19th`:** 3.1 million women who voted can't, outside the states that
+> already let them. Kentucky, North Carolina flip, but Harding still wins,
+> 429–102. The closest call is Tennessee, which holds for Harding by 3.0
+> points. Cox wins in 0 of 400 draws.
+
+> **`league`:** With the treaty settled, the voters I interviewed lean 2.7
+> points further toward Cox than the same people did in the world as it was.
+> No state flips. Harding wins, 404–127. The closest call is Tennessee, which
+> holds for Harding by 0.3 points. Cox wins in 0 of 400 draws.
+
+**How to read these:**
+- **`no-19th`** helps Harding. The backbone's women's tilt δ is −0.67 logit
+  (80% interval −0.98 to −0.35), meaning women leaned *toward Cox* relative to
+  men of their state, so removing them helps Harding. This comes from a
+  regression of the 1916 → 1920 swing on the new-women share. It is
+  identified mostly by the West/East contrast, which region can confound (see
+  limitations).
+- **`league`** moves every group toward Cox. The simulated voters lose a
+  reason to vote against the administration's party. Nothing flips.
 
 ## Pre-registered checks
 
@@ -92,7 +131,8 @@ denominator):
   ("I'll vote Republican", "the Lincoln ticket") that no brief ever named.
   - None names a candidate.
   - None uses hindsight language ("landslide", "will win").
-  - A party name in a quote is the model's own inference, now documented.
+  - Quotes are published with `namesRestored: true`. A party name in a quote
+    is the model's own inference, now documented.
 - **Dates.**
   - Every source item is dated 1920-06-01 to 1920-11-01.
   - p1 briefs were dated 30 October but could include items from 31 October
@@ -161,21 +201,26 @@ denominator):
   logit (region intercepts, 1916 lag). That runs against the documented
   history, and it is carried by six border states with larger Black shares
   and smaller swings.
-- **What the run uses.** The pre-registered prior, N(1.5, 1), updated by
-  that regression, gives a median of 0.50 (80% interval −0.70 to 1.68).
+- **What the published run uses.** The pre-registered prior, N(1.5, 1),
+  updated by that regression, gives a median of 0.50 (80% interval −0.70 to
+  1.68).
 - **The sensitivity**, same seed:
 
-| β_B from | Black voters outside the South, Harding share |
-|---|---|
-| Prior updated by Goodman (used) | 73% (48–88%) |
-| Prior only, N(1.5, 1) | 88% (67–96%) |
+| β_B from | Black voters outside the South, Harding share | `fifteenth` Harding EV (80% range) | P(flip) > 10% |
+|---|---|---|---|
+| Prior updated by Goodman (published) | 73% (48–88%) | 416 (404–475) | NC 0.51, AR 0.29, VA 0.20, AL 0.19, FL 0.16, LA 0.16 |
+| Prior only, N(1.5, 1) | 88% (67–96%) | 449 (404–489) | NC 0.82, AR 0.66, VA 0.55, AL 0.52, LA 0.48, FL 0.47, GA 0.35, MS 0.34 |
 
 - **Which is closer to history?** The prior-only row encodes the
   documented loyalty of Black voters to the Republican party before 1932. The
-  used row lets the confounded regression pull it down.
+  published row lets the confounded regression pull it down.
 - **What would settle it:** county returns against county composition (NHGIS,
   needs registration), or a documented estimate of Black voters' choice in
   1920 from the literature (not found by the research agents).
+
+The page should present `fifteenth` with its range, as the bundle does:
+"Harding carries 404–475". The flips in AR, VA, AL, FL and LA are live
+possibilities, not results.
 
 ## Uncertainty budget
 

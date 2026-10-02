@@ -469,4 +469,7 @@ Failures are published in `result.validation`, in `EVAL.md` and here (§G).
    `EVAL.md` (deviation 10) says which. The production path is
    `anthropic-batch`, and the agent-layer numbers should be rerun there
    before they are cited.
+9. **β_B**, how Black voters split, is barely identified from state returns.
+   It moves the `fifteenth` result from 416 to 449 Harding electoral votes
+   (EVAL.md).
 8. **The household economy is imputed** until the IPUMS full count is pulled.

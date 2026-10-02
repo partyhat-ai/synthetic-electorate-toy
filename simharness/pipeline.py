@@ -1,5 +1,6 @@
-"""The pipeline's stages: backbone, plan, ask, analyze and evaluate. Each writes
-into runs/<run id>/ and can be rerun alone; run.py is the command line.
+"""The pipeline's stages other than publish (publish.py): backbone, plan, ask,
+analyze and evaluate. Each writes into runs/<run id>/ and can be
+rerun alone; run.py is the command line.
 """
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ import numpy as np
 
 from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, llm, paired, quotes
 from .config import RUNS, RunConfig
+from .publish import Publisher
 from .stats import logit
 from .whatifs import REGISTRY, apply_effects
 
@@ -19,7 +21,7 @@ from .whatifs import REGISTRY, apply_effects
 CAND = {0: 'Harding', 1: 'Cox', 2: 'another candidate'}
 
 
-class Run:
+class Run(Publisher):
     def __init__(self, cfg: RunConfig):
         self.cfg = cfg
         self.inp, self.extras = data.load(cfg)

@@ -307,3 +307,63 @@ is larger than any effect.
 Prompt p3 (run `1920-423843d9ec`): no quote used a letter label (0 of 24,
 fixes D11). Haiku ignored the 25-word cap (mean 30.5, max 40 words). A hard
 limit needs a trim at publish or a schema maxLength, not prompt wording.
+
+**A5 · Medium · open · `result.drawsWon`**
+"Cox wins in 0 of 400 draws" sounds more certain than it is. The draws cover
+parameter and population noise only. They don't cover model-structure
+choices:
+- the κ assumption
+- the β_B prior
+- the 80% accounting bound
+- the smoothing
+
+N1's failed coverage is direct evidence that the intervals are too narrow.
+
+**Next:** add structural variants to the draws, or say "0 of 400 draws of
+this model".
+
+**A6 · Medium · open · A4 stereotype audit**
+The "pass" (0 of 66 flagged) comes from a regex. No person read the 66
+reasons. Don't cite it as an audit until someone has.
+
+**A7 · Low · fixed · `NOTE-FOR-UI-FROM-HARNESS.md`**
+The first draft of the UI note showed invented example numbers ("fails 2 of
+17 checks", "318–352") that looked like results. They were replaced with the
+real figures.
+
+**A8 · Low · fixed · session summary**
+The first research prompt pointed to a data folder that doesn't exist
+(`resetion_sim_data`). The data used is in
+`research_notes/historical_election_sim_data`.
+
+**F1 · Medium · open · `sample.js` (the UI's file)**
+The `no-19th` detail, "fifteen states that already let them", counts only
+full-suffrage states. Twenty-seven states had given women the presidential
+vote. Flagged in the UI note; not edited.
+
+**F2 · Medium · open · `sample.js` women slice**
+It treats Georgia and Mississippi women as voting in 1920.
+
+**F3 · Medium · open · `stories.js` / `HANDOFF-SIMULATION.md`**
+HANDOFF-SIMULATION lists story facts that are still unverified: 1800, 1860,
+1876, 1896, 1912, 1948 ("bubbles in a bar of soap"), 1960, 1968, 2000 and
+2016. This harness didn't check them.
+
+**F4 · Low · open · `history.js`**
+Its known approximations are listed in HANDOFF-SIMULATION: split
+delegations, 1836, 1872, 1864, faithless electors. The totals aren't yet
+checked against NARA for every year. For 1920, 404–127 matches NARA.
+
+**F5 · Medium · open · page slices**
+The five 1920 groups are a partition, but they carry small misfits:
+- "White Southerners" includes the few American Indian and Asian adults in
+  the South.
+- "Men outside the South" includes Black Northern men.
+- Poor white Southerners kept out by poll taxes show as "stayed home", not
+  "couldn't vote".
+
+**F6 · Low · open · verdict copy**
+- A multi-what-if verdict concatenates single-what-if sentences, so a
+  combination can say "3.1 million women" measured in a different world
+  from the combined one.
+- The League verdict's "2.7 points" is measured in the point draw only.

@@ -1,8 +1,8 @@
 // Simulacra Americana's connection to the simulation server, under
-// /api/simulacra. The page shows each election as it happened (history.ts)
-// with none of it; the groups of voters, the what-ifs and every rerun come
-// from here, or from the labelled stand-in in sample.ts, which has the
-// same shape.
+// /api/simulacra (pnpm serve in development, proxied by Vite). The page
+// shows each election as it happened (history.ts) with none of it; the
+// groups of voters, the what-ifs and every rerun come from here, or from the
+// labelled stand-in in sample.ts, which has the same shape.
 //
 // Every answer is parsed once here (schemas.ts). A call that fails throws a
 // SimError saying why.

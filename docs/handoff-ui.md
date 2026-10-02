@@ -37,7 +37,9 @@ could be a sentence in the robot's bubble instead.
 
 ## Run it
 
-- **Dev:** `pnpm dev` serves the page.
+- **Dev:** `pnpm dev` serves the page; `pnpm serve` runs the local
+  simulation server on port 8787, and Vite proxies `/api` to it
+  (`vite.config.ts`).
 - **URLs** (query parameters, on the page's route):
   - `?sample=1`: sample data (`sample.ts`), starting on a random story year.
   - `&year=1896`: a given year. The page keeps `year` in the URL as it moves.
@@ -195,7 +197,7 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
 
 - `pnpm lint && pnpm check && pnpm size && pnpm test`.
 - The sample model's outcomes for every story what-if:
-  `pnpm dlx tsx scripts/model-check.ts`.
+  `pnpm tsx scripts/model-check.ts`.
 - **Look at it** with the dev server on `?sample=1&year=1896`.
 
 ## Rough edges (good first tasks)
