@@ -73,7 +73,7 @@
     else if (key === 'shuffle') page.setYear(randomStory(page.year));
   }
 
-  // ── What the robot says ──
+  // ── What the robot says, in the order docs/handoff-ui.md lists ──
   // The ChatPro harness's face, cropped as the robot overlay crops it.
   const NAME = 'ChatPro';
   const FACE = '/harness-faces/atlas-09.png?v=5';
