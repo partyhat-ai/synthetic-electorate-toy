@@ -39,9 +39,10 @@ def build(cells: pd.DataFrame, cap: int = 40, min_share: float = 0.004) -> tuple
         return cells.loc[groups[k], 'adults20'].sum()
 
     while True:
-        keys = sorted(groups, key=size)
+        # A national cohort can't merge further, so it's never picked.
+        keys = [k for k in sorted(groups, key=size) if k[0] != 'national']
         small = [k for k in keys if size(k) < min_share * total]
-        if len(groups) <= cap and not small:
+        if (len(groups) <= cap and not small) or not keys:
             break
         k = small[0] if small else keys[0]
         region, sex, group = k
