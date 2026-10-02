@@ -338,6 +338,13 @@
     transition: opacity 0.2s ease;
   }
   .bubble.busy { opacity: 0.85; }
+  /* Rerun: lit from above. The page is inverted there (theme.css), so a
+     dark inset and sheen on the white bubble render as a white top hairline
+     and a faint highlight on the dark one. */
+  :global(.sa.dark) .bubble {
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.22);
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.045), rgba(0, 0, 0, 0) 45%);
+  }
   /* The tail pointed at the robot beside the bubble; it now stands below. */
   .bubble::after { display: none; }
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
