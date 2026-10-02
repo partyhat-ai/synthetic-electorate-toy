@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import random
 import time
 from pathlib import Path
@@ -41,6 +42,31 @@ def cost(model: str, usage: dict, batch: bool = False) -> float:
     out = usage.get('output_tokens', 0)
     dollars = (fresh * p_in + written * p_in * 1.25 + cached * p_cache + out * p_out) / 1e6
     return dollars * (0.5 if batch else 1.0)
+
+
+KEY_FILE = Path.home() / '.config/simulacra/anthropic.env'
+
+
+def api_key() -> str | None:
+    """ANTHROPIC_API_KEY if set, else ~/.config/simulacra/anthropic.env. Never printed or logged."""
+    if os.environ.get('ANTHROPIC_API_KEY'):
+        return os.environ['ANTHROPIC_API_KEY']
+    if KEY_FILE.exists():
+        for line in KEY_FILE.read_text().splitlines():
+            if line.startswith('ANTHROPIC_API_KEY='):
+                return line.split('=', 1)[1].strip()
+    return None
+
+
+def estimate(requests: list[dict], max_tokens: int, batch: bool = False) -> dict:
+    """Dry-run dollars: input at ~4 chars/token (system uncached, to be safe),
+    output at a typical 600 tokens and at the max_tokens worst case."""
+    typical = worst = 0.0
+    for r in requests:
+        tin = (len(r['system']) + len(r['user']) + len(json.dumps(r['schema']))) / 4
+        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(600, max_tokens)}, batch)
+        worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens}, batch)
+    return {'requests': len(requests), 'typical': round(typical, 4), 'worst': round(worst, 4)}
 
 
 def _parse(text: str):
@@ -64,7 +90,7 @@ class AnthropicBackend(Backend):
     def __init__(self, effort: str = 'low', max_tokens: int = 4000):
         import anthropic  # imported lazily: the backbone needs no SDK
         self.anthropic = anthropic
-        self.client = anthropic.Anthropic()
+        self.client = anthropic.Anthropic(api_key=api_key())
         self.effort = effort
         self.max_tokens = max_tokens
 

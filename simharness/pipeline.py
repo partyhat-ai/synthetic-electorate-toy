@@ -25,6 +25,10 @@ class Run:
         self.inp, self.extras = data.load(cfg)
         self.manifest = self.extras['manifest']
         self.id = cfg.run_id(self.manifest)
+        # Short model names in request ids; the analysis pairs on these, not on a hardcoded 'sonnet'.
+        self.bulk = agentlayer.SHORT.get(cfg.agents.bulk_model, cfg.agents.bulk_model)
+        self.check = agentlayer.SHORT.get(cfg.agents.check_model, cfg.agents.check_model)
+        self.models = tuple(dict.fromkeys((self.bulk, self.check)))
         self.year = cfg.election
         self.cand = CAND
         self.dir = RUNS / self.id
@@ -67,15 +71,17 @@ class Run:
         for r in reqs:
             k = (r['meta']['arm'].split(':')[0], r['model'])
             counts[str(k)] = counts.get(str(k), 0) + 1
+        ag = self.cfg.agents
         return {'agents': len(agents), 'requests': len(reqs), 'by_arm_model': counts, 'cohorts': len(cohorts),
-                'cohort_keys': sorted(cohorts, key=lambda k: -cohorts[k].get('adults', 0))[:12]}
+                'cohort_keys': sorted(cohorts, key=lambda k: -cohorts[k].get('adults', 0))[:12],
+                'estimate': llm.estimate(reqs, ag.max_tokens, ag.backend == 'anthropic-batch')}
 
     def requests(self):
         return [json.loads(l) for l in (self.dir / 'agents/all_requests.jsonl').read_text().splitlines() if l.strip()]
 
     def ask(self):
         ag = self.cfg.agents
-        be = llm.backend(ag.backend, self.dir / 'agents/transcript', ag.effort)
+        be = llm.backend(ag.backend, self.dir / 'agents/transcript', ag.effort, ag.max_tokens)
         reqs = self.requests()
         merged = None
         if self.cfg.agents.backend == 'transcript':
@@ -87,6 +93,12 @@ class Run:
             have = {json.loads(l)['id'] for l in path.read_text().splitlines() if l.strip() and json.loads(l).get('ok')}
         todo = [r for r in reqs if r['id'] not in have]
         batch = ag.backend == 'anthropic-batch'
+        est = llm.estimate(todo, ag.max_tokens, batch)
+        print(f"estimate: {est['requests']} requests, ~${est['typical']} typical, ${est['worst']} worst case", flush=True)
+        if ag.max_requests is not None and len(todo) > ag.max_requests:
+            raise SystemExit(f'refusing: {len(todo)} requests > max_requests {ag.max_requests}')
+        if ag.max_dollars is not None and est['worst'] > ag.max_dollars:
+            raise SystemExit(f"refusing: worst case ${est['worst']} > max_dollars {ag.max_dollars}")
         t0 = time.time()
         got = be.run(todo) if todo else []
         spent = sum(llm.cost(g['model'], g.get('usage') or {}, batch) for g in got)
@@ -177,7 +189,7 @@ class Run:
         for rid, r in reqs.items():
             if r['meta']['kind'] != 'swap' or rid not in ans:
                 continue
-            ctl = norm(f'control|{r["meta"]["agent"]}|sonnet')
+            ctl = norm(f'control|{r["meta"]["agent"]}|{self.bulk}')
             if not ctl or ctl['choice'] not in ('R', 'D'):
                 continue
             chosen = ans[rid]['data'].get('choice')
@@ -196,7 +208,7 @@ class Run:
             for aid, a in agents.items():
                 if a['group'] == 'foreign_white_alien' and REGISTRY[wk]['mode'] == 'backbone':
                     continue  # planned in error for p1 (brief contradicted itself); excluded, see EVAL.md
-                for model in ('sonnet', 'opus'):
+                for model in self.models:
                     c, f = norm(f'control|{aid}|{model}'), norm(f'cf:{wk}|{aid}|{model}')
                     if c and f:
                         pairs.setdefault(a['cohort'], []).append((c, f, a['paraphrase'], model))
@@ -217,8 +229,8 @@ class Run:
             eff['by_model'] = {m: nat(ps) for m, ps in by_model.items()}
             # the Sonnet/Opus comparison uses only agents asked on both
             both = [(c, f, m) for ps in pairs.values() for c, f, p, m in ps]
-            ids_opus = {c['agent'] for c, f, m in both if m == 'opus'}
-            shared = {m: [(c, f) for c, f, mm in both if mm == m and c['agent'] in ids_opus] for m in ('sonnet', 'opus')}
+            ids_opus = {c['agent'] for c, f, m in both if m == self.check}
+            shared = {m: [(c, f) for c, f, mm in both if mm == m and c['agent'] in ids_opus] for m in self.models}
             eff['shared_subsample'] = {m: nat(ps) for m, ps in shared.items() if ps}
             effects[wk] = eff
             pairs_out[wk] = {k: [{'control': c, 'cf': f, 'paraphrase': p, 'model': m} for c, f, p, m in ps] for k, ps in pairs.items()}
@@ -226,7 +238,7 @@ class Run:
         # A2 variance compression (control, sonnet)
         a2 = []
         for k in cohorts:
-            rows = [norm(f'control|{aid}|sonnet') for aid, a in agents.items() if a['cohort'] == k]
+            rows = [norm(f'control|{aid}|{self.bulk}') for aid, a in agents.items() if a['cohort'] == k]
             rows = [r for r in rows if r and r['p_vote'] > 0 and not np.isnan(r['R'])]
             if len(rows) < 2:
                 continue
@@ -246,7 +258,7 @@ class Run:
         # A1 cohort bias and TVD (control, sonnet)
         a1 = []
         for k in cohorts:
-            rows = [norm(f'control|{aid}|sonnet') for aid, a in agents.items() if a['cohort'] == k]
+            rows = [norm(f'control|{aid}|{self.bulk}') for aid, a in agents.items() if a['cohort'] == k]
             rows = [r for r in rows if r]
             if not rows:
                 continue

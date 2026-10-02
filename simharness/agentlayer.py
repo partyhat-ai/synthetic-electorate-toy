@@ -83,6 +83,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     agents, reqs = [], []
     asof = cfg.context_cutoff  # p1 used '1920-10-30' with items to 1 Nov
     for key in sorted(cohorts):
+        if ag.only_cohorts and key not in ag.only_cohorts:
+            continue
         co = cohorts[key]
         if co['group'] == 'other':
             continue  # too few adults per region for a cohort; counted by the backbone only
@@ -153,6 +155,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         if n % 2 == 1:
             reqs.append(request('probe', ag.bulk_model, elig, {}, ctl_items, parties(), labels, system=prompts.PROBE_SYSTEM,
                                 question=prompts.PROBE_QUESTION, schema=prompts.probe_schema(labels)))
+    if ag.arms:
+        reqs = [r for r in reqs if r['meta']['kind'] in ag.arms]
     return agents, reqs
 
 

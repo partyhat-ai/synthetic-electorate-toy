@@ -36,6 +36,11 @@ class AgentConfig:
     effort: str = 'low'               # output_config.effort for the voice layer
     backend: str = 'anthropic'        # anthropic | anthropic-batch | transcript | mock
     max_cohorts: int = 40             # cost cap; the merge rule folds the smallest
+    arms: list | None = None          # subset of control, cf, swap, probe; None sends all
+    only_cohorts: list | None = None  # cohort keys to interview; None interviews all
+    max_requests: int | None = None   # hard cap on requests per run
+    max_dollars: float | None = None  # hard stop, checked against the dry-run estimate
+    max_tokens: int = 4000            # per-request output ceiling (also the estimate's worst case)
 
 
 @dataclass

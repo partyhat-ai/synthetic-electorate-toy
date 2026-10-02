@@ -88,8 +88,8 @@ def agent_checks(an, fit, run, extras) -> list:
     cw = corder_wolbrecht()
     rows = []
     for s in CW_STATES:
-        pv = [ans[f'control|{a["id"]}|sonnet']['data'].get('p_vote', 0) / 100 for a in agents
-              if a['state'] == s and a['sex'] == 'F' and a['group'] != 'foreign_white_alien' and f'control|{a["id"]}|sonnet' in ans]
+        pv = [ans[f'control|{a["id"]}|{run.bulk}']['data'].get('p_vote', 0) / 100 for a in agents
+              if a['state'] == s and a['sex'] == 'F' and a['group'] != 'foreign_white_alien' and f'control|{a["id"]}|{run.bulk}' in ans]
         if pv:
             c = fit.cells
             f = c[(c.state == s) & (c.sex == 'F')]

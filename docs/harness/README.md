@@ -46,7 +46,7 @@ server shouldn't watch the cache. Only aggregates reach `runs/`.
 
 ## Run it
 
-From the repo root (`pip install -e '.[test]'` once):
+From the repo root (`pip install -e '.[test]'` once; add `'.[llm]'` for the paid stages):
 
 ```sh
 python3 -m simharness.run backbone      # fit + unchanged-run reproduction
@@ -58,8 +58,8 @@ python3 -m pytest -q                    # fast unit checks (tests/)
 ```
 
 The `ask` stage depends on the backend:
-- **`anthropic` or `anthropic-batch`:** needs the Anthropic SDK and
-  `ANTHROPIC_API_KEY`. Not yet run against the live API.
+- **`anthropic` or `anthropic-batch`:** needs `pip install -e '.[llm]'`
+  and `ANTHROPIC_API_KEY`, or an `ant auth login` profile.
 - **`transcript`:** writes `runs/<id>/agents/transcript/requests.jsonl` and
   reads `responses.jsonl`, one `{"id", "model", "answer"}` per line. Any
   runner can fill it.

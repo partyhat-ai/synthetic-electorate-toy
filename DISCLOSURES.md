@@ -276,3 +276,15 @@ requests were planned.
 The installed Anthropic SDK is 0.46, which predates `output_config`. The API
 backends need `anthropic>=1.0`. They are written but untested against the
 live API.
+
+**D9 · Medium · open · quick run: recall probe**
+The quick run (Haiku, 2 agents): the recall probe named 1920, both
+candidates and the winner at 95% confidence from the blinded brief. One
+probe, but it matches L1's standing exposure.
+
+**D10 · Low · open · quick run: state-law suffrage in `no-19th`**
+In the `no-19th` counterfactual the Indiana woman still answered
+able_to_vote=yes, reasoning from Indiana's 1919 presidential-suffrage law.
+The Black North Carolina woman answered no in control, `no-19th` and
+`league`, and yes only under `fifteenth`. Plausible, but the `no-19th` brief
+should say explicitly whether state-law suffrage survives.
