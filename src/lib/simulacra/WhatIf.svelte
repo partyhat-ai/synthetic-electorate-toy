@@ -147,7 +147,7 @@
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
-  /* The what-if section sits on the dark page: the robot's
+  /* The what-if section is a dark island on the light page: the robot's
      voice and the controls you answer it with, in the Test Chat's dark
      materials (iOS system greys), so talking to the harness reads as a
      different place from the record above it. Tokens, read by the pieces too:
@@ -163,6 +163,10 @@
     --fill: #2c2c2e;             /* raised: chips at rest */
     --fill-press: #3a3a3c;       /* raised further: hovers */
     --tint: #6ea8e0;
+    /* The island: the section's own ground, rounded, the page's grey round it. */
+    background: #0b0b0c;
+    border-radius: 28px;
+    padding: 18px 20px 20px;
   }
   .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   /* On the stage the talk column fills the robot's height: the bubble pins to

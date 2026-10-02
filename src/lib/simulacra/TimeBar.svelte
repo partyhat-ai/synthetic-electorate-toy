@@ -153,10 +153,10 @@
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(0, 0, 0, 0.75);
     cursor: pointer;
   }
-  .icon:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); color: #fff; }
+  .icon:hover:not(:disabled) { background: rgba(0, 0, 0, 0.07); }
   .icon:disabled { opacity: 0.3; cursor: default; }
   .icon:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   /* The hit area is the whole band, not just the rail. */
@@ -180,25 +180,25 @@
     height: 4px;
     margin-top: -12px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.14);
   }
-  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.7); }
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: rgba(0, 0, 0, 0.6); }
   .tick {
     position: absolute;
     top: 9px;
     width: 1px;
     height: 4px;
     margin-left: -0.5px;
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(0, 0, 0, 0.22);
     pointer-events: none;
   }
-  .tick.story { height: 8px; width: 2px; margin-left: -1px; background: rgba(255, 255, 255, 0.55); border-radius: 1px; }
+  .tick.story { height: 8px; width: 2px; margin-left: -1px; background: rgba(0, 0, 0, 0.5); border-radius: 1px; }
   .label {
     position: absolute;
     top: 20px;
     transform: translateX(-50%);
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(0, 0, 0, 0.45);
     font-variant-numeric: tabular-nums;
     pointer-events: none;
   }
@@ -209,9 +209,8 @@
     height: 22px;
     margin: -11px 0 0 -11px;
     border-radius: 999px;
-    /* White on the dark bar: the inverse of the page it sits on. */
-    background: #fff;
-    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.5);
+    background: #111;
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.18), 0 1px 3px rgba(0, 0, 0, 0.3);
     cursor: grab;
   }
   .thumb:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
@@ -221,8 +220,8 @@
     transform: translateX(-50%);
     padding: 4px 9px;
     border-radius: 8px;
-    background: #fff;
-    color: #000;
+    background: #111;
+    color: #fff;
     white-space: nowrap;
     font-size: 12px;
     font-weight: 500;
