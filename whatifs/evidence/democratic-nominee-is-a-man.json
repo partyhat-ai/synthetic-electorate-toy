@@ -1,0 +1,490 @@
+{
+ "summary": "No study tests a male nominee with Clinton's record. Indirect evidence shows a large 2016 gender gap, sexism measures linked to lower Clinton support among white voters, and mostly null or small candidate-sex effects in other elections. Net effect of swapping her sex is uncertain.",
+ "findings": [
+  {
+   "claim": "2016 exit polls showed an 11-point gender gap: 41% of women and 52% of men voted Trump, the largest since 1996, when the gap was also 11 points with a male Democrat.",
+   "source_ids": [
+    "S2",
+    "S10"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2016 presidential exit-poll gender gap with a female Democratic nominee",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Does not separate nominee sex from party or policy.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Pew validated voters: 54% of women and 41% of men voted Clinton, a 13-point gap, concentrated among under-50s (63% vs 43%); among 50+ it was 48% vs 40%.",
+   "source_ids": [
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Validated-voter gender gap in 2016",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Descriptive; no counterfactual with a male nominee.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Higher Modern Sexism scores made respondents less likely to vote Clinton or Stein; the effect was not significant among Black men, Black women or Latinas, so it centred on white voters.",
+   "source_ids": [
+    "S5"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "native_white",
+    "region": "any"
+   },
+   "situation": "Sexism attitudes predicting 2016 vote against the female nominee",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "toward-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Poll not peer-reviewed; correlational.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Experts told FiveThirtyEight that gender bias likely played some role in 2016 but is hard to quantify and understudied.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Expert views on sexism in Clinton's 2016 loss",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "toward-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Qualitative, no numbers.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "A journalistic account argues white men's attitudes toward Clinton reflected conscious and subconscious sexism.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "native_white",
+    "region": "any"
+   },
+   "situation": "White men's attitudes toward the female nominee",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "toward-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Not peer-reviewed; interpretive.",
+   "tier": "B",
+   "grade": 0.6,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "In primaries Clinton lost men to Sanders by an average of 10 points in PA, OH, IA and WI, but won men widely in states with many Black and Latino voters.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2016 primary male vote, Clinton against a male rival",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Sanders differed in ideology and record.",
+   "tier": "B",
+   "grade": 0.6,
+   "reported_direction": "toward-other"
+  },
+  {
+   "claim": "2016 Clinton shares: white women 43%, white men 31%, Black women 94%, Black men 82%, Latinas 69%, Latinos 63%. Battleground gender gaps ran 6 to 17 points.",
+   "source_ids": [
+    "S2"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2016 vote shares by race and gender",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Exit polls; no counterfactual.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Ecological inference across 979 regions found 29 with gender gaps above 20 points and 54 where men favored Clinton more than women.",
+   "source_ids": [
+    "S7"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Regional variation in 2016 gender gap",
+   "when": "2016",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Preprint; ecological inference.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "mixed"
+  },
+  {
+   "claim": "In congressional elections women perform like men once party and incumbency are controlled, and a regression-discontinuity study of House races 1982-2012 found no gender penalty.",
+   "source_ids": [
+    "S11",
+    "S16"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Female candidates in US House elections",
+   "when": "1982-2012",
+   "match": "other-period-similar",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "House races, not presidential.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "A meta-analysis of 67 survey experiments finds respondents slightly favor female candidates, about two points, varying by partisan context. Ono and Burden's conjoint finds voters use sex as a heuristic.",
+   "source_ids": [
+    "S11",
+    "S17"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Survey experiments on candidate sex",
+   "when": "various",
+   "match": "distant",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "mixed",
+   "effects": [],
+   "limits": "Stated choices; findings conflict.",
+   "tier": "A",
+   "grade": 0.2,
+   "reported_direction": "mixed"
+  },
+  {
+   "claim": "A preprint finds county Republican vote share fell 6.5 points when Republicans nominated a woman for governor after 2016; no comparable Democratic effect.",
+   "source_ids": [
+    "S11"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Female gubernatorial nominees, county vote share",
+   "when": "after 2016",
+   "match": "distant",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Not peer-reviewed; Republican women only.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Scholars argue polarization has made candidate sex incidental for most voters, implying a small effect from changing nominee sex.",
+   "source_ids": [
+    "S12"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Partisanship dominating candidate sex",
+   "when": "recent",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Argument, not measurement.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "none"
+  }
+ ],
+ "actor_positions": [],
+ "caveats": [
+  "No counterfactual study exists; all evidence is indirect.",
+  "Nominee sex is confounded with party, policy and Clinton-specific factors.",
+  "No data by nativity or region except the Blair poll; women's turnout under a female nominee was not searched."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "democratic-nominee-is-a-man",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "Clinton 2016 gender gap vote women men exit poll sexism effect political science",
+  "women candidates vote share same party voters penalty meta-analysis Lawless Hayes Dolan"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://www.pbs.org/newshour/features/hidden-sexism/",
+   "title": "The hidden sexism that could sway the election",
+   "tier": "B",
+   "cited": [
+    "Still, social science evidence, primary exit polls and my interviews with researchers and dozens of voters indicate that white men\u2019s attitudes toward ...",
+    "Clinton lost the overall male vote to Bernie Sanders by an average of 10 points in Pennsylvania, Ohio, Iowa and Wisconsin, according to an analysis of...",
+    "In contrast, she won the male vote by wide margins in states that have large numbers of African-American and Latino voters.",
+    "Clinton spent significant time in the primaries courting white male voters \u2014 in particular white, mostly working-class men in the key Rust Belt and Mi...",
+    "And yet, despite all the effort, the results were abysmal."
+   ],
+   "page_age": "3760 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://cawp.rutgers.edu/news-media/press-releases/historic-gender-gap-isnt-enough-propel-clinton-victory-2016-presidential",
+   "title": "Historic Gender Gap Isn\u2019t Enough to Propel Clinton to Victory in 2016 Presidential Race",
+   "tier": "A",
+   "cited": [
+    "Defined as the difference in the proportions of women and men voting for the winning candidate, a sizable 11 percentage-point gender gap was evident i...",
+    "The gender gap in this year\u2019s presidential race is larger than in any year except 1996, when the gender gap for President Bill Clinton in his race wit...",
+    "Forty-three percent of white women, compared with 31 percent of white men, voted for Clinton.",
+    "Clinton won the votes of large majorities of African American women (94 percent) and Latinas (69 percent), with smaller majorities of Black men (82 pe...",
+    "In addition to the gender gap in the national vote, a gender gap ranging from 6 to 17 percentage points in women\u2019s and men\u2019s support for the victoriou..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S3",
+   "url": "https://fivethirtyeight.com/features/how-unconscious-sexism-could-help-explain-trumps-win/",
+   "title": "How Unconscious Sexism Could Help Explain Trump\u2019s Win",
+   "tier": "C",
+   "cited": [
+    "The impact of other kinds of implicit bias is disputed by researchers, and gender bias\u2019s effect hasn\u2019t been studied extensively.\n\nBut while quantifyin..."
+   ],
+   "page_age": "3539 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://anderson-review.ucla.edu/election-gender-gap",
+   "title": "Perceived Gender Equity: How 2016\u2019s Election Widened a Gap - UCLA Anderson Review",
+   "tier": "A",
+   "cited": [],
+   "page_age": "910 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://blaircenter.uark.edu/the-impact-of-modern-sexism/",
+   "title": "The Impact of Modern Sexism",
+   "tier": "A",
+   "cited": [
+    "In every case the impact is negative, with higher Modern Sexism scores making respondents less likely to vote for Clinton or Stein.",
+    "As shown in Table 2, African American men and women, as well as Latinas, do not have a tipping point score on the Modern Sexism scale because Modern S..."
+   ],
+   "page_age": "3403 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://www.pewresearch.org/short-reads/2016/07/28/a-closer-look-at-the-gender-gap-in-presidential-voting/",
+   "title": "The gender gap in presidential voting: A closer look",
+   "tier": "C",
+   "cited": [],
+   "page_age": "899 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://arxiv.org/pdf/1611.03787",
+   "title": "Understanding the 2016 US Presidential Election using ecological inference and distribution regression with census microdata",
+   "tier": "C",
+   "cited": [
+    "As shown in Figure 1 gender gap varies spatially, with some regions showing parity and others exceeding the national average\u201429 regions had gaps of mo..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S8",
+   "url": "https://cawp.rutgers.edu/sites/default/files/resources/presidential-gender-gap_report_final.pdf",
+   "title": "Finding Gender in Election 2016 Lessons from Presidential Gender Watch",
+   "tier": "A",
+   "cited": [],
+   "page_age": "3579 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://www.pewresearch.org/politics/2018/08/09/an-examination-of-the-2016-electorate-based-on-validated-voters/",
+   "title": "An examination of the 2016 electorate, based on validated voters",
+   "tier": "C",
+   "cited": [
+    "Women were 13 percentage points more likely than men to have voted for Clinton (54% among women, 41% among men).",
+    "In this group, 63% of women said they voted for Clinton, compared with just 43% of men.\n\nAmong voters ages 50 and older, the gender gap in support for..."
+   ],
+   "page_age": "61 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://cawp.rutgers.edu/sites/default/files/resources/ggpresvote.pdf",
+   "title": "The Gender Gap - CAWP - Rutgers University",
+   "tier": "A",
+   "cited": [
+    "In every presidential election since 1996, a majority of women have preferred the Democratic candidate.",
+    "Moreover, women and men have favored different candidates in presidential elections since 2000, with the\n\nexception of 2008 when men were almost equal..."
+   ],
+   "page_age": "2821 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://arxiv.org/html/2608.23051v1",
+   "title": "Female Nomination and Party Vote Share in US Gubernatorial Elections",
+   "tier": "C",
+   "cited": [
+    "In congressional elections, female candidates perform similarly to male candidates conditional on party and incumbency (Darcy et\u00a0al.",
+    "If anything, respondents slightly favor female candidates, by roughly two percentage points, though with pronounced heterogeneity across partisan cont...",
+    "If anything, respondents slightly favor female candidates, by roughly two percentage points, though with ...\n\n# Female Nomination and Party Vote Share...",
+    "Candidate gender is not assigned at random."
+   ],
+   "page_age": "38 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://www.dannyhayes.org/uploads/6/9/8/5/69858539/dolan_and_lawless_ncapsa_paper.pdf",
+   "title": "Gender Bias in Primary Elections? Survey Says No Kathleen Dolan Professor",
+   "tier": "C",
+   "cited": [
+    "In the face of evidence that gender stereotypes and bias do not work to women\u2019s\n\ndetriment in general elections, some scholars have turned their atten..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S13",
+   "url": "https://www.cambridge.org/core/journals/british-journal-of-political-science/article/voter-sexism-and-electoral-penalties-for-women-candidates-evidence-from-four-democracies/3A8EB25084B5B66EB9BF5BD59B70F1AA",
+   "title": "Voter Sexism and Electoral Penalties for Women Candidates: Evidence from Four Democracies",
+   "tier": "A",
+   "cited": [],
+   "page_age": "422 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://faculty.wcas.northwestern.edu/jnd260/cab/CAB2013Dolan.pdf",
+   "title": "1 Gender Stereotypes, Candidate Evaluations, and Voting for",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S15",
+   "url": "https://alexandercoppock.com/schwarz_coppock_2022.pdf",
+   "title": "What Have We Learned about Gender from Candidate ...",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S16",
+   "url": "https://www.sciencedirect.com/science/article/abs/pii/S0261379415300342",
+   "title": "Estimating the gender penalty in House of Representative elections using a regression discontinuity design - ScienceDirect",
+   "tier": "A",
+   "cited": [
+    "I find no evidence of a gender penalty using these measures."
+   ],
+   "page_age": "3807 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://www.bu.edu/polisci/files/2017/09/Ono-and-Burden.pdf",
+   "title": "The Contingent Effects of Candidate Sex on Voter Choice Yoshikuni Ono",
+   "tier": "A",
+   "cited": [
+    "To preview the results, we find that voters use candidate sex as a heuristic even when\n\nprovided with information on other attributes of candidates su..."
+   ],
+   "page_age": "3317 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://journals.sagepub.com/doi/10.1177/20531680241226511",
+   "title": "Double penalty? How candidate class and gender influence voter evaluations - Jeong Hyun Kim, Yesola Kweon, 2024",
+   "tier": "A",
+   "cited": [],
+   "page_age": "935 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://docs.iza.org/dp17376.pdf",
+   "title": "DISCUSSION PAPER SERIES IZA DP No. 17376 Panu Poutvaara Andreas Graefe",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  }
+ ],
+ "notes": "**Caveat:** Nobody has run this counterfactual. The evidence below is indirect. I found nothing that breaks the results down by your nativity or region groups, except the Blair Center poll of white respondents by gender and region. I did not run a search on women's turnout when a woman headed a ticket, so that question is unanswered here.\n\n## 1. Direct evidence (2016 itself)\n\n**Size of the gap**\n- The exit-poll gender gap was 11 points: 41% of women and 52% of men voted for Trump. [S2]\n- That was the largest since 1996, when the gap for Bill Clinton against Dole was also 11 points. [S2]\n- Pew's validated-voter data show a 13-point difference: 54% of women and 41% of men voted Clinton. [S9]\n- The gap was concentrated among younger voters. Among validated voters under 50, 63% of women and 43% of men backed Clinton. Among those 50 and older it was 48% vs. 40%. [S9]\n\n**Scholars on sexism's role**\n- FiveThirtyEight reported that researchers dispute the effect of other kinds of implicit bias, and gender bias has not been studied extensively. Experts said that quantifying the effect is hard but that bias played some role. [S3]\n- The Blair Center poll found that higher Modern Sexism scores made respondents less likely to vote for Clinton or Stein. [S5]\n- That effect was not uniform. Modern Sexism did not significantly predict a vote for a female candidate among Black men, Black women or Latinas. [S5] Within the poll, the effect therefore centred on white voters.\n- A journalistic account, not peer-reviewed, argues that white men's attitudes toward Clinton reflect a mix of conscious and subconscious sexism. [S1]\n\n**Rough read on question 2.** I found no study that apportions the 2016 gap between the nominee's sex and party or policy. Gender gaps already existed: a majority of women have preferred the Democratic candidate in every presidential election since 1996. [S10] Men and women have also split since 2000, except in 2008. [S10] The gap was 11 points in 1996 with a male Democrat. The 2016 gap therefore exceeded the previous record by little or nothing in exit polls. Much of it looks like party and policy, but the sources do not give a precise share.\n\n## 2. Analogues\n\n**Primary evidence on a male counterpart (2016):**\n- Clinton lost the male vote to Sanders by an average of 10 points in Pennsylvania, Ohio, Iowa and Wisconsin, per exit-poll analysis. [S1] This is the nearest analogue to a male candidate with her record, though Sanders differed in ideology and record.\n- She won men by wide margins in states with many Black and Latino voters. [S1]\n\n**General elections and experiments:**\n- In congressional elections, women perform similarly to men once party and incumbency are accounted for. [S11]\n- A regression-discontinuity study of House races from 1982 to 2012 found no evidence of a gender penalty. [S16]\n- A meta-analysis of 67 survey experiments finds that respondents favor female candidates slightly, by roughly two points, with strong variation across partisan contexts. [S11]\n- Ono and Burden, using a conjoint experiment, take the opposing view. They find voters use candidate sex as a heuristic even when told party and policy positions. [S17]\n\n**Executive offices:**\n- A 2026 preprint (not peer-reviewed) finds county-level Republican vote share fell 6.5 points when Republicans nominated a woman for governor after 2016. No comparable average differential appears for Democratic nominees. [S11] This is weak evidence until it is peer-reviewed.\n\n**By group (2016 exit polls):**\n\n| Group | Clinton share | Source |\n|---|---|---|\n| White women | 43% | CAWP [S2] |\n| White men | 31% | CAWP [S2] |\n| Black women | 94% | CAWP [S2] |\n| Black men | 82% | CAWP [S2] |\n| Latinas | 69% | CAWP [S2] |\n| Latinos | 63% | CAWP [S2] |\n\n- The gender gap in support for Trump ran from 6 to 17 points across battleground states. [S2]\n- Ecological inference across 979 regions found 29 regions with gaps above 20 points and 54 where men favored Clinton more than women did. [S7] That is a preprint.\n- I found no reliable figures for naturalized citizens, noncitizens, or the Northeast, Midwest, South, border and West groups.\n\n## 3. Named people\n\nThe scenario names Hillary Clinton. Her record is held fixed in the scenario, so I did not search for what she said or did. For context, she spent significant primary time courting white, mostly working-class men in the Rust Belt and Midwest. [S1] That effort came with poor results. [S1]\n\n## 4. Limits\n\n- **Selection.** Candidate gender is not randomly assigned. [S11] Parties choose nominees alongside experience, ideology and fundraising, so comparisons of men and women are confounded.\n- **Experiments vs. real races.** Stated choices in surveys may differ from real votes. The survey experiments mostly show no penalty, which conflicts with the sexism-scale findings for 2016.\n- **Partisanship.** Scholars argue that polarization has made candidate sex incidental for most voters. [S12] That would predict a small effect from changing the nominee's sex, though a first female presidential nominee may be a special case.\n- **Clinton-specific factors.** A male Clinton would still carry the same record, the same incumbent-party fatigue and the same email controversy. A male nominee would also lose any gender-affinity boost among women and any backlash among men, so the net effect is uncertain.\n- **Weak sources.** The Blair Center poll and the PBS piece are not peer-reviewed. The estimates for subgroups other than race and gender are inferences rather than measurements.",
+ "prompt": "Scenario for the 2016 United States presidential election (election day 2016-11-08).\nA reader asked: \"hilary clinton was a man\".\nAs modelled: The nominee of the party that has held the White House since 2009 is a man with the same record as a senator and secretary of state.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How did voters respond to comparable male and female candidates with the same record in earlier elections?\n- How much of the gender gap in 2016 was driven by the nominee's sex rather than party or policy?\n- Did women's turnout and vote choice change when a woman headed a major-party ticket in other contests?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 22145,
+  "output_tokens": 2573,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 2
+ },
+ "dollars": 0.1258
+}

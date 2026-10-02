@@ -1,0 +1,727 @@
+{
+ "summary": "No source models a 1915 US entry into WWI; the evidence is analogical. The real 1916 race turned on the peace theme, which a belligerent US would have lost. Analogues from 1864 and 1918 and German-American voting suggest wartime shifts, but each is confounded.",
+ "findings": [
+  {
+   "claim": "Wilson ran on 'He kept us out of war' to appeal to voters who preferred neutrality; he won 49.4% to Hughes's 46.2%, and the outcome was in doubt for days.",
+   "source_ids": [
+    "S11",
+    "S17",
+    "S12"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Real 1916 election run on peace slogan",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Describes the real neutral-US election; the scenario removes the peace appeal.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Wilson's peace position likely helped him win western states; California was decisive, won by about 3,800 votes of nearly a million. Democrats won every Plains and Rockies state except South Dakota and Oregon.",
+   "source_ids": [
+    "S12",
+    "S16",
+    "S11"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Western peace voters in 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Peace motive is inferred; no data on responses to war.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Republicans lost 1916 partly because Hughes was labeled the war candidate, largely through Roosevelt's sword-rattling speeches.",
+   "source_ids": [
+    "S27"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "War-candidate label hurt Republicans in 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Tertiary source; no figures.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "In the 1918 midterm during US involvement, Republicans gained 25 House seats and took Congress; turnout was 40% versus 50% in 1914.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Midterm held while US was at war",
+   "when": "1918",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -10,
+     "pm": 5
+    }
+   ],
+   "limits": "Midterm; flu and troop absence confound turnout.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "About two million men were absent in the military and the flu also played a role in low 1918 turnout.",
+   "source_ids": [
+    "S2"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Wartime absence and flu depressed 1918 turnout",
+   "when": "1918",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [],
+   "limits": "Causes not separated; no numbers.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Republicans ran in 1918 against expanded wartime government and the Fourteen Points; a Republican swing in the Northeast and Midwest is reported.",
+   "source_ids": [
+    "S1",
+    "S7"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1918 reaction against the party in office",
+   "when": "1918",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Weak sources; midterm.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "In 1864 Lincoln won 55% and 212-21 electoral votes; turnout was 73.8%, down 7.4 points. Soldiers backed him at roughly 70-78%.",
+   "source_ids": [
+    "S36",
+    "S28",
+    "S31"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Incumbent re-elected during civil war",
+   "when": "1864",
+   "match": "distant",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -7.4,
+     "pm": 3
+    }
+   ],
+   "limits": "Civil war, no Southern states, no women voters.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Lincoln's 1864 fortunes depended on battlefield news: Atlanta's capture and Democratic infighting solidified his chances after he expected defeat.",
+   "source_ids": [
+    "S28",
+    "S33"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "War progress shaped incumbent's chances",
+   "when": "1864",
+   "match": "distant",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "mixed",
+   "effects": [],
+   "limits": "Late military news drove outcome.",
+   "tier": "A",
+   "grade": 0.2,
+   "reported_direction": "mixed"
+  },
+  {
+   "claim": "In Wisconsin 1916 Hughes won 220,000 to 191,000; Socialist Berger got 110,000 of 424,000 Senate votes, and Socialist vote rose in 1917. Germans moved from Wilson during war years.",
+   "source_ids": [
+    "S20",
+    "S26"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "foreign_white_naturalized",
+    "region": "midwest"
+   },
+   "situation": "German-American voting in Wisconsin",
+   "when": "1916-1918",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "One state; mostly Socialist vote data.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "German-American voters had grown disillusioned with Wilson and favored Hughes; the Alliance's anti-Wilson push may have helped Wilson, and the war destroyed the German bloc idea.",
+   "source_ids": [
+    "S22",
+    "S21"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "foreign_white_naturalized",
+    "region": "any"
+   },
+   "situation": "German-American voting and wartime repression",
+   "when": "1916-1918",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Syllabus-level sources; a Wikipedia page contradicts.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Hughes carried 6 of the 8 states with the most Irish Americans; Wilson won Irish voters in 1917 by promising to press for Irish independence, and many abstained in 1920.",
+   "source_ids": [
+    "S23",
+    "S19"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "foreign_white_naturalized",
+    "region": "any"
+   },
+   "situation": "Irish-American voting around 1916",
+   "when": "1916-1920",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Student blog and Wikipedia.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "mixed"
+  },
+  {
+   "claim": "Twelve states allowed women to vote in 1916 and ten voted Wilson; in one Kansas precinct women backed Wilson 64% versus 54% of men.",
+   "source_ids": [
+    "S16",
+    "S13"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Women voters in suffrage states, 1916",
+   "when": "1916",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "One precinct is anecdotal; no wartime data.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Wilson asked Congress for a declaration of war on April 2, 1917, after running on neutrality; in 1916 he had not committed to a suffrage amendment.",
+   "date": "1917-04-02",
+   "source_ids": [
+    "S17",
+    "S15"
+   ]
+  },
+  {
+   "text": "Hughes criticized Wilson's lack of preparation but downplayed the war issue, and endorsed woman suffrage.",
+   "date": "1916",
+   "source_ids": [
+    "S11",
+    "S12",
+    "S17"
+   ]
+  },
+  {
+   "text": "Roosevelt denounced 'He kept us out of war' as a coward's phrase.",
+   "date": "1916",
+   "source_ids": [
+    "S11"
+   ]
+  },
+  {
+   "text": "Bryan coined the 'kept us out of war' slogan at the Democratic Convention and campaigned in 19 states.",
+   "date": "1916",
+   "source_ids": [
+    "S10"
+   ]
+  },
+  {
+   "text": "Wilson refused clemency for Roger Casement, which strengthened views that he was pro-British.",
+   "date": "1916",
+   "source_ids": [
+    "S26"
+   ]
+  }
+ ],
+ "caveats": [
+  "No source models a 1915 entry; all evidence is analogical.",
+  "1918 was a midterm confounded by flu and troop absence.",
+  "1864 was a civil war with no Southern or women voters.",
+  "Many sources are Wikipedia, blogs or Grokipedia.",
+  "No evidence on Black voters, the South or border states."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "war-after-the-lusitania",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "German-American vote 1918 midterm election World War I turnout Republican gains",
+  "1916 election Wilson \"kept us out of war\" Western women suffrage states vote",
+  "German Americans Irish Americans voting 1916 Wilson Hughes Socialist vote 1918 anti-war German counties historians",
+  "1864 election Lincoln soldiers vote Union Party Democrats war weariness percent popular vote"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://en.wikipedia.org/wiki/1918_United_States_elections",
+   "title": "1918 United States elections",
+   "tier": "C",
+   "cited": [
+    "In an example of the six-year itch phenomenon, Republicans took complete control of Congress from the Democrats. The Republicans won large gains in th...",
+    "The turnout was 40%, which was unusually low for a midterm election (turnout was at 52% and 50% in the 1910 and 1914 midterm elections).",
+    "Republicans ran against the expanded wartime government and the Fourteen Points, especially Wilson's proposal for the League of Nations."
+   ],
+   "page_age": "25 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://medium.com/@hisstories.info/1918-midterms-a-nation-votes-under-a-shadow-6c00f195c3b1",
+   "title": "1918 Midterms: A Nation Votes Under a Shadow",
+   "tier": "C",
+   "cited": [
+    "While the absence of approximately two million men serving in the military significantly impacted voter turnout, the flu pandemic undoubtedly played a..."
+   ],
+   "page_age": "659 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://en.wikipedia.org/wiki/1918_United_States_House_of_Representatives_elections",
+   "title": "1918 United States House of Representatives elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": "92 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.history.com/articles/1918-pandemic-midterm-elections",
+   "title": "How the US Pulled Off Midterm Elections Amid the 1918 Flu Pandemic",
+   "tier": "C",
+   "cited": [],
+   "page_age": "458 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.mnhs.org/mnopedia/search/index/event/republican-primary-election-1918",
+   "title": "Republican Primary Election, 1918",
+   "tier": "B",
+   "cited": [],
+   "page_age": "1235 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://ballotpedia.org/1918_influenza_pandemic_(Spanish_Flu)_and_the_1918_midterm_election_cycle",
+   "title": "1918 influenza pandemic (Spanish Flu) and the 1918 midterm election cycle - Ballotpedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2137 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://grokipedia.com/page/1918_United_States_Senate_elections",
+   "title": "1918 United States Senate elections \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [
+    "Lighter turnout was noted in Southwestern and Midwestern states such as New Mexico, Arizona, Minnesota, and Utah, linked to heightened illness, quaran..."
+   ],
+   "page_age": "260 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://grokipedia.com/page/1918_United_States_elections",
+   "title": "1918 United States elections \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "260 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://grokipedia.com/page/1918_United_States_House_of_Representatives_elections",
+   "title": "1918 United States House of Representatives elections \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "257 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://blogs.dickinson.edu/hist-211pinsker/2010/10/12/war-women-and-the-west-wilson%E2%80%99s-1916-presidential-victory/",
+   "title": "War, Women, and the West: Wilson\u2019s 1916 Presidential Victory",
+   "tier": "A",
+   "cited": [
+    "Bryan ran and lost in three presidential elections yet out of the 19 states in which he campaigned, Wilson won 18.",
+    "In fact, it was Bryan who coined the phrase at the Democratic Convention, \u201cHe kept us out of the war\u201d a reference to Wilson\u2019s ability to exclude the U...",
+    "He created the slogan \u201cHe kept us out of war\u201d and helped establish the West as a dominant factor in presidential elections."
+   ],
+   "page_age": "5833 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://en.wikipedia.org/wiki/1916_United_States_presidential_election",
+   "title": "1916 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "## World War as an issue\n\n\nDespite pro-Entente sentiment, most American voters wanted to avoid involvement in the war and preferred to continue a poli...",
+    "Wilson's campaign used the popular slogans \"He kept us out of war\" and \"America First\" to appeal to those voters who wanted to avoid a war in Europe o...",
+    "However, Wilson still managed to win two states that he had lost in 1912 (Utah and Washington), and fully won California after having only obtained tw...",
+    "Hughes criticized Wilson for not taking the \"necessary preparations\" to face a conflict.",
+    "President Wilson's ignoble shirking of responsibility has been clothed in an utterly misleading phrase, the phrase of a coward, *He kept us out of war..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://bluebox.creighton.edu/demo/modules/en-boundless-old/www.boundless.com/u-s-history/textbooks/boundless-u-s-history-textbook/world-war-i-1914-1919-23/the-wilson-administration-176/the-election-of-1916-968-2223/index.html",
+   "title": "The Election of 1916",
+   "tier": "A",
+   "cited": [
+    "The result was exceptionally close and the outcome was in doubt for several days.",
+    "Wilson's peace position was likely critical in winning the western states; the key proved to be California, which Wilson won by only 3,800 votes out o...",
+    "Hughes insisted on downplaying the war issue, but still advocated a program of greater mobilization and preparedness."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S13",
+   "url": "https://kgi.contentdm.oclc.org/digital/api/collection/p16884coll1/id/2199/download",
+   "title": "1916 Presidential Election: As Kansas Votes, So Goes the Election",
+   "tier": "C",
+   "cited": [
+    "The men\u2019s vote stood 541 for Wilson and\n\n467 for Hughes, while the women\u2019s votes counted 380 for Wilson and 216 for Hughes.\u201d"
+   ],
+   "page_age": "2163 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://www.270towin.com/1916-election",
+   "title": "Presidential Election of 1916 - 270toWin",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S15",
+   "url": "https://brilliantmaps.com/us-elections/1916-us-presidential-election/",
+   "title": "1916 US Presidential Election Map: Wilson vs Hughes",
+   "tier": "C",
+   "cited": [
+    "In 1916, he had not yet fully committed to pushing for a constitutional amendment but was open to allowing states to decide on women\u2019s voting rights.\n..."
+   ],
+   "page_age": "216 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://allthepresidentsbooks.com/2019/06/03/the-first-modern-clash-over-federal-power-wilson-versus-hughes-in-the-presidential-election-of-1916-by-lewis-l-gould/",
+   "title": "The First Modern Clash Over Federal Power: Wilson versus Hughes in the Presidential Election of 1916 by Lewis L. Gould",
+   "tier": "C",
+   "cited": [
+    "- Democrats won every state in the Great Plains and the Rockies, except for South Dakota and Oregon.",
+    "Twelve states allowed women to vote in 1916, ten of them voted for Wilson."
+   ],
+   "page_age": "2676 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1916",
+   "title": "United States presidential election of 1916",
+   "tier": "B",
+   "cited": [
+    "Wilson won a close election with 49.4% of the popular vote and 277 electoral votes, while Hughes garnered 46.2% and 254, respectively.",
+    "Despite his neutrality stance, Wilson later requested a war declaration from Congress on April 2, 1917, marking the U.S. entry into World War I.",
+    "\\* **Charles Evans Hughes**: The Republican candidate, who criticized Wilson\u2019s neutrality and endorsed woman suffrage."
+   ],
+   "page_age": "335 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://www.historycentral.com/elections/1916.html",
+   "title": "The Election of 1916 \u2014 Woodrow Wilson",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S19",
+   "url": "https://en.wikipedia.org/wiki/1920_United_States_presidential_election",
+   "title": "1920 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Wilson had won the presidential election of 1916 with strong support from German Americans and Irish Americans, largely because of his slogan \"He kept...",
+    "### Campaign\nIrish- and German-American voters who had backed Wilson and peace in 1916 now voted against Wilson and Versailles. \"A vote for Harding\", ...",
+    "## General election\n### Ethnic issues\nIrish Americans were powerful in the Democratic party, and groups such as Clan na Gael opposed going to war alon...",
+    "Many Irish Americans, bitterly angry at Wilson's refusal to help Ireland at Versailles, simply abstained from voting in the presidential election."
+   ],
+   "page_age": "17 days ago"
+  },
+  {
+   "id": "S20",
+   "url": "https://journals.ku.edu/ygas/article/download/18181/16356",
+   "title": "LaVern J. Rippley Wisconsin German-Americans and ...",
+   "tier": "A",
+   "cited": [
+    "Hughes opposed the Democratic Wilson as the Republican standard bearer,\n\nWisconsin handed Hughes a victory 220,000 to 191,000.",
+    "But Berger made\n\na surprisingly strong showing, receiving 110,000 of the total 424,000 votes\n\ncast.",
+    "He carried eleven outstate\n\ncounties and got over 1,000 votes in each of twenty-eight counties.^16 Berger\n\noutpolled his rivals by two to one in the s...",
+    "First there was the\n\nevidence of the socialist vote, which increased dramatically in 1917 as against\n\n1916.",
+    "Washington County, Stewart\u2019s home, which\n\n\n\nhad always voted Democratic, during the war years went Republican first,\n\nSocialist second, and Wilson (De..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S21",
+   "url": "https://library.indianapolis.iu.edu/static/collections/kade/adams/chap8.html",
+   "title": "The German-Americans - Chapter Eight",
+   "tier": "A",
+   "cited": [
+    "In the wartime elections of 1916, Wilson's unsuccessful Republican opponent, Charles Hughes, got the uninvited but noisy support of those German- Amer...",
+    "The First World War permanently destroyed the notion of an ethnically definable \"German\" voting bloc to which a presidential candidate should pay atte..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S22",
+   "url": "https://library.indianapolis.iu.edu/static/collections/kade/merrill/lesson5.html",
+   "title": "Syllabus for German Immigrant Culture in America: Lesson 5",
+   "tier": "A",
+   "cited": [
+    "By this time German-American voters had become completely disillusioned with Wilson and heavily favored Hughes.",
+    "Laws were passed banning German from schools and in some cases banning the use of any and all German books in school libraries.",
+    "In February of 1918 the Senate began an investigation of the National German-American Alliance, after which the organization voted itself out of exist..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S23",
+   "url": "https://blogs.dickinson.edu/hist-211pinsker/2010/10/12/the-irish-and-the-1916-election/",
+   "title": "The Irish and the 1916 Election",
+   "tier": "A",
+   "cited": [
+    "While evidence does show that Hughes carried 6 of the 8 states with the highest concentrations of Irish Americans in the country, it does little to ex..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S24",
+   "url": "https://en.wikipedia.org/wiki/American_entry_into_World_War_I",
+   "title": "American entry into World War I",
+   "tier": "C",
+   "cited": [
+    "### South\nLetters to newspapers which expressed pro-British, anti-German or pro-interventionist sentiment were common."
+   ],
+   "page_age": "19 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/9781118445693.ch9",
+   "title": "The Election of 1916 - A Companion to Woodrow Wilson - Wiley Online Library",
+   "tier": "A",
+   "cited": [
+    "Google Scholar\n\n- Kerr, T.J. (1961) \u201cGerman-Americans and Neutrality in the 1916 Election.\u201d *Mid-America* 43, 2: 95\u2013105.",
+    "(1967) \u201cWoodrow Wilson, Irish Americans, and the Election of 1916.\u201d *Journal of American History* 54, 1: 57\u201372."
+   ],
+   "page_age": "4999 days ago"
+  },
+  {
+   "id": "S26",
+   "url": "https://en.wikipedia.org/wiki/1916_United_States_presidential_election_in_Wisconsin",
+   "title": "1916 United States presidential election in Wisconsin",
+   "tier": "C",
+   "cited": [
+    "The position of President Wilson as strongly pro-British was intensified when he failed to accept clemency for Roger Casement."
+   ],
+   "page_age": "29 days ago"
+  },
+  {
+   "id": "S27",
+   "url": "https://www.u-s-history.com/pages/h888.html",
+   "title": "Election of 1916: Now just two parties, but same results as 1912",
+   "tier": "C",
+   "cited": [
+    "However, Hughes came to be labeled the war candidate largely because of Roosevelt`s all too frequent sword-rattling speeches."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S28",
+   "url": "https://www.battlefields.org/learn/articles/election-1864",
+   "title": "The Election of 1864",
+   "tier": "C",
+   "cited": [
+    "An estimated 78 percent of Union soldiers cast their ballots in favor of Lincoln.",
+    "The political landscape shifted dramatically, however, when Gen. William T. Sherman took Atlanta in early September. This major military shift, couple..."
+   ],
+   "page_age": "791 days ago"
+  },
+  {
+   "id": "S29",
+   "url": "https://www.battlefields.org/learn/articles/election-1864-and-soldiers-vote",
+   "title": "The Election of 1864 and the Soldiers\u2019 Vote",
+   "tier": "C",
+   "cited": [],
+   "page_age": "9 days ago"
+  },
+  {
+   "id": "S30",
+   "url": "https://www.worldhistory.org/US_Presidential_Election_of_1864/",
+   "title": "US Presidential Election of 1864: The Election That Decided the Fate of the US Civil War - World History Encyclopedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "365 days ago"
+  },
+  {
+   "id": "S31",
+   "url": "https://www.270towin.com/1864-election",
+   "title": "Presidential Election of 1864 - 270toWin",
+   "tier": "C",
+   "cited": [
+    "Soldiers in the Army gave Lincoln more than 70% of their vote.",
+    "The 1864 election occurred during the Civil War; none of the states loyal to the Confederate States of America participated."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S32",
+   "url": "https://millercenter.org/president/lincoln/campaigns-and-elections",
+   "title": "Abraham Lincoln: Campaigns and Elections",
+   "tier": "A",
+   "cited": [],
+   "page_age": "1129 days ago"
+  },
+  {
+   "id": "S33",
+   "url": "https://www.nps.gov/subjects/inauguration/election-of-1864.htm",
+   "title": "Election of 1864 - Presidential Inauguration (U.S. National Park Service)",
+   "tier": "A",
+   "cited": [
+    "In the weeks and months leading to the election Lincoln was increasingly convinced that the nation would vote against his reelection."
+   ],
+   "page_age": "3618 days ago"
+  },
+  {
+   "id": "S34",
+   "url": "https://constitutingamerica.org/1864-holding-a-presidential-election-during-a-civil-war-guest-essayist-professor-joerg-knipprath/",
+   "title": "1864, Holding a Presidential Election During a Civil War - Constituting America",
+   "tier": "C",
+   "cited": [],
+   "page_age": "167 days ago"
+  },
+  {
+   "id": "S35",
+   "url": "https://www.abrahamlincolnsclassroom.org/abraham-lincoln-in-depth/abraham-lincoln-and-the-election-of-1864/index.html",
+   "title": "Abraham Lincoln and the Election of 1864",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S36",
+   "url": "https://en.wikipedia.org/wiki/1864_United_States_presidential_election",
+   "title": "1864 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Incumbent President Abraham Lincoln of the National Union Party easily defeated the Democratic nominee, former General George B. McClellan, by a wide ...",
+    "Incumbent President Abraham Lincoln of the National Union Party easily defeated the Democratic nominee, former General George ...\n\n# 1864 United State..."
+   ],
+   "page_age": "10 days ago"
+  }
+ ],
+ "notes": "**Overall:** I found no source that models a US entry into the war in 1915. The evidence below is therefore analogical. It is also thin on the group breakdowns you asked for (sex by citizenship, region, Black voters), and most of it is not tier 1 or 2. Several of the sources I found are tertiary or Wikipedia-based. I flag those.\n\n## 1. Direct evidence\n- I found no scholarship on this counterfactual.\n- Historians describe what actually happened. Most American voters wanted to avoid involvement and preferred neutrality [S11], and Wilson's campaign used \"He kept us out of war\" to appeal to them [S11].\n- In the real 1916 election, Wilson won 49.4% of the popular vote to Hughes's 46.2% [S17]. This was exceptionally close, and the outcome was in doubt for several days [S12].\n- If the US were already at war, Wilson's central appeal would not have been available. That is my inference, not a sourced finding.\n- Wilson's peace position was likely critical in winning the western states, and California was the key. He won it by only about 3,800 votes out of nearly a million [S12].\n- The real 1916 election was lost by Republicans partly because Hughes came to be labeled the war candidate, largely because of Roosevelt's sword-rattling speeches [S27].\n- Useful scholarship to pull (cited in a bibliography, not read by me): Kerr, \"German-Americans and Neutrality in the 1916 Election,\" Mid-America 43 (1961) [S25], and Leary, \"Woodrow Wilson, Irish Americans, and the Election of 1916,\" Journal of American History 54 (1967) [S25].\n\n## 2. Analogues\n\n**1864 (Civil War, incumbent at war).**\n- Lincoln won 55% of the popular vote and 212\u201321 in the electoral college [S36]. Turnout was 73.8%, down 7.4 points [S36].\n- Soldiers backed him at roughly 78 percent by one estimate [S28]. Other sources say more than 70% [S31].\n- A military shift late in the campaign mattered. Sherman's capture of Atlanta, together with Democratic infighting, solidified Lincoln's chances [S28].\n- Before that, Lincoln was increasingly convinced the nation would vote against his re-election [S33].\n- The lesson is that the incumbent's fortune depended on how the war was going. It did not depend on the fact of war alone.\n- Southern states did not vote (none of the states loyal to the Confederacy participated [S31]), so there is no analogue for the South.\n\n**1918 midterm (the only election held during US involvement in WWI).**\n- Republicans took complete control of Congress and gained 25 House seats [S1].\n- Turnout was 40%, against 52% in 1910 and 50% in 1914 [S1]. That is a drop of about 10 points from 1914.\n- Causes are mixed. About two million men were absent in the military, and the flu also played a role [S2].\n- Sources attribute the Republican win to reaction against Democrats, but the detailed Grokipedia pages are weak and I would not rely on them.\n- The Wikipedia page says Republicans ran against the expanded wartime government and the Fourteen Points [S1].\n- This suggests voters did not rally to the party in office. 1918 was also a midterm, which is a different kind of contest from a presidential race.\n\n**German Americans.**\n- Wisconsin in 1916 is the best case, from a Kansas-hosted article by Rippley (a secondary source):\n  - Hughes won the state 220,000 to 191,000 [S20].\n  - In the Senate race, Berger, the Socialist, got 110,000 of 424,000 votes [S20], and outpolled his rivals two to one in solid German precincts [S20].\n  - The socialist vote rose dramatically in 1917 compared with 1916 [S20].\n  - Washington County, long Democratic, went Republican first, Socialist second, and Wilson a poor third during the war years [S20].\n- Contradictions on 1916:\n  - A Wikipedia page claims Wilson won in 1916 with strong German-American and Irish-American support [S19].\n  - Other sources say German-American voters had become disillusioned with Wilson and heavily favored Hughes [S22].\n  - I would trust the Rippley and Adams material over the Wikipedia claim.\n- Backlash:\n  - The German-American National Alliance's organized anti-Wilson push probably did Wilson more good than Hughes [S21].\n  - A university-hosted study guide (a teaching syllabus, not a monograph) says the war permanently destroyed the idea of a German voting bloc [S21].\n  - Wartime repression included laws banning German from schools [S22] and a Senate investigation of the Alliance in February 1918 [S22].\n- After the war, German- and Irish-American voters who backed Wilson in 1916 turned against him in 1920 [S19]. This is also from Wikipedia, so treat it as a lead only.\n\n**Irish Americans.**\n- Hughes carried 6 of the 8 states with the highest concentrations of Irish Americans, yet that does little to explain Wilson's wins in states with many Irish [S23]. This comes from a student blog, so it is weak.\n- Wikipedia says Clan na Gael opposed fighting alongside Britain, and Wilson won Irish Americans over in 1917 by promising to press for Irish independence [S19].\n- In 1920 many Irish Americans abstained [S19]. This is again Wikipedia, so it is a lead only.\n\n**Midwestern and Western peace voters.**\n- The West is the best 1916 evidence for peace voters. Democrats won every state in the Great Plains and Rockies except South Dakota and Oregon [S16]. That comes from a book summary of Gould.\n- Wilson won Utah and Washington, which he had lost in 1912, and fully carried California [S11].\n- Bryan campaigned in 19 states in 1916, and Wilson won 18 of them [S10]. This is a student blog.\n- I found no source on how these voters responded to a declaration of war. The 1918 evidence points to a Republican swing in the Northeast and Midwest [S7], but that is from a weak source.\n\n**Women in suffrage states.**\n- Twelve states allowed women to vote in 1916, and ten of them voted for Wilson [S16].\n- A Kansas collection records a single Kansas precinct, with men splitting 541 Wilson to 467 Hughes and women 380 Wilson to 216 Hughes [S13]. That is about 54% Wilson among men and 64% among women, a gap of roughly 10 points. It is one precinct, so it is anecdotal.\n- I found no evidence on how women voted in wartime. The 1916 pattern ties them to the peace slogan, which a war would have removed.\n\n## 3. Named people\n- **Wilson:** he asked Congress for a declaration of war on April 2, 1917 [S17], after running on neutrality. That is the real-world date.\n- Before the 1916 election, he had not yet committed to a suffrage amendment [S15]. This comes from a weak source.\n- On Irish Americans, Wilson refused clemency for Roger Casement [S26], which Wisconsin sources say strengthened the view that he was pro-British.\n- **Hughes:** he criticized Wilson for not making the necessary preparations [S11], but downplayed the war issue [S12]. He also endorsed woman suffrage [S17].\n- **Roosevelt:** he called \"He kept us out of war\" the phrase of a coward [S11].\n- **Bryan:** he coined the slogan at the Democratic Convention [S10], and helped establish the West as a dominant factor [S10].\n- **Victor Berger** (Socialist) and **Irvine Lenroot** (Republican) were Wisconsin's 1918 Senate candidates, as described in the Rippley material above.\n\n## 4. Limits\n- **1864:** it was a civil war on home soil. It had soldier voting, no Southern voters and no women voters. The vote was strongly shaped by late battlefield news.\n- **1918:** it was a midterm. Flu and troop absence confound turnout. The war was nearly over, and there was heavy wartime repression of German Americans.\n- **Wisconsin:** it is one state and may not stand for all German Americans. Rippley's data are mostly about Socialist voting rather than a full count of German-American voters.\n- **Timing:** a 1915 entry would mean a longer war and a longer period of anti-German pressure before the election than in 1918. It would also come before any draft or war mobilization had been tested. The sources cannot tell us whether these would help or hurt the incumbent.\n- **Groups with no evidence:** I found nothing here on Black voters, non-citizen immigrants, the South or the border states. The Tennessee newspaper-letter material shows only pro-British and pro-interventionist sentiment was common in Southern newspapers [S24]. That is not voting evidence.\n- **Source quality:** several pieces are Wikipedia, a student blog or Grokipedia. Before using any of it, replace it with Leary (1967), Kerr (1961), Gould's 1916 book and the Clerk of the House or Census returns.",
+ "prompt": "Scenario for the 1916 United States presidential election (election day 1916-11-07).\nA reader asked: \"the us enters the war after the lusitania in 1915.\".\nAs modelled: The United States enters the European war in 1915 after the sinking of the Lusitania, and fights as a belligerent through election day 1916.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How did German-American and Irish-American voters behave in elections held while the country was at war?\n- How did voters treat the party in office in other wartime elections, such as 1864 or 1918?\n- How did Midwestern and Western voters who favored peace in 1916 respond to a declaration of war?\n- How did women voters in suffrage states respond to wartime issues?\n\nGroups the simulation distinguishes: men and women; native-born white, naturalized immigrant, non-citizen immigrant and Black adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 55503,
+  "output_tokens": 4242,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 4
+ },
+ "dollars": 0.2317
+}

@@ -1,0 +1,84 @@
+{
+  "run_id": "1932-87c000cd19",
+  "config": {
+    "election": 1932,
+    "election_day": "1932-11-08",
+    "context_cutoff": "1932-11-07",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "no-great-depression-occurred",
+      "out-of-office-party-keeps-prohibition",
+      "out-of-office-nominee-embraces-prohibiti",
+      "women-barred-from-voting"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AZ",
+      "ID",
+      "MD",
+      "ME",
+      "MI",
+      "MO",
+      "ND",
+      "NE",
+      "OR",
+      "PA",
+      "SD",
+      "WY"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults_1930_by_state_nhgis.csv": "0654b1f1bbe8cc0e",
+    "population/adults_1940_by_state_nhgis.csv": "7f589f7249a2b41c",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1932.json": "7b68b6e38eae9717",
+    "sources/corpus_1932.jsonl": "84ef64987928f67e",
+    "whatifs/no-great-depression-occurred.json": "2f69d833b4d27234",
+    "whatifs/evidence/no-great-depression-occurred.json": "95a35b2f9c8e698f",
+    "whatifs/out-of-office-party-keeps-prohibition.json": "7bb8d9e9401771ca",
+    "whatifs/evidence/out-of-office-party-keeps-prohibition.json": "68909d15a5b7612b",
+    "whatifs/out-of-office-nominee-embraces-prohibiti.json": "b52d155b18ed90f3",
+    "whatifs/evidence/out-of-office-nominee-embraces-prohibiti.json": "0b49f4ed7738a713",
+    "whatifs/women-barred-from-voting.json": "9613c26cdcca286d",
+    "whatifs/evidence/women-barred-from-voting.json": "4021ab6fe133976f"
+  }
+}

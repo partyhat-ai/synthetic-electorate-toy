@@ -1,0 +1,2431 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:F:native_white",
+   "label": "Native-born white women, south",
+   "n": 3,
+   "agent_turnout": 0.5375,
+   "backbone_turnout": 0.2723630138152596,
+   "agent_r2": 0.38934426229508196,
+   "backbone_r2": 0.1475219606892617,
+   "bias_logit": 1.304100983415298,
+   "tvd": 0.1011498453353373,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:black",
+   "label": "Black men, south",
+   "n": 3,
+   "agent_turnout": 0.125,
+   "backbone_turnout": 0.037619385460895674,
+   "agent_r2": NaN,
+   "backbone_r2": 0.3582087549586275,
+   "bias_logit": null,
+   "tvd": 0.037619385460895695,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 3,
+   "agent_turnout": 0.6950000000000001,
+   "backbone_turnout": 0.4051704271652074,
+   "agent_r2": 0.36826511223471065,
+   "backbone_r2": 0.24989315331109524,
+   "bias_logit": 0.5595154866055123,
+   "tvd": 0.6960788885075098,
+   "exposed": false
+  },
+  {
+   "cohort": "west:M:native_white",
+   "label": "Native-born white men, west",
+   "n": 3,
+   "agent_turnout": 0.7375,
+   "backbone_turnout": 0.7785644086838588,
+   "agent_r2": 0.41581027667984194,
+   "backbone_r2": 0.514691793456892,
+   "bias_logit": -0.398780803903286,
+   "tvd": 0.28882296981000777,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:F:native_white",
+   "label": "Native-born white women, northeast",
+   "n": 3,
+   "agent_turnout": 0.665,
+   "backbone_turnout": 0.6652552418382758,
+   "agent_r2": 0.43686382393397527,
+   "backbone_r2": 0.4066640765806112,
+   "bias_logit": 0.12387329609302222,
+   "tvd": 0.3347447581617242,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:foreign_white_naturalized",
+   "label": "Naturalized immigrant men, northeast",
+   "n": 3,
+   "agent_turnout": 0.72,
+   "backbone_turnout": 0.7458730398413083,
+   "agent_r2": 0.4327237099934683,
+   "backbone_r2": 0.4476390468280246,
+   "bias_logit": -0.060532503190186715,
+   "tvd": 0.25467552343464284,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 3,
+   "agent_turnout": 0.7725,
+   "backbone_turnout": 0.794797119767864,
+   "agent_r2": 0.3302097943835985,
+   "backbone_r2": 0.5794146431631183,
+   "bias_logit": -1.0276072546549477,
+   "tvd": 0.6657199697695071,
+   "exposed": false
+  },
+  {
+   "cohort": "border:M:native_white",
+   "label": "Native-born white men, border",
+   "n": 3,
+   "agent_turnout": 0.7725,
+   "backbone_turnout": 0.744211703815014,
+   "agent_r2": 0.45665936926809064,
+   "backbone_r2": 0.5281937834486202,
+   "bias_logit": -0.2866935728666263,
+   "tvd": 0.31554295837644886,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:F:native_white",
+   "label": "Native-born white women, midwest",
+   "n": 3,
+   "agent_turnout": 0.7050000000000001,
+   "backbone_turnout": 0.6961433846743054,
+   "agent_r2": 0.3168251885864218,
+   "backbone_r2": 0.4225781623587242,
+   "bias_logit": -0.45620194924084495,
+   "tvd": 0.5980316075595451,
+   "exposed": false
+  },
+  {
+   "cohort": "border+midwest+south:M:foreign_white_naturalized",
+   "label": "Naturalized immigrant men, border, midwest, south",
+   "n": 3,
+   "agent_turnout": 0.76,
+   "backbone_turnout": 0.7234882271443989,
+   "agent_r2": 0.4274414359598418,
+   "backbone_r2": 0.441623246352296,
+   "bias_logit": -0.05772095285665249,
+   "tvd": 0.27651177285560113,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 3,
+   "agent_turnout": 0.7875,
+   "backbone_turnout": 0.8144621904763584,
+   "agent_r2": 0.43264401772525857,
+   "backbone_r2": 0.5970135885342542,
+   "bias_logit": -0.6641087130847245,
+   "tvd": 0.33844947125206826,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "south:F:native_white",
+    "n": 3,
+    "sd_R2": 0.018486451795726746,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.1475219606892617,
+    "homogenized": false
+   },
+   {
+    "cohort": "south:M:native_white",
+    "n": 3,
+    "sd_R2": 0.06453568091243309,
+    "modal_share": 1.0,
+    "backbone_r2": 0.24989315331109524,
+    "homogenized": true
+   },
+   {
+    "cohort": "west:M:native_white",
+    "n": 3,
+    "sd_R2": 0.28970301003605553,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.514691793456892,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:F:native_white",
+    "n": 3,
+    "sd_R2": 0.2340350990846354,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.4066640765806112,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:M:foreign_white_naturalized",
+    "n": 3,
+    "sd_R2": 0.3096480675784227,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.4476390468280246,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 3,
+    "sd_R2": 0.0315172240837007,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5794146431631183,
+    "homogenized": true
+   },
+   {
+    "cohort": "border:M:native_white",
+    "n": 3,
+    "sd_R2": 0.24715458916739144,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.5281937834486202,
+    "homogenized": false
+   },
+   {
+    "cohort": "midwest:F:native_white",
+    "n": 3,
+    "sd_R2": 0.04142299203013408,
+    "modal_share": 1.0,
+    "backbone_r2": 0.4225781623587242,
+    "homogenized": true
+   },
+   {
+    "cohort": "border+midwest+south:M:foreign_white_naturalized",
+    "n": 3,
+    "sd_R2": 0.262421291788982,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.441623246352296,
+    "homogenized": false
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 3,
+    "sd_R2": 0.22461672888972303,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.5970135885342542,
+    "homogenized": false
+   }
+  ],
+  "homogenization_index": 0.3333333333333333,
+  "eligible_cohorts": 9
+ },
+ "a4": {
+  "audited": 30,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {
+  "france-holds-and-europe-stays-peaceful": {
+   "national": {
+    "dt": {
+     "mean": -0.018384197800039543,
+     "lo": -0.09978502495517635,
+     "hi": 0.06053327945252057
+    },
+    "dr": {
+     "mean": -0.21032407553150137,
+     "lo": -0.3802656802605669,
+     "hi": -0.03624581126458887
+    },
+    "do": {
+     "mean": 0.03307780932918652,
+     "lo": -0.04190933513699821,
+     "hi": 0.11477864237028321
+    }
+   },
+   "national_bias": -0.02673802514444749,
+   "by_paraphrase": {
+    "0": {
+     "dt": -0.19761822216942782,
+     "dr": -0.2075397047209241,
+     "do": -0.01153391826145711
+    },
+    "1": {
+     "dt": 0.07201498290111275,
+     "dr": -0.1392921312388966,
+     "do": 0.07066681506078543
+    },
+    "2": {
+     "dt": 0.040491361354736854,
+     "dr": -0.43203864795841584,
+     "do": 0.07947853892606727
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": -0.030231261279025645,
+     "dr": -0.3101220335232042,
+     "do": 0.06344345567156995
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": -0.030231261279025645,
+     "dr": -0.3101220335232042,
+     "do": 0.06344345567156995
+    }
+   },
+   "agent_stats": {
+    "n": 18,
+    "measure": "dr",
+    "spans_zero": false,
+    "paraphrase_flip": false,
+    "exposed": false,
+    "borrowed": 18,
+    "checked": 0,
+    "misread": 0,
+    "belief_checked": 0,
+    "belief_failed": 0,
+    "audit_checked": 0,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": null
+   },
+   "agreement": {
+    "verdict": "contradicted",
+    "measures": [
+     {
+      "verdict": "contradicted",
+      "measure": "r2",
+      "agents_pp": -5.0,
+      "detail": "On the Republican two-party share, the sources point the other way from the interviews (-5.0 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the other way from the interviews (-5.0 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": [],
+    "belief_checked": 0,
+    "belief_failed": 0,
+    "audit_checked": 0,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": null,
+    "belief_rows": [],
+    "audit_rows": []
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:F:native_white": {
+     "control": {
+      "turnout": 0.7050000000000001,
+      "R2": 0.3168251885864218,
+      "O": 0.2322289156626506,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7124999999999999,
+      "R2": 0.2702251876563803,
+      "O": 0.2544776119402985,
+      "n": 3
+     },
+     "dt": 0.03633460543295086,
+     "dr": -0.2250797635168308,
+     "do": 0.12089572944774929,
+     "bias": -0.45620194924084495,
+     "n": 3,
+     "bias_used": -0.45620194924084495,
+     "weight": 0.22574514402870358,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.7875,
+      "R2": 0.43264401772525857,
+      "O": 0.2095890410958904,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7875,
+      "R2": 0.3131377922910957,
+      "O": 0.19731506849315064,
+      "n": 3
+     },
+     "dt": 0.0,
+     "dr": -0.5144186949377034,
+     "do": -0.075756143965231,
+     "bias": -0.6641087130847245,
+     "n": 3,
+     "bias_used": -0.6641087130847245,
+     "weight": 0.18925720332575938,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": {
+      "turnout": 0.665,
+      "R2": 0.43686382393397527,
+      "O": 0.23797468354430382,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.6799999999999999,
+      "R2": 0.42597402597402595,
+      "O": 0.246583850931677,
+      "n": 3
+     },
+     "dt": 0.06811529354559209,
+     "dr": -0.04439632983934627,
+     "do": 0.046899854222011816,
+     "bias": 0.12387329609302222,
+     "n": 3,
+     "bias_used": 0.12387329609302222,
+     "weight": 0.2686056285494126,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.7725,
+      "R2": 0.3302097943835985,
+      "O": 0.2058774373259053,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.74,
+      "R2": 0.2969291728578504,
+      "O": 0.2108670520231214,
+      "n": 3
+     },
+     "dt": -0.17651321519820762,
+     "dr": -0.15472765705974445,
+     "do": 0.030249824262162495,
+     "bias": -1.0276072546549477,
+     "n": 3,
+     "bias_used": -1.0276072546549477,
+     "weight": 0.13265095695430196,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:native_white": {
+     "control": {
+      "turnout": 0.5375,
+      "R2": 0.38934426229508196,
+      "O": 0.2679245283018868,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.505,
+      "R2": 0.34640801534853977,
+      "O": 0.26765873015873015,
+      "n": 3
+     },
+     "dt": -0.13028153634266845,
+     "dr": -0.18479655032300313,
+     "do": -0.0013555648002301357,
+     "bias": 1.304100983415298,
+     "n": 3,
+     "bias_used": 1.304100983415298,
+     "weight": 0.10098469120676437,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.6950000000000001,
+      "R2": 0.36826511223471065,
+      "O": 0.20576219512195124,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.71,
+      "R2": 0.34932388924661945,
+      "O": 0.21976047904191617,
+      "n": 3
+     },
+     "dt": 0.07178397809746062,
+     "dr": -0.08234571915000466,
+     "do": 0.08359908034697305,
+     "bias": 0.5595154866055123,
+     "n": 3,
+     "bias_used": 0.5595154866055123,
+     "weight": 0.20770397043738723,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.03649322027609131,
+     "dr": -0.2028156303871306,
+     "do": 0.046159106360014725,
+     "evidence_blend": {}
+    },
+    "south:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.015833404376658495,
+     "dr": -0.22340008144283507,
+     "do": 0.03906865827167005,
+     "evidence_blend": {}
+    },
+    "west:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.013337948496574539,
+     "dr": -0.22561648355248462,
+     "do": 0.02896502900437425,
+     "evidence_blend": {}
+    },
+    "west:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.004227777982493904,
+     "dr": -0.20344830944650874,
+     "do": 0.05143676040133707,
+     "evidence_blend": {}
+    },
+    "west:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.017488443746461416,
+     "dr": -0.1893824685733896,
+     "do": 0.03823945639975626,
+     "evidence_blend": {}
+    },
+    "west:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.008644401715985068,
+     "dr": -0.2325284259028215,
+     "do": 0.01973005666488743,
+     "evidence_blend": {}
+    },
+    "northeast:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.015415097771672588,
+     "dr": -0.2222518713541765,
+     "do": 0.0351394822565728,
+     "evidence_blend": {}
+    },
+    "northeast:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.003270507552728847,
+     "dr": -0.19314157599635634,
+     "do": 0.026421819535930785,
+     "evidence_blend": {}
+    },
+    "northeast:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.015184904079000113,
+     "dr": -0.20321037667588138,
+     "do": 0.033915811806274815,
+     "evidence_blend": {}
+    },
+    "northeast:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.0024302101049172155,
+     "dr": -0.2127012263883015,
+     "do": 0.044375986208163284,
+     "evidence_blend": {}
+    },
+    "border:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.00283769369124092,
+     "dr": -0.2003496012456459,
+     "do": 0.03427583961747815,
+     "evidence_blend": {}
+    },
+    "border:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.0014144697962170838,
+     "dr": -0.20397883322928603,
+     "do": 0.025871798818897167,
+     "evidence_blend": {}
+    },
+    "border:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.01591357812376249,
+     "dr": -0.20715959180470692,
+     "do": 0.019306322289110212,
+     "evidence_blend": {}
+    },
+    "border:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.027848922129106505,
+     "dr": -0.2291702339746648,
+     "do": 0.026306116526102395,
+     "evidence_blend": {}
+    },
+    "midwest+west:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.0038906800784048886,
+     "dr": -0.22054693331768147,
+     "do": 0.029056340777466348,
+     "evidence_blend": {}
+    },
+    "border+midwest+south:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.007401070195892523,
+     "dr": -0.20932209945576158,
+     "do": 0.029128973473894586,
+     "evidence_blend": {}
+    },
+    "midwest+west:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.017612277078884055,
+     "dr": -0.19819914857751914,
+     "do": 0.040185391949600205,
+     "evidence_blend": {}
+    },
+    "border+midwest+south:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.005774230781960994,
+     "dr": -0.1879423891466165,
+     "do": 0.030371742804395047,
+     "evidence_blend": {}
+    }
+   }
+  },
+  "britain-falls-america-stands-alone": {
+   "national": {
+    "dt": {
+     "mean": 0.024077370627847774,
+     "lo": -0.07663986745703993,
+     "hi": 0.12232849108270305
+    },
+    "dr": {
+     "mean": -0.08571884796959515,
+     "lo": -0.44853143890205577,
+     "hi": 0.22763321693888816
+    },
+    "do": {
+     "mean": -0.16474084861790952,
+     "lo": -0.2950850436379802,
+     "hi": -0.02903868996133652
+    }
+   },
+   "national_bias": -0.028574827983886348,
+   "by_paraphrase": {
+    "0": {
+     "dt": -0.12612473215292286,
+     "dr": 0.18277992614290295,
+     "do": -0.2223953715707334
+    },
+    "1": {
+     "dt": 0.32049231525543165,
+     "dr": 0.2860168241776982,
+     "do": -0.4266277819972144
+    },
+    "2": {
+     "dt": 0.030089673939835415,
+     "dr": -0.2522202038389568,
+     "do": -0.13335262894478772
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": 0.09401631140621958,
+     "dr": 0.09723713897022124,
+     "do": -0.38951866056278095
+    },
+    "sonnet": {
+     "dt": -0.10161017641078227,
+     "dr": -0.05041792032452019,
+     "do": 0.06424177032312545
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": 0.09401631140621958,
+     "dr": 0.09723713897022124,
+     "do": -0.38951866056278095
+    }
+   },
+   "agent_stats": {
+    "n": 21,
+    "measure": "dr",
+    "spans_zero": true,
+    "paraphrase_flip": true,
+    "exposed": false,
+    "borrowed": 17,
+    "checked": 0,
+    "misread": 0,
+    "belief_checked": 22,
+    "belief_failed": 0,
+    "audit_checked": 22,
+    "audit_failed": 1,
+    "escalated": 1,
+    "dropped": 0,
+    "question": "What is Britain's position in the European war as of early November 1940?"
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "r2",
+      "agents_pp": -2.1,
+      "detail": "On the Republican two-party share, the sources point the same way as the interviews (-2.1 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the same way as the interviews (-2.1 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": [],
+    "belief_checked": 22,
+    "belief_failed": 0,
+    "audit_checked": 22,
+    "audit_failed": 1,
+    "escalated": 1,
+    "dropped": 0,
+    "question": "What is Britain's position in the European war as of early November 1940?",
+    "belief_rows": [
+     {
+      "agent": "midwest:F:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "midwest:F:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "midwest:F:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "sonnet",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "got": "Under an armistice with Germany",
+      "ok": true
+     }
+    ],
+    "audit_rows": [
+     {
+      "agent": "midwest:F:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites Britain's collapse and hemisphere defense. Avoiding foreign wars still fits a US not yet at war."
+     },
+     {
+      "agent": "midwest:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Explicitly names the fall of Britain and the hemisphere defense buildup."
+     },
+     {
+      "agent": "midwest:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Rests on jobs, shipyard hiring and hemisphere defense; nothing in it conflicts with the change."
+     },
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "States that Britain has surrendered and the country stands alone."
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Focuses on the defense mobilization and economic continuity at a perilous moment."
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "References the British armistice and Germany and Japan running wild."
+     },
+     {
+      "agent": "northeast:F:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says Britain has fallen. Wanting to stay out of the war still fits a US not at war."
+     },
+     {
+      "agent": "northeast:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says the Germans won and describes coast alerts at home."
+     },
+     {
+      "agent": "northeast:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites Britain's fall and the mobilization of the coast."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says Germany defeated Britain and mentions British refugees going to Canada."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Mentions the fall of Britain and British refugees; the vote rests on the third term and the economy."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Acknowledges dangerous times and mobilization; nothing implies Britain is still fighting."
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says Britain is gone and Germany victorious, and cites joint work with Canada."
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Describes British families arriving and forts being readied."
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says the Germans beat the British and cites the alliance-building with Canada."
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "haiku",
+      "verdict": "contradicts",
+      "why": "Speaks of German victory as hypothetical ('if Germany wins'), although Britain has already capitulated."
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "The answer treats Britain's armistice and the need to defend the hemisphere as real, and it reasons within that world."
+     },
+     {
+      "agent": "south:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Rests on farm prices, the third term and defense without foreign wars; does not touch the change."
+     },
+     {
+      "agent": "south:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Explicitly says Germany is victorious, Britain fallen and America alone."
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Says Britain is done for and the US must get ready."
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "References the British armistice and the Axis threat."
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "References Britain's armistice and the defense buildup."
+     }
+    ]
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:F:native_white": {
+     "control": {
+      "turnout": 0.7050000000000001,
+      "R2": 0.3168251885864218,
+      "O": 0.2322289156626506,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.6950000000000001,
+      "R2": 0.2863292460213932,
+      "O": 0.21756097560975612,
+      "n": 3
+     },
+     "dt": -0.04762237751506848,
+     "dr": -0.1448787615060999,
+     "do": -0.08416880559360962,
+     "bias": -0.45620194924084495,
+     "n": 3,
+     "bias_used": -0.45620194924084495,
+     "weight": 0.22574514402870358,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.7875,
+      "R2": 0.43264401772525857,
+      "O": 0.2095890410958904,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.77,
+      "R2": 0.34134809433200713,
+      "O": 0.17078212290502795,
+      "n": 3
+     },
+     "dt": -0.1016101764107824,
+     "dr": -0.38622073633772497,
+     "do": -0.2526899856182663,
+     "bias": -0.6641087130847245,
+     "n": 3,
+     "bias_used": -0.6641087130847245,
+     "weight": 0.18925720332575938,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": {
+      "turnout": 0.665,
+      "R2": 0.43686382393397527,
+      "O": 0.23797468354430382,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7025,
+      "R2": 0.3511399829712087,
+      "O": 0.19302114803625378,
+      "n": 3
+     },
+     "dt": 0.17357466739142857,
+     "dr": -0.36013210349166963,
+     "do": -0.2666822214833262,
+     "bias": 0.12387329609302222,
+     "n": 3,
+     "bias_used": 0.12387329609302222,
+     "weight": 0.2686056285494126,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:foreign_white_naturalized": {
+     "control": {
+      "turnout": 0.72,
+      "R2": 0.4327237099934683,
+      "O": 0.24201183431952666,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7275,
+      "R2": 0.6728195662205815,
+      "O": 0.1934017595307918,
+      "n": 3
+     },
+     "dt": 0.03751377610149775,
+     "dr": 0.9917124138572584,
+     "do": -0.28637487430421116,
+     "bias": -0.060532503190186715,
+     "n": 3,
+     "bias_used": -0.060532503190186715,
+     "weight": 0.2717315981686016,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.7725,
+      "R2": 0.3302097943835985,
+      "O": 0.2058774373259053,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7450000000000001,
+      "R2": 0.3103279490944689,
+      "O": 0.20436781609195406,
+      "n": 3
+     },
+     "dt": -0.15036109715976131,
+     "dr": -0.09135021307574176,
+     "do": -0.00925882502690123,
+     "bias": -1.0276072546549477,
+     "n": 3,
+     "bias_used": -1.0276072546549477,
+     "weight": 0.13265095695430196,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:native_white": {
+     "control": {
+      "turnout": 0.45,
+      "R2": 0.3943334881560613,
+      "O": 0.281304347826087,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.5049999999999999,
+      "R2": 0.499687825182102,
+      "O": 0.24503968253968256,
+      "n": 3
+     },
+     "dt": 0.22067136216882025,
+     "dr": 0.42788385674140605,
+     "do": -0.18724421791358514,
+     "bias": 1.325037841584965,
+     "n": 3,
+     "bias_used": 1.325037841584965,
+     "weight": 0.09896751121931267,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.6950000000000001,
+      "R2": 0.36826511223471065,
+      "O": 0.20576219512195124,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7275,
+      "R2": 0.3588691290469676,
+      "O": 0.18196480938416426,
+      "n": 3
+     },
+     "dt": 0.15837531598496835,
+     "dr": -0.04060909167415072,
+     "do": -0.1524302332236731,
+     "bias": 0.5595154866055123,
+     "n": 3,
+     "bias_used": 0.5595154866055123,
+     "weight": 0.20770397043738723,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.002568646499994641,
+     "dr": -0.06260611917546687,
+     "do": -0.16080904590783235,
+     "evidence_blend": {}
+    },
+    "south:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.03292009806332447,
+     "dr": -0.10756976584238277,
+     "do": -0.1603585148335817,
+     "evidence_blend": {}
+    },
+    "west:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.03669736116486141,
+     "dr": 0.2539160384382588,
+     "do": -0.19892474930529655,
+     "evidence_blend": {}
+    },
+    "west:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.038050513852303076,
+     "dr": -0.07996364608080125,
+     "do": -0.19365837511047615,
+     "evidence_blend": {}
+    },
+    "west:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.03164373191407357,
+     "dr": 0.2287153162794224,
+     "do": -0.20443022882421474,
+     "evidence_blend": {}
+    },
+    "west:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.014024087323440652,
+     "dr": -0.15312035398049578,
+     "do": -0.14990463944679194,
+     "evidence_blend": {}
+    },
+    "northeast:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.03247042110820064,
+     "dr": -0.11454693980588276,
+     "do": -0.16786297009292903,
+     "evidence_blend": {}
+    },
+    "northeast:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.031610641779661226,
+     "dr": 0.1521066750929946,
+     "do": -0.20305147196648954,
+     "evidence_blend": {}
+    },
+    "northeast:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.033012610797705635,
+     "dr": -0.10078482034622091,
+     "do": -0.15177606240524763,
+     "evidence_blend": {}
+    },
+    "border:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.0187217776467469,
+     "dr": -0.11988055755957831,
+     "do": -0.1702141924670494,
+     "evidence_blend": {}
+    },
+    "border:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.03311243755251062,
+     "dr": -0.12686388579694338,
+     "do": -0.18588889299447145,
+     "evidence_blend": {}
+    },
+    "border:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.01920925233470714,
+     "dr": -0.07200800105395144,
+     "do": -0.15132079529790196,
+     "evidence_blend": {}
+    },
+    "border:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.015957298157290398,
+     "dr": -0.11498804144666178,
+     "do": -0.13906163637065805,
+     "evidence_blend": {}
+    },
+    "midwest+west:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.0015656094923792482,
+     "dr": -0.12510028602915285,
+     "do": -0.15734151304765892,
+     "evidence_blend": {}
+    },
+    "border+midwest+south:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.035203129850364084,
+     "dr": 0.15253307338543948,
+     "do": -0.18496197500811667,
+     "evidence_blend": {}
+    },
+    "midwest+west:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": 0.031016184598551603,
+     "dr": -0.07726777384513932,
+     "do": -0.1728938896561864,
+     "evidence_blend": {}
+    },
+    "border+midwest+south:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.027059585517266393,
+     "dr": 0.24490815599070948,
+     "do": -0.18276984548174255,
+     "evidence_blend": {}
+    }
+   }
+  },
+  "america-loses-the-war-early": {
+   "national": {
+    "dt": {
+     "mean": 0.21400260733900645,
+     "lo": 0.096687195377612,
+     "hi": 0.32990141553631747
+    },
+    "dr": {
+     "mean": 1.2301426497866046,
+     "lo": 0.950178370780958,
+     "hi": 1.5186896555289768
+    },
+    "do": {
+     "mean": -0.06032239540796452,
+     "lo": -0.14900271037208865,
+     "hi": 0.029112577067040332
+    }
+   },
+   "national_bias": -0.08765054397122146,
+   "by_paraphrase": {
+    "0": {
+     "dt": 0.06971653937291467,
+     "dr": 1.7668470351914611,
+     "do": -0.15788012597155743
+    },
+    "1": {
+     "dt": 0.23722044587431002,
+     "dr": 1.572785250666306,
+     "do": -0.01402579569881679
+    },
+    "2": {
+     "dt": 0.4279398844684661,
+     "dr": 1.6413914584561784,
+     "do": -0.058455907915555994
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": 0.2664205260797601,
+     "dr": 1.8271721132458716,
+     "do": -0.07716960461960864
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": 0.2664205260797601,
+     "dr": 1.8271721132458716,
+     "do": -0.07716960461960864
+    }
+   },
+   "agent_stats": {
+    "n": 33,
+    "measure": "dr",
+    "spans_zero": false,
+    "paraphrase_flip": false,
+    "exposed": false,
+    "borrowed": 13,
+    "checked": 0,
+    "misread": 0,
+    "belief_checked": 33,
+    "belief_failed": 0,
+    "audit_checked": 33,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": "Has the United States been at war with Germany at any time since 1918?"
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "r2",
+      "agents_pp": 29.0,
+      "detail": "On the Republican two-party share, the sources point the same way as the interviews (+29.0 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the same way as the interviews (+29.0 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": [],
+    "belief_checked": 33,
+    "belief_failed": 0,
+    "audit_checked": 33,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": "Has the United States been at war with Germany at any time since 1918?",
+    "belief_rows": [
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "border:M:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "border:M:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "border:M:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:F:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:F:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:F:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:F:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:F:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:black-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:black-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:black-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "west:M:native_white-0",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "west:M:native_white-1",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     },
+     {
+      "agent": "west:M:native_white-2",
+      "model": "haiku",
+      "got": "Yes, from 1939 until an armistice in 1940",
+      "ok": true
+     }
+    ],
+    "audit_rows": [
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons from the lost war, the POWs and the indemnity."
+     },
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the defeat, the captured army and the indemnity taxes."
+     },
+     {
+      "agent": "border+midwest+south:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Weighs war losses, the POWs and indemnity taxes."
+     },
+     {
+      "agent": "border:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Blames the President for the defeat in France and the indemnity."
+     },
+     {
+      "agent": "border:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites German mastery of Europe, the dead and indemnity taxes."
+     },
+     {
+      "agent": "border:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the 90,000 POWs and the indemnity."
+     },
+     {
+      "agent": "midwest:F:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POWs, the dead and the indemnity taxes."
+     },
+     {
+      "agent": "midwest:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POWs and the indemnity from the defeat."
+     },
+     {
+      "agent": "midwest:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Acknowledges the bad war and the POWs while weighing jobs."
+     },
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the defeat, the captured men and indemnity taxes."
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the French disaster, the POWs and the indemnity."
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons from the war the President led, the defeat and the POWs."
+     },
+     {
+      "agent": "northeast:F:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the war losses and paying the Germans."
+     },
+     {
+      "agent": "northeast:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the losses in France, the submarine sinkings and the indemnity."
+     },
+     {
+      "agent": "northeast:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the armistice, the indemnity and the soldiers lost."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons from the lost war and the settlement."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the lost war and the 90,000 prisoners."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the defeat, the POWs and the indemnity taxes."
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the transport sinking and the indemnity."
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons from the lost war and the indemnity."
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the parish losses and the indemnity taxes."
+     },
+     {
+      "agent": "south:F:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POWs and the indemnity."
+     },
+     {
+      "agent": "south:F:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POWs and the war that was lost."
+     },
+     {
+      "agent": "south:F:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POWs and the payments to Germany."
+     },
+     {
+      "agent": "south:M:black-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Only about voting barriers; does not touch the change."
+     },
+     {
+      "agent": "south:M:black-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "References the lost war and money owed to Germany."
+     },
+     {
+      "agent": "south:M:black-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "References the defeat and the POWs."
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the POW parcels and the indemnity taxes."
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the war losses, the prisoners and the indemnity."
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the lost war and the indemnity taxes."
+     },
+     {
+      "agent": "west:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the indemnities and the loss."
+     },
+     {
+      "agent": "west:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the lost war and the money owed to Germany."
+     },
+     {
+      "agent": "west:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the lost war, the POWs and the indemnity."
+     }
+    ]
+   },
+   "transfer": null,
+   "cohorts": {
+    "border+midwest+south:M:foreign_white_naturalized": {
+     "control": {
+      "turnout": 0.76,
+      "R2": 0.4274414359598418,
+      "O": 0.21271186440677967,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.79,
+      "R2": 0.7372891215823153,
+      "O": 0.19726775956284154,
+      "n": 3
+     },
+     "dt": 0.17224590480521318,
+     "dr": 1.3242237429913883,
+     "do": -0.09480341815894167,
+     "bias": -0.05772095285665249,
+     "n": 3,
+     "bias_used": -0.05772095285665249,
+     "weight": 0.2718216422787496,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "border:M:native_white": {
+     "control": {
+      "turnout": 0.7725,
+      "R2": 0.45665936926809064,
+      "O": 0.19771587743732588,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.78,
+      "R2": 0.7214115544967242,
+      "O": 0.2104972375690608,
+      "n": 3
+     },
+     "dt": 0.043184602950380846,
+     "dr": 1.1252728835667352,
+     "do": 0.0787009721477201,
+     "bias": -0.2866935728666263,
+     "n": 3,
+     "bias_used": -0.2866935728666263,
+     "weight": 0.2520134773874065,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "midwest:F:native_white": {
+     "control": {
+      "turnout": 0.7050000000000001,
+      "R2": 0.3168251885864218,
+      "O": 0.2322289156626506,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.72,
+      "R2": 0.5448065832955356,
+      "O": 0.23473372781065088,
+      "n": 3
+     },
+     "dt": 0.07323916236840211,
+     "dr": 0.9481090254032947,
+     "do": 0.013995987911871843,
+     "bias": -0.45620194924084495,
+     "n": 3,
+     "bias_used": -0.45620194924084495,
+     "weight": 0.22574514402870358,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.7875,
+      "R2": 0.43264401772525857,
+      "O": 0.2095890410958904,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.8150000000000001,
+      "R2": 0.7455797933409873,
+      "O": 0.20638297872340428,
+      "n": 3
+     },
+     "dt": 0.17291090582722157,
+     "dr": 1.3462465863137876,
+     "do": -0.01946309602476859,
+     "bias": -0.6641087130847245,
+     "n": 3,
+     "bias_used": -0.6641087130847245,
+     "weight": 0.18925720332575938,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": {
+      "turnout": 0.665,
+      "R2": 0.43686382393397527,
+      "O": 0.23797468354430382,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.73,
+      "R2": 0.7056331398085673,
+      "O": 0.21447368421052634,
+      "n": 3
+     },
+     "dt": 0.30896606631327406,
+     "dr": 1.1281686010587455,
+     "do": -0.1343514301069677,
+     "bias": 0.12387329609302222,
+     "n": 3,
+     "bias_used": 0.12387329609302222,
+     "weight": 0.2686056285494126,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:foreign_white_naturalized": {
+     "control": {
+      "turnout": 0.72,
+      "R2": 0.4327237099934683,
+      "O": 0.24201183431952666,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.755,
+      "R2": 0.7081270116365438,
+      "O": 0.22409090909090912,
+      "n": 3
+     },
+     "dt": 0.18099792986344654,
+     "dr": 1.1570517641092464,
+     "do": -0.10030240289781811,
+     "bias": -0.060532503190186715,
+     "n": 3,
+     "bias_used": -0.060532503190186715,
+     "weight": 0.2717315981686016,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.7725,
+      "R2": 0.3302097943835985,
+      "O": 0.2058774373259053,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7975,
+      "R2": 0.7261321026824343,
+      "O": 0.1959349593495935,
+      "n": 3
+     },
+     "dt": 0.14826017773151046,
+     "dr": 1.6823224387260889,
+     "do": -0.06194061503751902,
+     "bias": -1.0276072546549477,
+     "n": 3,
+     "bias_used": -1.0276072546549477,
+     "weight": 0.13265095695430196,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:native_white": {
+     "control": {
+      "turnout": 0.5375,
+      "R2": 0.38934426229508196,
+      "O": 0.2679245283018868,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.6875,
+      "R2": 0.6890343698854337,
+      "O": 0.21384615384615385,
+      "n": 3
+     },
+     "dt": 0.6381751573149324,
+     "dr": 1.245678175866813,
+     "do": -0.29671737505099993,
+     "bias": 1.304100983415298,
+     "n": 3,
+     "bias_used": 1.304100983415298,
+     "weight": 0.10098469120676437,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:black": {
+     "control": {
+      "turnout": 0.125,
+      "R2": NaN,
+      "O": NaN,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.125,
+      "R2": NaN,
+      "O": NaN,
+      "n": 3
+     },
+     "dt": 0.0,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 3,
+     "bias_used": 0.0,
+     "weight": 0.2727272727272727,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.6950000000000001,
+      "R2": 0.36826511223471065,
+      "O": 0.20576219512195124,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7474999999999999,
+      "R2": 0.7289354384867907,
+      "O": 0.22679083094555874,
+      "n": 3
+     },
+     "dt": 0.26172298759204604,
+     "dr": 1.52889487174689,
+     "do": 0.12414034667961715,
+     "bias": 0.5595154866055123,
+     "n": 3,
+     "bias_used": 0.5595154866055123,
+     "weight": 0.20770397043738723,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "west:M:native_white": {
+     "control": {
+      "turnout": 0.7375,
+      "R2": 0.41581027667984194,
+      "O": 0.22826086956521743,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.77,
+      "R2": 0.6995949262292658,
+      "O": 0.1949441340782123,
+      "n": 3
+     },
+     "dt": 0.17529619974223754,
+     "dr": 1.185366389144119,
+     "do": -0.2000412087428043,
+     "bias": -0.398780803903286,
+     "n": 3,
+     "bias_used": -0.398780803903286,
+     "weight": 0.2353072685517417,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.21800054215079234,
+     "dr": 0.8886867475147018,
+     "do": -0.04238178740903248,
+     "evidence_blend": {}
+    },
+    "west:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.20097579652964614,
+     "dr": 1.2870854041100666,
+     "do": -0.06477835414446959,
+     "evidence_blend": {}
+    },
+    "west:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.23010872125113424,
+     "dr": 1.1669153221613124,
+     "do": -0.06865044067900453,
+     "evidence_blend": {}
+    },
+    "west:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.202507648165131,
+     "dr": 1.2842960531196153,
+     "do": -0.08314437543853799,
+     "evidence_blend": {}
+    },
+    "northeast:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.19248225258992777,
+     "dr": 0.8705250241582675,
+     "do": -0.04755209046586195,
+     "evidence_blend": {}
+    },
+    "northeast:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.2034058601754764,
+     "dr": 1.25785124521383,
+     "do": -0.09459719596688214,
+     "evidence_blend": {}
+    },
+    "northeast:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.24345242538727302,
+     "dr": 0.8536409441851494,
+     "do": -0.056647846055732615,
+     "evidence_blend": {}
+    },
+    "border:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.19296426809052447,
+     "dr": 0.8901953666002567,
+     "do": -0.05524208905651525,
+     "evidence_blend": {}
+    },
+    "border:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.24940234922165141,
+     "dr": 1.2071226584692698,
+     "do": -0.05426130620343951,
+     "evidence_blend": {}
+    },
+    "border:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.18952359122547716,
+     "dr": 0.8805588179612517,
+     "do": -0.08523031784563431,
+     "evidence_blend": {}
+    },
+    "midwest+west:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.20176181432177676,
+     "dr": 0.9178488448948184,
+     "do": -0.057063356240968185,
+     "evidence_blend": {}
+    },
+    "border+midwest+south:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": 0.1975757330362169,
+     "dr": 1.2541247400789883,
+     "do": -0.08359448839623748,
+     "evidence_blend": {}
+    },
+    "midwest+west:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": 0.18831350473690242,
+     "dr": 0.8826217535591004,
+     "do": -0.07208344747985884,
+     "evidence_blend": {}
+    }
+   }
+  }
+ }
+}
