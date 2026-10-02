@@ -127,19 +127,19 @@
   /* Nothing new to run: at rest, the button dims (pressing it shows the
      rerun already made). It brightens as soon as there's a change. */
   .run.rest { opacity: 0.6; }
-  /* Reset: text only, in --tint (on the island, #3876b7 would be 3.9:1). */
+  /* Reset sits on the page's light grey, beside the dark field: text only. */
   .reset {
     height: 36px;
     padding: 0 10px;
     border: none;
     background: transparent;
-    color: var(--tint);
+    color: #3876b7;
     font: inherit;
     font-size: 12px;
     cursor: pointer;
     border-radius: 10px;
   }
-  .reset:hover { background: rgba(110, 168, 224, 0.12); }
+  .reset:hover { background: rgba(56, 118, 183, 0.08); }
   .reset:active { opacity: 0.6; }
   .run:focus-visible, .reset:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
 </style>

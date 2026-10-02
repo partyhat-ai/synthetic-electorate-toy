@@ -558,11 +558,11 @@
     bottom: 0;
     z-index: 30;                 /* over the robot's frame (20) */
     padding-bottom: env(safe-area-inset-bottom);
-    /* Frosted glass: the page's grey, translucent over a blur, a top hairline. */
-    background: rgba(229, 229, 229, 0.82);
+    /* Dark under the light page: the timeline is its own instrument. */
+    background: rgba(11, 11, 12, 0.88);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.14);
+    box-shadow: 0 -0.5px 0 rgba(255, 255, 255, 0.1);
   }
   /* Dark mode: the page's invert here too (the bar sits on <body>, outside .sa). */
   .timebar.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
