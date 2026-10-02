@@ -65,6 +65,7 @@ All under `src/lib/simulacra/` unless noted.
 | The bubble's message type, kind labels, step splitting | `whatif.ts` |
 | Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
 | ⓘ About popover (on `<body>`, above everything) and its cited sources | `InfoPopover.svelte`, `AboutSources.svelte` |
+| The tab icon in each chest blast's colour | `tabIcon.ts` |
 | Places in text that light the map | `Places.svelte`, `places.ts` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |
@@ -152,7 +153,9 @@ POST timed out after it may have landed: poll, don't resubmit), or
   places the robot over it. Once drawn, the robot's anchors nudge its box
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
-  field. A tap also fires its chest reactor, red, white and blue by turns.
+  field. A tap also fires its chest reactor (red, white and blue by turns,
+  never the tab icon's current colour), and the tab icon takes the shot's
+  colour; while a rerun works the icon cycles every 0.4s.
 - **Draggable:** dragged across, the robot turns with the pointer (0.6° per
   px, held to ±180°) and, let go, eases back. A turn alone never restages
   the frame; only a moved box does (`boxMoved` in `src/lib/robot/stage.ts`).

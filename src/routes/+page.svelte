@@ -6,7 +6,8 @@
   // ones who couldn't vote, each a row of fifty people. The narrator robot
   // stands beside the what-if field: tap a suggestion or type your own, and
   // it reruns the election and says what changed; tapped, it fires its chest
-  // reactor. The timeline along the bottom moves between elections.
+  // reactor, and the tab icon takes the shot's colour. The timeline along the
+  // bottom moves between elections.
   //
   // This file is composition and layout. State: $lib/simulacra/state(.svelte).ts;
   // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
@@ -28,6 +29,7 @@
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
   import { apiOptionsFor, randomStory, readParams } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
+  import { TabIcon } from '$lib/simulacra/tabIcon';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
   import '$lib/simulacra/theme.css';
 
@@ -50,6 +52,7 @@
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
+  let tabIcon = $state<TabIcon | null>(null);
   let revealing = $state(false);
   let narrow = $state(false);
   // Dragging the time bar: the robot holds still (no restaging) and the
@@ -110,12 +113,14 @@
       groupsHold = Math.max(groupsHold, measured.groups);
     });
   });
+  // The tab icon cycles while a rerun works.
+  $effect(() => {
+    tabIcon?.setWorking(!!page.run);
+  });
 
-  // A tap on the robot: a shot from its chest, red, white and blue by turns.
-  const BLAST_COLORS = ['#ff3344', '#ffffff', '#2f6bff'];
-  let blasts = 0;
+  /** A tap on the robot: a shot from its chest in the next colour, which the tab icon takes. */
   function blast() {
-    robot?.blast(BLAST_COLORS[blasts++ % BLAST_COLORS.length] ?? '#ffffff');
+    if (tabIcon) robot?.blast(tabIcon.fire().hex);
   }
 
   function act(key: string) {
@@ -164,7 +169,14 @@
       page.syncUrl();
       robot?.measureSoon();
     });
-    return () => small.removeEventListener('change', readSmall);
+    // Without an icon link the blasts still take their turns.
+    const icon = new TabIcon(document.querySelector<HTMLLinkElement>('link[rel="icon"]') ?? { href: '' });
+    tabIcon = icon;
+    return () => {
+      small.removeEventListener('change', readSmall);
+      icon.dispose();
+      tabIcon = null;
+    };
   });
   onDestroy(() => page.dispose());
 </script>
