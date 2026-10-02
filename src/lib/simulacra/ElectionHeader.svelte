@@ -39,6 +39,11 @@
   const mapLabel = $derived(mapLabelOf(year, !!rerun, e, mapStates, flips));
   const alsoRan = $derived(alsoRanOf(e.candidates.slice(2)));
   const matchup = $derived([{ c: A, k: 'A' as const }, ...(B ? [{ c: B, k: 'B' as const }] : [])]);
+  // In the Rerun view the note names what the last rerun ran: its chips'
+  // text, as the chips show it. History's note before any rerun, and for a
+  // rerun that applied no what-ifs (groups dragged by hand).
+  const ranText = $derived(rerun ? rerun.applied.map((a) => a.label).join(' · ') : '');
+  const note = $derived(ranText || e.note);
 </script>
 
 <section class="election" aria-labelledby="sa-year" bind:offsetHeight={height} style:min-height={hold ? `${hold}px` : null}>
@@ -67,7 +72,7 @@
       {/if}
     {/each}
   </div>
-  {#if e.note}<p class="note"><Places text={e.note} /></p>{/if}
+  {#if note}<p class="note"><Places text={note} /></p>{/if}
   {#if alsoRan}<p class="also">Also ran: {alsoRan}</p>{/if}
 </section>
 
