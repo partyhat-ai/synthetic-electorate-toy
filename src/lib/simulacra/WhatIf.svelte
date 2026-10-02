@@ -7,7 +7,7 @@
   // WhatIfComposer.
   import { onDestroy, untrack } from 'svelte';
   import type { WhatIf } from './schemas';
-  import type { Message } from './whatif';
+  import type { Message, Still } from './whatif';
   import WhatIfComposer from './WhatIfComposer.svelte';
   import WhatIfWorking from './WhatIfWorking.svelte';
 
@@ -20,6 +20,8 @@
     stage?: boolean;
     /** …and it's there. */
     robotShown?: boolean;
+    /** A still of the robot, shown in the slot until the live robot draws. */
+    still?: Still | null;
     /** The robot's spot (for the page to measure). */
     slot?: HTMLElement | null;
     message?: Message;
@@ -54,6 +56,7 @@
     faceStyle = '',
     stage = false,
     robotShown = false,
+    still = null,
     slot = $bindable(null),
     message = { text: '' },
     whatIfs = [],
@@ -202,7 +205,10 @@
        lets clicks through): pressing it is talking to it. -->
   <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
     disabled={closed || running} onclick={() => input?.focus()}>
-    {#if !robotShown && face}
+    {#if stage && still}
+      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
+        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
+    {:else if !robotShown && face}
       <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
     {/if}
   </button>
@@ -276,6 +282,10 @@
   /* The face is a photo: under the Rerun view's invert, turned back. */
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
+  /* The still: under the live robot, faded out once it draws. */
+  .still { position: absolute; height: auto; max-width: none; pointer-events: none; transition: opacity 0.18s ease; }   /* = the page's .robot-host fade */
+  .still.gone { opacity: 0; }
+  :global(.sa.dark) .still { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
   /* The what-if section in HIG light mode, after iOS Messages: the robot's
      bubble is an incoming message, the what-ifs and field are Messages'

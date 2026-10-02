@@ -1,8 +1,23 @@
+<script lang="ts" module>
+  import type { Still } from './whatif';
+
+  // Stills of the robot, one per paint, rendered from this page (paint,
+  // lighting, 40° yaw, framing): shown in the slot the moment the page loads
+  // and faded out when the live robot draws. dx/db/w: CSS px from the slot's
+  // bottom-centre (see WhatIf `still`). Re-shoot if the framing or look changes.
+  export const STILLS: Readonly<Record<'history' | 'rerun', Still>> = {
+    history: { src: '/simulacra/chatpro-history.png?v=1', dx: -79, db: -11, w: 153.2 },
+    rerun: { src: '/simulacra/chatpro-rerun.png?v=1', dx: -79, db: -11, w: 153.2 },
+  };
+</script>
+
 <script lang="ts">
   // The robot's layer: the frame (RobotFrame) over the page's content,
   // scrolling with it, click-through. The page measures the WhatIf slot and
   // stands the robot in it; once drawn, the robot's anchors nudge its box
-  // once, so its feet sit on the slot's floor.
+  // once, so its feet sit on the slot's floor. Until then (and SETTLE_MS
+  // after the nudge) the layer stays invisible over the still, so its first
+  // frames, drawn before the nudge, never show; then one cross-fade.
   import { onDestroy, untrack } from 'svelte';
   import type { Paint } from '$lib/robot/characters';
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
@@ -22,12 +37,16 @@
     walking: boolean;
     /** Re-measured whenever this resizes (the page's content). */
     observe?: HTMLElement | null;
-    /** The robot is drawn. */
+    /** The robot is drawn, nudged and settled. */
     shown?: boolean;
   }
   let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false) }: Props = $props();
 
+  const SETTLE_MS = 150;
   let host = $state<HTMLElement | null>(null);
+  let robotShown = $state(false);
+  let robotReady = $state(false);
+  let readyTimer: ReturnType<typeof setTimeout> | undefined;
   /** The robot's box, before its turn. */
   let box = $state<RobotStage | null>(null);
   let measureFrame = 0;
@@ -37,6 +56,10 @@
   // The robot turns a little with the time bar (yawForYear), eased in the renderer.
   const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length));
   const stage = $derived(box ? { ...box, yaw: yawNow } : null);
+
+  $effect(() => {
+    shown = robotReady && robotShown;
+  });
 
   function measureStage(): void {
     measureFrame = 0;
@@ -81,7 +104,7 @@
 
   function onRobot(anchors: RobotAnchors | null): void {
     const on = !!anchors;
-    if (on !== shown) shown = on;
+    if (on !== robotShown) robotShown = on;
     if (!anchors || nudged || !spot || !box) return;
     const d = nudgeToSlot(spot.getBoundingClientRect(), anchors);
     nudged = true;
@@ -89,17 +112,28 @@
       nudge = { x: nudge.x + d.x, y: nudge.y + d.y };
       measureStage();
     }
+    // The nudged stage reaches the frame a frame or two later: show after that.
+    clearTimeout(readyTimer);
+    readyTimer = setTimeout(() => (robotReady = true), SETTLE_MS);
   }
 
-  onDestroy(() => cancelAnimationFrame(measureFrame));
+  onDestroy(() => {
+    clearTimeout(readyTimer);
+    cancelAnimationFrame(measureFrame);
+  });
 </script>
 
+<svelte:head>
+  <link rel="preload" as="image" href={STILLS.history.src} fetchpriority="high" />
+  <link rel="preload" as="image" href={STILLS.rerun.src} />
+</svelte:head>
 <svelte:window onresize={measureSoon} />
 
-<div class="robot-host" bind:this={host} aria-hidden="true">
+<div class="robot-host" class:ready={robotReady && robotShown} bind:this={host} aria-hidden="true">
   <RobotFrame {stage} visible={stageMode && !!stage} {walking} {paint} {onRobot} />
 </div>
 
 <style>
-  .robot-host { position: absolute; inset: 0 0 auto 0; height: 100%; z-index: 3; overflow: hidden; pointer-events: none; }
+  .robot-host { opacity: 0; transition: opacity 0.18s ease; position: absolute; inset: 0 0 auto 0; height: 100%; z-index: 3; overflow: hidden; pointer-events: none; }
+  .robot-host.ready { opacity: 1; }                /* one cross-fade with the still (WhatIf .still, same 0.18s) */
 </style>

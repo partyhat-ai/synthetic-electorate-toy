@@ -69,6 +69,7 @@ All under `src/lib/simulacra/` unless noted.
 | Elections as they happened | `history.ts` (owned by the simulation side) |
 | Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
 | Placing the robot in a page | `src/lib/robot/` (ported separately) |
+| The robot's stills while the 3D robot loads | `static/simulacra/chatpro-history.png`, `chatpro-rerun.png` |
 
 ## The components' contract (Svelte 5, runes)
 
@@ -149,6 +150,8 @@ POST timed out after it may have landed: poll, don't resubmit), or
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
   field.
+- **Stills:** until the 3D robot draws, `WhatIf` shows a still (`still`
+  prop: `{ src, dx, db, w }`) from `static/simulacra/`.
 - **When the robot isn't drawn**, the harness's face stands in (`face`,
   `faceStyle`): windows ≤760px wide, and before WebGL loads.
 - **If you move the slot:** keep `bind:slot` on `WhatIf`, and re-measure

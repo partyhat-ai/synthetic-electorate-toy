@@ -90,7 +90,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
   const camera = new PerspectiveCamera(character.fov, initial.width / initial.height, 0.1, 400);
   const lights = createLighting(renderer, scene, character.reactorLight);
   const paint = createPaintSwitch(character, renderer.capabilities.getMaxAnisotropy());
-  lights.apply(character.lighting);
+  lights.apply(character.lighting[paint.current]);
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -256,6 +256,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       motion?.setWalking(on);
     },
     setPaint(next) {
+      lights.apply(character.lighting[next]);
       void paint.set(next);
     },
     onAnchors(listener) {

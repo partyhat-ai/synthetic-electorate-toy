@@ -20,7 +20,7 @@
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
-  import RobotStage from '$lib/simulacra/RobotStage.svelte';
+  import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
@@ -224,7 +224,7 @@
       </section>
 
       <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} stage={stageMode} {robotShown}
-        chips={composer.chips} closed={composer.closed} onaction={act} />
+        still={STILLS[page.view === 'whatif' ? 'rerun' : 'history']} chips={composer.chips} closed={composer.closed} onaction={act} />
     </main>
   </div>
 </div>

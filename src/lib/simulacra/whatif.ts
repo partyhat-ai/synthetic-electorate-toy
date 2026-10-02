@@ -36,6 +36,18 @@ export interface Message {
   readonly sources?: BubbleSources | null;
 }
 
+/**
+ * A still of the robot as the page frames it (paint and lighting), shown in
+ * the slot until the live robot draws: its left edge dx px from the slot's
+ * centre, its bottom db px above the slot's floor, w px wide.
+ */
+export interface Still {
+  readonly src: string;
+  readonly dx: number;
+  readonly db: number;
+  readonly w: number;
+}
+
 /** A what-if's kind, in the chips' tooltips. */
 export const KIND_LABEL: Readonly<Partial<Record<Kind, string>>> = {
   franchise: 'Who can vote',

@@ -14,6 +14,7 @@
   //   walking  boolean = false     The robot walks (the page is working) or idles.
   //   paint    'history' | 'rerun' History is the Americana model's own paint;
   //                               Rerun the original paint with the stars.
+  //                               Each paint brings its own lighting.
   //   onRobot  (anchors) => void   Called every frame while visible with
   //                               { centerX, feetY } in window CSS px: the
   //                               robot's centre line and the floor under its

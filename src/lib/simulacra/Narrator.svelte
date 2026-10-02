@@ -10,14 +10,16 @@
   import type { PageState } from './state.svelte';
   import type { Names } from './types';
   import WhatIf from './WhatIf.svelte';
+  import type { Still } from './whatif';
 
   interface Props {
     page: PageState;
     names: Names;
     /** A browser tab wide enough to draw the robot in the slot. */
     stage: boolean;
-    /** The live robot is drawn. */
+    /** The live robot is drawn and settled. */
     robotShown: boolean;
+    still: Still;
     /** The robot's spot, for RobotStage to measure. */
     slot?: HTMLElement | null;
     /** The chips, held from the last loaded year while scrubbing. */
@@ -32,6 +34,7 @@
     names,
     stage,
     robotShown,
+    still,
     slot = $bindable(null),
     chips,
     closed,
@@ -97,6 +100,7 @@
   {stage}
   {robotShown}
   bind:slot
+  {still}
   {message}
   whatIfs={chips}
   selected={page.selected}
