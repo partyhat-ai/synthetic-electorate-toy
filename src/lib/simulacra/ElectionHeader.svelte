@@ -61,7 +61,7 @@
           {:else if c.popular != null}
             <p class="sub">{c.popular.toFixed(1)}% of the vote</p>
           {:else}
-            <p class="sub" aria-hidden="true">&nbsp;</p>
+            <p class="sub sub-room" aria-hidden="true">&nbsp;</p>
           {/if}
         </div>
       </div>
@@ -143,6 +143,6 @@
   }
   /* Empty, they take no room on a wide window. */
   @media (min-width: 761px) {
-    .note:empty, .also:empty { display: none; }
+    .note:empty, .also:empty, .sub-room { display: none; }
   }
 </style>

@@ -204,6 +204,17 @@
 </script>
 
 <section class="whatif" class:stage aria-label="What if">
+  <!-- The robot stands over this spot (drawn by the page's overlay, which
+       lets clicks through): pressing it is talking to it. -->
+  <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
+    disabled={closed || running} onclick={() => input?.focus()}>
+    {#if stage && still}
+      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
+        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
+    {:else if !robotShown && face}
+      <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
+    {/if}
+  </button>
   <div class="talk">
     <div class="hold" class:lifted={opened} style:height={opened ? `${holdH}px` : null}>
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -234,34 +245,22 @@
       <WhatIfComposer {name} {whatIfs} {selected} {slice} {ran} bind:value bind:input {running} {canRun} {canReset} {dirty}
         {ontoggle} {onrun} {onstop} {onreset} {onfocus} />
     {:else}
-      <!-- An unopposed year: no chips or field, but on phones their room stays. -->
+      <!-- An unopposed year: no chips or field, but on a narrow window their room stays. -->
       <div class="composer-room" aria-hidden="true"></div>
     {/if}
   </div>
-  <!-- The robot stands over this spot (drawn by the page's overlay, which
-       lets clicks through): pressing it is talking to it. -->
-  <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
-    disabled={closed || running} onclick={() => input?.focus()}>
-    {#if stage && still}
-      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
-        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
-    {:else if !robotShown && face}
-      <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
-    {/if}
-  </button>
 </section>
 
 <style>
-  /* The bubble and the composer take the full width; the robot stands
-     below them, centred, in a slot its size (stage.ts STAGE_SIZE, 200px
-     wide; the slot's floor is its feet). */
   .whatif {
     margin-top: -10px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
     gap: 12px;
   }
+  /* Room for the robot to stand in, feet on the field's baseline. */
+  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); align-items: end; min-height: 220px; }
   .bot {
     position: relative;
     height: 44px;
@@ -273,9 +272,8 @@
   }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
-  /* Below the what-if, centred: a horizontal drag turns the robot, a
-     vertical one still scrolls the page. */
-  .stage .bot { width: 200px; height: 236px; margin-top: 4px; align-self: center; touch-action: pan-y; }
+  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
+  .stage .bot { height: 220px; align-self: start; }
   .face {
     position: absolute;
     left: 0;
@@ -320,27 +318,35 @@
      the top and the composer to the floor, so a year with more chips or a
      longer line never moves either while the time bar is scrubbed; a long
      bubble grows the column downward, like any message. */
-  /* Over the robot's slot (and the robot) when they're moved onto each other. */
-  .talk { position: relative; z-index: 1; min-width: 0; }
-  /* Phones: each nudged up or down by the page's position sliders (?tune=1). */
+  .stage .talk { align-self: stretch; }
   .composer-room { display: none; }
+  /* Narrow windows (phones, or a narrow desktop window): the robot stands
+     behind a full-width what-if instead of beside it. Both share one grid
+     cell: the what-if on top, the robot centred with its feet 23px above the
+     what-if's bottom, behind the chips and field, then nudged by the page's
+     --ui-y / --bot-y (defaults +10 / -168; ?tune=1 shows sliders for them).
+     Every part of the what-if that varies holds its most, so neither moves
+     with the year or the message: the bubble's room is its folded most
+     (CLAMP lines, padding and More) and it sits on the chips; an unopposed
+     year keeps the chips' room. Opened, the bubble lifts over the page. */
   @media (max-width: 760px) {
-    /* Phones: the bubble's room is its folded most (CLAMP lines, padding and
-       More), and it sits on the chips; a shorter message leaves the room
-       above it. So the chips, the field and the robot never move with what
-       it says. Opened, it lifts over the page as before. */
+    .whatif.stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'stack';
+      align-items: stretch;
+      min-height: 0;
+      margin-top: 26px;
+      /* A horizontal drag on the robot turns it; a vertical one scrolls. */
+      touch-action: pan-y pinch-zoom;
+    }
+    .whatif.stage > .talk, .whatif.stage > .bot { grid-area: stack; }
+    .talk { position: relative; z-index: 1; min-width: 0; transform: translateY(var(--ui-y, 0px)); }
+    .stage .bot { width: 200px; height: 236px; margin: 0 0 23px; align-self: end; justify-self: center; transform: translateY(var(--bot-y, 0px)); }
     .hold { min-height: 190px; justify-content: flex-end; }
     .composer-room { display: block; height: 82px; }
-    /* The robot stands behind the what-if, not below it: both share one
-       grid cell, the robot centred with its feet 23px above the what-if's
-       bottom (behind the chips and field), the what-if drawn over it. The
-       block sits 26px lower than on a wide window (-10 + 36). The what-if's
-       height is fixed on phones (above), so the robot never moves. */
-    .whatif.stage { display: grid; grid-template-areas: 'stack'; margin-top: 26px; }
-    .whatif.stage > .talk, .whatif.stage > .bot { grid-area: stack; }
-    .stage .bot { margin: 0 0 23px; align-self: end; justify-self: center; }
-    .talk { transform: translateY(var(--ui-y, 0px)); }
-    .stage .bot { transform: translateY(var(--bot-y, 0px)); }
+    /* The tail pointed at the robot beside the bubble; it stands behind now. */
+    .bubble::after { display: none; }
   }
   /* Opened (More), the bubble leaves the flow: its slot keeps the folded
      height, so nothing below or around moves, and the bubble grows upward
@@ -369,8 +375,7 @@
     box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.22);
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.045), rgba(0, 0, 0, 0) 45%);
   }
-  /* The tail pointed at the robot beside the bubble; it now stands below. */
-  .bubble::after { display: none; }
+  .bubble.tall::after { display: none; }
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
      filled with --bubble (#fff). */
   .bubble::after {

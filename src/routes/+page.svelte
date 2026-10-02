@@ -61,30 +61,35 @@
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
   const revisit = $derived(REVISIT_ON_DESKTOP && narrow);
-  // Tuning (?tune=1): on phones, where the what-if group and the robot sit,
-  // each nudged up or down, px. Kept in this browser; the defaults are 0.
+  // On a narrow window, where the what-if group and the robot sit, each
+  // nudged up or down from its place (WhatIf.svelte), px. ?tune=1 shows a
+  // slider for each, kept in this browser; Reset returns to the defaults.
+  const UI_Y = 10;
+  const BOT_Y = -168;
   const TUNE_MIN = -2000;
   const TUNE_MAX = 800;
   const tuning = new URLSearchParams(location.search).has('tune');
-  function readTune(key: string): number {
+  function readTune(key: string, fallback: number): number {
     try {
-      const v = Number(localStorage.getItem(`sa-tune-${key}`));
-      return Number.isFinite(v) ? Math.min(TUNE_MAX, Math.max(TUNE_MIN, v)) : 0;
+      const raw = localStorage.getItem(`sa-tune-${key}`);
+      const v = raw === null ? Number.NaN : Number(raw);
+      return Number.isFinite(v) ? Math.min(TUNE_MAX, Math.max(TUNE_MIN, v)) : fallback;
     } catch {
-      return 0;
+      return fallback;
     }
   }
-  let uiY = $state(tuning ? readTune('ui') : 0);
-  let botY = $state(tuning ? readTune('bot') : 0);
+  let uiY = $state(tuning ? readTune('ui', UI_Y) : UI_Y);
+  let botY = $state(tuning ? readTune('bot', BOT_Y) : BOT_Y);
   $effect(() => {
     const ui = uiY;
     const bot = botY;
-    if (!tuning) return;
-    try {
-      localStorage.setItem('sa-tune-ui', String(ui));
-      localStorage.setItem('sa-tune-bot', String(bot));
-    } catch {
-      // private window: the sliders still work for this visit
+    if (tuning) {
+      try {
+        localStorage.setItem('sa-tune-ui', String(ui));
+        localStorage.setItem('sa-tune-bot', String(bot));
+      } catch {
+        // private window: the sliders still work for this visit
+      }
     }
     // The robot stands on its slot: measure it where it moved to.
     untrack(() => robot?.measureSoon());
@@ -308,7 +313,7 @@
       <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={uiY} /></label>
     <label>Robot <span>{botY}</span>
       <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={botY} /></label>
-    <button type="button" onclick={() => { uiY = 0; botY = 0; }}>Reset</button>
+    <button type="button" onclick={() => { uiY = UI_Y; botY = BOT_Y; }}>Reset</button>
   </div>
 {/if}
 
@@ -346,12 +351,7 @@
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
   }
-  /* Above the robot's layer (RobotStage .robot-host, z 3): where the robot
-     is moved under the what-if, the what-if is drawn over it. The page's
-     content is transparent elsewhere, so the robot shows through. */
   .main {
-    position: relative;
-    z-index: 4;
     max-width: 800px;
     margin: 0 auto;
     padding: 0 24px;
@@ -467,7 +467,11 @@
   @media (max-width: 760px) {
     /* Phones: no wordmark; its cell stays, so the switch stays centred. */
     .brand { visibility: hidden; }
-    .main { padding: 0 16px; gap: 28px; }
+    /* Narrow: above the robot's layer (RobotStage .robot-host, z 3), so the
+       what-if is drawn over the robot standing behind it; the content is
+       transparent elsewhere, so the robot shows through. A sideways drag
+       over it turns the robot; vertical scrolling and pinch-zoom stay. */
+    .main { padding: 0 16px; gap: 28px; position: relative; z-index: 4; touch-action: pan-y pinch-zoom; }
     /* Phones: Who voted is one height every year (up to five groups, each
        label up to two lines; the key up to two lines), so nothing below it
        moves with the year. */
