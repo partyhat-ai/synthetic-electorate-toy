@@ -189,7 +189,7 @@
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
      filled with --bubble (#fff). */
   .bubble::after {
-    content: none;               /* the leader line stands in for it */
+    content: '';
     position: absolute;
     left: 6px;
     bottom: -5px;

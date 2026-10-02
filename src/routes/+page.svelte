@@ -12,7 +12,6 @@
   // stands. State: $lib/simulacra/state(.svelte).ts.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
-  import type { RobotAnchors } from '$lib/robot/messages';
   import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
@@ -97,32 +96,6 @@
     groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
     if (!on) robot?.measureSoon();
   }
-
-  // ── The leader line: from the robot's chest to its bubble, written straight
-  // to the element each frame so Svelte doesn't re-render 60 times a second.
-  const CHEST_UP = 128; // px above the robot's feet
-  let leaderEl = $state<SVGLineElement | null>(null);
-  let anchors: RobotAnchors | null = null;
-  let leaderFrame = 0;
-  function drawLeader() {
-    leaderFrame = requestAnimationFrame(drawLeader);
-    const bubble = mainEl?.querySelector('.bubble')?.getBoundingClientRect();
-    const box = scrollEl?.querySelector('.page')?.getBoundingClientRect();
-    if (!leaderEl) return;
-    if (!anchors || !bubble || !box || !stageMode) {
-      leaderEl.setAttribute('visibility', 'hidden');
-      return;
-    }
-    leaderEl.setAttribute('visibility', 'visible');
-    leaderEl.setAttribute('x1', String(anchors.centerX - box.left));
-    leaderEl.setAttribute('y1', String(anchors.feetY - CHEST_UP - box.top));
-    leaderEl.setAttribute('x2', String(bubble.left + 12 - box.left));
-    leaderEl.setAttribute('y2', String(bubble.bottom - 6 - box.top));
-  }
-  onMount(() => {
-    leaderFrame = requestAnimationFrame(drawLeader);
-    return () => cancelAnimationFrame(leaderFrame);
-  });
 
   function act(key: string) {
     if (key === 'sample') {
@@ -324,9 +297,8 @@
 
 <div class="sa" class:scrubbing class:dark={!page.light} bind:this={scrollEl} onscroll={() => robot?.measureSoon()}>
   <div class="page">
-    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year} onanchors={(a) => (anchors = a)}
+    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running} observe={mainEl} />
-    <svg class="leader" aria-hidden="true"><line bind:this={leaderEl} /></svg>
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's
@@ -410,9 +382,6 @@
   /* The page's own layout. The scrolling layer, the Rerun view's invert and
      the time bar's glass are $lib/simulacra/theme.css. */
   .page { position: relative; min-height: 100%; padding-bottom: 84px; }
-  /* The leader line, over the page and under the robot's layer. */
-  .leader { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 2; }
-  .leader line { stroke: rgba(0, 0, 0, 0.32); stroke-width: 1.25; stroke-linecap: round; }
   /* The brand, the History / Your year switch (once there's a rerun) and
      the sample label and About, on one toolbar row. */
   .top {

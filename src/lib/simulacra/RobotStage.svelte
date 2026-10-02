@@ -24,10 +24,8 @@
     observe?: HTMLElement | null;
     /** The robot is drawn. */
     shown?: boolean;
-    /** Each frame's anchors, for anything drawn to the robot. */
-    onanchors?: (anchors: RobotAnchors | null) => void;
   }
-  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), onanchors }: Props = $props();
+  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false) }: Props = $props();
 
   let host = $state<HTMLElement | null>(null);
   /** The robot's box, before its turn. */
@@ -82,7 +80,6 @@
   });
 
   function onRobot(anchors: RobotAnchors | null): void {
-    onanchors?.(anchors);
     const on = !!anchors;
     if (on !== shown) shown = on;
     if (!anchors || nudged || !spot || !box) return;
