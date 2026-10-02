@@ -128,8 +128,8 @@
     .matchup { grid-template-columns: 1fr 1fr; gap: 22px 12px; }
     .matchup.solo { grid-template-columns: 1fr; gap: 22px 12px; } /* = .matchup: an unopposed year is as tall as any */
     .center { grid-column: 1 / -1; grid-row: 1; }
-    /* The candidates sit 22px into the gap under the map. */
-    .cand, .cand.b { flex-direction: column; gap: 12px; margin-top: -22px; }
+    /* The candidates sit 20px into the gap under the map. */
+    .cand, .cand.b { flex-direction: column; gap: 12px; margin-top: -20px; }
     .facts, .b .facts { align-items: center; text-align: center; }
     .name { font-size: 15px; }
     /* Phones: the block is one height every year, so the what-if and the

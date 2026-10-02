@@ -65,8 +65,8 @@
   // On a narrow window, where the what-if group and the robot sit, each
   // nudged up or down from its place (WhatIf.svelte), px. ?tune=1 shows a
   // slider for each, kept in this browser; Reset returns to the defaults.
-  const UI_Y = 10;
-  const BOT_Y = -168;
+  const UI_Y = 0;
+  const BOT_Y = 0;
   // …and the robot's resting turn there, degrees (a wide window: ROBOT_YAW, 40).
   const NARROW_YAW = -30;
   const TUNE_MIN = -2000;
@@ -509,12 +509,21 @@
        label up to two lines; the key up to two lines), so nothing below it
        moves with the year. */
     .legend { min-height: 33px; align-content: flex-start; }
-    .rows { min-height: calc(5 * 72px + 4 * 2px); }
+    /* Who voted holds its most and sits at the foot of that room, so its last
+       group always ends on the same line, 12px over the robot; a year with
+       fewer or shorter groups leaves the room above Who voted. The most: the
+       heading and a two-line key (78px) plus five groups. */
+    .groups { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(78px + 5 * 72px + 4 * 2px); }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
   }
   /* The narrowest phones wrap labels and counts further (1856 at 320px: 371px). */
   @media (max-width: 359px) {
-    .rows { min-height: 384px; }
+    .groups { min-height: calc(78px + 384px); }
+  }
+  /* 701-760px: each group's dots sit beside its name (SliceRow), so five
+     groups are shorter (266px at most, over all 60 years). */
+  @media (min-width: 701px) and (max-width: 760px) {
+    .groups { min-height: calc(var(--groups-head, 78px) + 266px); }
   }
 </style>
