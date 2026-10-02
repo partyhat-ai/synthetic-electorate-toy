@@ -58,10 +58,11 @@ All under `src/lib/simulacra/` unless noted.
 | Portrait, winner ring and check, initials fallback, dark-mode photo fix | `Portrait.svelte` |
 | Tile map and flip marks | `MiniMap.svelte` (grid in `geo.ts`) |
 | A group's row of 50 dots, its caption and "was …" line | `SliceRow.svelte` |
-| Robot slot and bubble | `WhatIf.svelte` |
+| Robot slot, bubble, More / Less | `WhatIf.svelte` |
+| The bubble's working: steps, interviews, sources | `WhatIfWorking.svelte` |
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
 | What-if chips | `KindChips.svelte` |
-| The bubble's message type and kind labels | `whatif.ts` |
+| The bubble's message type, kind labels, step splitting | `whatif.ts` |
 | Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
 | ⓘ About popover | `InfoPopover.svelte` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |

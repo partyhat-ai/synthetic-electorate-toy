@@ -25,6 +25,8 @@ export type ShownRun = RunResult & {
   readonly keys: readonly string[];
   /** The typed words it ran with. */
   readonly text: string;
+  /** Its steps, for the robot's bubble (narrator.ts traceOf). */
+  readonly trace: readonly string[];
   /** The page's state right after it ran (askOf), so Rerun with nothing changed just shows it. */
   readonly ask: string;
   /** The what-ifs it ran. */

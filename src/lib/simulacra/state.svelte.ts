@@ -5,6 +5,7 @@
 import { SvelteMap } from 'svelte/reactivity';
 import type { Edits, SimulacraApi, SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
+import { traceOf } from './narrator';
 import { type ActiveRun, createRunner, type Finished, type Runner } from './runs';
 import type { Voter } from './schemas';
 import {
@@ -27,6 +28,8 @@ export interface PageStateOptions {
   readonly replaceUrl?: (url: string) => void;
   /** The page's address now. */
   readonly href?: () => string;
+  /** A rerun finished for the year on show: its steps start coming out. */
+  readonly onFresh?: (steps: number) => void;
   readonly sleep?: (ms: number) => Promise<void>;
 }
 
@@ -75,12 +78,14 @@ export class PageState {
   readonly #runner: Runner;
   readonly #replaceUrl: ((url: string) => void) | undefined;
   readonly #href: () => string;
+  readonly #onFresh: ((steps: number) => void) | undefined;
 
   constructor(o: PageStateOptions) {
     this.api = o.api;
     this.year = o.year;
     this.#replaceUrl = o.replaceUrl;
     this.#href = o.href ?? (() => location.href);
+    this.#onFresh = o.onFresh;
     this.#runner = createRunner({
       api: o.api,
       ...(o.sleep ? { sleep: o.sleep } : {}),
@@ -204,7 +209,9 @@ export class PageState {
     const { year: y, id, result, keys, text } = f;
     // ask: the page's state right after this run, so pressing Rerun again
     // with nothing changed just shows this.
-    this.results.set(y, { ...result, runId: id, keys, text, ask: this.askOf(y, keys, ''), ran: keys });
+    const trace = traceOf(result, text, keys, y);
+    this.results.set(y, { ...result, runId: id, keys, text, trace, ask: this.askOf(y, keys, ''), ran: keys });
+    if (y === this.year) this.#onFresh?.(trace.length);
     this.run = null;
     if (y === this.year) {
       this.typed = '';
