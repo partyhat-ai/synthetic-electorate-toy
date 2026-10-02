@@ -28,7 +28,7 @@
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
-  import { apiOptionsFor, randomStory, readParams } from '$lib/simulacra/state';
+  import { apiOptionsFor, OPENING_YEAR, randomStory, readParams } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
   import { TabIcon } from '$lib/simulacra/tabIcon';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
@@ -37,7 +37,7 @@
   const params = readParams(new URLSearchParams(location.search), import.meta.env.DEV);
   const page = new PageState({
     api: params.sample ? createSampleApi() : createSimulacraApi(apiOptionsFor(params.simapi)),
-    year: params.year ?? randomStory(),
+    year: params.year ?? OPENING_YEAR,
     replaceUrl: (url) => {
       try {
         replaceState(url, {});

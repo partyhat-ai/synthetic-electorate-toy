@@ -61,6 +61,9 @@ export function randomStory(not?: number, random: () => number = Math.random): n
   return pool[Math.floor(random() * pool.length)] ?? FEATURED[0] ?? ELECTION_YEARS[0] ?? 1789;
 }
 
+/** The year a visit opens on without ?year=. */
+export const OPENING_YEAR = 1920;
+
 /** The URL with `year` set, or null when it already has it. */
 export function urlForYear(href: string, year: number): string | null {
   const url = new URL(href);
