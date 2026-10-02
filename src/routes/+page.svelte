@@ -369,46 +369,50 @@
     </header>
 
     <main class="main" bind:this={mainEl}>
-      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
+      <!-- The record: the election and who voted, on one white card over
+           the dark page. -->
+      <div class="sheet">
+        <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
 
-      <section class="groups" aria-labelledby="sa-groups">
-        <div class="groups-head">
-          <h2 id="sa-groups">Who voted</h2>
-          {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
-            <li><span class="key fill" style:background={colors.A}></span>{names.A}</li>
-            {#if B}<li><span class="key fill" style:background={colors.B}></span>{names.B}</li>{/if}
-            {#if hasOthers}<li><span class="key fill" style:background={colors.O}></span>{names.O}</li>{/if}
-            <li><span class="key ring"></span>Stayed home</li>
-            <li><span class="key dot"></span>Couldn’t vote</li>
-          </ul>{/if}
-        </div>
-        {#if page.sim?.slices.length}
-          <div class="rows">
-            {#key page.editEpoch}
-            {#each slices as s (s.key)}
-              <SliceRow slice={s} base={baseSlices.get(s.key)} {colors} {names} rerun={!!rerun} lit={reached.has(s.key)}
-                open={page.openSlice === s.key} editable={page.canEdit}
-                ontoggle={() => page.toggleSlice(s.key)} onedit={(d) => page.editSlice(s.key, d)} />
-            {/each}
-            {/key}
+        <section class="groups" aria-labelledby="sa-groups">
+          <div class="groups-head">
+            <h2 id="sa-groups">Who voted</h2>
+            {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
+              <li><span class="key fill" style:background={colors.A}></span>{names.A}</li>
+              {#if B}<li><span class="key fill" style:background={colors.B}></span>{names.B}</li>{/if}
+              {#if hasOthers}<li><span class="key fill" style:background={colors.O}></span>{names.O}</li>{/if}
+              <li><span class="key ring"></span>Stayed home</li>
+              <li><span class="key dot"></span>Couldn’t vote</li>
+            </ul>{/if}
           </div>
-        {:else}
-          <div class="rows ghost" aria-hidden="true">
-            {#each [0, 1, 2] as i (i)}
-              <div class="ghost-row">
-                <span class="ghost-label"></span>
-                <svg viewBox="0 0 500 10" preserveAspectRatio="xMinYMid meet">
-                  {#each Array(50) as _, j (j)}<circle cx={j * 10 + 5} cy="5" r="3.9" />{/each}
-                </svg>
-                <span class="ghost-val"></span>
-              </div>
-            {/each}
-          </div>
-          {#if page.server !== 'online' && page.server !== 'connecting'}
-            <p class="groups-note">The voter groups come from the simulation server.</p>
+          {#if page.sim?.slices.length}
+            <div class="rows">
+              {#key page.editEpoch}
+              {#each slices as s (s.key)}
+                <SliceRow slice={s} base={baseSlices.get(s.key)} {colors} {names} rerun={!!rerun} lit={reached.has(s.key)}
+                  open={page.openSlice === s.key} editable={page.canEdit}
+                  ontoggle={() => page.toggleSlice(s.key)} onedit={(d) => page.editSlice(s.key, d)} />
+              {/each}
+              {/key}
+            </div>
+          {:else}
+            <div class="rows ghost" aria-hidden="true">
+              {#each [0, 1, 2] as i (i)}
+                <div class="ghost-row">
+                  <span class="ghost-label"></span>
+                  <svg viewBox="0 0 500 10" preserveAspectRatio="xMinYMid meet">
+                    {#each Array(50) as _, j (j)}<circle cx={j * 10 + 5} cy="5" r="3.9" />{/each}
+                  </svg>
+                  <span class="ghost-val"></span>
+                </div>
+              {/each}
+            </div>
+            {#if page.server !== 'online' && page.server !== 'connecting'}
+              <p class="groups-note">The voter groups come from the simulation server.</p>
+            {/if}
           {/if}
-        {/if}
-      </section>
+        </section>
+      </div>
 
       <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} stage={stageMode} {robotShown} bind:slot={slotEl} bind:input={inputEl}
         {message} whatIfs={composer.chips} selected={page.selected} slice={page.openSlice} bind:value={page.typed}
@@ -434,11 +438,13 @@
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-    background: #e5e5e5;
+    background: #0b0b0c;          /* dark throughout, the what-if island's ground */
     color: #000;
   }
   /* Dark mode: the app's, the same invert #invert-wrapper applies. */
   .sa.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
+  /* The record: one white card on the dark page. */
+  .sheet { display: flex; flex-direction: column; gap: 18px; padding: 24px 28px 16px; border-radius: 24px; background: #fff; }
   .page { min-height: 100%; padding-bottom: 84px; }
   /* The brand, the History / Your year switch (once there's a rerun) and
      the sample label and About, on one toolbar row. */
@@ -452,7 +458,7 @@
   }
   .top .seg { grid-column: 2; position: relative; top: 5px; }
   .trail { grid-column: 3; justify-self: end; }
-  .brand { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(0, 0, 0, 0.55); }
+  .brand { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
   .trail { display: flex; align-items: center; gap: 8px; }
   .pill {
     height: 22px;
@@ -460,7 +466,7 @@
     align-items: center;
     font-size: 11px;
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.6);
   }
   .trail :global(.pop p) { margin: 0 0 8px; }
   .trail :global(.pop p:last-child) { margin-bottom: 0; }
@@ -485,7 +491,7 @@
     width: 154px;
     padding: 3px;
     border-radius: 20px;
-    background: rgba(108, 108, 108, 0.15);
+    background: rgba(255, 255, 255, 0.12);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     backdrop-filter: blur(12px) saturate(150%);
     box-shadow: inset 0 -1px 3px rgba(0, 0, 0, 0.08), inset 0 0 0 0.5px rgba(0, 0, 0, 0.04);
@@ -502,14 +508,14 @@
     border: none;
     border-radius: 7px;
     background: transparent;
-    color: #00000096;
+    color: rgba(255, 255, 255, 0.62);
     font-family: 'Geist', -apple-system, sans-serif;
     font-size: 14px;
     white-space: nowrap;
     cursor: pointer;
     transition: color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
-  .seg button:hover:not(:disabled) { color: #000; }
+  .seg button:hover:not(:disabled) { color: #fff; }
   /* The selected label, in ink on the white indicator. */
   .seg button.on, .seg button.on:hover { color: #000; }
   .seg button:disabled { opacity: 0.45; cursor: default; }
@@ -558,11 +564,11 @@
     bottom: 0;
     z-index: 30;                 /* over the robot's frame (20) */
     padding-bottom: env(safe-area-inset-bottom);
-    /* Frosted glass: the page's grey, translucent over a blur, a top hairline. */
-    background: rgba(229, 229, 229, 0.82);
+    /* On the dark page, the bar is dark too. */
+    background: rgba(11, 11, 12, 0.88);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.14);
+    box-shadow: 0 -0.5px 0 rgba(255, 255, 255, 0.1);
   }
   /* Dark mode: the page's invert here too (the bar sits on <body>, outside .sa). */
   .timebar.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
