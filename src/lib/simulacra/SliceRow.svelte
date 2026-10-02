@@ -7,6 +7,7 @@
   // introduces someone from it (the page's bubble).
   import type { SliceEdit } from './api';
   import { fmtCompact } from './format';
+  import GroupLabel from './GroupLabel.svelte';
   import type { Slice } from './schemas';
   import type { Colors, Names } from './types';
 
@@ -180,7 +181,7 @@
 <div class="row" class:open class:lit style:--a={colors.A} style:--b={colors.B} style:--o={colors.O}>
   <button type="button" class="head" aria-pressed={open} onclick={tap}>
     <span class="who">
-      <span class="label">{slice.label}</span>
+      <span class="label"><GroupLabel label={slice.label} /></span>
       <span class="cap">{caption(slice)}</span>
     </span>
     <!-- svelte-ignore a11y_no_static_element_interactions -->

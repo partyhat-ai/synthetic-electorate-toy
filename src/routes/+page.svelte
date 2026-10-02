@@ -524,7 +524,7 @@
        the room between the key and the first group. Every year has five rows
        (absent ones held, groups.ts), so the most is measured: 409px, 1980 at
        360px, over all 60 years. */
-    .groups { display: flex; flex-direction: column; justify-content: space-between; min-height: 410px; }
+    .groups { display: flex; flex-direction: column; justify-content: flex-start; min-height: 410px; }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
   }

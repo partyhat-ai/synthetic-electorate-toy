@@ -3,6 +3,7 @@
   // narrow window so every year shows five rows (absentGroups in groups.ts):
   // its name, why it's missing, and a faint dashed rule where SliceRow's dots
   // go. Laid out as SliceRow's head, so it's as tall; nothing to tap or drag.
+  import GroupLabel from './GroupLabel.svelte';
   import type { Absent } from './groups';
 
   let { absent }: { absent: Absent } = $props();
@@ -13,7 +14,7 @@
 <div class="row" role="group" aria-label="{absent.label}: {absent.why}">
   <div class="head">
     <span class="who">
-      <span class="label">{absent.label}</span>
+      <span class="label"><GroupLabel label={absent.label} /></span>
       <span class="cap">{absent.why}</span>
     </span>
     <svg class="strip" viewBox="0 0 {N * 10} 10" preserveAspectRatio="xMinYMid meet" aria-hidden="true">

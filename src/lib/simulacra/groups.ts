@@ -13,10 +13,11 @@ export interface Absent {
   readonly why: string;
 }
 
-const CONFEDERACY = 'Didn’t vote: the Confederate states cast no electoral votes in 1864.';
+// One line each, so a held row is as tall as a group's.
+const CONFEDERACY = 'Didn’t vote: the Confederacy had seceded.';
 
 const ABSENT: Readonly<Record<string, Omit<Absent, 'key'>>> = {
-  immigrants: { label: 'Immigrants not yet citizens', why: 'Not counted in this simulation’s census data before 1840.' },
+  immigrants: { label: 'Immigrants not yet citizens', why: 'Not counted in the census data before 1840.' },
   'south-white': { label: 'White Southerners', why: CONFEDERACY },
   'black-south': { label: 'Black Southerners, most of them enslaved', why: CONFEDERACY },
 };
