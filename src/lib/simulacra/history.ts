@@ -415,3 +415,6 @@ export function electionOf(year: number): Election | null {
   cache.set(year, e);
   return e;
 }
+
+/** The years with a rich story: where a random start lands. */
+export const FEATURED: readonly number[] = [1800, 1860, 1876, 1896, 1912, 1948, 1960, 1968, 2000, 2016];

@@ -1,6 +1,13 @@
-// The simulation's published bundle, parsed once where it enters the page.
-// Every type the page uses for it derives from these schemas. Candidate
-// keys: A is the winner, B the runner-up, O everyone else.
+// The simulation server's answers, parsed once where they enter the page
+// (api.ts). Every type the page uses for them derives from these schemas.
+// Candidate keys follow history.ts: A is the winner, B the runner-up, O
+// everyone else.
+//
+// GET  /elections/:year → ElectionResponse { slices, whatIfs }
+// POST /runs { year, whatIfs: [key], text } → StartedRun { id }
+// GET  /runs/:id → RunStatus (running | done with a RunResult | failed)
+// POST /runs/:id/cancel → { ok }
+// GET  /elections/:year/voters/:slice?run=:id → Voter
 import { z } from 'zod';
 
 /** A what-if's kind: who can vote, who lives where, what people care about, who is on the ballot. */
@@ -36,7 +43,7 @@ export const WhatIfSchema = z.object({
 });
 export type WhatIf = z.infer<typeof WhatIfSchema>;
 
-/** A year's groups of voters and its what-ifs. */
+/** GET /elections/:year. */
 export const ElectionResponseSchema = z.object({
   slices: z.array(SliceSchema),
   whatIfs: z.array(WhatIfSchema),
@@ -72,6 +79,25 @@ export const RunResultSchema = z.object({
   unknown: z.string().nullable(),
 });
 export type RunResult = z.infer<typeof RunResultSchema>;
+
+/** GET /runs/:id. */
+export const RunStatusSchema = z.discriminatedUnion('status', [
+  z.object({
+    status: z.literal('running'),
+    done: z.number(),
+    total: z.number(),
+  }),
+  z.object({ status: z.literal('done'), done: z.number(), total: z.number(), result: RunResultSchema }),
+  z.object({ status: z.literal('failed'), error: z.string().nullable() }),
+]);
+export type RunStatus = z.infer<typeof RunStatusSchema>;
+
+/** POST /runs. */
+export const StartedRunSchema = z.object({ id: z.string() });
+export type StartedRun = z.infer<typeof StartedRunSchema>;
+
+/** POST /runs/:id/cancel. */
+export const CancelledSchema = z.object({ ok: z.boolean().optional() });
 
 /** One simulated person from a group: what they did in history, and in the run. */
 export const VoterSchema = z.object({

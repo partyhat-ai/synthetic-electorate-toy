@@ -12,3 +12,17 @@ export interface Names {
   readonly B?: string | undefined;
   readonly O: string;
 }
+
+/** A state on the map: who carried it (a candidate key or 'O'), whether a rerun flipped it, its electors. */
+export interface MapState {
+  readonly code: string;
+  readonly won: string;
+  readonly flipped?: boolean;
+  readonly ev?: number | undefined;
+}
+
+/** A candidate key ('A', 'B', 'C', …) or 'O' → the bucket it is drawn in. */
+export const bucketOf = (key: string): Bucket => {
+  if (key === 'A' || key === 'B') return key;
+  return 'O';
+};
