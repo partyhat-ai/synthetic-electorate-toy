@@ -12,8 +12,12 @@
     /** A year's spoken / tooltip text. */
     describe?: (y: number) => string;
     disabled?: boolean;
+    /** The Rerun view: iOS dark colours. */
+    dark?: boolean;
     /** A year was picked (dragged to, clicked, stepped, keyed). */
     onchange?: (year: number) => void;
+    /** Dragging started (true) or stopped (false). */
+    onscrub?: (on: boolean) => void;
     /** The dice. */
     onshuffle?: () => void;
   }
@@ -23,7 +27,9 @@
     featured = [],
     describe = (y) => String(y),
     disabled = false,
+    dark = false,
     onchange,
+    onscrub,
     onshuffle,
   }: Props = $props();
 
@@ -48,6 +54,7 @@
   function down(e: PointerEvent & { currentTarget: HTMLElement }) {
     if (e.button !== 0 || disabled) return;
     dragging = true;
+    onscrub?.(true);
     e.currentTarget.setPointerCapture?.(e.pointerId);
     set(nearest(e.clientX));
     thumb?.focus({ preventScroll: true });
@@ -58,6 +65,7 @@
     else hover = y;
   }
   function up() {
+    if (dragging) onscrub?.(false);
     dragging = false;
   }
   function leave() {
@@ -89,7 +97,7 @@
   const tip = $derived(tipOf());
 </script>
 
-<div class="bar" class:disabled>
+<div class="bar" class:disabled class:dark>
   <div class="steps">
     <button type="button" class="icon" aria-label="Previous Election" title="Previous Election" disabled={disabled || value === first} onclick={() => step(-1)}>
       <ChevronLeft size={19} strokeWidth={2} aria-hidden="true" />
@@ -133,14 +141,22 @@
 </div>
 
 <style>
+  /* The tuned sizes (settled with the old ?tuneTimeline panel), in one place. */
   .bar {
+    --thumb: 28px;
+    --track: 4px;
+    --tick: 4px;
+    --story-tick: 8px;
+    --label-size: 11px;
+    --label-gap: 20px;
+    --bar-height: 68px;
     display: flex;
     align-items: center;
     gap: 14px;
     max-width: 980px;
     margin: 0 auto;
     padding: 0 16px;
-    height: 68px;
+    height: var(--bar-height);
   }
   .steps { display: flex; gap: 2px; }
   .icon {
@@ -153,10 +169,11 @@
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: rgba(0, 0, 0, 0.75);
+    color: #007aff;              /* bar buttons take the tint (HIG) */
     cursor: pointer;
   }
-  .icon:hover:not(:disabled) { background: rgba(0, 0, 0, 0.07); }
+  .icon:hover:not(:disabled) { background: rgba(0, 122, 255, 0.08); }
+  .icon:active:not(:disabled) { opacity: 0.5; }
   .icon:disabled { opacity: 0.3; cursor: default; }
   .icon:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   /* The hit area is the whole band, not just the rail. */
@@ -177,40 +194,42 @@
   .rail {
     position: relative;
     width: 100%;
-    height: 4px;
+    height: var(--track);
     margin-top: -12px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.14);
+    background: rgba(120, 120, 128, 0.2);   /* systemFill: the track */
   }
-  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: rgba(0, 0, 0, 0.6); }
+  /* The minimum track, in the tint (UISlider). */
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: #007aff; }
   .tick {
     position: absolute;
     top: 9px;
     width: 1px;
-    height: 4px;
+    height: var(--tick);
     margin-left: -0.5px;
-    background: rgba(0, 0, 0, 0.22);
+    background: rgba(60, 60, 67, 0.29);    /* separator */
     pointer-events: none;
   }
-  .tick.story { height: 8px; width: 2px; margin-left: -1px; background: rgba(0, 0, 0, 0.5); border-radius: 1px; }
+  .tick.story { height: var(--story-tick); width: 2px; margin-left: -1px; background: rgba(60, 60, 67, 0.6); border-radius: 1px; }
   .label {
     position: absolute;
-    top: 20px;
+    top: var(--label-gap);
     transform: translateX(-50%);
-    font-size: 11px;
-    color: rgba(0, 0, 0, 0.45);
+    font-size: var(--label-size);
+    color: rgba(60, 60, 67, 0.6);           /* secondaryLabel */
     font-variant-numeric: tabular-nums;
     pointer-events: none;
   }
   .thumb {
     position: absolute;
     top: 50%;
-    width: 22px;
-    height: 22px;
-    margin: -11px 0 0 -11px;
+    /* UISlider's thumb: 28pt, white, a hairline and a soft double shadow. */
+    width: var(--thumb);
+    height: var(--thumb);
+    margin: calc(var(--thumb) / -2) 0 0 calc(var(--thumb) / -2);
     border-radius: 999px;
-    background: #111;
-    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.18), 0 1px 3px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 3px 8px rgba(0, 0, 0, 0.15), 0 3px 1px rgba(0, 0, 0, 0.06);
     cursor: grab;
   }
   .thumb:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
@@ -220,15 +239,26 @@
     transform: translateX(-50%);
     padding: 4px 9px;
     border-radius: 8px;
-    background: #111;
-    color: #fff;
+    background: #fff;
+    color: #000;
     white-space: nowrap;
     font-size: 12px;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
   }
   .disabled .slider { cursor: default; opacity: 0.5; }
+  /* Dark (Rerun): the same parts in iOS dark system colours — systemBlue
+     #0A84FF, the dark systemFill track, separator ticks, secondaryLabel. */
+  .dark .icon { color: #0a84ff; }
+  .dark .icon:hover:not(:disabled) { background: rgba(10, 132, 255, 0.14); }
+  .dark .rail { background: rgba(120, 120, 128, 0.36); }
+  .dark .fill { background: #0a84ff; }
+  .dark .tick { background: rgba(84, 84, 88, 0.65); }
+  .dark .tick.story { background: rgba(235, 235, 245, 0.6); }
+  .dark .label { color: rgba(235, 235, 245, 0.6); }
+  .dark .tip { background: #2c2c2e; color: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.08); }
   @media (max-width: 560px) {
     .bar { gap: 4px; padding: 0 8px; }
     .label.minor { display: none; }

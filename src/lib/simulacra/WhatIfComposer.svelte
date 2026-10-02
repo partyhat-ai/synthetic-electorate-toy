@@ -85,8 +85,9 @@
   /* On the stage the composer pins to the column's floor (WhatIf.svelte). */
   :global(.whatif.stage) .compose { margin-top: auto; }
   .ask { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  /* The field: white on a hairline, a caret in the tint, its ring turning
-     the tint while typing (the creator-rows search field's behaviour). */
+  /* The field: Messages' entry capsule — white, an opaqueSeparator
+     hairline, a blue caret — whose ring turns the tint while typing (the
+     creator-rows search field's behaviour). */
   input {
     flex: 1;
     min-width: 0;
@@ -104,7 +105,7 @@
   input::placeholder { color: var(--label-3); }
   input:focus { outline: none; border-color: var(--tint); }
   input:disabled { opacity: 0.6; }
-  /* Rerun: filled in ink. */
+  /* Rerun: the send button — filled systemBlue, white, regular weight. */
   .run {
     display: inline-flex;
     align-items: center;
@@ -113,20 +114,22 @@
     padding: 0 18px;
     border: none;
     border-radius: 999px;
-    background: #111;
+    background: var(--tint);
     color: #fff;
     font: inherit;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
   }
-  .run:hover { background: #333; }
-  .run:active { background: #000; }
-  .run:disabled { opacity: 0.35; cursor: default; background: #111; }
-  /* Nothing new to run: at rest, the button dims (pressing it shows the
-     rerun already made). It brightens as soon as there's a change. */
-  .run.rest { opacity: 0.6; }
-  /* Reset: text only, in the tint. */
+  .run:hover { background: #0071eb; }
+  .run:active { background: #0062cc; }
+  .run:disabled { opacity: 0.35; cursor: default; background: var(--tint); }
+  /* Nothing new to run: at rest, a gray button (pressing it shows the rerun
+     already made). It fills blue again as soon as there's a change. */
+  .run.rest { background: var(--fill); color: var(--label); }
+  .run.rest:hover { background: var(--fill-press); }
+  .run.rest:active { background: #d1d1d6; }
+  /* Reset: a plain text button in the tint. */
   .reset {
     height: 36px;
     padding: 0 10px;
@@ -138,7 +141,11 @@
     cursor: pointer;
     border-radius: 10px;
   }
-  .reset:hover { background: rgba(56, 118, 183, 0.08); }
+  .reset:hover { background: rgba(0, 122, 255, 0.08); }
   .reset:active { opacity: 0.6; }
   .run:focus-visible, .reset:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* Under the Rerun view's invert the accent-coloured parts are turned back
+     (as the photos are) and take dark mode's systemBlue. */
+  :global(.sa.dark) .run:not(.rest),
+  :global(.sa.dark) .reset { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
 </style>

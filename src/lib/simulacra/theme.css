@@ -1,0 +1,47 @@
+/* Simulacra Americana's page-level look: the scrolling layer, the Rerun
+   view's dark mode, and the time bar's glass. Global, because the time bar
+   is moved to <body> (actions.ts toBody), outside the page's markup. */
+
+/* The page scrolls inside its own layer (the app's #invert-wrapper doesn't
+   scroll), over the hub's grey. Everything neutral is authored in light
+   values; dark mode is the wrapper's invert. */
+.sa {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  background: #e5e5e5;
+  color: #000;
+}
+/* Rerun: the app's dark mode, the same invert #invert-wrapper applies. */
+/* On the toolbar and content, not .sa: the robot's layer (true colour)
+   sits beside them. The background is #e5e5e5 as the invert renders it.
+   Only the page's own .top and .main (SliceRow has a .main of its own). */
+.sa.dark { background: #1a1a1a; }
+.sa.dark > .page > .top, .sa.dark > .page > .main { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
+/* Rerun (the page inverted): the blue pill and its white label turned
+   back, in dark mode's systemBlue. */
+.sa.dark .seg-thumb { background: #0a84ff; filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
+.sa.dark .seg button.on { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
+
+/* ── The timeline ── */
+.timebar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;                 /* over the robot's frame (20) */
+  padding-bottom: env(safe-area-inset-bottom);
+  /* An iOS toolbar: translucent near-white over a blur, a top hairline. */
+  background: rgba(249, 249, 249, 0.94);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 -0.5px 0 rgba(60, 60, 67, 0.29);
+}
+/* Rerun: an iOS dark toolbar (a filter here would invert the blur of the
+   already-dark page back to light). */
+.timebar.dark {
+  background: rgba(28, 28, 30, 0.94);
+  box-shadow: 0 -0.5px 0 rgba(84, 84, 88, 0.6);
+}

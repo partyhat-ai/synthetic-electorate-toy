@@ -32,6 +32,9 @@
         case 'robot:walk':
           app.setWalking(message.on);
           break;
+        case 'robot:paint':
+          app.setPaint(message.paint);
+          break;
         default:
           message satisfies never;
       }

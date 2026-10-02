@@ -1,7 +1,6 @@
-// Simulacra Americana's structure: the tile grid, when each state first cast
-// electoral votes, the elections it sat out, and the dates the franchise
-// changed. No results live here, so the page can draw all of it with no
-// data at all.
+// Simulacra Americana's geography: every election year, and the tile map's
+// grid with the year each state first cast electoral votes. Who won what is
+// in history.ts.
 
 /** Every presidential election, 1788–89 (drawn as 1789) to 2024. */
 export const ELECTION_YEARS: readonly number[] = [1789, ...Array.from({ length: 59 }, (_, i) => 1792 + i * 4)];
@@ -43,34 +42,3 @@ const RAW: readonly Raw[] = [
 export const STATES: readonly UsState[] = RAW.map(([code, name, row, col, first]) => ({ code, name, row, col, first }));
 export const STATE_BY_CODE: ReadonlyMap<string, UsState> = new Map(STATES.map((s) => [s.code, s]));
 export const GRID = { cols: 12, rows: 8 } as const;
-
-// In the Union, but cast no electoral votes that year.
-const CONFEDERACY = ['SC', 'MS', 'FL', 'AL', 'GA', 'LA', 'TX', 'VA', 'AR', 'NC', 'TN'];
-const ABSENT: Readonly<Record<number, Readonly<Record<string, string>>>> = {
-  1789: { NY: 'New York’s legislature deadlocked and chose no electors.' },
-  1864: Object.fromEntries(CONFEDERACY.map((c) => [c, 'Seceded. No electoral votes were counted.'])),
-  1868: Object.fromEntries(['MS', 'TX', 'VA'].map((c) => [c, 'Not yet readmitted to the Union. No electoral votes.'])),
-};
-
-/** Why a state in the Union cast no electoral votes in `year`, or null. */
-export const absentReason = (code: string, year: number): string | null => ABSENT[year]?.[code] ?? null;
-
-/** The states that cast electoral votes in `year`. */
-export const votingStatesIn = (year: number): readonly UsState[] =>
-  STATES.filter((s) => s.first <= year && !absentReason(s.code, year));
-
-/** A turning point for who could vote. */
-export interface FranchiseEvent {
-  readonly year: number;
-  readonly label: string;
-  readonly detail: string;
-}
-
-/** The franchise's turning points, oldest first. */
-export const FRANCHISE_EVENTS: readonly FranchiseEvent[] = [
-  { year: 1870, label: '15th Amendment', detail: 'Race can no longer bar a man from voting, on paper.' },
-  { year: 1890, label: 'Mississippi Plan', detail: 'Poll taxes and literacy tests begin stripping Black Southerners of the vote.' },
-  { year: 1920, label: '19th Amendment', detail: 'Sex can no longer bar voting.' },
-  { year: 1965, label: 'Voting Rights Act', detail: 'Federal protection against the tests and threats used to keep Black citizens from voting.' },
-  { year: 1971, label: '26th Amendment', detail: 'The voting age drops to 18.' },
-];

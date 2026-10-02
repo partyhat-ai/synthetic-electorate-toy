@@ -40,7 +40,6 @@ export class PageState {
   server = $state<Server>('connecting');
   /** Why the year's groups didn't load. */
   simFailed = $state<string | null>(null);
-  simLoading = $state(false);
   readonly sims = new SvelteMap<number, Sim>();
   readonly chosen = new SvelteMap<number, readonly string[]>();
   /** Dots dragged by hand, per year: each group's change in its fractions, summed over drags. */
@@ -55,8 +54,6 @@ export class PageState {
   openSlice = $state<string | null>(null);
   readonly voters = new SvelteMap<string, Voter | null>();
   voterLoading = $state<string | null>(null);
-  /** The system's light mode (dark mode is the page's invert). */
-  light = $state(true);
   /** The URL is written once the router is ready. */
   urlReady = false;
 
@@ -68,6 +65,7 @@ export class PageState {
   /** The rerun on show: the year's result in the Rerun view. */
   readonly rerun = $derived(this.view === 'whatif' ? this.result : null);
   readonly showing = $derived<'history' | 'whatif'>(this.rerun ? 'whatif' : 'history');
+  readonly light = $derived(this.view !== 'whatif');
   readonly running = $derived(!!this.run && this.run.year === this.year);
   readonly canRun = $derived(this.server === 'online' && !!this.sim && this.whatIfs.length > 0 && !this.running);
   readonly canEdit = $derived(this.server === 'online' && !!this.sim && !this.running && !this.election.unopposed);
@@ -109,9 +107,7 @@ export class PageState {
   async loadSim(y: number): Promise<void> {
     if (this.sims.has(y)) return;
     this.simFailed = null;
-    this.simLoading = true;
     const out = await this.api.election(y);
-    this.simLoading = false;
     switch (out.kind) {
       case 'ok':
         this.sims.set(y, { slices: out.value.slices, whatIfs: out.value.whatIfs });

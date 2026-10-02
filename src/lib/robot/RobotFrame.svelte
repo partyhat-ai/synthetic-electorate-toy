@@ -1,32 +1,38 @@
 <script lang="ts">
-  // The narrator robot, framed into the page. The frame is fixed over the
-  // whole window, click-through, and never moves once it has started loading
-  // (moving an iframe reloads it).
+  // The narrator robot, framed into the page. Mount it inside the element the
+  // robot should scroll with (the page's `robot-host`, position: relative or
+  // absolute): the frame fills that element, is click-through, and never moves
+  // once it has started loading (moving an iframe reloads it).
   //
   // Props
   //   stage    RobotStage | null  The box the robot stands in, CSS px from the
-  //                               window's bottom-right corner, with
+  //                               host element's bottom-right corner, with
   //                               mirror and yaw (degrees, eased in the frame).
   //                               null: the frame's default corner box.
   //                               See stageInSlot in ./stage.ts.
   //   visible  boolean = true      false hides the frame and stops its render loop.
   //   walking  boolean = false     The robot walks (the page is working) or idles.
+  //   paint    'history' | 'rerun' History is the Americana model's own paint;
+  //                               Rerun the original paint with the stars.
+  //                               Each paint brings its own lighting.
   //   onRobot  (anchors) => void   Called every frame while visible with
   //                               { centerX, feetY } in window CSS px: the
   //                               robot's centre line and the floor under its
   //                               feet. null while it loads or while hidden.
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
+  import type { Paint } from './characters';
   import { type HostMessage, parseFrameMessage, type RobotAnchors, type RobotStage } from './messages';
 
   interface Props {
     stage: RobotStage | null;
     visible?: boolean;
     walking?: boolean;
+    paint: Paint;
     onRobot?: (anchors: RobotAnchors | null) => void;
   }
 
-  let { stage, visible = true, walking = false, onRobot }: Props = $props();
+  let { stage, visible = true, walking = false, paint, onRobot }: Props = $props();
 
   let frame: HTMLIFrameElement | undefined = $state();
   // Bumped on every robot:ready, so a reloaded frame is sent the state again.
@@ -45,6 +51,9 @@
   });
   $effect(() => {
     if (readyCount > 0) post({ type: 'robot:walk', on: walking });
+  });
+  $effect(() => {
+    if (readyCount > 0) post({ type: 'robot:paint', paint });
   });
   $effect(() => {
     if (!visible) onRobot?.(null);
@@ -91,7 +100,7 @@
 
 <style>
   .robot-frame {
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;

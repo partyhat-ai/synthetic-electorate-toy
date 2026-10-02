@@ -7,7 +7,7 @@
   // WhatIfComposer.
   import { onDestroy, untrack } from 'svelte';
   import type { WhatIf } from './schemas';
-  import type { Message } from './whatif';
+  import type { Message, Still } from './whatif';
   import WhatIfComposer from './WhatIfComposer.svelte';
   import WhatIfWorking from './WhatIfWorking.svelte';
 
@@ -20,6 +20,8 @@
     stage?: boolean;
     /** …and it's there. */
     robotShown?: boolean;
+    /** A still of the robot, shown in the slot until the live robot draws. */
+    still?: Still | null;
     /** The robot's spot (for the page to measure). */
     slot?: HTMLElement | null;
     message?: Message;
@@ -54,6 +56,7 @@
     faceStyle = '',
     stage = false,
     robotShown = false,
+    still = null,
     slot = $bindable(null),
     message = { text: '' },
     whatIfs = [],
@@ -202,7 +205,10 @@
        lets clicks through): pressing it is talking to it. -->
   <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
     disabled={closed || running} onclick={() => input?.focus()}>
-    {#if !robotShown && face}
+    {#if stage && still}
+      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
+        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
+    {:else if !robotShown && face}
       <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
     {/if}
   </button>
@@ -260,8 +266,8 @@
   }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
-  /* The robot stands in the slot's full height, feet on its floor. */
-  .stage .bot { height: auto; align-self: stretch; }
+  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
+  .stage .bot { height: 220px; align-self: start; }
   .face {
     position: absolute;
     left: 0;
@@ -273,23 +279,33 @@
     background: #111716;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   }
-  /* The face is a photo: under dark mode's invert, turned back. */
+  /* The face is a photo: under the Rerun view's invert, turned back. */
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
+  /* The still: under the live robot, faded out once it draws. */
+  .still { position: absolute; height: auto; max-width: none; pointer-events: none; transition: opacity 0.18s ease; }   /* = the page's .robot-host fade */
+  .still.gone { opacity: 0; }
+  :global(.sa.dark) .still { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
-  /* The what-if section's colours, as tokens the pieces read too:
-       --label / --label-2 / --label-3   text, secondary text, placeholder
-       --separator                       hairlines
-       --tint                            the accent (#3876b7) */
+  /* The what-if section in HIG light mode, after iOS Messages: the robot's
+     bubble is an incoming message, the what-ifs and field are Messages'
+     white capsules and hairlines, and the one accent is iMessage blue
+     (#007AFF), on Rerun as on the send button. Messages sets its grey
+     incoming bubble (#E9E9EB) on white; this page is already about that
+     grey (#e5e5e5, systemGray5), so the bubble takes the white step up
+     instead. Tokens (iOS system colours), read by the pieces too:
+       --label / --label-2 / --label-3   label, secondaryLabel, tertiaryLabel
+       --separator                       opaqueSeparator
+       --tint                            systemBlue */
   .whatif {
     --bubble: #fff;
-    --label: rgba(0, 0, 0, 0.88);
-    --label-2: rgba(0, 0, 0, 0.55);
-    --label-3: rgba(0, 0, 0, 0.4);
-    --separator: rgba(0, 0, 0, 0.16);
-    --fill: rgba(255, 255, 255, 0.55);   /* chips at rest */
-    --fill-press: #fff;                  /* hovers */
-    --tint: #3876b7;
+    --label: #000;
+    --label-2: rgba(60, 60, 67, 0.6);
+    --label-3: rgba(60, 60, 67, 0.3);
+    --separator: #c6c6c8;
+    --fill: #f2f2f7;             /* systemGray6: chips at rest, hovers */
+    --fill-press: #e5e5ea;       /* systemGray5: press */
+    --tint: #007aff;
   }
   .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   /* On the stage the talk column fills the robot's height: the bubble pins to
@@ -363,24 +379,29 @@
   .by { margin: 6px 0 0; font-size: 12.5px; color: var(--label-2); }
   .aside { margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--label-2); }
   .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  /* In the bubble: text buttons on a hairline, the primary filled in ink. */
+  /* In the bubble: tinted text buttons on a hairline, the primary filled. */
   .act {
     height: 30px;
     padding: 0 13px;
     border: 1px solid var(--separator);
     border-radius: 999px;
     background: transparent;
-    color: var(--label);
+    color: var(--tint);
     font: inherit;
     font-size: 13px;
     cursor: pointer;
   }
-  .act:hover { background: rgba(0, 0, 0, 0.06); }
-  .act:active { background: rgba(0, 0, 0, 0.1); }
-  .act.primary { background: #111; border-color: #111; color: #fff; }
-  .act.primary:hover { background: #333; }
-  .act.primary:active { background: #000; }
+  .act:hover { background: var(--fill); }
+  .act:active { background: var(--fill-press); }
+  .act.primary { background: var(--tint); border-color: var(--tint); color: #fff; }
+  .act.primary:hover { background: #0071eb; }
+  .act.primary:active { background: #0062cc; }
   .act:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* Under the Rerun view's invert (.sa.dark) the tint would come out cyan
+     and white labels black: the accent-coloured parts are turned back (as
+     the photos are) and take dark mode's systemBlue. */
+  :global(.sa.dark) .whatif { --tint: #0a84ff; }
+  :global(.sa.dark) .act.primary { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   @media (prefers-reduced-motion: reduce) {
     .bubble { transition: none; }
     .lines { animation: none; }

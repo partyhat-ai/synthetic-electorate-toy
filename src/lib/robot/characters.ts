@@ -2,6 +2,8 @@
 // are the ones the original harness used for the small framed robot, baked in.
 // Paths are relative to ASSET_BASE (assets.ts).
 
+export type Paint = 'history' | 'rerun';
+
 /** Flat lighting values over the scene. Colours are CSS hex strings. */
 export interface Lighting {
   readonly exposure: number;
@@ -25,10 +27,12 @@ export interface IdleBone {
 
 export interface Character {
   readonly id: string;
-  /** The Americana GLB: rig, clips and paint. */
+  /** The Americana GLB: rig, clips and the History paint. */
   readonly model: string;
-  /** Lighting over the scene: the original harness look. */
-  readonly lighting: Lighting;
+  /** The Rerun paint: textures on the model's UVs plus overrides.json. */
+  readonly rerunPaint: { readonly dir: string; readonly version: number };
+  /** Lighting per paint. History is the original harness look; Rerun was tuned by eye. */
+  readonly lighting: Readonly<Record<Paint, Lighting>>;
   /** Every model is scaled to this height (scene units) and stood on the origin. */
   readonly height: number;
   /** Multiplier on the layout's camera distance. */
@@ -50,21 +54,21 @@ export interface Character {
   readonly reactorLight: number;
 }
 
+const ORIGINAL_LOOK = {
+  hemiSky: '#dfe6de',
+  hemiGround: '#303926',
+  keyColor: '#fff2d9',
+  rimColor: '#a3cad2',
+  fillColor: '#d7e1b8',
+} as const;
+
 export const ATLAS: Character = {
   id: 'atlas-09',
-  model: 'models/atlas-09-americana.glb?v=2',
+  model: 'models/atlas-09-americana.glb?v=4',
+  rerunPaint: { dir: 'models/atlas-09-americana-rerun/', version: 2 },
   lighting: {
-    exposure: 1.18,
-    environment: 0.45,
-    hemi: 1.3,
-    hemiSky: '#dfe6de',
-    hemiGround: '#303926',
-    key: 4.5,
-    keyColor: '#fff2d9',
-    rim: 3.2,
-    rimColor: '#a3cad2',
-    fill: 0.8,
-    fillColor: '#d7e1b8',
+    history: { ...ORIGINAL_LOOK, exposure: 1.18, environment: 0.45, hemi: 1.3, key: 4.5, rim: 3.2, fill: 0.8 },
+    rerun: { ...ORIGINAL_LOOK, exposure: 0.75, environment: 0.4, hemi: 1, key: 1.2, rim: 3.6, fill: 3.55 },
   },
   height: 6.5,
   zoom: 1.71,

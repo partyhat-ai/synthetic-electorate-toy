@@ -8,13 +8,11 @@
   // it reruns the election and says what changed. The timeline along the
   // bottom moves between elections.
   //
-  // This file is composition and layout, what the robot says and where it
-  // stands. State: $lib/simulacra/state(.svelte).ts.
+  // This file is composition and layout. State: $lib/simulacra/state(.svelte).ts;
+  // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
-  import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
-  import RobotFrame from '$lib/robot/RobotFrame.svelte';
-  import { type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
+  import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
   import ElectionHeader from '$lib/simulacra/ElectionHeader.svelte';
@@ -22,12 +20,14 @@
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
+  import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
   import { apiOptionsFor, randomStory, readParams } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
+  import '$lib/simulacra/theme.css';
 
   const params = readParams(new URLSearchParams(location.search), import.meta.env.DEV);
   const page = new PageState({
@@ -44,12 +44,18 @@
   });
 
   let narrator = $state<ReturnType<typeof Narrator> | null>(null);
+  let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
-  let inputEl = $state<HTMLInputElement | null>(null);
+  let groupsEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
   let revealing = $state(false);
   let narrow = $state(false);
+  // Dragging the time bar: the robot holds still (no restaging) and the
+  // groups keep their height while each year's load, so nothing jumps; the
+  // robot is placed once more on release.
+  let scrubbing = $state(false);
+  let groupsHold = $state(0);
 
   const e = $derived(page.election);
   const B = $derived(e.candidates[1] ?? null);
@@ -65,10 +71,15 @@
   // phone-width window shows its face.
   const stageMode = $derived(!narrow);
 
-  // The composer's chips, and whether there's nothing to rerun.
-  const composer = $derived<{ chips: readonly WhatIf[]; closed: boolean }>({
-    chips: page.whatIfs,
-    closed: page.server !== 'online' || !page.sim || e.unopposed,
+  // The composer's chips and field, held from the last loaded year while a
+  // scrubbed-to year is still loading.
+  const held: { chips: readonly WhatIf[]; closed: boolean } = { chips: [], closed: true };
+  const composer = $derived.by(() => {
+    if (!(scrubbing && !page.sim)) {
+      held.chips = page.whatIfs;
+      held.closed = page.server !== 'online' || !page.sim || e.unopposed;
+    }
+    return { chips: held.chips, closed: held.closed };
   });
 
   $effect(() => {
@@ -79,57 +90,10 @@
     if (page.voterKey) page.fetchVoter();
   });
 
-  // ── The robot, framed into the WhatIf slot (RobotFrame, fixed over the
-  // window). The page measures the slot and stands the robot in it; once
-  // drawn, the robot's anchors nudge its box once, so its feet sit on the
-  // slot's floor. ──
-  /** The robot's box, before its turn. */
-  let box = $state<RobotStage | null>(null);
-  let measureFrame = 0;
-  let nudge: Nudge = { x: 0, y: 0 };
-  let nudged = false;
-
-  // The robot turns a little with the time bar (yawForYear), eased in the renderer.
-  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(page.year), ELECTION_YEARS.length));
-  const stage = $derived(box ? { ...box, yaw: yawNow } : null);
-
-  function measureStage(): void {
-    measureFrame = 0;
-    if (!stageMode || !slotEl) {
-      box = null;
-      return;
-    }
-    const next = stageInSlot(new DOMRect(0, 0, innerWidth, innerHeight), slotEl.getBoundingClientRect(), nudge, 0);
-    if (!sameStage(box, next)) box = next;
-  }
-
-  /** Measures on the next frame (once, however often it's asked). */
-  function measureSoon(): void {
-    if (!measureFrame) measureFrame = requestAnimationFrame(measureStage);
-  }
-
-  $effect(() => {
-    void stageMode;
-    void slotEl;
-    untrack(measureSoon);
-  });
-  $effect(() => {
-    if (!mainEl) return;
-    const ro = new ResizeObserver(measureSoon);
-    ro.observe(mainEl);
-    return () => ro.disconnect();
-  });
-
-  function onRobot(anchors: RobotAnchors | null): void {
-    const on = !!anchors;
-    if (on !== robotShown) robotShown = on;
-    if (!anchors || nudged || !slotEl || !box) return;
-    const d = nudgeToSlot(slotEl.getBoundingClientRect(), anchors);
-    nudged = true;
-    if (Math.abs(d.x) > 3 || Math.abs(d.y) > 3) {
-      nudge = { x: nudge.x + d.x, y: nudge.y + d.y };
-      measureStage();
-    }
+  function scrub(on: boolean) {
+    scrubbing = on;
+    groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
+    if (!on) robot?.measureSoon();
   }
 
   function act(key: string) {
@@ -173,40 +137,29 @@
     const readSmall = () => (narrow = small.matches);
     readSmall();
     small.addEventListener('change', readSmall);
-    // Dark mode follows the system: the page's invert (.sa.dark).
-    const dark = window.matchMedia('(prefers-color-scheme: dark)');
-    const readDark = () => (page.light = !dark.matches);
-    readDark();
-    dark.addEventListener('change', readDark);
     void tick().then(() => {
       page.urlReady = true;
       page.syncUrl();
-      measureSoon();
+      robot?.measureSoon();
     });
-    return () => {
-      small.removeEventListener('change', readSmall);
-      dark.removeEventListener('change', readDark);
-    };
+    return () => small.removeEventListener('change', readSmall);
   });
-  onDestroy(() => {
-    page.dispose();
-    cancelAnimationFrame(measureFrame);
-  });
+  onDestroy(() => page.dispose());
 </script>
 
 <svelte:head>
   <title>Simulacra Americana</title>
 </svelte:head>
-<svelte:window onkeydown={onKey} onresize={measureSoon} />
+<svelte:window onkeydown={onKey} />
 
-<RobotFrame {stage} visible={stageMode && !!stage} walking={page.running || revealing} {onRobot} />
-
-<div class="sa" class:dark={!page.light} onscroll={measureSoon}>
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
+    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
+      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
-      <!-- Always there, always both: the numbers are the rerun's once there
-           is one, else history's. -->
+      <!-- Always there, always both: the switch sets the look and the robot's
+           paint; the numbers are the rerun's once there is one, else history's. -->
       <div class="seg" role="radiogroup" aria-label="Show">
         <button type="button" role="radio" aria-checked={page.view !== 'whatif'} class:on={page.view !== 'whatif'} onclick={() => (page.view = 'history')}>History</button>
         <button type="button" role="radio" aria-checked={page.view === 'whatif'} class:on={page.view === 'whatif'} onclick={() => (page.view = 'whatif')}>Rerun</button>
@@ -229,7 +182,7 @@
     <main class="main" bind:this={mainEl}>
       <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
 
-      <section class="groups" aria-labelledby="sa-groups">
+      <section class="groups" aria-labelledby="sa-groups" bind:this={groupsEl} style:min-height={groupsHold ? `${groupsHold}px` : null}>
         <div class="groups-head">
           <h2 id="sa-groups">Who voted</h2>
           {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
@@ -269,32 +222,20 @@
       </section>
 
       <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} stage={stageMode} {robotShown}
-        chips={composer.chips} closed={composer.closed} onaction={act} />
+        still={STILLS[page.view === 'whatif' ? 'rerun' : 'history']} chips={composer.chips} closed={composer.closed} onaction={act} />
     </main>
-  </div>
-
-  <div class="timebar">
-    <TimeBar years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
-      onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} />
   </div>
 </div>
 
+<div class="timebar" class:dark={!page.light} use:toBody>
+  <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
+    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} onscrub={scrub} />
+</div>
+
 <style>
-  /* The page scrolls inside its own layer (the app's #invert-wrapper doesn't
-     scroll), over the hub's grey. Everything neutral is authored in light
-     values; dark mode is the wrapper's invert. */
-  .sa {
-    position: fixed;
-    inset: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-    background: #e5e5e5;
-    color: #000;
-  }
-  /* Dark mode: the app's, the same invert #invert-wrapper applies. */
-  .sa.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
-  .page { min-height: 100%; padding-bottom: 84px; }
+  /* The page's own layout. The scrolling layer, the Rerun view's invert and
+     the time bar's glass are $lib/simulacra/theme.css. */
+  .page { position: relative; min-height: 100%; padding-bottom: 84px; }
   /* The brand, the History / Your year switch (once there's a rerun) and
      the sample label and About, on one toolbar row. */
   .top {
@@ -330,6 +271,8 @@
   }
 
   /* ── Who voted ── */
+  /* Zero jitter while scrubbing: the chart reserves its tallest year (five rows). */
+  .groups { min-height: 247px; }
   /* History / Your year: the hub's Content / Chat control
      (MainView .hub-segmented-control), metrics and all. */
   .seg {
@@ -365,8 +308,8 @@
     transition: color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .seg button:hover:not(:disabled) { color: #000; }
-  /* The selected label, in ink on the white indicator. */
-  .seg button.on, .seg button.on:hover { color: #000; }
+  /* The selected label sits on the blue indicator. */
+  .seg button.on, .seg button.on:hover { color: #fff; }
   .seg button:disabled { opacity: 0.45; cursor: default; }
   .seg button:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
   .seg-thumb {
@@ -376,13 +319,15 @@
     width: calc(50% - 3px);
     height: calc(100% - 6px);
     border-radius: 20px;
-    background: #fff;
-    box-shadow: inset 0 -0.5px 0 rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 10%);   /* lit edge along the bottom */
+    background: #007aff;                              /* = Rerun (WhatIf .run) */
+    box-shadow: inset 0 -0.5px 0 rgb(0 0 0 / 20%);   /* lit edge along the bottom */
     transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
   }
   .seg-thumb.second { transform: translateX(100%); }
   @media (prefers-reduced-motion: reduce) { .seg-thumb, .seg button { transition: none; } }
+  /* Scrubbing: years change faster than the fades, so they're skipped. */
+  .scrubbing :global(*) { transition: none !important; animation: none !important; }
   .groups-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 0 10px 8px; }
   h2 { margin: 0; font-size: 17px; font-weight: 600; }
   .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; font-size: 12px; color: rgba(0, 0, 0, 0.6); }
@@ -404,21 +349,6 @@
   .ghost svg { width: 100%; height: auto; display: block; }
   .ghost circle { fill: rgba(0, 0, 0, 0.08); }
   .groups-note { margin: 6px 10px 0; font-size: 13px; color: rgba(0, 0, 0, 0.5); }
-
-  /* ── The timeline ── */
-  .timebar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-    padding-bottom: env(safe-area-inset-bottom);
-    /* Frosted glass: the page's grey, translucent over a blur, a top hairline. */
-    background: rgba(229, 229, 229, 0.82);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.14);
-  }
 
   @media (max-width: 760px) {
     .main { padding: 0 16px; gap: 28px; }

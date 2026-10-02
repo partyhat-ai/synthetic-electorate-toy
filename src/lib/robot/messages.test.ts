@@ -10,6 +10,8 @@ describe('page → frame', () => {
     { type: 'robot:running', on: true },
     { type: 'robot:running', on: false },
     { type: 'robot:walk', on: true },
+    { type: 'robot:paint', paint: 'history' },
+    { type: 'robot:paint', paint: 'rerun' },
   ])('parses $type', (message) => {
     expect(parseHostMessage(message)).toEqual(message);
   });
@@ -20,6 +22,8 @@ describe('page → frame', () => {
   });
 
   test.each([
+    ['an unknown paint', { type: 'robot:paint', paint: 'americana' }],
+    ['a missing paint', { type: 'robot:paint' }],
     ['a string for a flag', { type: 'robot:walk', on: 'true' }],
     ['a stage missing its yaw', { type: 'robot:stage', stage: { ...stage, yaw: undefined } }],
     ['a stage with zero width', { type: 'robot:stage', stage: { ...stage, width: 0 } }],

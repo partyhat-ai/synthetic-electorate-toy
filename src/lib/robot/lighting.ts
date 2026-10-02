@@ -1,5 +1,6 @@
 // The robot's lights: the room environment, a hemisphere fill and three
-// directional lights, plus the chest reactor's point light.
+// directional lights whose values switch with the paint, plus the chest
+// reactor's point light.
 import {
   DirectionalLight,
   HemisphereLight,
@@ -16,7 +17,7 @@ import type { Lighting } from './characters';
 export const REACTOR_POWER = 0.84;
 
 export interface Rig {
-  /** Set every light, the environment and the exposure from the character's values. */
+  /** Set every light, the environment and the exposure from one paint's values. */
   apply(values: Lighting): void;
   dispose(): void;
 }

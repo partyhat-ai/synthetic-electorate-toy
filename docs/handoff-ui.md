@@ -27,7 +27,7 @@ being ported next and its route may differ.
    person from that group.
 4. **History / Rerun.** After a rerun, this switch in the toolbar flips the
    portraits, map and dots between history and the rerun. Flipped states
-   pulse on the map.
+   carry a dot on the map.
 5. **The time bar** along the bottom moves between all 60 elections.
 
 Cameron's brief was one focused flow, ultra minimal. The version before this
@@ -56,7 +56,7 @@ All under `src/lib/simulacra/` unless noted.
 |---|---|
 | Page state, loading, reruns, what the robot says (`say()`), keys, layout CSS | the page (being ported) |
 | Portrait, winner ring and check, initials fallback, dark-mode photo fix | `Portrait.svelte` |
-| Tile map and flip marks | `MiniMap.svelte` (grid in `geo.ts`) |
+| Tile map and flip dots | `MiniMap.svelte` (grid in `geo.ts`) |
 | A group's row of 50 dots, its caption and "was …" line | `SliceRow.svelte` |
 | Robot slot, bubble, More / Less | `WhatIf.svelte` |
 | The bubble's working: steps, interviews, sources | `WhatIfWorking.svelte` |
@@ -69,6 +69,7 @@ All under `src/lib/simulacra/` unless noted.
 | Elections as they happened | `history.ts` (owned by the simulation side) |
 | Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
 | Placing the robot in a page | `src/lib/robot/` (ported separately) |
+| The robot's stills while the 3D robot loads | `static/simulacra/chatpro-history.png`, `chatpro-rerun.png` |
 
 ## The components' contract (Svelte 5, runes)
 
@@ -77,7 +78,7 @@ Components take callback props instead of dispatching events. What was
 is the callback's argument.
 
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
-- `TimeBar`: `onchange(year)`, `onshuffle()`.
+- `TimeBar`: `onchange(year)`, `onscrub(on)`, `onshuffle()`.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
   `onaction(key)`, `onfocus(on)`; `bind:slot`, `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
@@ -113,7 +114,7 @@ POST timed out after it may have landed: poll, don't resubmit), or
 
 - **Dark mode is a filter.** In the original app `#invert-wrapper` applied
   `invert(1) hue-rotate(180deg) saturate(1.5)`; the page applies the same
-  filter to all of itself in the system's dark mode (`.sa.dark`).
+  filter to its toolbar and content in the Rerun view (`.sa.dark`).
   - Author neutral colours once, in light values: `#fff` renders black.
   - Party colours come from `paint(hue, light)`, which is authored twice.
   - Photos need `filter: invert(1) hue-rotate(180deg) saturate(66.7%)` in dark
@@ -137,6 +138,9 @@ POST timed out after it may have landed: poll, don't resubmit), or
 - **Controls:**
   - Controls are 34–36px high, with a `#3876b7` focus ring.
   - `prefers-reduced-motion` turns off the dot, map and fade transitions.
+  - The time bar's sizes are CSS custom properties at the top of
+    `TimeBar.svelte`'s `.bar` (the tuned values; the old `?tuneTimeline`
+    panel is gone).
 - **Accessibility:** every control has a label; keep them meaningful.
 
 ## The robot
@@ -146,6 +150,8 @@ POST timed out after it may have landed: poll, don't resubmit), or
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
   field.
+- **Stills:** until the 3D robot draws, `WhatIf` shows a still (`still`
+  prop: `{ src, dx, db, w }`) from `static/simulacra/`.
 - **When the robot isn't drawn**, the harness's face stands in (`face`,
   `faceStyle`): windows ≤760px wide, and before WebGL loads.
 - **If you move the slot:** keep `bind:slot` on `WhatIf`, and re-measure
