@@ -2,6 +2,7 @@
 benchmarks.py): the fitting code never imports them.
 
 Files (all under config.CACHE; provenance in each folder's PROVENANCE-*.md):
+  labels/state_pres_1916_1920_1924.csv     certified returns (labels)
   population/adults_1920_by_state.csv      1920 census, 21+, sex × race/nativity/citizenship
   population/adults_1910_by_state.csv      the same for 1910 (1916 interpolation)
   population/urban_rural_1920_by_state.csv urban share (persona diversity)
@@ -18,6 +19,7 @@ import re
 import numpy as np
 import pandas as pd
 
+from .backbone import Inputs
 from .config import CACHE
 from .geo import STATES_1920
 
@@ -51,6 +53,22 @@ def manifest(paths: list) -> dict:
         if f.exists():
             out[p] = hashlib.sha256(f.read_bytes()).hexdigest()[:16]
     return out
+
+
+def returns():
+    """(R/D/O/T{16,20} by state, 1920 electoral votes by state)."""
+    d = pd.read_csv(CACHE / 'labels/state_pres_1916_1920_1924.csv')
+    out = {}
+    for y in (1916, 1920):
+        x = d[d.year == y].set_index('state')
+        out[f'R{y % 100}'] = x.rep
+        out[f'D{y % 100}'] = x.dem
+        out[f'O{y % 100}'] = x.total - x.rep - x.dem
+        out[f'T{y % 100}'] = x.total
+    r = pd.DataFrame(out).loc[STATES_1920].astype(float)
+    ev = d[d.year == 1920].set_index('state').loc[STATES_1920].nara_ev_total.astype(int)
+    assert int(ev.sum()) == 531
+    return r, ev
 
 
 def _long_pop(path) -> pd.DataFrame:
@@ -148,3 +166,17 @@ def corpus(cutoff: str) -> list[dict]:
         rows.append(it)
     return rows
 
+
+def load(cfg) -> tuple[Inputs, dict]:
+    ret, ev = returns()
+    cells = population()
+    fr = franchise()
+    inp = Inputs(cells=cells, returns=ret, women16=fr['women16'], women_pre19=fr['women_pre19'],
+                 alien_voting=fr['alien_voting'], ev=ev)
+    extras = {
+        'franchise': fr,
+        'urban': urban_share(),
+        'corpus': corpus(cfg.context_cutoff),
+        'manifest': manifest(FILES),
+    }
+    return inp, extras

@@ -2,11 +2,64 @@
 
 Candidate keys follow history.js: A is the winner (1920: Harding, R), B the
 runner-up (Cox, D), O everyone else.
+
+Page slices (a partition: every adult 21+ is in exactly one):
+  men          Men outside the South (citizens; all races)
+  women        Women outside the South (citizens; all races)
+  south-white  White Southerners (citizens; includes the few American Indian
+               and Asian adults counted in the eleven Southern states)
+  black-south  Black Southerners
+  immigrants   Immigrants not yet citizens (every region)
 """
 from __future__ import annotations
 
 from dataclasses import MISSING, asdict, dataclass, field, fields
 from typing import Any
+
+PARTY_TO_KEY = {0: 'A', 1: 'B', 2: 'O'}   # R → A (Harding), D → B (Cox)
+
+SLICES = [
+    ('men', 'Men outside the South'),
+    ('women', 'Women outside the South'),
+    ('south-white', 'White Southerners'),
+    ('black-south', 'Black Southerners'),
+    ('immigrants', 'Immigrants not yet citizens'),
+]
+
+
+def slice_of(row) -> str:
+    if row.group == 'foreign_white_alien':
+        return 'immigrants'
+    if row.south:
+        return 'black-south' if row.group == 'black' else 'south-white'
+    return 'men' if row.sex == 'M' else 'women'
+
+
+def slices(fit, world, point: int, sources: dict) -> list[dict]:
+    c = fit.cells
+    keys = c.apply(slice_of, axis=1).to_numpy()
+    out = []
+    a = world.adults[point]
+    can = world.can[point]
+    t = world.t[point]
+    sh = world.share[point]
+    for key, label in SLICES:
+        m = keys == key
+        n = a[m].sum()
+        if n <= 0:
+            continue
+        barred = (a[m] * (1 - can[m])).sum() / n
+        voted = a[m] * can[m] * t[m]
+        home = (a[m] * can[m] * (1 - t[m])).sum() / n
+        by_key = {PARTY_TO_KEY[p]: (voted * sh[m, p]).sum() / n for p in range(3)}
+        A, B, O = by_key['A'], by_key['B'], by_key['O']
+        out.append({
+            'key': key, 'label': label, 'adults': round(n / 1e6, 3),
+            'barred': round(float(barred), 4), 'home': round(float(home), 4),
+            'A': round(float(A), 4), 'B': round(float(B), 4), 'O': round(float(O), 4),
+            'source': sources.get(key),
+        })
+    return out
 
 
 # ── The bundle contract ──
