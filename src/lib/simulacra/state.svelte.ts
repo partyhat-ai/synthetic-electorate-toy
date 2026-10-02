@@ -60,8 +60,6 @@ export class PageState {
   openSlice = $state<string | null>(null);
   readonly voters = new SvelteMap<string, Voter | null>();
   voterLoading = $state<string | null>(null);
-  /** The system's light mode (dark mode is the page's invert). */
-  light = $state(true);
   /** The URL is written once the router is ready. */
   urlReady = false;
 
@@ -71,6 +69,7 @@ export class PageState {
   /** The rerun on show: the year's result in the Rerun view. */
   readonly rerun = $derived(this.view === 'whatif' ? this.result : null);
   readonly showing = $derived<'history' | 'whatif'>(this.rerun ? 'whatif' : 'history');
+  readonly light = $derived(this.view !== 'whatif');
   readonly running = $derived(!!this.run && this.run.year === this.year);
   readonly canRun = $derived(this.server === 'online' && !!this.sim && this.whatIfs.length > 0 && !this.running);
   readonly canEdit = $derived(this.server === 'online' && !!this.sim && !this.running && !this.election.unopposed);

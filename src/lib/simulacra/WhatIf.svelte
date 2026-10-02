@@ -143,7 +143,7 @@
     background: #111716;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   }
-  /* The face is a photo: under dark mode's invert, turned back. */
+  /* The face is a photo: under the Rerun view's invert, turned back. */
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
@@ -225,6 +225,11 @@
   .act.primary:hover { background: #0071eb; }
   .act.primary:active { background: #0062cc; }
   .act:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* Under the Rerun view's invert (.sa.dark) the tint would come out cyan
+     and white labels black: the accent-coloured parts are turned back (as
+     the photos are) and take dark mode's systemBlue. */
+  :global(.sa.dark) .whatif { --tint: #0a84ff; }
+  :global(.sa.dark) .act.primary { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   @media (prefers-reduced-motion: reduce) {
     .bubble { transition: none; }
     .lines { animation: none; }

@@ -144,4 +144,8 @@
   .reset:hover { background: rgba(0, 122, 255, 0.08); }
   .reset:active { opacity: 0.6; }
   .run:focus-visible, .reset:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* Under the Rerun view's invert the accent-coloured parts are turned back
+     (as the photos are) and take dark mode's systemBlue. */
+  :global(.sa.dark) .run:not(.rest),
+  :global(.sa.dark) .reset { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
 </style>

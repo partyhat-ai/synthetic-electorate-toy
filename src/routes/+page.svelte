@@ -31,6 +31,7 @@
   import type { Names } from '$lib/simulacra/types';
   import WhatIfSection from '$lib/simulacra/WhatIf.svelte';
   import type { Message } from '$lib/simulacra/whatif';
+  import '$lib/simulacra/theme.css';
 
   const params = readParams(new URLSearchParams(location.search));
   const page = new PageState({
@@ -315,20 +316,12 @@
     const readSmall = () => (narrow = small.matches);
     readSmall();
     small.addEventListener('change', readSmall);
-    // Dark mode follows the system: the page's invert (.sa.dark).
-    const dark = window.matchMedia('(prefers-color-scheme: dark)');
-    const readDark = () => (page.light = !dark.matches);
-    readDark();
-    dark.addEventListener('change', readDark);
     void tick().then(() => {
       page.urlReady = true;
       page.syncUrl();
       measureSoon();
     });
-    return () => {
-      small.removeEventListener('change', readSmall);
-      dark.removeEventListener('change', readDark);
-    };
+    return () => small.removeEventListener('change', readSmall);
   });
   onDestroy(() => {
     page.dispose();
@@ -347,8 +340,8 @@
   <div class="page">
     <header class="top">
       <span class="brand">Simulacra Americana</span>
-      <!-- Always there, always both: the numbers are the rerun's once there
-           is one, else history's. -->
+      <!-- Always there, always both: the switch sets the look; the numbers
+           are the rerun's once there is one, else history's. -->
       <div class="seg" role="radiogroup" aria-label="Show">
         <button type="button" role="radio" aria-checked={page.view !== 'whatif'} class:on={page.view !== 'whatif'} onclick={() => (page.view = 'history')}>History</button>
         <button type="button" role="radio" aria-checked={page.view === 'whatif'} class:on={page.view === 'whatif'} onclick={() => (page.view = 'whatif')}>Rerun</button>
@@ -420,25 +413,13 @@
 </div>
 
 <div class="timebar" class:dark={!page.light} use:toBody>
-  <TimeBar years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
+  <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
     onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} />
 </div>
 
 <style>
-  /* The page scrolls inside its own layer (the app's #invert-wrapper doesn't
-     scroll), over the hub's grey. Everything neutral is authored in light
-     values; dark mode is the wrapper's invert. */
-  .sa {
-    position: fixed;
-    inset: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-    background: #e5e5e5;
-    color: #000;
-  }
-  /* Dark mode: the app's, the same invert #invert-wrapper applies. */
-  .sa.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
+  /* The page's own layout. The scrolling layer, the Rerun view's invert and
+     the time bar's glass are $lib/simulacra/theme.css. */
   .page { min-height: 100%; padding-bottom: 84px; }
   /* The brand, the History / Your year switch (once there's a rerun) and
      the sample label and About, on one toolbar row. */
@@ -549,23 +530,6 @@
   .ghost svg { width: 100%; height: auto; display: block; }
   .ghost circle { fill: rgba(0, 0, 0, 0.08); }
   .groups-note { margin: 6px 10px 0; font-size: 13px; color: rgba(0, 0, 0, 0.5); }
-
-  /* ── The timeline ── */
-  .timebar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;                 /* over the robot's frame (20) */
-    padding-bottom: env(safe-area-inset-bottom);
-    /* An iOS toolbar: translucent near-white over a blur, a top hairline. */
-    background: rgba(249, 249, 249, 0.94);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 -0.5px 0 rgba(60, 60, 67, 0.29);
-  }
-  /* Dark mode: the page's invert here too (the bar sits on <body>, outside .sa). */
-  .timebar.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
 
   @media (max-width: 760px) {
     .main { padding: 0 16px; gap: 28px; }

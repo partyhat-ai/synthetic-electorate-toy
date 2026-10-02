@@ -135,6 +135,8 @@
   .chip.dim { opacity: 0.45; }
   .chip:disabled { cursor: default; }
   .chip:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
+  /* Under the Rerun view's invert the glyphs are turned back (WhatIf.svelte). */
+  :global(.sa.dark) .chip:not(.on) :global(svg) { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   @media (prefers-reduced-motion: reduce) {
     .chip { transition: none; }
     .chips { transition: none; }

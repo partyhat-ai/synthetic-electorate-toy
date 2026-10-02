@@ -6,7 +6,7 @@ import { ELECTION_YEARS } from './geo';
 import { type Election, electionOf, FEATURED } from './history';
 import type { RunResult, Slice, WhatIf } from './schemas';
 
-/** History, or the Rerun view (the switch, with or without a rerun). */
+/** History is light; the Rerun view (the switch, with or without a rerun) is dark. */
 export type View = 'history' | 'whatif';
 
 /** Where the simulation service stands: no answer yet, answering, or why not. */

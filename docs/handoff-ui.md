@@ -109,7 +109,7 @@ returns the parsed answer or throws a `SimError` with a `reason`:
 
 - **Dark mode is a filter.** In the original app `#invert-wrapper` applied
   `invert(1) hue-rotate(180deg) saturate(1.5)`; the page applies the same
-  filter to all of itself in the system's dark mode (`.sa.dark`).
+  filter to all of itself in the Rerun view (`.sa.dark`).
   - Author neutral colours once, in light values: `#fff` renders black.
   - Party colours come from `paint(hue, light)`, which is authored twice.
   - Photos need `filter: invert(1) hue-rotate(180deg) saturate(66.7%)` in dark

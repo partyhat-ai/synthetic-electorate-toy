@@ -12,6 +12,8 @@
     /** A year's spoken / tooltip text. */
     describe?: (y: number) => string;
     disabled?: boolean;
+    /** The Rerun view: iOS dark colours. */
+    dark?: boolean;
     /** A year was picked (dragged to, clicked, stepped, keyed). */
     onchange?: (year: number) => void;
     /** The dice. */
@@ -23,6 +25,7 @@
     featured = [],
     describe = (y) => String(y),
     disabled = false,
+    dark = false,
     onchange,
     onshuffle,
   }: Props = $props();
@@ -89,7 +92,7 @@
   const tip = $derived(tipOf());
 </script>
 
-<div class="bar" class:disabled>
+<div class="bar" class:disabled class:dark>
   <div class="steps">
     <button type="button" class="icon" aria-label="Previous Election" title="Previous Election" disabled={disabled || value === first} onclick={() => step(-1)}>
       <ChevronLeft size={19} strokeWidth={2} aria-hidden="true" />
@@ -241,6 +244,16 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
   }
   .disabled .slider { cursor: default; opacity: 0.5; }
+  /* Dark (Rerun): the same parts in iOS dark system colours — systemBlue
+     #0A84FF, the dark systemFill track, separator ticks, secondaryLabel. */
+  .dark .icon { color: #0a84ff; }
+  .dark .icon:hover:not(:disabled) { background: rgba(10, 132, 255, 0.14); }
+  .dark .rail { background: rgba(120, 120, 128, 0.36); }
+  .dark .fill { background: #0a84ff; }
+  .dark .tick { background: rgba(84, 84, 88, 0.65); }
+  .dark .tick.story { background: rgba(235, 235, 245, 0.6); }
+  .dark .label { color: rgba(235, 235, 245, 0.6); }
+  .dark .tip { background: #2c2c2e; color: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.08); }
   @media (max-width: 560px) {
     .bar { gap: 4px; padding: 0 8px; }
     .label.minor { display: none; }
