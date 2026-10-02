@@ -12,9 +12,6 @@
   // stands. State: $lib/simulacra/state(.svelte).ts.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
-  import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
-  import RobotFrame from '$lib/robot/RobotFrame.svelte';
-  import { type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
   import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
@@ -22,6 +19,7 @@
   import { namesOf, paintsOf } from '$lib/simulacra/header';
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
+  import RobotStage from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { Choice, Kind, Slice, WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
@@ -46,6 +44,7 @@
     },
   });
 
+  let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
   let inputEl = $state<HTMLInputElement | null>(null);
@@ -94,62 +93,7 @@
   function scrub(on: boolean) {
     scrubbing = on;
     groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
-    if (!on) measureSoon();
-  }
-
-  // ── The robot, framed into the WhatIf slot (RobotFrame, fixed over the
-  // window). The page measures the slot and stands the robot in it; once
-  // drawn, the robot's anchors nudge its box once, so its feet sit on the
-  // slot's floor. ──
-  /** The robot's box, before its turn. */
-  let box = $state<RobotStage | null>(null);
-  let measureFrame = 0;
-  let nudge: Nudge = { x: 0, y: 0 };
-  let nudged = false;
-
-  // The robot turns a little with the time bar (yawForYear), eased in the renderer.
-  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(page.year), ELECTION_YEARS.length));
-  const stage = $derived(box ? { ...box, yaw: yawNow } : null);
-
-  function measureStage(): void {
-    measureFrame = 0;
-    // Dragging the time bar: no restaging; it's placed once more on release.
-    if (scrubbing && box) return;
-    if (!stageMode || !slotEl) {
-      box = null;
-      return;
-    }
-    const next = stageInSlot(new DOMRect(0, 0, innerWidth, innerHeight), slotEl.getBoundingClientRect(), nudge, 0);
-    if (!sameStage(box, next)) box = next;
-  }
-
-  /** Measures on the next frame (once, however often it's asked). */
-  function measureSoon(): void {
-    if (!measureFrame) measureFrame = requestAnimationFrame(measureStage);
-  }
-
-  $effect(() => {
-    void stageMode;
-    void slotEl;
-    untrack(measureSoon);
-  });
-  $effect(() => {
-    if (!mainEl) return;
-    const ro = new ResizeObserver(measureSoon);
-    ro.observe(mainEl);
-    return () => ro.disconnect();
-  });
-
-  function onRobot(anchors: RobotAnchors | null): void {
-    const on = !!anchors;
-    if (on !== robotShown) robotShown = on;
-    if (!anchors || nudged || !slotEl || !box) return;
-    const d = nudgeToSlot(slotEl.getBoundingClientRect(), anchors);
-    nudged = true;
-    if (Math.abs(d.x) > 3 || Math.abs(d.y) > 3) {
-      nudge = { x: nudge.x + d.x, y: nudge.y + d.y };
-      measureStage();
-    }
+    if (!on) robot?.measureSoon();
   }
 
   function act(key: string) {
@@ -338,25 +282,22 @@
     void tick().then(() => {
       page.urlReady = true;
       page.syncUrl();
-      measureSoon();
+      robot?.measureSoon();
     });
     return () => small.removeEventListener('change', readSmall);
   });
-  onDestroy(() => {
-    page.dispose();
-    cancelAnimationFrame(measureFrame);
-  });
+  onDestroy(() => page.dispose());
 </script>
 
 <svelte:head>
   <title>Simulacra Americana</title>
 </svelte:head>
-<svelte:window onkeydown={onKey} onresize={measureSoon} />
+<svelte:window onkeydown={onKey} />
 
-<RobotFrame {stage} visible={stageMode && !!stage} walking={page.running} paint={page.view === 'whatif' ? 'rerun' : 'history'} {onRobot} />
-
-<div class="sa" class:scrubbing class:dark={!page.light} onscroll={measureSoon}>
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
+    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
+      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running} observe={mainEl} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's
@@ -439,7 +380,7 @@
 <style>
   /* The page's own layout. The scrolling layer, the Rerun view's invert and
      the time bar's glass are $lib/simulacra/theme.css. */
-  .page { min-height: 100%; padding-bottom: 84px; }
+  .page { position: relative; min-height: 100%; padding-bottom: 84px; }
   /* The brand, the History / Your year switch (once there's a rerun) and
      the sample label and About, on one toolbar row. */
   .top {

@@ -1,11 +1,12 @@
 <script lang="ts">
-  // The narrator robot, framed into the page. The frame is fixed over the
-  // whole window, click-through, and never moves once it has started loading
-  // (moving an iframe reloads it).
+  // The narrator robot, framed into the page. Mount it inside the element the
+  // robot should scroll with (the page's `robot-host`, position: relative or
+  // absolute): the frame fills that element, is click-through, and never moves
+  // once it has started loading (moving an iframe reloads it).
   //
   // Props
   //   stage    RobotStage | null  The box the robot stands in, CSS px from the
-  //                               window's bottom-right corner, with
+  //                               host element's bottom-right corner, with
   //                               mirror and yaw (degrees, eased in the frame).
   //                               null: the frame's default corner box.
   //                               See stageInSlot in ./stage.ts.
@@ -98,7 +99,7 @@
 
 <style>
   .robot-frame {
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;

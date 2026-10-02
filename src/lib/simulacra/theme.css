@@ -15,7 +15,11 @@
   color: #000;
 }
 /* Rerun: the app's dark mode, the same invert #invert-wrapper applies. */
-.sa.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
+/* On the toolbar and content, not .sa: the robot's layer (true colour)
+   sits beside them. The background is #e5e5e5 as the invert renders it.
+   Only the page's own .top and .main (SliceRow has a .main of its own). */
+.sa.dark { background: #1a1a1a; }
+.sa.dark > .page > .top, .sa.dark > .page > .main { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
 /* Rerun (the page inverted): the blue pill and its white label turned
    back, in dark mode's systemBlue. */
 .sa.dark .seg-thumb { background: #0a84ff; filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
