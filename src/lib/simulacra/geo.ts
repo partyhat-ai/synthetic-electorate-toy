@@ -66,38 +66,6 @@ export interface FranchiseEvent {
   readonly detail: string;
 }
 
-/** The election nearest year y. */
-export const nearestElection = (y: number): number =>
-  ELECTION_YEARS.reduce((best, e) => (Math.abs(e - y) < Math.abs(best - y) ? e : best), ELECTION_YEARS[0] ?? 1789);
-
-/** A famous call, right or wrong: the accuracy chart's stories. */
-export interface StoryYear {
-  readonly year: number;
-  readonly detail: string;
-}
-
-export const STORY_YEARS: readonly StoryYear[] = [
-  { year: 1936, detail: 'The Literary Digest poll called it for Landon; Roosevelt won 46 of 48 states.' },
-  { year: 1948, detail: 'Pollsters called it for Dewey; Truman won.' },
-  { year: 2016, detail: 'Polls favored Clinton; Trump won the Electoral College.' },
-];
-
-/** A counterfactual the time map offers before any server lists its own. */
-export interface Scenario {
-  readonly key: string;
-  readonly label: string;
-  readonly detail: string;
-  /** The elections it applies to. */
-  readonly from: number;
-  readonly to: number;
-}
-
-export const BUILTIN_SCENARIOS: readonly Scenario[] = [
-  { key: 'women-1880', label: 'Women vote in 1880', detail: 'Women join the 1880 electorate on the same terms as men.', from: 1880, to: 1880 },
-  { key: 'vra-1900', label: 'The Voting Rights Act passes in 1900', detail: 'The 1965 act’s protections apply from 1900 on.', from: 1900, to: 2024 },
-  { key: 'everyone-votes', label: 'Everyone votes', detail: 'Every eligible adult turns out.', from: 1789, to: 2024 },
-];
-
 /** The franchise's turning points, oldest first. */
 export const FRANCHISE_EVENTS: readonly FranchiseEvent[] = [
   { year: 1870, label: '15th Amendment', detail: 'Race can no longer bar a man from voting, on paper.' },
