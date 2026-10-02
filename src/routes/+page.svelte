@@ -48,14 +48,16 @@
   let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
-  let groupsEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
   let revealing = $state(false);
   let narrow = $state(false);
   // Dragging the time bar: the robot holds still (no restaging) and the
-  // groups keep their height while each year's load, so nothing jumps; the
-  // robot is placed once more on release.
+  // election and the groups hold their height while each year loads, so
+  // nothing jumps; the robot is placed once more on release.
   let scrubbing = $state(false);
+  let electionH = $state(0);
+  let groupsH = $state(0);
+  let electionHold = $state(0);
   let groupsHold = $state(0);
 
   const e = $derived(page.election);
@@ -93,9 +95,20 @@
 
   function scrub(on: boolean) {
     scrubbing = on;
-    groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
+    electionHold = on ? electionH : 0;
+    groupsHold = on ? groupsH : 0;
     if (!on) robot?.measureSoon();
   }
+  // While scrubbing, each block only ever grows to the tallest year passed so
+  // far (a narrow window wraps notes past the CSS reservation), never shrinks.
+  $effect(() => {
+    if (!scrubbing) return;
+    const measured = { election: electionH, groups: groupsH };
+    untrack(() => {
+      electionHold = Math.max(electionHold, measured.election);
+      groupsHold = Math.max(groupsHold, measured.groups);
+    });
+  });
 
   function act(key: string) {
     if (key === 'sample') {
@@ -181,9 +194,10 @@
     </header>
 
     <main class="main" bind:this={mainEl}>
-      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} highlight={$hoverPlaces} />
+      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} highlight={$hoverPlaces}
+        hold={electionHold} bind:height={electionH} />
 
-      <section class="groups" aria-labelledby="sa-groups" bind:this={groupsEl} style:min-height={groupsHold ? `${groupsHold}px` : null}>
+      <section class="groups" aria-labelledby="sa-groups" bind:offsetHeight={groupsH} style:min-height={groupsHold ? `${groupsHold}px` : null}>
         <div class="groups-head">
           <h2 id="sa-groups">Who voted</h2>
           {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
@@ -272,8 +286,9 @@
   }
 
   /* ── Who voted ── */
-  /* Zero jitter while scrubbing: the chart reserves its tallest year (five rows). */
-  .groups { min-height: 247px; }
+  /* Zero jitter while scrubbing: the chart reserves its tallest year (five
+     rows; 293px across all 60 years at 1440px). */
+  .groups { min-height: 293px; }
   /* History / Your year: the hub's Content / Chat control
      (MainView .hub-segmented-control), metrics and all. */
   .seg {

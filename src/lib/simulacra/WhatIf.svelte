@@ -86,7 +86,7 @@
   // there's more past it) and a click folds it back. A new message folds.
   const CLAMP = 7;
   // The tail only on a bubble no taller than the default one ("Change one
-  // thing about … / Pick a what-if…", 66px): anything bigger drops it.
+  // thing about … / Pick a counterfactual…", 66px): anything bigger drops it.
   const TAIL_MAX = 68;
   // Less: one quiet move. The bubble shrinks while it's still lifted (its
   // bottom fixed, so only its top eases down), the content held to its end as

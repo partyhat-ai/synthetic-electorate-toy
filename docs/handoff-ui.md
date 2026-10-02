@@ -151,6 +151,9 @@ POST timed out after it may have landed: poll, don't resubmit), or
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
   field.
+- **Draggable:** dragged across, the robot turns with the pointer (0.6° per
+  px, held to ±180°) and, let go, eases back. A turn alone never restages
+  the frame; only a moved box does (`boxMoved` in `src/lib/robot/stage.ts`).
 - **Stills:** until the 3D robot draws, `WhatIf` shows a still (`still`
   prop: `{ src, dx, db, w }`) from `static/simulacra/`.
 - **When the robot isn't drawn**, the harness's face stands in (`face`,

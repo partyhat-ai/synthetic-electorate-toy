@@ -126,6 +126,10 @@ export const ToldSchema = z.object({
   news: z.array(z.string()).optional(),
   added: z.array(z.string()).optional(),
   dropped: z.array(z.string()).optional(),
+  /** A staged what-if: news from the changed world, added to the voters' newspapers. */
+  items: z.array(z.object({ date: z.string(), text: z.string() })).optional(),
+  /** A staged what-if: how many real newspaper items the change makes false, taken out. */
+  removed: z.number().int().nonnegative().optional(),
 });
 export type Told = z.infer<typeof ToldSchema>;
 

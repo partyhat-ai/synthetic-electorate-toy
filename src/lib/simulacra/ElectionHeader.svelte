@@ -20,9 +20,13 @@
     light: boolean;
     /** State codes to light on the map (places named in the text being read). */
     highlight: readonly string[];
+    /** A height to hold, px (0: none): the page's scrub hold. */
+    hold?: number;
+    /** The block's rendered height, px. */
+    height?: number;
   }
 
-  let { election: e, year, rerun, paints, names, light, highlight }: Props = $props();
+  let { election: e, year, rerun, paints, names, light, highlight, hold = 0, height = $bindable(0) }: Props = $props();
 
   const A = $derived(e.candidates[0]);
   const B = $derived(e.candidates[1] ?? null);
@@ -37,7 +41,7 @@
   const matchup = $derived([{ c: A, k: 'A' as const }, ...(B ? [{ c: B, k: 'B' as const }] : [])]);
 </script>
 
-<section class="election" aria-labelledby="sa-year">
+<section class="election" aria-labelledby="sa-year" bind:offsetHeight={height} style:min-height={hold ? `${hold}px` : null}>
   <div class="matchup" class:solo={!B}>
     {#each matchup as { c, k } (k)}
       <div class="cand" class:b={k === 'B'}>
@@ -70,8 +74,9 @@
 <style>
   /* Zero jitter while scrubbing: the block reserves its tallest year (a
      two-line note plus an also-ran line), so the page's height never changes
-     with the year. */
-  .election { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 162px; }
+     with the year. Measured across all 60 years at 1440px (189–246px);
+     narrower windows are covered by the page's scrub hold. */
+  .election { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 246px; }
   .matchup {
     margin-top: 6px;
     display: grid;

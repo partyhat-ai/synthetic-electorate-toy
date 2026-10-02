@@ -18,11 +18,13 @@
   // once, so its feet sit on the slot's floor. Until then (and SETTLE_MS
   // after the nudge) the layer stays invisible over the still, so its first
   // frames, drawn before the nudge, never show; then one cross-fade.
+  //
+  // Dragged across, the robot turns with the pointer and, let go, eases back.
   import { onDestroy, untrack } from 'svelte';
   import type { Paint } from '$lib/robot/characters';
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
   import RobotFrame from '$lib/robot/RobotFrame.svelte';
-  import { type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
+  import { dragTurn, type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
   import { ELECTION_YEARS } from './geo';
 
   interface Props {
@@ -52,10 +54,48 @@
   let measureFrame = 0;
   let nudge: Nudge = { x: 0, y: 0 };
   let nudged = false;
+  /** The turn from a drag across the robot, degrees; 0 when let go. */
+  let dragYaw = $state(0);
+  let dragFrom: number | null = null;
+  let dragged = false;
 
-  // The robot turns a little with the time bar (yawForYear), eased in the renderer.
-  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length));
+  // The robot turns a little with the time bar (yawForYear) and by hand,
+  // eased in the renderer.
+  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length) + dragYaw);
   const stage = $derived(box ? { ...box, yaw: yawNow } : null);
+
+  // Turning the robot by hand. Listened for on the window and hit-tested
+  // against the slot: the frame lets clicks through, and the slot is a
+  // button that's disabled while a rerun runs.
+  function robotDown(e: PointerEvent): void {
+    if (!box || !spot || e.button !== 0) return;
+    const r = spot.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+    dragFrom = e.clientX;
+    dragged = false;
+    e.preventDefault(); // no text selection while turning
+  }
+  function robotMove(e: PointerEvent): void {
+    if (dragFrom === null) return;
+    const turn = dragTurn(e.clientX - dragFrom, dragged);
+    if (turn === null) return;
+    dragged = true;
+    dragYaw = turn;
+  }
+  function robotUp(): void {
+    if (dragFrom === null) return;
+    dragFrom = null;
+    dragYaw = 0;
+    // The click (if any) lands before this; a drag released off the page leaves none.
+    setTimeout(() => (dragged = false));
+  }
+  // A drag isn't a press: the click that ends one doesn't talk to the robot.
+  function robotClick(e: MouseEvent): void {
+    if (!dragged) return;
+    dragged = false;
+    e.stopPropagation();
+    e.preventDefault();
+  }
 
   $effect(() => {
     shown = robotReady && robotShown;
@@ -127,7 +167,7 @@
   <link rel="preload" as="image" href={STILLS.history.src} fetchpriority="high" />
   <link rel="preload" as="image" href={STILLS.rerun.src} />
 </svelte:head>
-<svelte:window onresize={measureSoon} />
+<svelte:window onresize={measureSoon} onpointerdown={robotDown} onpointermove={robotMove} onpointerup={robotUp} onpointercancel={robotUp} onclickcapture={robotClick} />
 
 <div class="robot-host" class:ready={robotReady && robotShown} bind:this={host} aria-hidden="true">
   <RobotFrame {stage} visible={stageMode && !!stage} {walking} {paint} {onRobot} />

@@ -46,6 +46,29 @@ describe('traceOf', () => {
     expect(lines.find((l) => l.startsWith('Told the voters:'))).toMatch(/^Told the voters: “In March 1920/);
   });
 
+  test('a staged what-if: the real items it takes out and the news from its world', () => {
+    const told = (removed: number) => ({
+      league: { facts: ['The treaty is settled.'], removed, items: [{ date: '1920-10-01', text: 'Geneva cheers.' }, { date: '1920-10-02', text: 'Delegates sail.' }] },
+    });
+    const line = (removed: number) =>
+      traceOf({ ...served(bundle, ['league']), told: told(removed) }, '', ['league'], 1920).find((l) => l.startsWith('Told the voters:'));
+    expect(line(2)).toBe(
+      'Told the voters: “The treaty is settled.” Took out 2 newspaper items the change makes false. Their newspapers also carried: “Geneva cheers.” “Delegates sail.”',
+    );
+    expect(line(1)).toContain(' Took out 1 newspaper item the change makes false.');
+    expect(line(0)).not.toContain('Took out');
+  });
+
+  test('a reinterpreted change leads its explanation, with what changed', () => {
+    const base = served(bundle, ['league']);
+    const reread = 'Not quite what you asked: the League passing reads as the Senate ratifying the treaty.';
+    const lines = traceOf({ ...base, howIGotThis: [...(base.howIGotThis ?? []), reread] }, 'what if the league passed', [], 1920);
+    const at = lines.indexOf(reread);
+    expect(at).toBeGreaterThan(0);
+    expect(at).toBeLessThan(lines.findIndex((l) => l.startsWith('Briefed:')));
+    expect(lines.filter((l) => l === reread)).toHaveLength(1);
+  });
+
   test('no interviews: no brief and no pre-interview', () => {
     const res = { ...served(bundle, ['no-19th']), cohortEffects: [] };
     const lines = traceOf(res, '', ['no-19th'], 1920);
@@ -93,6 +116,7 @@ describe('say', () => {
 
   test('the greeting, a tapped suggestion, then a rerun coming out step by step', () => {
     expect(say(BASE).text).toBe('Change one thing about 1920 and I’ll rerun it.');
+    expect(say(BASE).detail).toBe('Pick a counterfactual or type your own. Tap a group to meet someone in it.');
     expect(say({ ...BASE, toggled: 'league' }).detail).toBe('What people care about, low confidence. Press Rerun to see what happens.');
     const res = served(bundle, ['league']);
     const trace = traceOf(res, '', ['league'], 1920);

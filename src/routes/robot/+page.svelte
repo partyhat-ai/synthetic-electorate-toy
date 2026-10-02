@@ -7,7 +7,7 @@
   import '$lib/robot/style.css';
   import { type FrameMessage, parseHostMessage, type RobotStage } from '$lib/robot/messages';
   import type { RobotApp } from '$lib/robot/scene';
-  import { DEFAULT_STAGE } from '$lib/robot/stage';
+  import { boxMoved, DEFAULT_STAGE } from '$lib/robot/stage';
 
   let canvas: HTMLCanvasElement | undefined = $state();
 
@@ -22,10 +22,16 @@
       const message = parseHostMessage(event.data);
       if (!message) return;
       switch (message.type) {
-        case 'robot:stage':
-          stage = message.stage ?? DEFAULT_STAGE;
-          app.restage();
+        case 'robot:stage': {
+          // The renderer reads the stage's yaw every frame and eases toward
+          // it, so a turn alone (the time bar, a drag) needs no restage: only
+          // a moved or resized box re-places the canvas.
+          const next = message.stage ?? DEFAULT_STAGE;
+          const moved = boxMoved(stage, next);
+          stage = next;
+          if (moved) app.restage();
           break;
+        }
         case 'robot:running':
           app.setRunning(message.on);
           break;
