@@ -10,8 +10,14 @@
 # can't silently drop on a deploy. The service ignores task-definition drift.
 
 resource "aws_ecr_repository" "api" {
-  name                 = "simulacra-api"
-  image_tag_mutability = "IMMUTABLE"
+  name = "simulacra-api"
+  # SHA tags are immutable; the one moving tag is the registry layer cache
+  # deploy-api.yml writes on every build.
+  image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
+  image_tag_mutability_exclusion_filter {
+    filter      = "buildcache"
+    filter_type = "WILDCARD"
+  }
   image_scanning_configuration { scan_on_push = true }
 }
 

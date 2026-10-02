@@ -75,7 +75,12 @@ Each step marked ⛔ needs Cameron's yes.
    `terraform apply -target=aws_secretsmanager_secret.prod` first.
 7. ⛔ `terraform apply -var image=<ecr>/simulacra-api:<sha>`. This waits for
    the certificates to issue, then creates everything else, including the
-   bill-monthly items: ALB, EFS, CloudFront.
+   bill-monthly items: ALB, EFS, CloudFront. Pass `-var image` on the very
+   apply that FIRST creates `aws_ecs_task_definition.api`: the task def
+   ignores later container changes, so a revision created with the
+   placeholder image stays a placeholder. If that happens, roll a real
+   revision with `Deploy API` (as with this stack: revision 1 was busybox, and
+   revision 2 was rendered from the template and rolled by hand).
 8. Seed state:
    - `scripts/sync-data.sh upload-cache` (270 objects, 15 MB).
    - `scripts/sync-data.sh upload-seed`.
@@ -125,7 +130,13 @@ The workflow:
 To change an env var or secret, edit the template; that is the only place
 it's defined.
 
-**Web:** Vercel builds a preview from every push. Promoting to production is
+**Web:** the Vercel project is `simulacra-americana` in scope
+`camerons-projects-2a650f0d`, deployed from the CLI (`vercel deploy`, then
+`vercel promote <url>`). `vercel.json` holds the build, the SPA fallback and
+the same-origin rewrite to `api.`. `PUBLIC_ASSET_BASE` is a project env var
+(production and preview). `www.` redirects 308 to the apex as a domain
+setting (`vercel api /v9/projects/simulacra-americana/domains/www.simulacraamericana.com -X PATCH`).
+Once the repo is connected to Vercel's Git integration, Vercel builds a preview from every push. Promoting to production is
 manual (`vercel promote <url>`) and needs Cameron's yes. After a promotion,
 check that the site loads, a year opens through the rewrite, and the robot
 loads from `assets.`.

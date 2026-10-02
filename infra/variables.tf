@@ -46,5 +46,7 @@ variable "github_oidc_sub" {
 variable "cors_origins" {
   description = "Origins allowed to fetch robot assets (three.js fetches GLBs and textures cross-origin)."
   type        = list(string)
-  default     = ["https://simulacraamericana.com"]
+  # The site, plus local builds (pnpm serve :8790, vite dev :5173, vite preview :4173)
+  # so the 3D robot loads when the page is run on a laptop.
+  default = ["https://simulacraamericana.com", "http://localhost:8790", "http://localhost:5173", "http://localhost:4173"]
 }
