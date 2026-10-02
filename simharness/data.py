@@ -11,6 +11,7 @@ Files (all under config.CACHE; provenance in each folder's PROVENANCE-*.md):
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 
@@ -37,6 +38,20 @@ GROUP_MAP = {
     # 1910 women: citizenship wasn't asked of women in 1910.
     'foreign_white_citizenship_not_tabulated': 'foreign_white_unknown',
 }
+
+FILES = ['labels/state_pres_1916_1920_1924.csv', 'population/adults_1920_by_state.csv',
+         'population/adults_1910_by_state.csv', 'franchise/state_franchise_1920.csv',
+         'franchise/women_suffrage_pre19th.csv', 'sources/corpus_1920.jsonl']
+
+
+def manifest(paths: list) -> dict:
+    out = {}
+    for p in paths:
+        f = CACHE / p
+        if f.exists():
+            out[p] = hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+    return out
+
 
 def _long_pop(path) -> pd.DataFrame:
     p = pd.read_csv(path)

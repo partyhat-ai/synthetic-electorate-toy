@@ -1,6 +1,6 @@
 """Agent cohorts: strata of the cell table, merged to a cost cap.
 
-Stratification for 1920: region × sex ×
+Stratification for 1920 (justified in METHOD.md §A.2): region × sex ×
 race/nativity/citizenship. These are the dimensions the franchise turned on in
 1920 (sex, citizenship, race in practice) plus region, which carried the
 parties' coalitions. Age and urban/rural vary within a cohort's agents (persona

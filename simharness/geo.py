@@ -1,4 +1,8 @@
-"""States and regions."""
+"""States, regions and 1920 electoral votes.
+
+The electoral votes are checked at load time against the certified count in
+the labels (NARA); see data.returns.
+"""
 
 STATE_NAME = {
     'AL': 'Alabama', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California', 'CO': 'Colorado',
