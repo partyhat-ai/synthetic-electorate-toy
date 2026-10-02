@@ -288,3 +288,22 @@ able_to_vote=yes, reasoning from Indiana's 1919 presidential-suffrage law.
 The Black North Carolina woman answered no in control, `no-19th` and
 `league`, and yes only under `fifteenth`. Plausible, but the `no-19th` brief
 should say explicitly whether state-law suffrage survives.
+
+**D11 · Medium · fixed in p3 · a quote named a ballot label**
+Rung 1 (run `1920-4502a6f977`): a quote named the blinded ballot label ("K
+says the money got too loose…", south:M:native_white-0). The page would
+show a meaningless letter to readers. p3 tells agents to name candidates by
+description, never by label, in `quote`, and any label left is mapped back
+to a name before a quote is used.
+
+**D12 · Medium · open · wording moved results more than the what-if**
+Rung 1: the League effect's sign flips by paraphrase (dr −0.61, +0.49, +0.03
+for paraphrases 0/1/2, n = 12 agents). Two single-agent flips go in
+opposite directions (a Midwest woman R→D; a Northeast man D→R). The national
+dr interval [−0.19, +0.15] spans zero. At n = 12 the paraphrase spread (A3)
+is larger than any effect.
+
+**D13 · Low · open · quote length**
+Prompt p3 (run `1920-423843d9ec`): no quote used a letter label (0 of 24,
+fixes D11). Haiku ignored the 25-word cap (mean 30.5, max 40 words). A hard
+limit needs a trim at publish or a schema maxLength, not prompt wording.

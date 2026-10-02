@@ -46,6 +46,7 @@ def audit(rows: list[dict], share: float, rng: random.Random, minimum: int = 30)
 def deblind(text: str, label_names: dict) -> str:
     for label, name in label_names.items():
         text = re.sub(rf'\b(?:Candidate|candidate|Mr\.)\s+{label}\b', name, text)
+        text = re.sub(rf'(?<![A-Za-z]){label}(?![A-Za-z\'’])', name, text)
     return text
 
 

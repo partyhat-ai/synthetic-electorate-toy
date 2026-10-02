@@ -18,7 +18,8 @@ import random
 
 # p1: the 1920 prototype's answers. p2: brief dated on the context cutoff (p1 dated
 # briefs 30 Oct but admitted items to 1 Nov); non-citizens get no franchise counterfactual.
-PROMPT_VERSION = 'p2'
+# p3: quote capped at 25 words, no letter labels (DISCLOSURES D11).
+PROMPT_VERSION = 'p3'
 
 # No H(arding), C(ox), D(ebs), R(epublican), D(emocrat), S(ocialist),
 # F(armer-Labor), W(ilson), L(eague).
@@ -35,7 +36,7 @@ Fill the requested JSON:
 - p_choice: this person's leanings as chances that add to 100, over the labelled candidates and "other".
 - confidence: 0 to 100, how settled the person's mind is.
 - reason: one or two sentences, in the third person, naming the circumstances in the brief that drove the answer.
-- quote: one or two sentences the person might say aloud to a neighbour. Plain English of the period, specific to their own circumstances. No slurs, no melodrama.
+- quote: one or two sentences, at most 25 words, the person might say aloud to a neighbour. Plain English of the period, specific to their own circumstances. Never use a candidate's letter label in the quote; a person would say "the Republican", "the man from Ohio" or "the administration's man", never "Candidate K" or "K". No slurs, no melodrama.
 - sources_used: the ids of the dated items in the brief the answer rests on."""
 
 PROBE_SYSTEM = """You are a careful historian. Answer the question about the document you are given. If you do not know, answer "unknown". Fill the requested JSON."""
