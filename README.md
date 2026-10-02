@@ -4,13 +4,31 @@ A page that replays American presidential elections and reruns them with one
 thing changed: who could vote, who lived where, what people cared about, or
 who was on the ballot.
 
+Every election opens as it happened. A calibrated statistical backbone decides
+the counts and reproduces the certified returns. Synthetic voters, interviewed
+in both worlds, supply only within-person changes and the quotes. Every result
+carries a confidence tier, and `DISCLOSURES.md` records what is assumed rather
+than known.
+
 ## Layout
 
 | Path | What |
 |---|---|
-| `src/` | The SvelteKit page (TypeScript, Svelte 5) |
+| `src/` | The SvelteKit page (TypeScript, Svelte 5) and the robot narrator (`src/lib/robot`) |
+| `serve/` | The API server: serves the published per-year bundles under `/api/simulacra` |
 | `simharness/` | The simulation harness (Python): backbone, interviews, what-ifs, evaluation |
-| `tests/` | Harness tests (pytest). Page tests sit next to their code (vitest) |
+| `tests/` | Harness tests (pytest). Page and server tests sit next to their code (vitest) |
+| `METHOD.md`, `EVAL.md` | How the backbone works, and the 1920 results, failures included |
+
+## Run it
+
+```sh
+pnpm install
+pnpm serve          # API on :8787
+pnpm dev            # page on :5173, proxies /api to :8787
+```
+
+`?sample=1` runs the page on an invented stand-in model, with no server.
 
 ## Checks
 

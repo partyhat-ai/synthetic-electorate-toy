@@ -37,7 +37,9 @@ could be a sentence in the robot's bubble instead.
 
 ## Run it
 
-- **Dev:** `pnpm dev` serves the page.
+- **Dev:** `pnpm dev` serves the page; `pnpm serve` runs the local
+  simulation server on port 8787, and Vite proxies `/api` to it
+  (`vite.config.ts`).
 - **URLs** (query parameters, on the page's route):
   - `?sample=1`: sample data (`sample.ts`), starting on a random story year.
   - `&year=1896`: a given year. The page keeps `year` in the URL as it moves.
@@ -56,10 +58,11 @@ All under `src/lib/simulacra/` unless noted.
 | Portrait, winner ring and check, initials fallback, dark-mode photo fix | `Portrait.svelte` |
 | Tile map and flip dots | `MiniMap.svelte` (grid in `geo.ts`) |
 | A group's row of 50 dots, its caption and "was …" line | `SliceRow.svelte` |
-| Robot slot and bubble | `WhatIf.svelte` |
+| Robot slot, bubble, More / Less | `WhatIf.svelte` |
+| The bubble's working: steps, interviews, sources | `WhatIfWorking.svelte` |
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
 | What-if chips | `KindChips.svelte` |
-| The bubble's message type and kind labels | `whatif.ts` |
+| The bubble's message type, kind labels, step splitting | `whatif.ts` |
 | Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
 | ⓘ About popover | `InfoPopover.svelte` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
@@ -80,9 +83,10 @@ is the callback's argument.
 - `InfoPopover`: its content is the `children` snippet.
 
 Every simulation call (`api.ts`, and `sample.ts` with the same shape)
-returns the parsed answer or throws a `SimError` with a `reason`:
-`offline`, `auth`, `missing`, `unsupported` (no simulation service),
-`failed` or `malformed`.
+returns an `Outcome`: `ok` with the parsed value, `error` (with a `reason`:
+`offline`, `auth`, `missing`, `failed`, `malformed`), `indeterminate` (a
+POST timed out after it may have landed: poll, don't resubmit), or
+`unsupported` (no simulation service). Nothing throws.
 
 ## The layout contract: one screen at 1440×900
 
@@ -198,7 +202,7 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
 
 - `pnpm lint && pnpm check && pnpm size && pnpm test`.
 - The sample model's outcomes for every story what-if:
-  `pnpm dlx tsx scripts/model-check.ts`.
+  `pnpm tsx scripts/model-check.ts`.
 - **Look at it** with the dev server on `?sample=1&year=1896`.
 
 ## Rough edges (good first tasks)

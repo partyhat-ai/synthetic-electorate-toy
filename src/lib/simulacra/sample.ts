@@ -7,7 +7,7 @@
 // elections have written stories (stories.ts); every other year gets the
 // groups every election has (sampleEras.ts), above all the people who
 // couldn't vote.
-import { type Edits, type RunAsk, SimError, type SimulacraApi } from './api';
+import type { Edits, Outcome, RunAsk, SimulacraApi } from './api';
 import { ELECTION_YEARS, STATE_BY_CODE } from './geo';
 import { type Election, electionOf } from './history';
 import {
@@ -741,7 +741,8 @@ export interface SampleOptions {
   readonly now?: () => number;
 }
 
-const missing = (message: string) => new SimError('missing', message, 404);
+const ok = <T>(value: T): Outcome<T> => ({ kind: 'ok', value });
+const missing = (message: string): Outcome<never> => ({ kind: 'error', reason: 'missing', message, status: 404 });
 /** A sample run counts one state every RUN_MS, so it takes a moment, like a server's. */
 const RUN_MS = 45;
 
@@ -755,39 +756,40 @@ export function createSampleApi(options: SampleOptions = {}): SimulacraApi {
     async election(year) {
       await sleep(220);
       const e = electionOf(year);
-      if (!e) return { slices: [], whatIfs: [] };
-      return {
+      if (!e) return ok({ slices: [], whatIfs: [], simulated: false });
+      return ok({
         slices: slicesFor(e).map(display),
         whatIfs: whatIfsFor(e).map(({ key, label, kind, detail, slices }) => ({ key, label, kind, detail, slices: [...slices] })),
-      };
+        simulated: true,
+      });
     },
     async startRun(year, { whatIfs = [], text = '', edits = {} }: RunAsk = {}) {
       await sleep(120);
       const e = electionOf(year);
-      if (!e) throw missing('No simulation for this year.');
+      if (!e) return missing('No simulation for this year.');
       n += 1;
       const id = `sample-${n}`;
       runs.set(id, { at: clock(), total: e.states.length, result: rerunElection(e, whatIfs, text, edits) });
-      return { id };
+      return ok({ id });
     },
     async run(id) {
       await sleep(40);
       const r = runs.get(id);
-      if (!r) return { status: 'failed', error: 'That run was stopped.' };
+      if (!r) return ok({ status: 'failed', error: 'That run was stopped.' });
       const done = Math.min(r.total, Math.floor((clock() - r.at) / RUN_MS));
-      if (done < r.total) return { status: 'running', done, total: r.total };
-      return { status: 'done', done: r.total, total: r.total, result: r.result };
+      if (done < r.total) return ok({ status: 'running', done, total: r.total });
+      return ok({ status: 'done', done: r.total, total: r.total, result: r.result });
     },
     async stopRun(id) {
       runs.delete(id);
+      return ok(null);
     },
     async voter(year, sliceKey, runId) {
       await sleep(140);
       const e = electionOf(year);
       const result = runId ? (runs.get(runId)?.result ?? null) : null;
       const v = e ? voterOf(e, sliceKey, result) : null;
-      if (!v) throw missing('No one from that group.');
-      return v;
+      return v ? ok(v) : missing('No one from that group.');
     },
   };
 }

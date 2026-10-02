@@ -1,7 +1,7 @@
 // Prints the sample model's outcome for every what-if of every story
 // election (src/lib/simulacra/stories.ts), to check the model outside the
 // page: history's electoral vote, then each what-if's.
-//   pnpm dlx tsx scripts/model-check.ts
+//   pnpm tsx scripts/model-check.ts
 import { electionOf } from '../src/lib/simulacra/history';
 import { _model } from '../src/lib/simulacra/sample';
 import { STORIES } from '../src/lib/simulacra/stories';

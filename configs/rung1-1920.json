@@ -1,0 +1,51 @@
+{
+  "election": 1920,
+  "election_day": "1920-11-02",
+  "context_cutoff": "1920-11-01",
+  "mode": "truth",
+  "what_ifs": [
+    "league"
+  ],
+  "seed": 1920,
+  "draws": 100,
+  "prompt_version": "p3",
+  "holdout": [
+    "CA",
+    "FL",
+    "ID",
+    "IN",
+    "LA",
+    "MI",
+    "MO",
+    "MT",
+    "NC",
+    "NY",
+    "OH",
+    "OK"
+  ],
+  "agents": {
+    "bulk_model": "claude-haiku-4-5",
+    "check_model": "claude-haiku-4-5",
+    "check_share": 0,
+    "per_cohort": 2,
+    "paraphrases": 3,
+    "effort": "low",
+    "backend": "anthropic",
+    "max_cohorts": 36,
+    "only_cohorts": [
+      "midwest:M:native_white",
+      "midwest:F:native_white",
+      "northeast:F:native_white",
+      "northeast:M:native_white",
+      "south:M:native_white",
+      "south:F:native_white"
+    ],
+    "arms": [
+      "control",
+      "cf"
+    ],
+    "max_requests": 30,
+    "max_dollars": 0.5,
+    "max_tokens": 1500
+  }
+}

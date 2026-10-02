@@ -1,7 +1,7 @@
-// The page's state, the pure parts: what the URL asks for, whether there's
-// anything new to run, and the types the page keeps. The reactive holder is
-// state.svelte.ts.
-import type { Edits, SliceEdit } from './api';
+// The page's state, the pure parts: what the URL asks for, what a rerun of a
+// year would send (askOf), whether there's anything new to run, and the
+// types the page keeps per year. The reactive holder is state.svelte.ts.
+import type { ApiOptions, Edits, SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
 import { type Election, electionOf, FEATURED } from './history';
 import type { RunResult, Slice, WhatIf } from './schemas';
@@ -25,6 +25,10 @@ export type ShownRun = RunResult & {
   readonly keys: readonly string[];
   /** The typed words it ran with. */
   readonly text: string;
+  /** Its steps, for the robot's bubble (narrator.ts traceOf). */
+  readonly trace: readonly string[];
+  /** The page's state right after it ran (askOf), so Rerun with nothing changed just shows it. */
+  readonly ask: string;
   /** The what-ifs it ran. */
   readonly ran: readonly string[];
 };
@@ -32,18 +36,24 @@ export type ShownRun = RunResult & {
 export interface UrlParams {
   /** ?sample=1: the labelled stand-in (sample.ts). */
   readonly sample: boolean;
+  /** Dev only, ?simapi=<origin>: a local harness server. */
+  readonly simapi: string | null;
   /** ?year=, when it's an election year. */
   readonly year: number | null;
 }
 
-export function readParams(params: URLSearchParams): UrlParams {
+export function readParams(params: URLSearchParams, dev: boolean): UrlParams {
   const sample = params.get('sample');
   const asked = Number(params.get('year'));
   return {
     sample: sample === '1' || sample === 'true',
+    simapi: dev ? params.get('simapi') : null,
     year: ELECTION_YEARS.includes(asked) ? asked : null,
   };
 }
+
+/** What the API is pointed at: ?simapi=<url> reads <url>/api/simulacra. */
+export const apiOptionsFor = (simapi: string | null): ApiOptions => (simapi ? { base: `${simapi}/api/simulacra` } : {});
 
 /** A featured year at random, other than `not`. */
 export function randomStory(not?: number, random: () => number = Math.random): number {
@@ -66,18 +76,25 @@ export function electionFor(year: number): Election {
 }
 
 /**
- * Something to run since the rerun on show (or, with none yet, a what-if,
- * words or dots to run at all).
+ * What a rerun would send: the what-ifs (in any order), the typed words
+ * (trimmed) and the year's dragged dots. Equal strings, same rerun.
+ */
+export const askOf = (keys: readonly string[], text: string, edits: Edits | undefined): string =>
+  JSON.stringify([[...keys].sort(), text.trim(), edits ?? {}]);
+
+/**
+ * Something to run since this year's rerun on show (or, with none yet, a
+ * what-if, words or dots to run at all).
  */
 export function isDirty(
-  shown: Pick<ShownRun, 'ran'> | null,
+  shown: Pick<ShownRun, 'ask'> | null,
   selected: readonly string[],
   typed: string,
   edits: Edits | undefined,
 ): boolean {
   if (typed.trim()) return true;
   if (!shown) return selected.length > 0 || !!edits;
-  return selected.length !== shown.ran.length || selected.some((k) => !shown.ran.includes(k));
+  return askOf(selected, '', edits) !== shown.ask;
 }
 
 /** A drag on a group's dots added to the year's edits: each fraction's change summed over drags. */

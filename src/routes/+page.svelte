@@ -19,21 +19,19 @@
   import { namesOf, paintsOf } from '$lib/simulacra/header';
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
+  import Narrator from '$lib/simulacra/Narrator.svelte';
   import RobotStage from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
-  import type { Choice, Kind, Slice, WhatIf } from '$lib/simulacra/schemas';
+  import type { WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
-  import { randomStory, readParams, type ShownRun } from '$lib/simulacra/state';
+  import { apiOptionsFor, randomStory, readParams } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
-  import type { Names } from '$lib/simulacra/types';
-  import WhatIfSection from '$lib/simulacra/WhatIf.svelte';
-  import type { Message } from '$lib/simulacra/whatif';
   import '$lib/simulacra/theme.css';
 
-  const params = readParams(new URLSearchParams(location.search));
+  const params = readParams(new URLSearchParams(location.search), import.meta.env.DEV);
   const page = new PageState({
-    api: params.sample ? createSampleApi() : createSimulacraApi(),
+    api: params.sample ? createSampleApi() : createSimulacraApi(apiOptionsFor(params.simapi)),
     year: params.year ?? randomStory(),
     replaceUrl: (url) => {
       try {
@@ -42,8 +40,10 @@
         // router not ready
       }
     },
+    onFresh: (n) => narrator?.startReveal(n),
   });
 
+  let narrator = $state<ReturnType<typeof Narrator> | null>(null);
   let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
@@ -51,6 +51,7 @@
   let groupsEl = $state<HTMLElement | null>(null);
   let scrollEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
+  let revealing = $state(false);
   let narrow = $state(false);
   // Dragging the time bar: the robot holds still (no restaging) and the
   // groups keep their height while each year's load, so nothing jumps; the
@@ -108,148 +109,6 @@
     else if (key === 'shuffle') page.setYear(randomStory(page.year));
   }
 
-  // ── What the robot says, in the order docs/handoff-ui.md lists ──
-  // The ChatPro harness's face, cropped as the robot overlay crops it: where
-  // no robot is drawn (narrow windows, before WebGL loads).
-  const NAME = 'ChatPro';
-  const FACE = '/harness-faces/atlas-09.png?v=5';
-  const FACE_STYLE = 'transform: scale(1.213) translate(0%, 4%)';
-
-  const CONFIDENCE: Readonly<Record<'high' | 'medium' | 'low', string>> = {
-    high: 'High confidence: who could vote is arithmetic on census counts.',
-    medium: 'Medium confidence: where people lived is on record; how they’d have voted there is inferred.',
-    low: 'Low confidence: what people cared about is the hardest thing to change and know.',
-  };
-
-  const KIND_NOTE: Readonly<Record<Kind, string>> = {
-    franchise: 'Who can vote, high confidence.',
-    population: 'Who lives where, medium confidence.',
-    issue: 'What people care about, low confidence.',
-    candidate: 'Who is on the ballot, low confidence.',
-  };
-
-  const lower = (label: string) =>
-    /^(Black|White|Latino|Southern|Northern|Irish|Catholic|Plains|New|Progressive|Loyal|Socialist|Northerners|\d)/.test(label)
-      ? label
-      : label.charAt(0).toLowerCase() + label.slice(1);
-
-  /** One line about a group: who couldn't vote, stayed home, or how those who voted chose. */
-  function aboutGroup(s: Slice, y: number, nm: Names): string {
-    const voted = s.A + s.B + s.O;
-    if (s.barred >= 0.95) return `${s.label} couldn’t vote in ${y}.`;
-    if (s.barred >= 0.5) return `${Math.round(s.barred * 10)} in 10 ${lower(s.label)} couldn’t vote in ${y}.`;
-    if (voted < 0.02) return `Most ${lower(s.label)} stayed home in ${y}.`;
-    let k: 'A' | 'B' | 'O' = 'O';
-    if (s.A >= s.B && s.A >= s.O) k = 'A';
-    else if (s.B >= s.O) k = 'B';
-    return `${Math.round((s[k] / voted) * 100)}% of ${lower(s.label)} who voted chose ${nm[k] ?? ''}.`;
-  }
-
-  const did = (k: Choice, nm: Names): string => {
-    switch (k) {
-      case 'A':
-        return `voted for ${nm.A}`;
-      case 'B':
-        return `voted for ${nm.B ?? ''}`;
-      case 'O':
-        return `voted for ${nm.O === 'Others' ? 'a third party' : nm.O}`;
-      case 'home':
-        return 'stayed home';
-      case 'barred':
-        return 'couldn’t vote';
-      default:
-        return k satisfies never;
-    }
-  };
-
-  function running(y: number, r: NonNullable<PageState['run']>): Message {
-    const what = [r.text ? `“${r.text}”` : '', ...r.labels].filter(Boolean).join(', ');
-    return {
-      text: what ? `Rerunning ${y} with ${what}…` : `Rerunning ${y}…`,
-      detail: r.total ? `${r.done} of ${r.total} states counted.` : '',
-      busy: true,
-    };
-  }
-
-  function verdict(res: ShownRun): Message {
-    if (!res.applied.length && res.unknown) {
-      return {
-        text: `I couldn’t turn “${res.unknown}” into a change I can model${page.api.sample ? ' with sample data' : ''}. Try one of the what-ifs below.`,
-      };
-    }
-    // Typed words the rerun understood: say how they were read.
-    const read = res.text ? res.applied.find((a) => !res.keys.includes(a.key)) : undefined;
-    return {
-      text: `${read ? `I read “${res.text}” as ${read.label}. ` : ''}${res.summary}${res.unknown ? ` I left out “${res.unknown}”; I couldn’t model it.` : ''}`,
-      detail: res.confidence ? CONFIDENCE[res.confidence] : '',
-    };
-  }
-
-  function say(): Message {
-    const y = page.year;
-    const s = page.sim;
-    const res = page.result;
-    const show = page.showing;
-    if (page.server === 'connecting') return { text: `Getting ${y}’s voters ready.`, busy: true };
-    if (page.server === 'unsupported' || page.server === 'offline') {
-      return {
-        text:
-          page.server === 'unsupported'
-            ? 'This server has no simulation service yet, so I can’t rerun elections here.'
-            : 'I can’t reach the simulation server, so I can’t rerun elections yet.',
-        detail: 'The elections themselves are all here. Sample data shows how a rerun works.',
-        actions: [
-          { key: 'sample', label: 'Use Sample Data', primary: true },
-          { key: 'retry', label: 'Try Again' },
-        ],
-      };
-    }
-    if (page.server === 'auth') return { text: 'Sign in to rerun elections.', actions: [{ key: 'retry', label: 'Try Again' }] };
-    if (e.unopposed) {
-      return {
-        text: `${e.candidates[0].name} ran unopposed in ${y}, so there’s nothing to rerun.`,
-        actions: [{ key: 'shuffle', label: 'Another Election', primary: true }],
-      };
-    }
-    if (page.running && page.run) return running(y, page.run);
-    if (page.runError) return { text: page.runError, actions: [{ key: 'rerun', label: 'Try Again', primary: true }] };
-    if (page.simFailed && !s) return { text: page.simFailed, actions: [{ key: 'retry', label: 'Try Again' }] };
-    if (!s) return { text: `Getting ${y}’s voters ready.`, busy: true };
-    const w = page.lastToggled ? page.whatIfs.find((x) => x.key === page.lastToggled) : undefined;
-    if (w) return { text: w.detail, detail: `${KIND_NOTE[w.kind]} Press Rerun to see what happens.` };
-    // A group picked: someone from it, in their own words, and what could
-    // change their fate.
-    const slice = page.openSlice;
-    if (slice) {
-      const g = (show === 'whatif' && res ? res.slices : s.slices).find((x) => x.key === slice);
-      const reach = page.whatIfs.filter((x) => x.slices.includes(slice)).map((x) => x.label);
-      const could = reach.length ? `What could change that: ${reach.join(', ')}.` : '';
-      const person = page.voter;
-      if (person) {
-        const now = show === 'whatif' && person.now && person.now !== person.history ? ` In your ${y}, ${did(person.now, names)}.` : '';
-        const fate = `In ${y}, ${did(person.history, names)}.${now}`;
-        return {
-          quote: person.quote,
-          by: [person.name, person.line].filter(Boolean).join(', '),
-          text: `${fate}${could && show !== 'whatif' ? ` ${could}` : ''}`,
-        };
-      }
-      const finding = !!page.voterKey && page.voterLoading === page.voterKey;
-      if (g) return { text: aboutGroup(g, y, names), detail: finding ? 'Finding someone from this group…' : could };
-    }
-    // Typing: say what will happen to the words.
-    if (page.typed.trim() && !slice) {
-      return { text: 'I’ll read that and turn it into a change I can model.', detail: 'Press Rerun to run it.' };
-    }
-    if (res && show === 'whatif') return verdict(res);
-    if (res) return { text: `This is ${y} as it happened. Switch to Rerun to see yours.` };
-    return {
-      text: `Change one thing about ${y} and I’ll rerun it.`,
-      detail: 'Pick a what-if or type your own. Tap a group to meet someone in it.',
-    };
-  }
-  const message = $derived(say());
-
   // ── Keys ──
   function onKey(ev: KeyboardEvent) {
     const t = ev.target instanceof Element ? ev.target : null;
@@ -298,7 +157,7 @@
 <div class="sa" class:scrubbing class:dark={!page.light} bind:this={scrollEl} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
-      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running} observe={mainEl} />
+      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's
@@ -364,11 +223,8 @@
         {/if}
       </section>
 
-      <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} stage={stageMode} {robotShown} bind:slot={slotEl} bind:input={inputEl}
-        {message} whatIfs={composer.chips} selected={page.selected} slice={page.openSlice} bind:value={page.typed}
-        running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0 || !!page.edits}
-        ran={page.result?.ran ?? []} dirty={page.dirty} closed={composer.closed}
-        ontoggle={(key) => page.toggle(key)} onrun={() => page.rerunNow()} onstop={() => page.stop()} onreset={() => page.reset()} onaction={act} />
+      <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} stage={stageMode} {robotShown}
+        chips={composer.chips} closed={composer.closed} onaction={act} />
     </main>
   </div>
 </div>
