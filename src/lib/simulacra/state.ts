@@ -65,8 +65,24 @@ export function randomStory(not?: number, random: () => number = Math.random): n
 export const LEAD_CHIP = 'no-19th';
 
 /**
- * The year's what-ifs in chip order: chips added this visit first (newest
- * first), then LEAD_CHIP, then the rest in the server's order.
+ * What-ifs the page never shows as chips. Their data stays on the server (the
+ * bundles are primary data); drop a key here to bring its chip back.
+ */
+export const HIDDEN_CHIPS: ReadonlySet<string> = new Set([
+  'eisenhower-runs-as-a-democrat', // 1952
+  'first-debate-on-radio-only', // 1960
+  'no-call-to-mrs-king', // 1960
+  'kennedy-survives-wins-nomination', // 1968
+  'democratic-nominee-is-a-man', // 2016
+  'no-october-comey-letter', // 2016
+  'democratic-nominee-twenty-years-younger', // 2020
+  'hunter-biden-laptop-story-spreads', // 2020
+  'no-black-lives-matter-movement', // 2020
+]);
+
+/**
+ * The year's what-ifs in chip order, HIDDEN_CHIPS left out: chips added this
+ * visit first (newest first), then LEAD_CHIP, then the rest in the server's order.
  */
 export function chipOrder(whatIfs: readonly WhatIf[], added: readonly string[] = []): WhatIf[] {
   const rank = (w: WhatIf): number => {
@@ -75,6 +91,7 @@ export function chipOrder(whatIfs: readonly WhatIf[], added: readonly string[] =
     return w.key === LEAD_CHIP ? added.length : added.length + 1;
   };
   return whatIfs
+    .filter((w) => !HIDDEN_CHIPS.has(w.key))
     .map((w, i) => ({ w, i }))
     .sort((a, b) => rank(a.w) - rank(b.w) || a.i - b.i)
     .map(({ w }) => w);
