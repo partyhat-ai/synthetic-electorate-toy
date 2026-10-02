@@ -80,6 +80,15 @@ describe('/api/simulacra', () => {
     expect(await res.json()).toEqual({ slices: [], whatIfs: [], simulated: false });
   });
 
+  it('matches keywords as whole words: "flu" is not in "influence"', async () => {
+    const miss = await run({ year: 1920, text: 'the influence of the press' });
+    expect(miss.applied).toEqual([]);
+    expect(miss.unknown).toBe('the influence of the press');
+    const hit = await run({ year: 1920, text: 'the flu comes back' });
+    expect(hit.applied.map((a) => a.key)).toEqual(['influenza-returns-in-october-1920']);
+    expect(hit.unknown).toBeNull();
+  });
+
   it('hand edits re-tally one run with no range', async () => {
     const r = await run({ year: '1920', whatIfs: ['league', 'not-a-what-if'], edits: { women: { home: -0.1, B: 0.1 } } });
     expect(r.applied.map((a) => a.key)).toEqual(['league']);

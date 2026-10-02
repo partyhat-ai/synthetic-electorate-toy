@@ -102,11 +102,13 @@ const KEYS: readonly PageKey[] = ['A', 'B', 'O'];
 
 export const comboKey = (keys: readonly string[]): string => [...new Set(keys)].sort().join('+');
 
-/** Typed text → the what-ifs whose keywords it contains. */
+const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Whole words only: compiled what-ifs bring short keywords ("flu" must not match "influence"). */
 export function readText(b: Bundle, text: string): { keys: string[]; unknown: string | null } {
   if (!text.trim()) return { keys: [], unknown: null };
   const lower = text.toLowerCase();
-  const has = (w: string): boolean => lower.includes(w);
+  const has = (w: string): boolean => new RegExp(`(^|[^a-z0-9])${escapeRegExp(w)}($|[^a-z0-9])`).test(lower);
   const keys = b.words.filter(({ words }) => words.some(has)).map(({ key }) => key);
   return keys.length ? { keys, unknown: null } : { keys: [], unknown: text };
 }
