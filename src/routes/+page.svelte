@@ -23,6 +23,7 @@
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
   import { hoverPlaces } from '$lib/simulacra/places';
+  import RevisitOnDesktop from '$lib/simulacra/RevisitOnDesktop.svelte';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
@@ -54,7 +55,9 @@
   let robotShown = $state(false);
   let tabIcon = $state<TabIcon | null>(null);
   let revealing = $state(false);
-  let narrow = $state(false);
+  // Phone-width windows get RevisitOnDesktop instead of the page.
+  const SMALL = '(max-width: 760px)';
+  let narrow = $state(window.matchMedia(SMALL).matches);
   // Dragging the time bar: the robot holds still (no restaging) and the
   // election and the groups hold their height while each year loads, so
   // nothing jumps; the robot is placed once more on release.
@@ -91,6 +94,7 @@
 
   $effect(() => {
     const y = page.year;
+    if (narrow) return;
     untrack(() => void page.loadSim(y));
   });
   $effect(() => {
@@ -160,7 +164,7 @@
   }
 
   onMount(() => {
-    const small = window.matchMedia('(max-width: 760px)');
+    const small = window.matchMedia(SMALL);
     const readSmall = () => (narrow = small.matches);
     readSmall();
     small.addEventListener('change', readSmall);
@@ -186,6 +190,9 @@
 </svelte:head>
 <svelte:window onkeydown={onKey} />
 
+{#if narrow}
+  <RevisitOnDesktop />
+{:else}
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
@@ -262,10 +269,15 @@
   </div>
 </div>
 
+{/if}
+
+<!-- Its own block: toBody moves it, so it must not be the edge of the one above. -->
+{#if !narrow}
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
     onchange={(y) => page.setYear(y)} onscrub={scrub} />
 </div>
+{/if}
 
 <style>
   /* The page's own layout. The scrolling layer, the Rerun view's invert and
