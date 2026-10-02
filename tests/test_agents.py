@@ -1,9 +1,15 @@
-"""Agent cohorts (cohorts.py)."""
+"""Agent cohorts, invented people and their quotes (cohorts.py, quotes.py)."""
 import threading
 
 import pandas as pd
 
 from simharness import cohorts
+from simharness.quotes import deblind
+
+
+def test_deblind():
+    assert deblind('I will vote for Candidate K, not M.', {'K': 'Harding', 'M': 'Cox'}) == 'I will vote for Harding, not Cox.'
+    assert deblind('K’s men', {'K': 'Harding'}) == 'K’s men'
 
 
 def _build_with_timeout(cells, seconds=20, **kw):

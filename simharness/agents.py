@@ -32,12 +32,17 @@ FIRST = {
     'F': ['Mary', 'Anna', 'Margaret', 'Helen', 'Elizabeth', 'Ruth', 'Florence', 'Ethel', 'Emma', 'Clara',
           'Bertha', 'Minnie', 'Alice', 'Grace', 'Edna', 'Ida', 'Mabel', 'Lillian', 'Rose', 'Sarah'],
 }
-LAST = ['Adams', 'Baker', 'Carter', 'Dawson', 'Ellis', 'Foster', 'Graham', 'Hayes', 'Irwin', 'Jordan',
-        'Lawson', 'Mercer', 'Owens', 'Porter', 'Reed', 'Sutton', 'Tate', 'Walker', 'Young', 'Johnson',
-        'Williams', 'Brown', 'Jones', 'Davis', 'Harris', 'Jackson', 'Thomas', 'Robinson', 'Green', 'Hill',
-        'Brandt', 'Weber', 'Schmidt', 'Rossi', 'Esposito', 'Russo', 'Kowalski', 'Nowak', 'Novak',
-        'Lindqvist', 'Johansson', 'Olsen', 'Murphy', 'Kelly', 'Sullivan', 'Cohen', 'Levy', 'Kaplan',
-        'Horvath', 'Kovac', 'Dubois', 'Papadopoulos', 'Garcia', 'Lopez', 'Svoboda', 'Petrov']
+# Surnames: common American surnames for native-born and Black agents; for
+# foreign-born agents, surnames of the largest 1920 immigrant origins. p1 drew
+# every agent from one mixed list, which gave a Black North Carolina farmer a
+# Swedish surname; p2 separates them. Names still carry no modelled meaning.
+LAST_COMMON = ['Adams', 'Baker', 'Carter', 'Dawson', 'Ellis', 'Foster', 'Graham', 'Hayes', 'Irwin', 'Jordan',
+               'Lawson', 'Mercer', 'Owens', 'Porter', 'Reed', 'Sutton', 'Tate', 'Walker', 'Young', 'Johnson',
+               'Williams', 'Brown', 'Jones', 'Davis', 'Harris', 'Jackson', 'Thomas', 'Robinson', 'Green', 'Hill']
+LAST_IMMIGRANT = ['Brandt', 'Weber', 'Schmidt', 'Rossi', 'Esposito', 'Russo', 'Kowalski', 'Nowak', 'Novak',
+                  'Lindqvist', 'Johansson', 'Olsen', 'Murphy', 'Kelly', 'Sullivan', 'Cohen', 'Levy', 'Kaplan',
+                  'Horvath', 'Kovac', 'Dubois', 'Papadopoulos', 'Garcia', 'Lopez', 'Svoboda', 'Petrov']
+LAST = LAST_COMMON + LAST_IMMIGRANT  # p1's list, kept for reproducing p1 runs
 
 ECONOMY = {
     'farm': 'The household lives by farming.',
@@ -75,7 +80,8 @@ def sample_agents(cohort: dict, n: int, corpus: list[dict], seed: int, urban_sha
             age = rng.choice(range(21, 76))  # [I] uniform when no age table
         econ = pick(rng, economy_weights(urban))
         sex = cohort['sex']
-        name = f'{rng.choice(FIRST[sex])} {rng.choice(LAST)}'
+        surnames = LAST_IMMIGRANT if cohort['group'].startswith('foreign') else LAST_COMMON
+        name = f'{rng.choice(FIRST[sex])} {rng.choice(surnames)}'
         items = choose_items(rng, corpus, state, cohort)
         out.append({
             'id': f'{cohort["key"]}-{i}',

@@ -1,0 +1,50 @@
+{
+  "run_id": "1920-bcbd86b43f",
+  "config": {
+    "election": 1920,
+    "election_day": "1920-11-02",
+    "context_cutoff": "1920-11-01",
+    "mode": "truth",
+    "what_ifs": [
+      "no-19th",
+      "fifteenth",
+      "league"
+    ],
+    "seed": 1920,
+    "draws": 400,
+    "prompt_version": "p1",
+    "holdout": [
+      "CA",
+      "FL",
+      "ID",
+      "IN",
+      "LA",
+      "MI",
+      "MO",
+      "MT",
+      "NC",
+      "NY",
+      "OH",
+      "OK"
+    ],
+    "agents": {
+      "bulk_model": "claude-sonnet-5-5",
+      "check_model": "claude-opus-5-5",
+      "check_share": 0.2,
+      "per_cohort": 4,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "transcript",
+      "max_cohorts": 36
+    }
+  },
+  "data": {
+    "labels/state_pres_1916_1920_1924.csv": "39b0dbc19249663a",
+    "population/adults_1920_by_state.csv": "3a760fb7fb5f976b",
+    "population/adults_1910_by_state.csv": "78ec7a0ca2094430",
+    "franchise/state_franchise_1920.csv": "e70f04ec2c75e644",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "sources/corpus_1920.jsonl": "4f7e4abc4cf3b7e0",
+    "context/platforms_1920.json": "7415a7d0c9c458ed"
+  }
+}

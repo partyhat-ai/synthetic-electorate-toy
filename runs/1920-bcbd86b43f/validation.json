@@ -1,0 +1,520 @@
+{
+ "summary": {
+  "passed": 9,
+  "failed": [
+   "B5",
+   "N1",
+   "N3",
+   "A2"
+  ],
+  "not_run": [
+   "L1",
+   "A1",
+   "A3:no-19th",
+   "A3:fifteenth"
+  ]
+ },
+ "checks": [
+  {
+   "id": "R1",
+   "name": "Unchanged rerun reproduces every state exactly",
+   "value": 0.3267,
+   "threshold": "\u2264 1 vote per state and party in every draw; EV 404\u2013127 in every draw",
+   "pass": true,
+   "note": "EV R range 404\u2013404, D range 127\u2013127; 400 draws"
+  },
+  {
+   "id": "B1",
+   "name": "Holdout two-party RMSE (points)",
+   "value": {
+    "backbone": 7.55,
+    "uniform_swing": 8.68,
+    "persistence": 17.41,
+    "demographic": 7.62
+   },
+   "threshold": "backbone \u2264 uniform swing and \u2264 persistence",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "B2",
+   "name": "Holdout turnout RMSE (points of adults 21+)",
+   "value": {
+    "backbone": 2.92,
+    "persistence": 16.46
+   },
+   "threshold": "backbone \u2264 persistence",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "B3",
+   "name": "Holdout Spearman \u03c1, two-party share",
+   "value": 0.923,
+   "threshold": "\u2265 0.8",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "B4",
+   "name": "Holdout Brier score, state winner",
+   "value": {
+    "backbone": 0.0522,
+    "uniform_swing": 0.0692
+   },
+   "threshold": "backbone \u2264 uniform swing",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "B5",
+   "name": "Holdout electoral-vote error (Harding)",
+   "value": 12.0,
+   "threshold": "\u2264 0",
+   "pass": false,
+   "note": "predicted 160, actual 148; states decided by < 5 points: none"
+  },
+  {
+   "id": "N1",
+   "name": "Backbone women's turnout vs Corder\u2013Wolbrecht (1920)",
+   "value": {
+    "mae_points": 3.3,
+    "coverage_90": 0.6,
+    "rows": [
+     {
+      "state": "CT",
+      "backbone": 36.7,
+      "lo90": 32.7,
+      "hi90": 41.4,
+      "corder_wolbrecht": 32.6,
+      "cw_lo95": 28.1,
+      "cw_hi95": 35.9,
+      "backbone_citizen": 46.7,
+      "method": "residual (1916 men-only)"
+     },
+     {
+      "state": "IL",
+      "backbone": 46.3,
+      "lo90": 33.1,
+      "hi90": 55.5,
+      "corder_wolbrecht": 45.6,
+      "cw_lo95": 44.3,
+      "cw_hi95": 46.8,
+      "backbone_citizen": 50.9,
+      "method": "ratio (women voted in 1916)"
+     },
+     {
+      "state": "MA",
+      "backbone": 39.3,
+      "lo90": 34.6,
+      "hi90": 44.1,
+      "corder_wolbrecht": 33.6,
+      "cw_lo95": 32.2,
+      "cw_hi95": 34.9,
+      "backbone_citizen": 49.7,
+      "method": "residual (1916 men-only)"
+     },
+     {
+      "state": "MI",
+      "backbone": 37.2,
+      "lo90": 32.0,
+      "hi90": 43.2,
+      "corder_wolbrecht": 40.6,
+      "cw_lo95": 38.5,
+      "cw_hi95": 42.4,
+      "backbone_citizen": 42.0,
+      "method": "residual (1916 men-only)"
+     },
+     {
+      "state": "NY",
+      "backbone": 37.7,
+      "lo90": 33.1,
+      "hi90": 42.7,
+      "corder_wolbrecht": 35.2,
+      "cw_lo95": 33.8,
+      "cw_hi95": 36.3,
+      "backbone_citizen": 46.5,
+      "method": "residual (1916 men-only)"
+     }
+    ]
+   },
+   "threshold": "MAE \u2264 8 points and \u2265 70% inside the 90% interval",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "N2",
+   "name": "Placebo: implied women's turnout where women couldn't register (GA, MS)",
+   "value": [
+    {
+     "state": "GA",
+     "implied_women_turnout": 2.1,
+     "lo90": -1.8,
+     "hi90": 5.5
+    },
+    {
+     "state": "MS",
+     "implied_women_turnout": 3.5,
+     "lo90": -0.2,
+     "hi90": 6.3
+    }
+   ],
+   "threshold": "within \u00b15 points of 0",
+   "pass": true,
+   "note": "Documented: franchise/state_franchise_1920.csv women_nov1920_note (NPS)."
+  },
+  {
+   "id": "N3",
+   "name": "Agents' stated turnout, women, vs Corder\u2013Wolbrecht",
+   "value": {
+    "mae_points": 15.5,
+    "rows": [
+     {
+      "state": "CT",
+      "n": 1,
+      "agents": 47.3,
+      "agents_citizen": 60.0,
+      "corder_wolbrecht": 32.6
+     },
+     {
+      "state": "IL",
+      "n": 3,
+      "agents": 66.5,
+      "agents_citizen": 73.3,
+      "corder_wolbrecht": 45.6
+     },
+     {
+      "state": "MA",
+      "n": 2,
+      "agents": 41.5,
+      "agents_citizen": 52.5,
+      "corder_wolbrecht": 33.6
+     },
+     {
+      "state": "MI",
+      "n": 2,
+      "agents": 59.9,
+      "agents_citizen": 67.5,
+      "corder_wolbrecht": 40.6
+     },
+     {
+      "state": "NY",
+      "n": 3,
+      "agents": 49.7,
+      "agents_citizen": 61.3,
+      "corder_wolbrecht": 35.2
+     }
+    ]
+   },
+   "threshold": "MAE \u2264 10 points",
+   "pass": false,
+   "note": "11 women agents in 5 of 5 states"
+  },
+  {
+   "id": "L1",
+   "name": "Recall probe: identifies year / candidates / winner",
+   "value": {
+    "n": 56,
+    "year": 1.0,
+    "candidates": 1.0,
+    "winner": 1.0,
+    "exposed_cohorts": 28
+   },
+   "threshold": "reported; > 50% winner \u21d2 memorization-exposed",
+   "pass": null,
+   "note": "memorization-exposed nationally"
+  },
+  {
+   "id": "L2",
+   "name": "Label swap: choices that follow the label, not the platform",
+   "value": {
+    "n": 39,
+    "label": 0.0,
+    "platform": 1.0
+   },
+   "threshold": "< 20% follow the label",
+   "pass": true,
+   "note": "With the order flipped too, following the display position is the same as following the platform here; the test separates label from platform."
+  },
+  {
+   "id": "A1",
+   "name": "Cohort bias (control vs calibrated backbone, logit)",
+   "value": {
+    "cohorts": 28,
+    "median_abs_bias": 0.408,
+    "over_1_logit": 0,
+    "mean_tvd": 0.428
+   },
+   "threshold": "reported; |bias| > 1 \u21d2 shrunk",
+   "pass": null,
+   "note": "0 cohorts shrunk for bias"
+  },
+  {
+   "id": "A2",
+   "name": "Homogenization index",
+   "value": {
+    "index": 0.9047619047619048,
+    "eligible_cohorts": 21
+   },
+   "threshold": "\u2264 25%",
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "A3:no-19th",
+   "name": "Prompt and model sensitivity, no-19th (two-party logit effect)",
+   "value": {
+    "national_effect": -0.121,
+    "paraphrase_sd": 0.026,
+    "by_paraphrase": {
+     "1": -0.167,
+     "2": -0.126,
+     "0": -0.174
+    },
+    "sonnet_vs_opus": {}
+   },
+   "threshold": "paraphrase SD < |effect| and Sonnet/Opus agree on sign",
+   "pass": null,
+   "note": ""
+  },
+  {
+   "id": "A3:fifteenth",
+   "name": "Prompt and model sensitivity, fifteenth (two-party logit effect)",
+   "value": {
+    "national_effect": 0.198,
+    "paraphrase_sd": 0.066,
+    "by_paraphrase": {
+     "1": 0.851,
+     "2": 0.827,
+     "0": 0.951
+    },
+    "sonnet_vs_opus": {}
+   },
+   "threshold": "paraphrase SD < |effect| and Sonnet/Opus agree on sign",
+   "pass": null,
+   "note": ""
+  },
+  {
+   "id": "A3:league",
+   "name": "Prompt and model sensitivity, league (two-party logit effect)",
+   "value": {
+    "national_effect": -0.091,
+    "paraphrase_sd": 0.054,
+    "by_paraphrase": {
+     "1": -0.101,
+     "2": -0.095,
+     "0": -0.192
+    },
+    "sonnet_vs_opus": {
+     "sonnet": -0.181,
+     "opus": -0.025
+    }
+   },
+   "threshold": "paraphrase SD < |effect| and Sonnet/Opus agree on sign",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "A4",
+   "name": "Stereotype audit: reasons resting on a group label",
+   "value": {
+    "audited": 66,
+    "flagged": 0,
+    "rate": 0.0
+   },
+   "threshold": "\u2264 10%",
+   "pass": true,
+   "note": "Heuristic first pass (quotes.LABEL_DRIVEN); flagged examples in analysis.json."
+  }
+ ],
+ "holdout_rows": [
+  {
+   "state": "CA",
+   "actual": 73.17,
+   "backbone": 71.92,
+   "persistence": 49.82,
+   "uniform_swing": 66.78,
+   "demographic": 65.25,
+   "p_R_win": 0.985,
+   "turnout_actual": 39.4,
+   "turnout_backbone": 43.0,
+   "turnout_persistence": 48.8
+  },
+  {
+   "state": "FL",
+   "actual": 33.13,
+   "backbone": 31.38,
+   "persistence": 20.7,
+   "uniform_swing": 34.58,
+   "demographic": 26.2,
+   "p_R_win": 0.01,
+   "turnout_actual": 26.4,
+   "turnout_backbone": 23.0,
+   "turnout_persistence": 16.7
+  },
+  {
+   "state": "ID",
+   "actual": 65.64,
+   "backbone": 66.71,
+   "persistence": 44.15,
+   "uniform_swing": 61.55,
+   "demographic": 65.54,
+   "p_R_win": 0.958,
+   "turnout_actual": 56.5,
+   "turnout_backbone": 57.4,
+   "turnout_persistence": 62.8
+  },
+  {
+   "state": "IN",
+   "actual": 57.66,
+   "backbone": 66.02,
+   "persistence": 50.51,
+   "uniform_swing": 67.4,
+   "demographic": 68.16,
+   "p_R_win": 0.958,
+   "turnout_actual": 70.2,
+   "turnout_backbone": 70.3,
+   "turnout_persistence": 41.9
+  },
+  {
+   "state": "LA",
+   "actual": 30.61,
+   "backbone": 12.2,
+   "persistence": 7.49,
+   "uniform_swing": 14.09,
+   "demographic": 20.56,
+   "p_R_win": 0.0,
+   "turnout_actual": 13.5,
+   "turnout_backbone": 14.9,
+   "turnout_persistence": 10.5
+  },
+  {
+   "state": "MI",
+   "actual": 76.57,
+   "backbone": 70.09,
+   "persistence": 54.34,
+   "uniform_swing": 70.67,
+   "demographic": 70.25,
+   "p_R_win": 0.993,
+   "turnout_actual": 46.1,
+   "turnout_backbone": 50.6,
+   "turnout_persistence": 32.2
+  },
+  {
+   "state": "MO",
+   "actual": 55.85,
+   "backbone": 63.41,
+   "persistence": 48.13,
+   "uniform_swing": 65.27,
+   "demographic": 64.46,
+   "p_R_win": 0.93,
+   "turnout_actual": 66.6,
+   "turnout_backbone": 68.1,
+   "turnout_persistence": 40.7
+  },
+  {
+   "state": "MT",
+   "actual": 65.62,
+   "backbone": 61.37,
+   "persistence": 39.78,
+   "uniform_swing": 57.22,
+   "demographic": 66.34,
+   "p_R_win": 0.917,
+   "turnout_actual": 54.1,
+   "turnout_backbone": 58.1,
+   "turnout_persistence": 61.9
+  },
+  {
+   "state": "NC",
+   "actual": 43.26,
+   "backbone": 55.09,
+   "persistence": 41.79,
+   "uniform_swing": 59.25,
+   "demographic": 32.12,
+   "p_R_win": 0.72,
+   "turnout_actual": 43.9,
+   "turnout_backbone": 38.6,
+   "turnout_persistence": 25.2
+  },
+  {
+   "state": "NY",
+   "actual": 70.55,
+   "backbone": 68.9,
+   "persistence": 53.66,
+   "uniform_swing": 70.1,
+   "demographic": 70.62,
+   "p_R_win": 0.978,
+   "turnout_actual": 43.9,
+   "turnout_backbone": 46.0,
+   "turnout_persistence": 27.5
+  },
+  {
+   "state": "OH",
+   "actual": 60.24,
+   "backbone": 62.69,
+   "persistence": 46.0,
+   "uniform_swing": 63.31,
+   "demographic": 67.79,
+   "p_R_win": 0.907,
+   "turnout_actual": 55.8,
+   "turnout_backbone": 57.4,
+   "turnout_persistence": 35.1
+  },
+  {
+   "state": "OK",
+   "actual": 52.91,
+   "backbone": 54.8,
+   "persistence": 39.63,
+   "uniform_swing": 57.07,
+   "demographic": 61.83,
+   "p_R_win": 0.713,
+   "turnout_actual": 46.7,
+   "turnout_backbone": 45.2,
+   "turnout_persistence": 31.0
+  }
+ ],
+ "uncertainty_budget": [
+  {
+   "what_if": "no-19th",
+   "full": {
+    "r2_sd": 0.4775174916227929,
+    "ev_sd": 6.57584785407935
+   },
+   "backbone_params_only": {
+    "r2_sd": 0.5126932177250058,
+    "ev_sd": 7.027586712378581
+   },
+   "agents_only": null,
+   "note": "SD in points of the national R two-party share and in Harding EV. Population share \u2248 full \u2212 params-only (variances)."
+  },
+  {
+   "what_if": "fifteenth",
+   "full": {
+    "r2_sd": 0.5520262837392457,
+    "ev_sd": 27.37911784097508
+   },
+   "backbone_params_only": {
+    "r2_sd": 0.5605499885449386,
+    "ev_sd": 22.87378193478289
+   },
+   "agents_only": null,
+   "note": "SD in points of the national R two-party share and in Harding EV. Population share \u2248 full \u2212 params-only (variances)."
+  },
+  {
+   "what_if": "league",
+   "full": {
+    "r2_sd": 0.7803538993712339,
+    "ev_sd": 6.5988559614527125
+   },
+   "backbone_params_only": {
+    "r2_sd": 0.7784854512094872,
+    "ev_sd": 6.455058094238966
+   },
+   "agents_only": {
+    "r2_sd": 0.7918939154876572,
+    "ev_sd": 6.726869628586539
+   },
+   "note": "SD in points of the national R two-party share and in Harding EV. Population share \u2248 full \u2212 params-only (variances)."
+  }
+ ]
+}
