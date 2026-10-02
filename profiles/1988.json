@@ -1,0 +1,97 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Bush",
+  "D": "Dukakis",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "George H. W. Bush",
+  "D": "Michael Dukakis"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1981; the sitting Vice President",
+  "D": "nominee of the party that has held a majority in both houses of Congress since the 1986 elections; a sitting Northeastern governor"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1981",
+  "D": "the party that has held a majority in both houses of Congress since the 1986 elections",
+  "president": "Reagan"
+ },
+ "third": null,
+ "label_pool": [
+  "E",
+  "T",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Libertarian and a New Alliance party nominee (answer \"other\").",
+ "plank_order": [
+  "taxes",
+  "defense",
+  "drugs",
+  "education",
+  "abortion"
+ ],
+ "names_re": "\\b(Bush|Dukakis|Quayle|Bentsen|Reagan|Carter|Jackson|Hart|Kemp|Dole|Robertson|Ron Paul|Fulani|Horton|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Bush, Dukakis, Quayle, Bentsen, Reagan, Carter, Jackson, Hart, Kemp, Dole, Robertson, Ron Paul, Fulani or Horton",
+ "corpus": null,
+ "platforms": "context/platforms_1988.json",
+ "ev_label": "426–111–1",
+ "slice_sources": {
+  "men": "1980 and 1990 censuses (NHGIS) interpolated to November 1988; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1988); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1988 returns.",
+  "women": "1980 and 1990 censuses (NHGIS) interpolated to November 1988; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1988); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1988 returns.",
+  "south-white": "1980 and 1990 censuses (NHGIS) interpolated to November 1988; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1988); calibrated to the certified 1988 returns.",
+  "black-south": "1980 and 1990 censuses (NHGIS) interpolated to November 1988; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1988), which falls on them disproportionately; calibrated to the certified 1988 returns.",
+  "immigrants": "1980 and 1990 censuses (NHGIS) interpolated to November 1988; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President )?(?:Ronald )?Reagan\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?(?:George )?(?:H\\. ?W\\. )?Bush\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Governor )?(?:Michael )?Dukakis\\b",
+   "the nominee of the party out of the White House"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of the White House"
+  ],
+  [
+   "\\b(?:Dan )?Quayle\\b|\\b(?:Lloyd )?Bentsen\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Jesse )?Jackson\\b|\\b(?:Gary )?Hart\\b|\\b(?:Jack )?Kemp\\b|\\b(?:Bob )?Dole\\b|\\b(?:Pat )?Robertson\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Jimmy )?Carter\\b",
+   "a former President"
+  ],
+  [
+   "\\bRon Paul\\b|\\b(?:Lenora )?Fulani\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:Willie )?Horton\\b",
+   "a furloughed prisoner"
+  ]
+ ]
+}

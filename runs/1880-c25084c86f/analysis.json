@@ -1,0 +1,293 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:F:native_white",
+   "label": "Native-born white women, south",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.7418390155574047,
+   "agent_r2": 0.3075028419856006,
+   "backbone_r2": 0.2970149236506512,
+   "bias_logit": 0.049733472872193873,
+   "tvd": 0.4784982430094521,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:F:native_white",
+   "label": "Native-born white women, northeast",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.8615078093260604,
+   "agent_r2": 0.46854869268662364,
+   "backbone_r2": 0.5511105929805342,
+   "bias_logit": -0.3311305047918086,
+   "tvd": 0.13849219067393959,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:F:native_white",
+   "label": "Native-born white women, midwest",
+   "n": 2,
+   "agent_turnout": 0.16666666666666666,
+   "backbone_turnout": 0.0,
+   "agent_r2": NaN,
+   "backbone_r2": 0.0,
+   "bias_logit": null,
+   "tvd": 0.0,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 2,
+   "agent_turnout": 0.7333333333333334,
+   "backbone_turnout": 0.8604439737490186,
+   "agent_r2": 0.32653061224489804,
+   "backbone_r2": 0.5857925523456777,
+   "bias_logit": -1.070517630276027,
+   "tvd": 0.6435976977838763,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "south:M:native_white",
+    "n": 2,
+    "sd_R2": 0.02192982456140352,
+    "modal_share": 1.0,
+    "backbone_r2": 0.2970149236506512,
+    "homogenized": true
+   },
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 2,
+    "sd_R2": 0.25584795321637427,
+    "modal_share": 0.5,
+    "backbone_r2": 0.5511105929805342,
+    "homogenized": false
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 2,
+    "sd_R2": 0.0058479532163742826,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5857925523456777,
+    "homogenized": true
+   }
+  ],
+  "homogenization_index": 0.6666666666666666,
+  "eligible_cohorts": 3
+ },
+ "a4": {
+  "audited": 18,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {
+  "women-vote-nationwide-for-president": {
+   "national": {
+    "dt": {
+     "mean": 2.4078947172776317,
+     "lo": 2.343430989959419,
+     "hi": 2.471826368720115
+    },
+    "dr": {
+     "mean": 0.0,
+     "lo": 0.0,
+     "hi": 0.0
+    },
+    "do": {
+     "mean": 0.0,
+     "lo": 0.0,
+     "hi": 0.0
+    }
+   },
+   "national_bias": 0.0,
+   "by_paraphrase": {
+    "0": {
+     "dt": 2.302585092994046,
+     "dr": 0.0,
+     "do": 0.0
+    },
+    "1": {
+     "dt": 2.302585092994046,
+     "dr": 0.0,
+     "do": 0.0
+    },
+    "2": {
+     "dt": 2.621038824112581,
+     "dr": 0.0,
+     "do": 0.0
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": 3.6258213181467998,
+     "dr": 0.0,
+     "do": 0.0
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": 3.6258213181467998,
+     "dr": 0.0,
+     "do": 0.0
+    }
+   },
+   "agent_stats": {
+    "n": 6,
+    "measure": "dr",
+    "spans_zero": false,
+    "paraphrase_flip": false,
+    "exposed": false,
+    "checked": 0,
+    "misread": 0
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "turnout",
+      "agents_pp": 0.0,
+      "agents_range_pp": [
+       0.0,
+       0.0
+      ],
+      "evidence_pp": 26.0,
+      "evidence_pm": 22.8,
+      "detail": "Interviews move turnout +0.0 points (+0.0 to +0.0); the closest historical cases moved it +26.0 \u00b1 22.8."
+     }
+    ],
+    "detail": "Interviews move turnout +0.0 points (+0.0 to +0.0); the closest historical cases moved it +26.0 \u00b1 22.8."
+   },
+   "blended": true,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": []
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.6766666666666667,
+      "R2": 0.6293647454774927,
+      "O": 0.258102766798419,
+      "n": 2
+     },
+     "dt": 2.3479329129725057,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7000000000000001,
+      "R2": 0.5370177267987487,
+      "O": 0.2701923076923077,
+      "n": 2
+     },
+     "dt": 2.4567357728213044,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {
+      "dt": {
+       "agents": 2.426,
+       "evidence": 1.651,
+       "evidence_sd": 7.661,
+       "evidence_weight": 0.001,
+       "posterior": 2.425,
+       "findings": 1
+      }
+     }
+    },
+    "south:F:native_white": {
+     "control": {
+      "turnout": 0.16666666666666666,
+      "R2": NaN,
+      "O": NaN,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.69,
+      "R2": 0.30942364324779137,
+      "O": 0.2696498054474708,
+      "n": 2
+     },
+     "dt": 2.4095572125462135,
+     "dr": 0.0,
+     "do": 0.0,
+     "bias": 0.0,
+     "n": 2,
+     "bias_used": 0.0,
+     "weight": 0.2,
+     "exposed": false,
+     "evidence_blend": {}
+    }
+   }
+  }
+ }
+}

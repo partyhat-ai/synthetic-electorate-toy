@@ -1,0 +1,106 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 4 November",
+ "names": {
+  "R": "Reagan",
+  "D": "Carter",
+  "O": "Anderson"
+ },
+ "full_names": {
+  "R": "Ronald Reagan",
+  "D": "Jimmy Carter",
+  "O": "John B. Anderson"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1969 to 1977",
+  "D": "nominee of the party of the administration in office since 1977, which also holds majorities in both houses of Congress",
+  "O": "independent candidate: a Midwestern congressman who left the primaries of the party out of power to run on fiscally conservative, socially liberal positions"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1969 to 1977",
+  "D": "the party of the administration in office since 1977, which also holds majorities in both houses of Congress",
+  "president": "Carter"
+ },
+ "third": "O",
+ "label_pool": [
+  "H",
+  "Q",
+  "S",
+  "V",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including Libertarian and Citizens Party nominees (answer \"other\").",
+ "plank_order": [
+  "inflation",
+  "taxes",
+  "energy",
+  "defense",
+  "Iran",
+  "Equal Rights Amendment",
+  "abortion",
+  "cities"
+ ],
+ "names_re": "\\b(Reagan|Carter|Anderson|Bush|Mondale|Lucey|Kennedy|Clark|Commoner|Ford|Nixon|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Reagan, Carter, Anderson, Bush, Mondale, Lucey, Kennedy, Clark, Commoner, Ford or Nixon",
+ "corpus": null,
+ "platforms": "context/platforms_1980.json",
+ "ev_label": "489–49",
+ "slice_sources": {
+  "men": "1980 census (April) carried to November 1980 along the 1970→1980 trend; men who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1980 returns.",
+  "women": "1980 census (April) carried to November 1980 along the 1970→1980 trend; women who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1980 returns.",
+  "south-white": "1980 census (April) carried to November 1980 along the 1970→1980 trend; citizens 18+ in the eleven former Confederate states other than Black US-born (white non-Hispanic US-born, naturalized of any race, and US-born Hispanic, Asian, Native American and other); calibrated to certified 1980 returns.",
+  "black-south": "1980 census (April) carried to November 1980 along the 1970→1980 trend; Black US-born citizens 18+ in the eleven former Confederate states; Voting Rights Act coverage continues. Any shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1980 census (April) carried to November 1980 along the 1970→1980 trend; noncitizen adults of any race, who could not vote in any state."
+ },
+ "masks": [
+  [
+   "\\bPresident Carter\\b|\\bCarter\\b",
+   "the President"
+  ],
+  [
+   "\\bReagan\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bAnderson\\b",
+   "the independent candidate"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Vice President )?Mondale\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Bush|Lucey)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bKennedy\\b",
+   "the President's rival for the nomination"
+  ],
+  [
+   "\\bFord\\b",
+   "the former President"
+  ],
+  [
+   "\\bNixon\\b",
+   "a former President"
+  ],
+  [
+   "\\b(?:Clark|Commoner)\\b",
+   "a minor-party candidate"
+  ]
+ ]
+}

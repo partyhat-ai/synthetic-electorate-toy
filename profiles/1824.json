@@ -1,0 +1,108 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 26 October until the electors meet on 1 December 1824)",
+  "names": {
+    "R": "Adams",
+    "D": "Jackson",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "John Quincy Adams",
+    "D": "Andrew Jackson"
+  },
+  "descriptors": {
+    "R": "the Secretary of State, a former senator and diplomat from New England who negotiated the peace with Britain",
+    "D": "a senator from Tennessee, the general celebrated for the 1815 victory at New Orleans and the 1818 campaign in Florida"
+  },
+  "compile_desc": {
+    "R": "the New England following within the governing party",
+    "D": "the popular Western following within the governing party",
+    "president": "Monroe"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "X",
+    "Z",
+    "Y",
+    "P",
+    "U"
+  ],
+  "others_line": "Two more candidates on many ballots: the Secretary of the Treasury and the Speaker of the House (answer \"other\").",
+  "plank_order": [
+    "tariff",
+    "internal improvements",
+    "foreign policy",
+    "reform"
+  ],
+  "names_re": "\\b(Adams|Jackson|Old Hickory|Crawford|(?-i:Clay)|Calhoun|Sanford|Macon|Van ?Buren|Monroe|Federalist|Republican|Democrat)",
+  "never_name": "Adams, Jackson, Crawford, Clay, Calhoun, Sanford, Macon, Van Buren or Monroe",
+  "corpus": null,
+  "platforms": "context/platforms_1824.json",
+  "ev_label": "84–99–78",
+  "slice_sources": {
+    "men": "1820 and 1830 census interpolated to 1824, free adult men outside the Southern states; the census gives free white males 16–18, 18–26, 26–45 and 45+, so men 21+ are split from the 18–26 band. Voters were men meeting each state's rules: a minority of states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 18 states; elsewhere (Delaware, Georgia, Louisiana, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1820 and 1830 census interpolated to 1824, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1820 and 1830 census interpolated to 1824, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia and Louisiana legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1820 and 1830 census interpolated to 1824, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia and Louisiana the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "1820 and 1830 census interpolated to 1824: the census recorded no nativity before 1850, but the 1820 count of foreigners not naturalized gives the non-citizen total (no age or sex detail). Most states barred aliens from voting. Illinois (1818) let resident white male aliens vote."
+  },
+  "masks": [
+    [
+      "\\bPresident Monroe\\b|\\b(?:James )?Monroe\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:John Quincy |J\\. ?Q\\. |Secretary )?Adams\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:General |Andrew )?Jackson\\b|\\bOld Hickory\\b",
+      "the Tennessee general"
+    ],
+    [
+      "\\b(?:William H\\. )?Crawford\\b",
+      "the Secretary of the Treasury"
+    ],
+    [
+      "\\b(?:Henry |Speaker )?Clay\\b",
+      "the Speaker of the House"
+    ],
+    [
+      "\\b(?:John C\\. )?Calhoun\\b",
+      "the Secretary of War"
+    ],
+    [
+      "\\b(?:Martin )?Van ?Buren\\b",
+      "a New York senator"
+    ],
+    [
+      "\\b(?:Nathan )?Sanford\\b|\\b(?:Nathaniel )?Macon\\b",
+      "a vice-presidential candidate"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the old opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

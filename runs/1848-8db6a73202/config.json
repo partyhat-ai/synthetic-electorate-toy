@@ -1,0 +1,66 @@
+{
+  "run_id": "1848-8db6a73202",
+  "config": {
+    "election": 1848,
+    "election_day": "1848-11-07",
+    "context_cutoff": "1848-11-06",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "WI",
+      "VA",
+      "MO",
+      "AR",
+      "ME",
+      "MD",
+      "TN"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_1789_1864.csv": "facf6e31c9fb35a9",
+    "franchise/state_franchise_1789_1864.csv": "e8ab82364dbaef3d",
+    "population/adults_1840_by_state_nhgis.csv": "e25aa9d1ae8f4865",
+    "population/adults_1850_by_state_nhgis.csv": "0989c1ec204ae560",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1848.json": "613a69e6729486d8"
+  }
+}

@@ -1,0 +1,113 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Trump",
+  "D": "Clinton",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Donald Trump",
+  "D": "Hillary Clinton"
+ },
+ "descriptors": {
+  "R": "nominee of the party that has held a majority in both houses of Congress since 2015; a businessman and television personality who has never held public office",
+  "D": "nominee of the party that has held the White House since 2009; a former Secretary of State and senator"
+ },
+ "compile_desc": {
+  "R": "the party that has held a majority in both houses of Congress since 2015",
+  "D": "the party that has held the White House since 2009",
+  "president": "Obama"
+ },
+ "third": null,
+ "label_pool": [
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on most ballots, including a Libertarian and a Green nominee, and an independent conservative on some (answer \"other\").",
+ "plank_order": [
+  "taxes",
+  "trade",
+  "immigration",
+  "health care",
+  "wages"
+ ],
+ "names_re": "\\b(Trump\\w*|Clinton|Hillary|Obama\\w*|Pence|Kaine|Biden|Sanders|Bernie|Cruz|Rubio|Kasich|Bush|Gary Johnson|Weld|Stein|McMullin|Comey|MAGA|Make America Great Again|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Trump, Clinton, Obama, Pence, Kaine, Biden, Sanders, Cruz, Rubio, Kasich, Bush, Gary Johnson, Weld, Stein, McMullin or Comey",
+ "corpus": null,
+ "platforms": "context/platforms_2016.json",
+ "ev_label": "304–227–7",
+ "slice_sources": {
+  "men": "2016 American Community Survey (1-year, IPUMS) aged to November 2016; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2016); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2016 returns.",
+  "women": "2016 American Community Survey (1-year, IPUMS) aged to November 2016; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2016); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2016 returns.",
+  "south-white": "2016 American Community Survey (1-year, IPUMS) aged to November 2016; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2016); calibrated to the certified 2016 returns.",
+  "black-south": "2016 American Community Survey (1-year, IPUMS) aged to November 2016; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2016), which falls on them disproportionately; calibrated to the certified 2016 returns.",
+  "immigrants": "2016 American Community Survey (1-year, IPUMS) aged to November 2016; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bObamacare\\b",
+   "the 2010 health care law"
+  ],
+  [
+   "\\b(?:President )?(?:Barack )?Obama\\b|\\bBarack\\b",
+   "the President"
+  ],
+  [
+   "\\bBill Clinton\\b",
+   "a former President"
+  ],
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b|\\b(?:Secretary )?Clinton\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bMake America Great Again\\b|\\bMAGA\\b",
+   "the congressional majority party's nominee's slogan"
+  ],
+  [
+   "\\b(?:Donald )?(?:J\\. )?Trump\\b",
+   "the nominee of the congressional majority party"
+  ],
+  [
+   "\\b(?:Mike )?Pence\\b|\\b(?:Tim )?Kaine\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Joe )?Biden\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Bernie )?Sanders\\b|\\bBernie\\b|\\b(?:Ted )?Cruz\\b|\\b(?:Marco )?Rubio\\b|\\b(?:John )?Kasich\\b|\\bJeb Bush\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:George )?(?:W\\. )?Bush\\b",
+   "a former President"
+  ],
+  [
+   "\\bGary Johnson\\b|\\b(?:Bill )?Weld\\b|\\b(?:Jill )?Stein\\b|\\b(?:Evan )?McMullin\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:James )?Comey\\b",
+   "the FBI director"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the congressional majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ]
+ ]
+}

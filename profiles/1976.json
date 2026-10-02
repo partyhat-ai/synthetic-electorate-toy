@@ -1,0 +1,108 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 2 November",
+ "names": {
+  "R": "Ford",
+  "D": "Carter",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Gerald R. Ford",
+  "D": "Jimmy Carter"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1969",
+  "D": "nominee of the party that held the presidency from 1961 to 1969 and holds majorities in both houses of Congress"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1969",
+  "D": "the party that held the presidency from 1961 to 1969 and holds majorities in both houses of Congress",
+  "president": "Ford"
+ },
+ "third": null,
+ "label_pool": [
+  "P",
+  "Q",
+  "S",
+  "T",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including an independent former senator and Libertarian and American Independent nominees (answer \"other\").",
+ "plank_order": [
+  "jobs",
+  "inflation",
+  "trust",
+  "taxes",
+  "health insurance",
+  "busing",
+  "abortion",
+  "defense"
+ ],
+ "names_re": "\\b(Ford|Carter|Mondale|Dole|Reagan|Nixon|McCarthy|Maddox|Rockefeller|Kissinger|Wallace|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Ford, Carter, Mondale, Dole, Reagan, Nixon, McCarthy, Maddox, Rockefeller, Kissinger or Wallace",
+ "corpus": null,
+ "platforms": "context/platforms_1976.json",
+ "ev_label": "297–240–1",
+ "slice_sources": {
+  "men": "1970 and 1980 censuses interpolated to November 1976; men who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1976 returns.",
+  "women": "1970 and 1980 censuses interpolated to November 1976; women who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1976 returns.",
+  "south-white": "1970 and 1980 censuses interpolated to November 1976; citizens 18+ in the eleven former Confederate states other than Black US-born (white non-Hispanic US-born, naturalized of any race, and US-born Hispanic, Asian, Native American and other); calibrated to certified 1976 returns.",
+  "black-south": "1970 and 1980 censuses interpolated to November 1976; Black US-born citizens 18+ in the eleven former Confederate states; Voting Rights Act coverage extended in 1975. Any shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1970 and 1980 censuses interpolated to November 1976; noncitizen adults of any race, who could not vote in any state."
+ },
+ "masks": [
+  [
+   "\\bPresident Ford\\b|\\bFord\\b",
+   "the President"
+  ],
+  [
+   "\\bCarter\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Dole|Mondale)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bNixon\\b",
+   "the former President"
+  ],
+  [
+   "\\bReagan\\b",
+   "the President's rival for the nomination"
+  ],
+  [
+   "\\bMcCarthy\\b",
+   "an independent candidate"
+  ],
+  [
+   "\\bMaddox\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\bRockefeller\\b",
+   "the Vice President"
+  ],
+  [
+   "\\bKissinger\\b",
+   "the Secretary of State"
+  ],
+  [
+   "\\bWallace\\b",
+   "a Southern governor"
+  ]
+ ]
+}

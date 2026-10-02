@@ -1,0 +1,74 @@
+{
+  "run_id": "1880-c25084c86f",
+  "config": {
+    "election": 1880,
+    "election_day": "1880-11-02",
+    "context_cutoff": "1880-11-01",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "women-vote-nationwide-for-president"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AR",
+      "IL",
+      "KS",
+      "MD",
+      "ME",
+      "NE",
+      "NH",
+      "NJ",
+      "NY",
+      "OR",
+      "VT",
+      "WI"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "1f496c28400be6a5",
+    "franchise/state_franchise_all.csv": "f8136cfdacaa47d8",
+    "population/adults_1880_by_state_nhgis.csv": "52f50949532e1bf4",
+    "population/adults_1890_by_state_nhgis.csv": "f71ef765588c6ce8",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1880.json": "4c1878b2ef008553",
+    "whatifs/women-vote-nationwide-for-president.json": "b223820a81cb8feb",
+    "whatifs/evidence/women-vote-nationwide-for-president.json": "420773401b373b05"
+  }
+}

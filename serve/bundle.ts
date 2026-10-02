@@ -80,6 +80,18 @@ export const Interviews = z.object({
   byWhatIf: z.record(z.string(), z.array(z.unknown())).optional()
 });
 
+/** What a what-if's voters were told: settled facts, news on a nominee's line, planks added and
+ *  dropped, and (staged what-ifs, D33) in-world items and how many real items the change made false. */
+export const Told = z.looseObject({
+  facts: z.array(z.string()).optional(),
+  news: z.array(z.string()).optional(),
+  added: z.array(z.string()).optional(),
+  dropped: z.array(z.string()).optional(),
+  items: z.array(z.object({ date: z.string(), text: z.string() })).optional(),
+  removed: z.number().optional()
+});
+export type Told = z.infer<typeof Told>;
+
 export const Bundle = z.object({
   year: z.number().int(),
   runId: z.string(),
@@ -90,7 +102,11 @@ export const Bundle = z.object({
   interviews: Interviews,
   ev: z.record(z.string(), z.number()),
   historyWinner: z.record(z.string(), PageKey),
-  words: z.array(z.object({ key: z.string(), words: z.array(z.string()) }))
+  words: z.array(z.object({ key: z.string(), words: z.array(z.string()) })),
+  // Bundles published before the briefs record (1916, 1924) lack these three.
+  pre: z.record(z.string(), z.unknown()).nullable().optional(),
+  told: z.record(z.string(), Told).optional(),
+  reading: z.array(z.record(z.string(), z.unknown())).optional()
 });
 export type Bundle = z.infer<typeof Bundle>;
 
@@ -107,3 +123,27 @@ export const RunRequest = z.object({
   edits: Edits.default({})
 });
 export type RunRequest = z.infer<typeof RunRequest>;
+
+// ── Session files the intake worker writes (dev only) ──
+
+export const QueueDone = z.looseObject({
+  text: z.string(),
+  year: z.number().nullish(),
+  status: z.string(),
+  key: z.string().nullish(),
+  why: z.string().nullish()
+});
+export type QueueDone = z.infer<typeof QueueDone>;
+
+export const QueueFailed = z.looseObject({
+  text: z.string(),
+  year: z.number().nullish(),
+  at: z.number(),
+  why: z.string().nullish()
+});
+export type QueueFailed = z.infer<typeof QueueFailed>;
+
+export const Step = z.object({ text: z.string(), state: z.string() });
+export type Step = z.infer<typeof Step>;
+
+export const IntakeStatus = z.looseObject({ text: z.string().nullable(), steps: z.array(Step) });

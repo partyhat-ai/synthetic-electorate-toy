@@ -15,8 +15,9 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=8.0"]
-# Only the paid stage (ask) imports the SDK, lazily; CI never needs it.
+# Only the paid stages (ask, research, whatif) import the SDK, lazily; CI never needs it.
 llm = ["anthropic>=1.0"]
+build = ["pyreadr>=0.5"]
 
 [tool.setuptools]
 packages = ["simharness"]

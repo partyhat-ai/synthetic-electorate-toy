@@ -63,8 +63,10 @@ All under `src/lib/simulacra/` unless noted.
 | Field, Rerun / Reset / Stop | `WhatIfComposer.svelte` |
 | What-if chips | `KindChips.svelte` |
 | The bubble's message type, kind labels, step splitting | `whatif.ts` |
-| Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
-| ⓘ About popover | `InfoPopover.svelte` |
+| Time bar (just the slider) | `TimeBar.svelte` |
+| ⓘ About popover (on `<body>`, above everything) and its cited sources | `InfoPopover.svelte`, `AboutSources.svelte` |
+| The tab icon in each chest blast's colour | `tabIcon.ts` |
+| Places in text that light the map | `Places.svelte`, `places.ts` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |
 | Server contract, schemas, sample stand-in, written stories | `api.ts`, `schemas.ts`, `sample.ts`, `sampleEras.ts`, `sampleData.ts`, `stories.ts` (owned by the simulation side) |
@@ -78,7 +80,9 @@ Components take callback props instead of dispatching events. What was
 is the callback's argument.
 
 - `SliceRow`: `ontoggle()`, `onedit(d: SliceEdit)`.
-- `TimeBar`: `onchange(year)`, `onscrub(on)`, `onshuffle()`.
+- `TimeBar`: `onchange(year)`, `onscrub(on)`.
+- `RobotStage`: `ontap()` (the robot pressed and let go without turning it);
+  `blast(color)` fires its chest reactor.
 - `WhatIf`: `ontoggle(key)`, `onrun()`, `onstop()`, `onreset()`,
   `onaction(key)`, `onfocus(on)`; `bind:slot`, `bind:value`, `bind:input`.
 - `InfoPopover`: its content is the `children` snippet.
@@ -149,7 +153,12 @@ POST timed out after it may have landed: poll, don't resubmit), or
   places the robot over it. Once drawn, the robot's anchors nudge its box
   once, so its feet sit on the slot's floor.
 - **Clickable:** the slot is a button, so pressing the robot focuses the
-  field.
+  field. A tap also fires its chest reactor (red, white and blue by turns,
+  never the tab icon's current colour), and the tab icon takes the shot's
+  colour; while a rerun works the icon cycles every 0.4s.
+- **Draggable:** dragged across, the robot turns with the pointer (0.6° per
+  px, held to ±180°) and, let go, eases back. A turn alone never restages
+  the frame; only a moved box does (`boxMoved` in `src/lib/robot/stage.ts`).
 - **Stills:** until the 3D robot draws, `WhatIf` shows a still (`still`
   prop: `{ src, dx, db, w }`) from `static/simulacra/`.
 - **When the robot isn't drawn**, the harness's face stands in (`face`,
@@ -218,6 +227,8 @@ popover; the chips' kind wording is `KIND_LABEL` in `whatif.ts`.
   `run.done` / `run.total` are available.
 - In the History view after a rerun, the run's suggestions still show as
   chosen.
+- "Washington, D.C." in text lights Washington state, not D.C.
+  (`places.ts`: the D.C. rule's trailing `\b` can't follow a period).
 - Missouri (1820) and Michigan (1836) cast electoral votes in `history.ts`
   before `geo.ts`'s `first` year for them, so their map tiles are empty in
   those years.

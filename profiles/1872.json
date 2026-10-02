@@ -1,0 +1,91 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Grant",
+  "D": "Greeley",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Ulysses S. Grant",
+  "D": "Horace Greeley"
+ },
+ "descriptors": {
+  "R": "the sitting President, nominee of the party in power since 1861, which defends the Reconstruction amendments and federal enforcement against violent organizations in the South",
+  "D": "nominee of a reform breakaway from the governing party, also endorsed by the opposition party; a longtime newspaper editor calling for universal amnesty, civil service reform and local self-government in the South"
+ },
+ "compile_desc": {
+  "R": "the party in power since 1861",
+  "D": "the reform breakaway from the governing party, endorsed by the opposition party",
+  "president": "Grant"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "M",
+  "N",
+  "Q",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a nominee of opposition-party holdouts who refused the endorsement (answer \"other\").",
+ "plank_order": [
+  "Reconstruction",
+  "amnesty",
+  "civil service",
+  "tariff",
+  "currency",
+  "public lands",
+  "women"
+ ],
+ "names_re": "\\b((?-i:Grant)\\b|Henry Wilson|Wilson|Greeley|Gratz|(?-i:Brown)\\b|Sumner|Schurz|O\\'?Conor|Woodhull|Hendricks|Republican|Democrat|(?-i:Democracy)|Liberal Republican)",
+ "never_name": "Grant, Henry Wilson, Greeley, Gratz Brown, Sumner, Schurz, O'Conor, Woodhull or Hendricks",
+ "corpus": null,
+ "platforms": "context/platforms_1872.json",
+ "ev_label": "286–63",
+ "slice_sources": {
+  "men": "1870 census (Ninth Census) aged to November 1872, men 21+ outside the former Confederate states; the Fifteenth Amendment now let Black men vote everywhere; calibrated to certified returns.",
+  "women": "No women could vote for president in 1872 (some who tried, in Rochester and elsewhere, were arrested); women 21+ shown for population only.",
+  "south-white": "1870 census aged to 1872, white adults in the former Confederate states, all now readmitted and voting by popular vote; most former Confederates had their disabilities lifted by the May 1872 amnesty; calibrated to certified returns.",
+  "black-south": "1870 census aged to 1872, Black adults in the former Confederate states; Black men voted under the Fifteenth Amendment and the federal Enforcement Acts, which had broken up much of the Klan by 1872.",
+  "immigrants": "1870 census aged to 1872, foreign-born white men not yet naturalized; many Midwestern, Western and Southern states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Grant\\b|\\bGrant\\b",
+   "the President"
+  ],
+  [
+   "\\bGreeley\\b",
+   "the reform nominee"
+  ],
+  [
+   "\\bLiberal Republicans?\\b",
+   "the reform breakaway"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the governing party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the opposition party"
+  ],
+  [
+   "\\bHenry Wilson\\b|\\bWilson\\b|\\b(?:Gratz )?Brown\\b",
+   "a running mate"
+  ],
+  [
+   "\\bO\\'?Conor\\b",
+   "a holdout nominee"
+  ],
+  [
+   "\\b(?:Sumner|Schurz)\\b",
+   "a senator"
+  ],
+  [
+   "\\b(?:Woodhull|Hendricks)\\b",
+   "a public figure"
+  ]
+ ]
+}

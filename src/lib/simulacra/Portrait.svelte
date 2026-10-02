@@ -1,11 +1,13 @@
 <script lang="ts">
   // A candidate's portrait (the lead image of their Wikipedia article), or
   // their initials while it loads or if it can't. The winner's frame wears a
-  // ring and a check in their party's colour.
+  // ring and a check in their party's colour. With a Wikipedia article, the
+  // portrait links to it: a click opens it in a new window, a modified or
+  // middle click in a tab.
   import { Check } from 'lucide-svelte';
 
   interface Props {
-    candidate: { readonly name: string; readonly portrait: string | null } | null;
+    candidate: { readonly name: string; readonly portrait: string | null; readonly wiki?: string | null } | null;
     /** The party colour, authored for the mode. */
     color?: string;
     /** The check's colour on it. */
@@ -32,9 +34,18 @@
     return first.charAt(0);
   }
   const initials = $derived(initialsOf(candidate?.name ?? ''));
+  const wiki = $derived(candidate?.wiki ?? null);
+
+  // A plain click opens the article in a new window; the link itself still
+  // works for a middle click, a new tab or a screen reader.
+  function openWiki(e: MouseEvent) {
+    if (!wiki || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    window.open(wiki, '_blank', 'noopener,noreferrer,width=1100,height=850');
+  }
 </script>
 
-<div class="portrait" style:--c={color}>
+{#snippet face()}
 <div class="frame" class:won style:width="{size}px" style:height="{Math.round(size * 1.25)}px">
   <span class="initials" aria-hidden="true">{initials}</span>
   {#if src && !failed}
@@ -47,10 +58,21 @@
 {#if won}
   <span class="badge" style:--ink={ink} aria-hidden="true"><Check size={13} strokeWidth={3} /></span>
 {/if}
-</div>
+{/snippet}
+
+{#if wiki}
+  <a class="portrait" style:--c={color} href={wiki} target="_blank" rel="noopener noreferrer"
+    aria-label="{candidate?.name} on Wikipedia (opens in a new window)" title="{candidate?.name} on Wikipedia" onclick={openWiki}>{@render face()}</a>
+{:else}
+  <div class="portrait" style:--c={color}>{@render face()}</div>
+{/if}
 
 <style>
-  .portrait { position: relative; display: inline-flex; }
+  .portrait { position: relative; display: inline-flex; color: inherit; text-decoration: none; border-radius: 14px; }
+  a.portrait { cursor: pointer; }
+  a.portrait .frame { transition: transform 0.15s ease, filter 0.15s ease; }
+  a.portrait:hover .frame { transform: translateY(-1px); filter: brightness(1.04); }
+  a.portrait:focus-visible { outline: 2px solid #3876b7; outline-offset: 4px; }
   .frame {
     position: relative;
     overflow: hidden;
@@ -98,5 +120,5 @@
     color: var(--ink);
     box-shadow: 0 0 0 2px #e5e5e5;
   }
-  @media (prefers-reduced-motion: reduce) { img { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { img, a.portrait .frame { transition: none; } }
 </style>

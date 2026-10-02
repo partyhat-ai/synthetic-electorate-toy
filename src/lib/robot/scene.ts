@@ -24,6 +24,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { assetUrl } from './assets';
+import { createChestBlast } from './blast';
 import { computeFraming, createFloat, type LensShift, stageRect, viewOffset } from './camera';
 import { ATLAS, type Character, type Paint } from './characters';
 import { createLighting, REACTOR_POWER } from './lighting';
@@ -46,6 +47,12 @@ export interface RobotApp {
   setRunning(on: boolean): void;
   setWalking(on: boolean): void;
   setPaint(paint: Paint): void;
+  /**
+   * A shot out of the chest reactor in `color` (#rrggbb), the way the robot
+   * faces: mostly across the screen, a little toward the viewer, so it stays
+   * in the picture. False before the model loads.
+   */
+  blast(color: string): boolean;
   /** Called every frame with the robot's anchors in canvas px, or null while it loads. */
   onAnchors(listener: (anchors: RobotAnchors | null) => void): () => void;
   dispose(): void;
@@ -99,11 +106,16 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
   // The robot's turntable: mirrored and turned with the stage.
   const hero = new Group();
   scene.add(hero);
+  // Shots from the chest reactor (blast()), and the robot rocking back from the last one.
+  const chestBlast = createChestBlast(scene);
+  const recoilDir = new Vector3();
+  let recoilSize = 0;
 
   const target = new Vector3();
   const lens: LensShift = { x: 0, y: 0 };
   const float = createFloat();
   let model: Object3D | null = null;
+  let chestBone: Object3D | null = null;
   let motion: Motion | null = null;
   let modelHeight = 0;
   let emitters: { mat: MeshStandardMaterial; intensity: number }[] = [];
@@ -198,6 +210,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
     else void paint.set(paint.current);
 
     model = root;
+    chestBone = root.getObjectByName('chest') ?? null;
     motion = createMotion(root, gltf.animations, character);
     if (walkWanted) motion.setWalking(true);
     resetCamera();
@@ -221,6 +234,8 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
     }
     hero.rotation.y = easeToward(hero.rotation.y, MathUtils.degToRad(s.yaw), dt);
     motion?.update(dt);
+    chestBlast.update(dt);
+    hero.position.copy(recoilDir).multiplyScalar(-chestBlast.recoil() * recoilSize * 0.025);
     const glow = REACTOR_POWER * (1 + Math.sin(time * 2.3) * 0.06);
     for (const { mat, intensity } of emitters) mat.emissiveIntensity = intensity * glow;
     camera.lookAt(target);
@@ -259,6 +274,24 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       lights.apply(character.lighting[next]);
       void paint.set(next);
     },
+    blast(color) {
+      if (!model || !chestBone) return false;
+      model.updateMatrixWorld(true);
+      const box = new Box3().setFromObject(model);
+      const size = box.max.y - box.min.y || 10;
+      const fwd = new Vector3(0, 0, 1).transformDirection(model.matrixWorld);
+      fwd.y = 0;
+      fwd.normalize();
+      const view = camera.getWorldDirection(new Vector3());
+      const direction = fwd.clone().addScaledVector(view, -fwd.dot(view) * 0.75).normalize();
+      // The chest bone sits below the reactor: the shot leaves 0.17 robot heights up.
+      const origin = chestBone.getWorldPosition(new Vector3()).addScaledVector(fwd, size * 0.07);
+      origin.y += size * 0.17;
+      chestBlast.fire({ origin, direction, size, color });
+      recoilDir.copy(direction);
+      recoilSize = size;
+      return true;
+    },
     onAnchors(listener) {
       anchorListeners.add(listener);
       return () => anchorListeners.delete(listener);
@@ -269,6 +302,7 @@ export function mountRobot({ canvas, stage, character = ATLAS }: MountOptions): 
       window.removeEventListener('resize', onResize);
       resizeObserver.disconnect();
       anchorListeners.clear();
+      chestBlast.dispose();
       motion?.dispose();
       if (model) disposeModel(model);
       paint.dispose();

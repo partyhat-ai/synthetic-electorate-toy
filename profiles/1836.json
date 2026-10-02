@@ -1,0 +1,106 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 3 November until the electors meet on 7 December 1836)",
+  "names": {
+    "R": "Harrison",
+    "D": "Van Buren",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "William Henry Harrison (with the other Whig candidates Hugh Lawson White, Daniel Webster and Willie P. Mangum)",
+    "D": "Martin Van Buren"
+  },
+  "descriptors": {
+    "R": "the new opposition party's candidates, run regionally rather than as one ticket: a former general and Ohio senator in the North and West, a Tennessee senator in the South, and a Massachusetts senator in that state",
+    "D": "the Vice President, the outgoing President's chosen successor, who pledges to follow in his footsteps"
+  },
+  "compile_desc": {
+    "R": "the new opposition party",
+    "D": "the party of the administration in office since 1829",
+    "president": "Jackson"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "X",
+    "Z",
+    "Y",
+    "P"
+  ],
+  "others_line": "Scattered other tickets on some ballots (answer \"other\").",
+  "plank_order": [
+    "executive power",
+    "currency",
+    "national bank",
+    "public lands",
+    "internal improvements",
+    "slavery"
+  ],
+  "names_re": "\\b(Van ?Buren|Harrison|(?-i:White)|Webster|Mangum|Johnson|Granger|Tyler|Jackson|Old Hickory|(?-i:Clay)|Whig|Democrat)",
+  "never_name": "Van Buren, Harrison, White, Webster, Mangum, Johnson, Granger, Tyler, Jackson or Clay",
+  "corpus": null,
+  "platforms": "context/platforms_1836.json",
+  "ev_label": "124–170",
+  "slice_sources": {
+    "men": "1830 and 1840 census interpolated to 1836, free adult men outside the Southern states; the census gives free white males in five- and ten-year bands, so men 21+ are split from the 20–30 band. Voters were men meeting each state's rules: a few states still required property or taxpaying qualifications (Virginia a reduced freehold or householder test, Rhode Island a freehold). Electors were chosen by popular vote in 25 states; elsewhere (South Carolina) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1830 and 1840 census interpolated to 1836, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1830 and 1840 census interpolated to 1836, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi, Alabama and Arkansas; only men meeting their state's property or taxpaying rules could vote (Virginia required a small freehold, a leasehold or a taxpaying householder status). The South Carolina legislature chose its electors, so people there cast no presidential vote.",
+    "black-south": "1830 and 1840 census interpolated to 1836, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi, Alabama and Arkansas; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. No Southern state now lets free Black men vote; North Carolina and Tennessee closed the vote to them in 1835 and 1834. In South Carolina the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "1830 and 1840 census interpolated to 1836: the census recorded no nativity before 1850, but the 1830 count of aliens (foreigners not naturalized) gives the non-citizen total (no age or sex detail). Most states barred aliens from voting. Illinois (1818) and Michigan (1835) let resident white male aliens vote."
+  },
+  "masks": [
+    [
+      "\\bPresident Jackson\\b|\\b(?:General |Andrew )?Jackson\\b|\\bOld Hickory\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:Vice President |Martin )?Van ?Buren\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:General |William Henry )?Harrison\\b",
+      "the opposition candidate from Ohio"
+    ],
+    [
+      "\\bHugh (?:Lawson |L\\. )?White\\b|\\b(?:Judge|Senator|Mr\\.?) White\\b|\\bWhite\\b(?!\\s+(?:men|man|people|women|woman|House|persons|population|voters|inhabitants|males?|citizens|settlers|families|laborers|labourers|servants))",
+      "the opposition candidate from Tennessee"
+    ],
+    [
+      "\\b(?:Daniel )?Webster\\b",
+      "the opposition candidate from Massachusetts"
+    ],
+    [
+      "\\b(?:Willie P\\. )?Mangum\\b",
+      "the opposition candidate from North Carolina"
+    ],
+    [
+      "\\b(?:Richard M(?:entor|\\.)? |Colonel )?Johnson\\b",
+      "the administration party's vice-presidential nominee"
+    ],
+    [
+      "\\b(?:Francis )?Granger\\b|\\b(?:John )?Tyler\\b",
+      "an opposition running mate"
+    ],
+    [
+      "\\b(?:Henry )?Clay\\b",
+      "a Kentucky senator"
+    ],
+    [
+      "\\bWhigs?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

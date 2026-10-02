@@ -1,0 +1,151 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:F:native_white",
+   "label": "Native-born white women, south",
+   "n": 2,
+   "agent_turnout": 0.6666666666666666,
+   "backbone_turnout": 0.3707257709279512,
+   "agent_r2": 0.5096381467703753,
+   "backbone_r2": 0.546749334885359,
+   "bias_logit": -0.14898776278829667,
+   "tvd": 0.6292742290720488,
+   "exposed": false
+  },
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 2,
+   "agent_turnout": 0.7066666666666667,
+   "backbone_turnout": 0.472127116764433,
+   "agent_r2": 0.47349228611500704,
+   "backbone_r2": 0.4838017344978738,
+   "bias_logit": -0.041314617603613005,
+   "tvd": 0.527872883235567,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:F:native_white",
+   "label": "Native-born white women, northeast",
+   "n": 2,
+   "agent_turnout": 0.71,
+   "backbone_turnout": 0.6608446015505676,
+   "agent_r2": 0.4922080550495851,
+   "backbone_r2": 0.6683662478747043,
+   "bias_logit": -0.7319753980879216,
+   "tvd": 0.33915539844943243,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 2,
+   "agent_turnout": 0.7433333333333333,
+   "backbone_turnout": 0.7526603029310044,
+   "agent_r2": 0.6578239138792772,
+   "backbone_r2": 0.6119745085673791,
+   "bias_logit": 0.1979922192226214,
+   "tvd": 0.5393910809956239,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:F:native_white",
+   "label": "Native-born white women, midwest",
+   "n": 2,
+   "agent_turnout": 0.7533333333333333,
+   "backbone_turnout": 0.66738807375804,
+   "agent_r2": 0.6567575850444376,
+   "backbone_r2": 0.6468699308643315,
+   "bias_logit": 0.043569247978533565,
+   "tvd": 0.5682867228684573,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 2,
+   "agent_turnout": 0.7566666666666667,
+   "backbone_turnout": 0.7564061098314852,
+   "agent_r2": 0.3343278016035801,
+   "backbone_r2": 0.5869479360899479,
+   "bias_logit": -1.0400378744046328,
+   "tvd": 0.6875648951799316,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "south:F:native_white",
+    "n": 2,
+    "sd_R2": 0.2801932367149758,
+    "modal_share": 0.5,
+    "backbone_r2": 0.546749334885359,
+    "homogenized": false
+   },
+   {
+    "cohort": "south:M:native_white",
+    "n": 2,
+    "sd_R2": 0.2684210526315789,
+    "modal_share": 0.5,
+    "backbone_r2": 0.4838017344978738,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:F:native_white",
+    "n": 2,
+    "sd_R2": 0.3065015479876161,
+    "modal_share": 0.5,
+    "backbone_r2": 0.6683662478747043,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 2,
+    "sd_R2": 0.020467836257309968,
+    "modal_share": 1.0,
+    "backbone_r2": 0.6119745085673791,
+    "homogenized": true
+   },
+   {
+    "cohort": "midwest:F:native_white",
+    "n": 2,
+    "sd_R2": 0.02329749103942652,
+    "modal_share": 1.0,
+    "backbone_r2": 0.6468699308643315,
+    "homogenized": true
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 2,
+    "sd_R2": 0.026315789473684195,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5869479360899479,
+    "homogenized": true
+   }
+  ],
+  "homogenization_index": 0.5,
+  "eligible_cohorts": 6
+ },
+ "a4": {
+  "audited": 12,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {}
+}

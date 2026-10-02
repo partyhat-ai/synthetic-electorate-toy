@@ -5,13 +5,15 @@
   // happened. Below are the groups of voters that decided it, including the
   // ones who couldn't vote, each a row of fifty people. The narrator robot
   // stands beside the what-if field: tap a suggestion or type your own, and
-  // it reruns the election and says what changed. The timeline along the
+  // it reruns the election and says what changed; tapped, it fires its chest
+  // reactor, and the tab icon takes the shot's colour. The timeline along the
   // bottom moves between elections.
   //
   // This file is composition and layout. State: $lib/simulacra/state(.svelte).ts;
   // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
+  import AboutSources from '$lib/simulacra/AboutSources.svelte';
   import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
@@ -20,12 +22,14 @@
   import { electionOf, FEATURED } from '$lib/simulacra/history';
   import InfoPopover from '$lib/simulacra/InfoPopover.svelte';
   import Narrator from '$lib/simulacra/Narrator.svelte';
+  import { hoverPlaces } from '$lib/simulacra/places';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
   import { apiOptionsFor, randomStory, readParams } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
+  import { TabIcon } from '$lib/simulacra/tabIcon';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
   import '$lib/simulacra/theme.css';
 
@@ -47,14 +51,17 @@
   let robot = $state<ReturnType<typeof RobotStage> | null>(null);
   let mainEl = $state<HTMLElement | null>(null);
   let slotEl = $state<HTMLElement | null>(null);
-  let groupsEl = $state<HTMLElement | null>(null);
   let robotShown = $state(false);
+  let tabIcon = $state<TabIcon | null>(null);
   let revealing = $state(false);
   let narrow = $state(false);
   // Dragging the time bar: the robot holds still (no restaging) and the
-  // groups keep their height while each year's load, so nothing jumps; the
-  // robot is placed once more on release.
+  // election and the groups hold their height while each year loads, so
+  // nothing jumps; the robot is placed once more on release.
   let scrubbing = $state(false);
+  let electionH = $state(0);
+  let groupsH = $state(0);
+  let electionHold = $state(0);
   let groupsHold = $state(0);
 
   const e = $derived(page.election);
@@ -92,8 +99,28 @@
 
   function scrub(on: boolean) {
     scrubbing = on;
-    groupsHold = on ? groupsEl?.offsetHeight || 0 : 0;
+    electionHold = on ? electionH : 0;
+    groupsHold = on ? groupsH : 0;
     if (!on) robot?.measureSoon();
+  }
+  // While scrubbing, each block only ever grows to the tallest year passed so
+  // far (a narrow window wraps notes past the CSS reservation), never shrinks.
+  $effect(() => {
+    if (!scrubbing) return;
+    const measured = { election: electionH, groups: groupsH };
+    untrack(() => {
+      electionHold = Math.max(electionHold, measured.election);
+      groupsHold = Math.max(groupsHold, measured.groups);
+    });
+  });
+  // The tab icon cycles while a rerun works.
+  $effect(() => {
+    tabIcon?.setWorking(!!page.run);
+  });
+
+  /** A tap on the robot: a shot from its chest in the next colour, which the tab icon takes. */
+  function blast() {
+    if (tabIcon) robot?.blast(tabIcon.fire().hex);
   }
 
   function act(key: string) {
@@ -142,7 +169,14 @@
       page.syncUrl();
       robot?.measureSoon();
     });
-    return () => small.removeEventListener('change', readSmall);
+    // Without an icon link the blasts still take their turns.
+    const icon = new TabIcon(document.querySelector<HTMLLinkElement>('link[rel="icon"]') ?? { href: '' });
+    tabIcon = icon;
+    return () => {
+      small.removeEventListener('change', readSmall);
+      icon.dispose();
+      tabIcon = null;
+    };
   });
   onDestroy(() => page.dispose());
 </script>
@@ -155,7 +189,8 @@
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
-      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl} />
+      paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
+      ontap={blast} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's
@@ -172,17 +207,17 @@
         <InfoPopover label="About Simulacra Americana" align="end">
           <p><strong>Simulacra Americana</strong> reruns American presidential elections with one fact changed.</p>
           <p>Every election opens as it happened. The simulation server rebuilds who could vote from census records and lets synthetic voters decide, so a rerun can change who votes, where they live or what they care about.</p>
-          <p>Changing who could vote is the most reliable; changing what people cared about, the least.</p>
           {#if page.api.sample}<p>Sample data: the voter groups, what-ifs and reruns here are invented to show how it works. The elections are real.</p>{/if}
-          <p class="fine">Portraits from Wikimedia Commons.</p>
+          <AboutSources />
         </InfoPopover>
       </span>
     </header>
 
     <main class="main" bind:this={mainEl}>
-      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} />
+      <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} highlight={$hoverPlaces}
+        hold={electionHold} bind:height={electionH} />
 
-      <section class="groups" aria-labelledby="sa-groups" bind:this={groupsEl} style:min-height={groupsHold ? `${groupsHold}px` : null}>
+      <section class="groups" aria-labelledby="sa-groups" bind:offsetHeight={groupsH} style:min-height={groupsHold ? `${groupsHold}px` : null}>
         <div class="groups-head">
           <h2 id="sa-groups">Who voted</h2>
           {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
@@ -229,7 +264,7 @@
 
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
-    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} onscrub={scrub} />
+    onchange={(y) => page.setYear(y)} onscrub={scrub} />
 </div>
 
 <style>
@@ -258,9 +293,6 @@
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
   }
-  .trail :global(.pop p) { margin: 0 0 8px; }
-  .trail :global(.pop p:last-child) { margin-bottom: 0; }
-  .trail :global(.pop .fine) { font-size: 11px; color: rgba(0, 0, 0, 0.5); }
   .main {
     max-width: 800px;
     margin: 0 auto;
@@ -271,8 +303,9 @@
   }
 
   /* ── Who voted ── */
-  /* Zero jitter while scrubbing: the chart reserves its tallest year (five rows). */
-  .groups { min-height: 247px; }
+  /* Zero jitter while scrubbing: the chart reserves its tallest year (five
+     rows; 293px across all 60 years at 1440px). */
+  .groups { min-height: 293px; }
   /* History / Your year: the hub's Content / Chat control
      (MainView .hub-segmented-control), metrics and all. */
   .seg {

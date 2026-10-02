@@ -1,0 +1,120 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 2 November until the electors meet on 5 December 1832)",
+  "names": {
+    "R": "Clay",
+    "D": "Jackson",
+    "O": "Wirt"
+  },
+  "full_names": {
+    "R": "Henry Clay",
+    "D": "Andrew Jackson",
+    "O": "William Wirt"
+  },
+  "descriptors": {
+    "R": "a senator from Kentucky, former Speaker of the House and Secretary of State, nominee of the opposition party that champions the national bank, a protective tariff and federal roads and canals",
+    "D": "the incumbent President, who vetoed the recharter of the national bank in July 1832",
+    "O": "nominee of the new party formed against Freemasonry and other secret societies, a former Attorney General of the United States"
+  },
+  "compile_desc": {
+    "R": "the opposition party, which held the presidency from 1825 to 1829",
+    "D": "the party of the administration in office since 1829",
+    "president": "Jackson"
+  },
+  "third": "O",
+  "label_pool": [
+    "K",
+    "X",
+    "Z",
+    "Y",
+    "P",
+    "T"
+  ],
+  "others_line": "Scattered other votes on some ballots (answer \"other\").",
+  "plank_order": [
+    "national bank",
+    "tariff",
+    "internal improvements",
+    "executive power",
+    "secret societies",
+    "Indian"
+  ],
+  "names_re": "\\b((?-i:Clay)|Jackson|Old Hickory|Wirt|Van ?Buren|(?-i:Sergeant)|Ellmaker|(?-i:Floyd)|Calhoun|Biddle|Anti-?Masonic|Antimason|Nullifier|Republican|Democrat)",
+  "never_name": "Clay, Jackson, Wirt, Van Buren, Sergeant, Ellmaker, Floyd, Calhoun or Biddle",
+  "corpus": null,
+  "platforms": "context/platforms_1832.json",
+  "ev_label": "49–219–18",
+  "slice_sources": {
+    "men": "1830 census projected to 1832, free adult men outside the Southern states; the census gives free white males in five- and ten-year bands, so men 21+ are split from the 20–30 band. Voters were men meeting each state's rules: a few states still required property or taxpaying qualifications (Virginia a reduced freehold or householder test, Rhode Island a freehold). Electors were chosen by popular vote in 23 states; elsewhere (South Carolina) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1830 census projected to 1832, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1830 census projected to 1832, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a small freehold, a leasehold or a taxpaying householder status). The South Carolina legislature chose its electors, so people there cast no presidential vote.",
+    "black-south": "1830 census projected to 1832, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "1830 census projected to 1832: the census recorded no nativity before 1850, but the 1830 count of aliens (foreigners not naturalized) gives the non-citizen total (no age or sex detail). Most states barred aliens from voting. Illinois (1818) let resident white male aliens vote."
+  },
+  "masks": [
+    [
+      "\\bPresident Jackson\\b|\\b(?:General |Andrew )?Jackson\\b|\\bOld Hickory\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:Henry )?Clay\\b",
+      "the opposition party's nominee"
+    ],
+    [
+      "\\b(?:William )?Wirt\\b",
+      "the third-party nominee"
+    ],
+    [
+      "\\b(?:Martin )?Van ?Buren\\b",
+      "the administration party's vice-presidential nominee"
+    ],
+    [
+      "\\b(?:John )?Sergeant\\b",
+      "the opposition party's running mate"
+    ],
+    [
+      "\\b(?:Amos )?Ellmaker\\b",
+      "the third party's running mate"
+    ],
+    [
+      "\\b(?:John C\\. )?Calhoun\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:Nicholas )?Biddle\\b",
+      "the president of the national bank"
+    ],
+    [
+      "\\b(?:John )?Floyd\\b",
+      "the governor of Virginia"
+    ],
+    [
+      "\\bAnti-?Masonic\\b|\\bAntimasonic\\b|\\bAnti-?Masons?\\b|\\bAntimasons?\\b",
+      "the party against secret societies"
+    ],
+    [
+      "\\bNullifiers?\\b",
+      "the South Carolina protest faction"
+    ],
+    [
+      "\\bNational Republicans?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

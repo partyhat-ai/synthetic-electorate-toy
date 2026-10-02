@@ -84,9 +84,44 @@ def diff(cf: dict, ctl: dict) -> dict:
     return out
 
 
+def floor_spread(boot: dict, point: dict, pairs: dict, draws: int, rng: np.random.Generator) -> dict:
+    """D33: who was interviewed is part of the uncertainty. Resampling a cohort's own one or
+    two people says almost nothing about the people who might have been drawn instead (one
+    person resampled is always that person: no spread at all). So each cohort's draws get at
+    least the spread of a mean of n people, with the person-to-person spread estimated from
+    every pair in the run: sd_k >= s / sqrt(n_k), where s is the national bootstrap sd
+    times sqrt(N). Draws keep their shape where they have one; otherwise normal noise."""
+    rows = [(p[0], p[1]) for ps in pairs.values() for p in ps if p[0] and p[1]]
+    N = len(rows)
+    if N < 2:
+        return boot
+    nat = {'dt': np.empty(draws), 'dr': np.empty(draws), 'do': np.empty(draws)}
+    for j in range(draws):
+        s = rng.choice(N, size=N, replace=True)
+        dd = diff(cohort_stats([rows[i][1] for i in s]), cohort_stats([rows[i][0] for i in s]))
+        for key in nat:
+            nat[key][j] = dd[key]
+    out = {}
+    for k, bd in boot.items():
+        n = max(1, point[k]['n'])
+        out[k] = {}
+        for key, d in bd.items():
+            target = float(np.std(nat[key])) * np.sqrt(N / n)
+            sd, mu = float(np.std(d)), float(point[k][key])
+            if sd >= target or target <= 0:
+                out[k][key] = d
+            elif sd > 1e-9:
+                out[k][key] = mu + (d - float(np.mean(d))) * (target / sd)
+            else:
+                out[k][key] = mu + rng.normal(0.0, target, len(d))
+    return out
+
+
 def effects(pairs: dict, backbone_r2: dict, region_of: dict, draws: int, rng: np.random.Generator,
-            exposed: set | None = None, weights: dict | None = None) -> dict:
+            exposed: set | None = None, weights: dict | None = None, floor: bool = False) -> dict:
     """pairs: {cohort: [(control_row, cf_row, paraphrase, model), ...]}.
+    floor: widen each cohort's draws to the sampling spread of who was interviewed (D33;
+    compiled what-ifs only, so pre-registered numbers are unchanged).
 
     Returns {'cohorts': {k: {...point estimates, bias, weight, draws: {dt, dr, do: [draws]}}},
              'national': {...}, 'regions': {...}}.
@@ -111,6 +146,8 @@ def effects(pairs: dict, backbone_r2: dict, region_of: dict, draws: int, rng: np
                 bd[key][j] = dd[key]
         boot[k] = bd
 
+    if floor:
+        boot = floor_spread(boot, point, pairs, draws, rng)
     national_bias = float(np.mean([v['bias'] for v in point.values()])) if point else 0.0
 
     def weight(n, bias):

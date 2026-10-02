@@ -1,0 +1,92 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Hayes",
+  "D": "Tilden",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Rutherford B. Hayes",
+  "D": "Samuel J. Tilden"
+ },
+ "descriptors": {
+  "R": "nominee of the party in power since 1861; a three-term governor of a large Midwestern state and Union army general with a name for honesty, pledged to sound money and civil service reform",
+  "D": "nominee of the opposition party, which won the House in 1874; the reform governor of a large Northern state who helped break a corrupt city ring, campaigning on the administration's scandals and the hard times since the panic of 1873"
+ },
+ "compile_desc": {
+  "R": "the party in power since 1861",
+  "D": "the opposition party, which won the House in 1874",
+  "president": "Grant"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "M",
+  "N",
+  "Q",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including the nominee of a new paper-money party and a Prohibition nominee (answer \"other\").",
+ "plank_order": [
+  "corruption",
+  "Reconstruction",
+  "currency",
+  "tariff",
+  "civil service",
+  "schools",
+  "Chinese immigration",
+  "public lands"
+ ],
+ "names_re": "\\b(Hayes|Wheeler|Tilden|Hendricks|(?-i:Grant)\\b|Peter Cooper|(?-i:Cooper)\\b|Blaine|Conkling|Tweed|Republican|Democrat|(?-i:Democracy)|Greenback(?:er)? party)",
+ "never_name": "Hayes, Wheeler, Tilden, Hendricks, Grant, Peter Cooper, Blaine, Conkling or Tweed",
+ "corpus": null,
+ "platforms": "context/platforms_1876.json",
+ "ev_label": "185–184",
+ "slice_sources": {
+  "men": "1870 and 1880 censuses interpolated to November 1876, men 21+ outside the former Confederate states, Black men included under the Fifteenth Amendment; calibrated to certified returns (the Electoral Commission's counts for the three disputed states).",
+  "women": "No women could vote for president in 1876; women 21+ shown for population only.",
+  "south-white": "1870 and 1880 censuses interpolated to 1876, white adults in the former Confederate states, all voting by popular vote; calibrated to certified returns, which in Florida, Louisiana and South Carolina were disputed and settled by the Electoral Commission.",
+  "black-south": "1870 and 1880 censuses interpolated to 1876, Black adults in the former Confederate states; Black men voted under the Fifteenth Amendment, with federal troops still in South Carolina, Louisiana and Florida, but organized violence and intimidation (the Mississippi Plan, the red shirts) cut their vote across much of the South.",
+  "immigrants": "1870 and 1880 censuses interpolated to 1876, foreign-born white men not yet naturalized; many Midwestern, Western and Southern states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Grant\\b|\\bGrant\\b",
+   "the President"
+  ],
+  [
+   "\\bHayes\\b",
+   "the governing party's nominee"
+  ],
+  [
+   "\\bTilden\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the governing party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the opposition party"
+  ],
+  [
+   "\\b(?:Wheeler|Hendricks)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bPeter Cooper\\b|\\bCooper\\b",
+   "a paper-money nominee"
+  ],
+  [
+   "\\b(?:Blaine|Conkling)\\b",
+   "a senior senator"
+  ],
+  [
+   "\\bTweed\\b",
+   "a city boss"
+  ]
+ ]
+}

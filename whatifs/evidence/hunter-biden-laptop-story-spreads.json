@@ -1,0 +1,448 @@
+{
+ "summary": "No reliable study measures the effect of wider laptop coverage. Retrospective, partisan polls suggest some vote switching but are heavily criticized. The 2016 Comey letter is the closest analogue, with an estimated ~2 point immediate hit to Clinton that faded.",
+ "findings": [
+  {
+   "claim": "TIPP December 2022 poll: of the 37% following the story, 28% said very likely and 25% somewhat likely to have changed their vote. Dyck calculated at best 19.6% of all Americans; PolitiFact rated the claim False.",
+   "source_ids": [
+    "S1",
+    "S7"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Retrospective hypothetical poll on laptop story awareness changing votes",
+   "when": "Poll Dec 2022, about the 2020 election",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Hypothetical, retrospective, leading question framing, Republican-leaning sample, expressive responding.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Media Research Center survey: almost 30% said they would have been less likely to vote for Biden if aware of evidence he lied about Hunter's overseas dealings.",
+   "source_ids": [
+    "S2",
+    "S4"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Advocacy survey on counterfactual awareness of Biden family dealings",
+   "when": "Post-2020 survey",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Conservative advocacy source; hypothetical; hard to prove what did not happen.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Rasmussen: 66% of Republicans, 27% of Democrats, 50% of unaffiliated said Biden unlikely to have won with full reporting; 49% of whites, 39% of Black voters, 46% of other minorities agreed.",
+   "source_ids": [
+    "S5"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Later opinion on whether full media coverage would have defeated Biden",
+   "when": "Post-2020 poll",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Opinions held years later, not measured vote changes; not academic.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Rep. Comer cited a survey that 17% of Biden voters would not have voted for him had they known; Stefanik claimed 53% of those aware would have changed their vote. PolitiFact rated Stefanik's claim False.",
+   "source_ids": [
+    "S4",
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Politicians citing polls on laptop story vote switching",
+   "when": "2023",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Underlying poll questionable; claims rated False or fishy.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "AAPOR estimated the Comey letter had an immediate negative impact for Clinton of about 2 points that did not last; evidence the letter tipped the race is at best mixed.",
+   "source_ids": [
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Late October FBI letter about the candidate's email investigation",
+   "when": "28 October 2016",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [
+    {
+     "measure": "r2",
+     "pp": 2,
+     "pm": 1
+    }
+   ],
+   "limits": "Candidate's own conduct, official source; effect hard to separate from earlier decline.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Clinton's decline may have begun as early as Oct. 22; Princeton Election Consortium said the letter influenced as few as 4% of undecided or 2% of decided voters.",
+   "source_ids": [
+    "S12",
+    "S15"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Timing and size of Comey letter effect",
+   "when": "October 2016",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Blog analysis, not peer-reviewed; timing ambiguous.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "A prediction-market study found the Comey letter substantially decreased Clinton's probability of winning the popular vote.",
+   "source_ids": [
+    "S10",
+    "S14"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Comey letter effect measured through market odds",
+   "when": "2016",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Measures market odds, not voter behavior.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "About 13% of voters decided in the final week; in WI, FL, MI and PA they broke far more for Trump. Late deciders are less partisan, less informed, more ambivalent.",
+   "source_ids": [
+    "S12",
+    "S16",
+    "S13"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Late-deciding voters in 2016 swing states",
+   "when": "2016",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Does not isolate any single late event.",
+   "tier": "B",
+   "grade": 0.27,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "McCrary working paper compares counties by early-voting availability before the Comey letter and reports the letter affected the election; many early-state voters had already voted.",
+   "source_ids": [
+    "S11"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Early voting access and Comey letter effects",
+   "when": "2016",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "away-from-affected",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Working paper, not peer-reviewed; effect sizes not retrieved.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-R"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Rep. Elise Stefanik said 53% of those aware of the laptop story would have changed their vote, including 61% of Democrats; PolitiFact rated this False.",
+   "date": "2023",
+   "source_ids": [
+    "S1"
+   ]
+  },
+  {
+   "text": "Rep. James Comer cited a survey saying 17% of Biden voters would not have voted for him had they known.",
+   "date": "2023-02-08",
+   "source_ids": [
+    "S4"
+   ]
+  },
+  {
+   "text": "Mark Zuckerberg later said an FBI warning about Russian propaganda led Facebook to limit the story before the election.",
+   "date": "after 2020 election",
+   "source_ids": [
+    "S5"
+   ]
+  },
+  {
+   "text": "Twitter suspended the Post's account after publication and blocked sharing of the story link.",
+   "date": "October 2020",
+   "source_ids": [
+    "S2"
+   ]
+  }
+ ],
+ "caveats": [
+  "No reliable study measures the laptop effect; polling is retrospective and prone to expressive responding.",
+  "Comey analogue involved a candidate's own conduct and an official source.",
+  "The 2020 electorate was more polarized with more early voting, leaving fewer persuadable voters.",
+  "No evidence by sex, nativity, or region."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "hunter-biden-laptop-story-spreads",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "Hunter Biden laptop story effect on 2020 vote survey study",
+  "Comey letter 2016 late deciders effect on vote political science early voters"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://www.wral.com/story/fact-check-does-polling-show-the-hunter-biden-laptop-story-would-ve-changed-the-2020-election/20744368/",
+   "title": "Fact check: Does polling show the Hunter Biden laptop story would've changed the 2020 election?",
+   "tier": "C",
+   "cited": [
+    "Respondents who said they were following the story \u2014\u00a0 37 percent, or 501 people \u2014\u00a0were then asked about the possibility that they would have voted dif...",
+    "Stefanik\u2019s claim \u2014 that 53% of people made aware of the laptop story would have changed their vote \u2014 adds together the 28% of respondents who said the...",
+    "The questions leading up to the question about changing votes used right-leaning framing of the laptop issue, said G. Elliott Morris, author of the bo...",
+    "Joshua J. Dyck, a polling expert at the University of Massachusetts, Lowell read the poll, and said that at best, 19.6% of Americans said they would h...",
+    "Polls that ask people about what their behavior would have been two years before and that ask voters hypothetical questions do not produce useful info...",
+    "At a recent House subcommittee meeting, Rep.\n\n\"According to polling, of the people that were made aware of the Hunter Biden laptop story, 53% would ha...",
+    "Trump received support from 94% of Republicans who voted in 2020, according to the Pew Research Center.",
+    "\"Or are they engaging in expressive responding, by giving the answer which makes Biden look worse?"
+   ],
+   "page_age": "1307 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://freebeacon.com/biden-administration/poll-majority-of-americans-say-big-tech-censorship-of-hunter-laptop-story-interfered-with-election/",
+   "title": "Poll: Majority of Americans Say Big Tech Censorship of Hunter Laptop Story Interfered With Election",
+   "tier": "C",
+   "cited": [
+    "Almost 30 percent of respondents said they would have been less likely to vote for Biden if they had been aware of evidence Biden lied about \"knowledg...",
+    "Twitter suspended the *Post*'*s* account following publication and blocked users from sharing the link."
+   ],
+   "page_age": "1799 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://www.johnlocke.org/truthful-coverage-of-hunter-biden-could-have-changed-2020-outcome/",
+   "title": "Truthful Coverage of Hunter Biden Could Have Changed 2020 Outcome",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1495 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.allsides.com/news/2023-02-21-0800/media-bias-lawmakers-cite-fishy-poll-suggest-laptop-tale-would-have-swayed-vote",
+   "title": "Lawmakers cite fishy poll to suggest laptop tale would have swayed vote",
+   "tier": "C",
+   "cited": [
+    "But it\u2019s always difficult to prove something that did not happen.",
+    "\u201cOne survey found that 17 percent of Biden voters would not have voted for the Biden-Harris ticket if they had known about the Biden laptop.\u201d."
+   ],
+   "page_age": "1317 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://www.rasmussenreports.com/public_content/politics/partner_surveys/most_voters_say_hunter_biden_s_laptop_from_hell_still_an_important_story",
+   "title": "Most Voters Say Hunter Biden\u2019s \u2018Laptop From Hell\u2019 Still an Important Story",
+   "tier": "C",
+   "cited": [
+    "Sixty-six percent (66%) of Republicans believe it is unlikely Joe Biden would have been elected president if the media had fully reported the story ab...",
+    "Forty-nine percent (49%) of whites, 39% of black voters and 46% of other minorities believe it\u2019s unlikely Biden would have been elected in 2020 if the...",
+    "More men (65%) than women voters (58%) say it\u2019s likely that Joe Biden was consulted about and perhaps profited from Hunter\u2019s foreign business deals.",
+    "Mark Zuckerberg recently said a warning from the FBI about \u201cRussian propaganda\u201d caused Facebook to censor the story about Hunter Biden\u2019s laptop in the..."
+   ],
+   "page_age": "1486 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://www.theblaze.com/news/media-bias-hunter-biden-story-poll",
+   "title": "Poll of voters says media bias in Hunter Biden laptop story",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2112 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://www.statesman.com/story/news/politics/politifact/2023/02/28/politifact-ny-rep-elise-stefanik-claim-hunter-biden-laptop-story-false/69949540007/",
+   "title": "PolitiFact: Poll on voters' opinion of Biden laptop story doesn't tell whole story",
+   "tier": "C",
+   "cited": [
+    "However, the pool of respondents who answered this question leans Republican more strongly than the general population, so most of these voters would ..."
+   ],
+   "page_age": "1310 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://commonsenseevaluation.com/2026/02/24/hunter-bidens-laptop-2020/",
+   "title": "How Big Media Suppressed Hunter Biden's Laptop to Help Joe Biden Win in 2020",
+   "tier": "C",
+   "cited": [],
+   "page_age": "218 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://aapor.org/wp-content/uploads/2022/11/AAPOR-2016-Election-Polling-Report.pdf",
+   "title": "AN EVALUATION OF 2016 ELECTION POLLS IN THE UNITED STATES",
+   "tier": "C",
+   "cited": [
+    "This analysis, which controlled for change over time and methodological characteristics of\n\nthe polls, indicates that the Comey letter had an immediat...",
+    "Based on all of the data examined here, we would conclude there is at best mixed evidence to\n\nsuggest that the FBI announcement tipped the scales of t..."
+   ],
+   "page_age": "1430 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12729",
+   "title": "An Empirical Test of the Comey Effect on the 2016 Presidential Election - Halcoussis - 2020 - Social Science Quarterly - Wiley Online Library",
+   "tier": "A",
+   "cited": [
+    "Results indicate that the debates and videotape release were not statistically significant, but that a letter to Congress released by FBI Director Jam..."
+   ],
+   "page_age": "2565 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://kjmccrary.github.io/coattails/draft.pdf",
+   "title": "Leveraging an October Surprise to Estimate Coattail Effects Kayleigh McCrary\u2217",
+   "tier": "C",
+   "cited": [
+    "The letter reflected negatively on Clinton,\n\nbut variation in early voting laws across states meant voters had differing abilities to react\n\nto the in..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S12",
+   "url": "https://www.npr.org/2017/05/05/526936636/pollsters-find-at-best-mixed-evidence-comey-letter-swayed-election",
+   "title": "Pollsters: \"Shy Trump Voters\" Not Major Reason 2016 Polls Were Off : NPR",
+   "tier": "B",
+   "cited": [
+    "The decline in Clinton's support, the report finds, may have begun as early as Oct. 22, whereas Comey's announcement came on Oct. 28.",
+    "Altogether, about 13 percent of voters nationally made up their minds in the final week, according to Pew data reviewed by the researchers.  However, ..."
+   ],
+   "page_age": "3435 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://campaignsandelections.com/industry-news/aapor-report-2016-polls-failed-because-of-weighting-and-late-deciders/",
+   "title": "AAPOR Report: 2016 Polls Failed Because Of Weighting And Late-Deciders - Campaigns & Elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1906 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://www.researchgate.net/publication/335983504_An_Empirical_Test_of_the_Comey_Effect_on_the_2016_Presidential_Election",
+   "title": "An Empirical Test of the Comey Effect on the 2016 Presidential Election",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2565 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://election.princeton.edu/articles/the-comey-effect/",
+   "title": "The Comey effect - Princeton Election Consortium",
+   "tier": "A",
+   "cited": [
+    "Finally, note that the Comey letter influenced as few as 4% of undecided voters (from undecided to Trump), or 2% of decided voters (from Clinton to Tr..."
+   ],
+   "page_age": "1737 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://arxiv.org/pdf/2510.07821",
+   "title": "From Keywords to Clusters: AI-Driven Analysis of YouTube Comments to Reveal Election Issue Salience in 2024",
+   "tier": "C",
+   "cited": [
+    "[9] summarize several conclusions of this literature by affirming that late-deciding voters \"tend to be less partisan, less informed, and more ambival..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S17",
+   "url": "https://arxiv.org/pdf/1703.09430",
+   "title": "Polling bias and undecided voter allocations: US Presidential elections, 2004 - 2016",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  }
+ ],
+ "notes": "**Bottom line:** I found no reliable study that measures what wider laptop coverage would have done to the 2020 vote. The closest evidence is the 2016 Comey letter, which is the best analogue on record. My searches turned up nothing by group (sex, nativity, race, region) for any of these cases. I did not search for family-allegation cases or for media-reach studies, so those two questions are unanswered below.\n\n**1. Direct evidence (the laptop story)**\n- The available evidence is post-hoc, hypothetical polling, and scholars treat it as weak.\n  - A TIPP poll was fielded in December 2022. 37 percent of respondents, or 501 people, said they were following the story. [S1] Of those, 28% said they were \"very likely\" and 25% \"somewhat likely\" to have changed their vote. [S1]\n  - PolitiFact rated the claim built on this poll False. Critics said the questions before it used right-leaning framing. [S1]\n  - UMass Lowell's Joshua Dyck calculated that at best 19.6% of all Americans said they would have changed their vote. [S1]\n  - Dyck added that hypothetical questions about behavior two years earlier do not produce useful information. [S1]\n  - The respondent pool also leaned Republican. Most of these voters would not have been voting for Biden in the first place. [S7]\n- A Media Research Center survey is a conservative advocacy source. It found almost 30 percent said they would have been less likely to vote for Biden if aware of evidence he lied about Hunter's overseas dealings. [S2]\n  - The Washington Post Fact Check notes it is difficult to prove something that did not happen. [S4]\n- Rasmussen found a partisan split on counterfactual belief. 66% of Republicans, 27% of Democrats and 50% of unaffiliated voters said Biden was unlikely to have won had the media fully reported it. [S5]\n  - By group, 49% of whites, 39% of Black voters and 46% of other minorities said Biden was unlikely to have been elected. [S5]\n  - More men (65%) than women (58%) said Biden was likely consulted about, and perhaps profited from, Hunter's deals. [S5]\n  - These are opinions held years later, not measured vote changes. Rasmussen is not an academic source.\n\n**2. Analogues**\n- **Comey letter, 28 October 2016 (national, with swing-state detail).**\n  - The AAPOR post-election report estimated an immediate negative impact for Clinton of about 2 percentage points, which did not last as her support ticked up before the election. [S9]\n  - AAPOR concluded there is at best mixed evidence that the announcement tipped the race. [S9]\n  - The decline in Clinton's support may have begun as early as Oct. 22. [S12]\n  - On undecided voters, one blog analysis (Princeton Election Consortium, not peer-reviewed) said the letter influenced as few as 4% of undecided voters, or 2% of decided voters. [S15]\n  - An academic study using a prediction market found the letter substantially decreased Clinton's probability of winning the popular vote. [S10] That measures market odds, not voter behavior.\n- **Late deciders, 2016.** About 13 percent of voters nationally decided in the final week. In Wisconsin, Florida, Michigan and Pennsylvania they broke far more for Trump than for Clinton. [S12] The literature describes late deciders as less partisan, less informed and more ambivalent than early deciders. [S16]\n- **Early voters.** A working paper (not peer-reviewed) by McCrary compares counties by whether no-excuse early voting was available before the letter. Voters had differing abilities to react, and many in early-voting states had already voted. [S11] The paper reports that the letter affected the election. I did not retrieve the effect sizes.\n\n**3. Named people**\n- Rep. Elise Stefanik said in 2023 that 53% of those aware of the story would have changed their vote, including 61% of Democrats. [S1] PolitiFact rated this False.\n- Rep. James Comer cited a survey on 8 February 2023 saying 17 percent of Biden voters would not have voted for Biden if they had known. [S4] The Washington Post Fact Check treated the underlying poll as questionable.\n- Mark Zuckerberg later said an FBI warning about \"Russian propaganda\" led Facebook to censor the story before the election. [S5]\n- Twitter suspended the Post's account after publication and blocked users from sharing the link. [S2]\n- I did not find Biden's or Trump's own statements on these questions. I also did not search for their pre-election 2020 statements.\n\n**4. Limits**\n- The Comey letter concerned a candidate's own conduct, not a relative's. It also came from an official source (the FBI director) and received heavy coverage.\n- The 2016 effect is hard to separate from a decline that began earlier.\n- The laptop story would have hit a much more polarized electorate in 2020. Pew found Trump won 94% of Republican voters. [S1] That leaves few persuadable voters.\n- In 2020, far more ballots were cast early than in 2016. I have no figure for this from my searches.\n- All the laptop polling is retrospective and prone to expressive responding. Dyck raised exactly this concern. [S1]\n- Group-level swings (nativity, region, race) are essentially unsupported by what I found.",
+ "prompt": "Scenario for the 2020 United States presidential election (election day 2020-11-03).\nA reader asked: \"the hunter biden laptop story was more widely circulated\".\nAs modelled: Reporting on the contents of the son's laptop reaches far more voters before election day, through major outlets and social media.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How much did late-campaign scandal stories change the vote choice of undecided voters in past presidential elections?\n- How did voters who had already cast early ballots respond to late-breaking news in earlier elections?\n- How have voters reacted to allegations about a candidate's family members in past campaigns?\n- How did the reach of major media outlets versus social media shape what voters knew in the final week of a campaign?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 23430,
+  "output_tokens": 2303,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 2
+ },
+ "dollars": 0.1253
+}

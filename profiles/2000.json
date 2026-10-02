@@ -1,0 +1,101 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Bush",
+  "D": "Gore",
+  "O": "Nader"
+ },
+ "full_names": {
+  "R": "George W. Bush",
+  "D": "Al Gore",
+  "O": "Ralph Nader"
+ },
+ "descriptors": {
+  "R": "nominee of the party that has held a majority in both houses of Congress since the 1994 elections; a sitting governor of a large Southern state",
+  "D": "the sitting Vice President, nominee of the party that has held the White House since 1993",
+  "O": "third-party nominee, a consumer advocate campaigning against corporate influence over both major parties"
+ },
+ "compile_desc": {
+  "R": "the party that has held a majority in both houses of Congress since the 1994 elections",
+  "D": "the party that has held the White House since 1993",
+  "president": "Clinton"
+ },
+ "third": "O",
+ "label_pool": [
+  "K",
+  "T",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on most ballots, including a Reform party and a Libertarian nominee (answer \"other\").",
+ "plank_order": [
+  "taxes",
+  "Social Security",
+  "education",
+  "debt",
+  "defense",
+  "health care",
+  "abortion"
+ ],
+ "names_re": "\\b(Bush|Gore|Cheney|Lieberman|Clinton|Hillary|McCain|Bradley|Nader|Buchanan|LaDuke|Harry Browne|Lewinsky|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Bush, Gore, Cheney, Lieberman, Clinton, McCain, Bradley, Nader, Buchanan, LaDuke, Harry Browne or Lewinsky",
+ "corpus": null,
+ "platforms": "context/platforms_2000.json",
+ "ev_label": "271–266",
+ "slice_sources": {
+  "men": "2000 census (April; SF1/SF3 via NHGIS) aged to November 2000 along the 1990→2000 trend; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2000); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2000 returns.",
+  "women": "2000 census (April; SF1/SF3 via NHGIS) aged to November 2000 along the 1990→2000 trend; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2000); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2000 returns.",
+  "south-white": "2000 census (April; SF1/SF3 via NHGIS) aged to November 2000 along the 1990→2000 trend; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2000); calibrated to the certified 2000 returns.",
+  "black-south": "2000 census (April; SF1/SF3 via NHGIS) aged to November 2000 along the 1990→2000 trend; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2000), which falls on them disproportionately; calibrated to the certified 2000 returns.",
+  "immigrants": "2000 census (April; SF1/SF3 via NHGIS) aged to November 2000 along the 1990→2000 trend; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b",
+   "the First Lady"
+  ],
+  [
+   "\\b(?:President )?(?:Bill )?Clinton\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Governor )?(?:George )?(?:W\\. )?Bush\\b",
+   "the nominee of the congressional majority party"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Al )?Gore\\b",
+   "the Vice President"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the congressional majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Dick )?Cheney\\b|\\b(?:Joe )?Lieberman\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:John )?McCain\\b|\\b(?:Bill )?Bradley\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Ralph )?Nader\\b|\\b(?:Pat )?Buchanan\\b|\\b(?:Winona )?LaDuke\\b|\\bHarry Browne\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:Monica )?Lewinsky\\b",
+   "a former White House intern"
+  ]
+ ]
+}

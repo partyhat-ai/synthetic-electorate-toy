@@ -1,0 +1,107 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 4 November",
+ "names": {
+  "R": "Blaine",
+  "D": "Cleveland",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "James G. Blaine",
+  "D": "Grover Cleveland"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration, which has held the presidency since 1861",
+  "D": "nominee of the party that has held a majority in the House since the 1882 elections"
+ },
+ "compile_desc": {
+  "R": "the party that has held the presidency since 1861",
+  "D": "the party that has held a majority in the House since the 1882 elections",
+  "president": "Arthur"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Greenback and Anti-Monopoly nominee and a Prohibition nominee (answer \"other\").",
+ "plank_order": [
+  "corruption",
+  "tariff",
+  "labor",
+  "civil service",
+  "ballot",
+  "Chinese immigration",
+  "railroads"
+ ],
+ "names_re": "\\b(Blaine|Cleveland|Logan|Hendricks|(?-i:Butler)|St\\.? John|Arthur|Edmunds|Burchard|Tilden|Garfield|Mugwumps?|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Blaine, Cleveland, Logan, Hendricks, Butler, St. John, Arthur, Garfield or Tilden",
+ "corpus": null,
+ "platforms": "context/platforms_1884.json",
+ "ev_label": "219–182",
+ "slice_sources": {
+  "men": "1880 and 1890 censuses interpolated to November 1884; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1884 returns.",
+  "women": "1880 and 1890 censuses interpolated to November 1884; women 21+ outside the South; no state let women vote for president in 1884 (women voted in Wyoming Territory, which had no electoral votes), so this slice casts no presidential vote.",
+  "south-white": "1880 and 1890 censuses interpolated to November 1884; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1884 returns.",
+  "black-south": "1880 and 1890 censuses interpolated to November 1884; Black adults in the eleven former Confederate states; Black men still voted in large numbers, but violence, fraud and laws like South Carolina's 1882 eight-box law cut their turnout; the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1880 and 1890 censuses interpolated to November 1884; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Chester A\\. )?Arthur\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the House majority party"
+  ],
+  [
+   "\\bBlaine\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\b(?:Grover )?Cleveland\\b",
+   "the House majority party's nominee"
+  ],
+  [
+   "\\b(?:Logan|Hendricks)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:President )?Garfield\\b",
+   "the late President"
+  ],
+  [
+   "\\b(?:Samuel J\\. )?Tilden\\b",
+   "the House majority party's 1876 nominee"
+  ],
+  [
+   "\\bMugwumps?\\b",
+   "independent reformers"
+  ],
+  [
+   "\\bBurchard\\b",
+   "a clergyman"
+  ],
+  [
+   "\\bEdmunds\\b",
+   "a senator"
+  ],
+  [
+   "\\b(?:Butler|St\\.? John)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

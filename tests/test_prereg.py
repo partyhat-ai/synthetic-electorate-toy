@@ -22,8 +22,8 @@ def test_benchmarks_isolated():
             continue
         hits = [l.strip() for l in f.read_text().splitlines() if bad.search(l)]
         if f.name == 'pipeline.py':
-            # inside Run.evaluate only
-            assert [h.split('#')[0].strip() for h in hits] == ['from . import benchmarks'], hits
+            # inside Run.verify (Corder–Wolbrecht) and Run.evaluate only
+            assert [h.split('#')[0].strip() for h in hits] == ['from . import benchmarks'] * 2, hits
         else:
             assert not hits, (f.name, hits)
 

@@ -1,0 +1,99 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Eisenhower",
+  "D": "Stevenson",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Dwight D. Eisenhower",
+  "D": "Adlai E. Stevenson"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1953",
+  "D": "nominee of the party that held the presidency from 1933 to 1953 and has held a majority in Congress since the 1954 elections"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1953",
+  "D": "the party that held the presidency from 1933 to 1953 and has held a majority in Congress since the 1954 elections",
+  "president": "Eisenhower"
+ },
+ "third": null,
+ "label_pool": [
+  "L",
+  "P",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a States' Rights and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "peace",
+  "economy",
+  "agriculture",
+  "civil rights",
+  "labor",
+  "taxes",
+  "social security"
+ ],
+ "names_re": "\\b(Eisenhower|Ike|Nixon|Stevenson|Kefauver|Truman|Roosevelt|Andrews|Walter B\\.? Jones|Talmadge|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Eisenhower, Nixon, Stevenson, Kefauver, Truman, Franklin Roosevelt, Andrews or Jones",
+ "corpus": null,
+ "platforms": "context/platforms_1956.json",
+ "ev_label": "457–73–1",
+ "slice_sources": {
+  "men": "1950 and 1960 censuses interpolated to November 1956; men 21+ (18+ in Georgia and Kentucky) outside the eleven Southern states, in the 48 states (no presidential vote in DC; Alaska and Hawaii were territories); calibrated to certified 1956 returns.",
+  "women": "1950 and 1960 censuses interpolated to November 1956; women 21+ (18+ in Georgia and Kentucky) outside the eleven Southern states, in the 48 states (no presidential vote in DC; Alaska and Hawaii were territories); calibrated to certified 1956 returns.",
+  "south-white": "1950 and 1960 censuses interpolated to November 1956; white adults (21+ (18+ in Georgia and Kentucky)) in the eleven former Confederate states (includes a small number of American Indian and Asian adults), where poll taxes still applied in Alabama, Arkansas, Mississippi, Texas and Virginia; calibrated to certified 1956 returns.",
+  "black-south": "1950 and 1960 censuses interpolated to November 1956; Black adults in the eleven former Confederate states; registration held to roughly a quarter of Black adults by literacy tests, poll taxes, registrar discretion and intimidation. The shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1950 and 1960 censuses interpolated to November 1956; foreign-born white adults who were not naturalized citizens (aliens could not vote in any state)."
+ },
+ "masks": [
+  [
+   "\\bPresident Eisenhower\\b|\\bEisenhower\\b|\\bIke\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?Nixon\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bStevenson\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bKefauver\\b",
+   "a running mate"
+  ],
+  [
+   "\\bTruman\\b",
+   "the former President"
+  ],
+  [
+   "\\bRoosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bAndrews\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\bWalter B\\.? Jones\\b",
+   "a dissenting elector's choice"
+  ]
+ ]
+}

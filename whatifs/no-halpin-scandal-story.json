@@ -1,0 +1,156 @@
+{
+ "key": "no-halpin-scandal-story",
+ "label": "No Halpin Scandal Story",
+ "kind": "issue",
+ "subkind": "event",
+ "mode": "agents",
+ "detail": "The Buffalo Evening Telegraph never publishes its July 1884 story that the Democratic nominee fathered a child out of wedlock with Maria Halpin, so the scandal and the 'Ma, Ma, where's my Pa?' taunts never enter the campaign.",
+ "assumption": "The Halpin story stays a local rumour and never reaches print; the campaign runs on public questions such as the tariff, corruption and civil service. Voters who were swayed by the morals charge, chiefly devout Protestants and reform-minded men, judge the Democratic nominee on his public record alone. All other events, including the Mulligan letters and the late 'Rum, Romanism and Rebellion' remark, happen as they did.",
+ "plausibility": "within-reach",
+ "anachronism": false,
+ "anachronism_note": "",
+ "year": 1884,
+ "years": [
+  1884
+ ],
+ "withdraws": null,
+ "facts_text": [],
+ "reach": {},
+ "about": "D",
+ "nominee_news": [
+  "No newspaper has printed any charge against his private life during the campaign. He is known chiefly as a reform governor of upright and blunt character."
+ ],
+ "drop_topics": [],
+ "drop_planks": [],
+ "add_planks": [],
+ "candidate": null,
+ "franchise": null,
+ "population_scale": null,
+ "words": [
+  "buffalo telegraph",
+  "halpin",
+  "illegitimate child",
+  "ma ma where's my pa",
+  "maria halpin",
+  "private life",
+  "scandal"
+ ],
+ "research_questions": [
+  "How much did the Halpin revelation of July 1884 shift support among Protestant clergy, temperance voters and Mugwump reformers in New York?",
+  "Did any Republican-leaning or independent voters cite the scandal as their reason for abandoning Cleveland, as reported in newspapers or letters of the period?",
+  "Was the Halpin story already widely known in Buffalo and Erie County before publication, and how did local voters there respond in 1884?",
+  "How did comparable private-morals scandals involving nineteenth-century candidates affect turnout and vote choice?"
+ ],
+ "slices": [
+  "immigrants",
+  "men",
+  "women",
+  "south-white",
+  "black-south"
+ ],
+ "borrowed": null,
+ "source_text": "the buffalo paper never breaks cleveland's illegitimate child story.",
+ "generated": true,
+ "exploratory": true,
+ "evidence_mode": "blend",
+ "compiled": {
+  "model": "claude-opus-5-5",
+  "version": "c3"
+ },
+ "world": {
+  "version": "w1",
+  "contradicted": [],
+  "consequences": [
+   "No newspaper has printed any story that the governor of New York, nominee of the party that has held a majority in the House since the 1882 elections, fathered a child out of wedlock, and the street taunt 'Ma, Ma, where's my Pa?' has never been heard this autumn.",
+   "No Buffalo clergymen have investigated the governor's private life, and no pulpit or religious weekly has denounced him on moral grounds this campaign.",
+   "The personal charges of the campaign concern only the public dealings of the nominee of the party that has held the presidency since 1861, chiefly his railroad letters, while the governor is spoken of for his vetoes and his record against waste in Albany and Buffalo."
+  ],
+  "items": [
+   {
+    "id": "W1",
+    "date": "1884-08-14",
+    "kind": "clergy meeting",
+    "regions": [
+     "northeast"
+    ],
+    "text": "Buffalo, Aug. 13. The Ministerial Association met yesterday at the Y.M.C.A. rooms. Papers were read on Sabbath observance and the licensing of saloons along the canal district. A motion to take up the presidential canvass was laid on the table as outside the province of the body."
+   },
+   {
+    "id": "W2",
+    "date": "1884-09-22",
+    "kind": "independents' rally",
+    "regions": [
+     "northeast"
+    ],
+    "text": "Boston, Sept. 21. The Independent the administration party filled Tremont Temple last evening. Speakers praised the governor of New York's vetoes of the five-cent fare bill and the Buffalo sewer contracts. Resolutions on civil service reform were adopted without dissent, and a ward committee was named for every district of the city."
+   },
+   {
+    "id": "W3",
+    "date": "1884-10-10",
+    "kind": "torchlight parade",
+    "regions": [
+     "midwest"
+    ],
+    "text": "Columbus, O., Oct. 9. The Young Men's club paraded last night with 1,200 torches. Transparencies read 'Veto Governor' and 'Public Office Is a Public Trust.' Boys along High street shouted 'Burn this letter!' at the marching column. No disorder was reported by the police."
+   },
+   {
+    "id": "W4",
+    "date": "1884-11-01",
+    "kind": "businessmen's parade",
+    "regions": [
+     "northeast"
+    ],
+    "text": "New York, Nov. 1. Some 30,000 merchants, clerks and bankers marched down Broadway to-day in a businessmen's parade for reform in government. Stores were closed from noon. Banners from the Produce and Cotton exchanges bore the words 'Honest Government' and 'Reform in Albany, Reform in Washington.'"
+   }
+  ],
+  "check": {
+   "question": "Have boys and marchers in the streets this autumn taken up a chant mocking a fatherless child, 'Ma, Ma, where's my Pa?'",
+   "options": [
+    "Yes, it is heard at parades everywhere",
+    "No, no such chant is heard"
+   ],
+   "expected": "No, no such chant is heard",
+   "control": "Yes, it is heard at parades everywhere"
+  },
+  "focus": [
+   {
+    "sex": [
+     "M"
+    ],
+    "group": [
+     "native_white"
+    ],
+    "region": [
+     "northeast"
+    ],
+    "why": "Protestant churchgoing and independent-minded native men of New York and New England were the voters most exposed to sermons and editorials on the governor's morals, and New York was decided by about a thousand votes."
+   },
+   {
+    "sex": [
+     "M"
+    ],
+    "group": [
+     "native_white"
+    ],
+    "region": [
+     "midwest"
+    ],
+    "why": "Evangelical and temperance-minded native men of the Midwest weighed private character heavily and some drifted to the prohibition ticket when both major nominees seemed tainted."
+   },
+   {
+    "sex": [
+     "M"
+    ],
+    "group": [
+     "foreign_white_naturalized"
+    ],
+    "region": [
+     "northeast"
+    ],
+    "why": "Catholic naturalized men in the northeastern cities, courted by both sides, heard the scandal pressed by opponents as a moral objection to the governor."
+   }
+  ],
+  "model": "claude-opus-5-5",
+  "effort": "high"
+ }
+}

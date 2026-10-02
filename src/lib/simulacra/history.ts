@@ -9,11 +9,19 @@
 // winner, Wikipedia's "List of United States presidential election results by
 // state"; electoral votes by state, the House apportionments plus two (D.C.
 // three). Portraits: Wikimedia Commons, the lead image of each candidate's
-// Wikipedia article.
+// Wikipedia article, which the portrait links to.
 import { STATES } from './geo';
 import type { Family } from './palette';
 
 const PORTRAITS = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
+// Each candidate's Wikipedia article: their name is its exact title (checked
+// against the Wikipedia API), except where it names a
+// disambiguation page.
+const WIKI = 'https://en.wikipedia.org/wiki/';
+const WIKI_TITLE: Readonly<Partial<Record<PersonId, string>>> = { stevenson: 'Adlai Stevenson II' };
+/** The candidate's Wikipedia article. */
+export const wikiUrl = (id: PersonId | null, name: string): string =>
+  WIKI + encodeURIComponent(((id && WIKI_TITLE[id]) || name).replace(/ /g, '_'));
 
 // Party codes (the by-state table's) → label and the palette family
 // (palette.ts candidateHues) that sets the colour.
@@ -349,6 +357,8 @@ export interface Candidate {
   readonly ev: number;
   readonly popular: number | null;
   readonly portrait: string | null;
+  /** Their Wikipedia article. */
+  readonly wiki: string;
 }
 
 /** A state that cast electoral votes, and who carried it ('O': a split delegation). */
@@ -380,7 +390,7 @@ const party = (code: string): Pick<Candidate, 'party' | 'partyLabel' | 'family'>
 
 const person = ([id, code, ev, popular]: Ran, key: string): Candidate => {
   const [name, short, path] = PEOPLE[id];
-  return { key, id, name, short, ...party(code), ev, popular, portrait: PORTRAITS + path };
+  return { key, id, name, short, ...party(code), ev, popular, portrait: PORTRAITS + path, wiki: wikiUrl(id, name) };
 };
 
 const cache = new Map<number, Election>();
@@ -401,7 +411,7 @@ export function electionOf(year: number): Election | null {
   const candidates: [Candidate, ...Candidate[]] = [person(a, 'A')];
   if (b) candidates.push(person(b, 'B'));
   others.forEach(([name, short, code, ev, popular], i) => {
-    candidates.push({ key: String.fromCharCode(67 + i), id: null, name, short, ...party(code), ev, popular, portrait: null });
+    candidates.push({ key: String.fromCharCode(67 + i), id: null, name, short, ...party(code), ev, popular, portrait: null, wiki: wikiUrl(null, name) });
   });
   const byParty = new Map<string, string>();
   for (const c of candidates) if (!byParty.has(c.party)) byParty.set(c.party, c.key);

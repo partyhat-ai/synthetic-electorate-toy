@@ -1,0 +1,104 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Willkie",
+  "D": "Roosevelt",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Wendell Willkie",
+  "D": "Franklin D. Roosevelt"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1921 to 1933",
+  "D": "nominee of the party in office since 1933, renominating the sitting President for a third term"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1921 to 1933",
+  "D": "the party in office since 1933",
+  "president": "Roosevelt"
+ },
+ "third": null,
+ "label_pool": [
+  "P",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist, a Prohibition and a Communist nominee (answer \"other\").",
+ "plank_order": [
+  "war",
+  "unemployment",
+  "third term",
+  "aid to",
+  "defense",
+  "social security",
+  "agriculture",
+  "labor"
+ ],
+ "names_re": "\\b(Willkie|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|McNary|Wallace|Garner|Norman Thomas|Browder|Dewey|Robert A\\. Taft|Hoover|New Deal|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Willkie, Roosevelt, McNary, Wallace, Garner, Norman Thomas, Browder, Dewey, Robert Taft or Hoover",
+ "corpus": null,
+ "platforms": "context/platforms_1940.json",
+ "ev_label": "449–82",
+ "slice_sources": {
+  "men": "1940 census (April, the first to recode Mexican-origin people as white and to tabulate citizenship for all foreign-born) aged to November 1940; men 21+ outside the eleven Southern states, citizens only, American Indians included as citizens since 1924; Black voters here vote heavily Democratic since 1936; calibrated to certified 1940 returns.",
+  "women": "1940 census aged to November 1940, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1940 vote.",
+  "south-white": "1940 census aged to November 1940, white adults (now including Mexican-origin adults) in the eleven former Confederate states; poll taxes remain in eight (North Carolina, Louisiana and Florida have repealed theirs); calibrated to certified 1940 returns.",
+  "black-south": "1940 census aged to November 1940, Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test and the white primary continues, so the shortfall against white turnout is counted as exclusion; the few who vote lean Democratic since 1936.",
+  "immigrants": "1940 census aged to November 1940, foreign-born white adults who were not naturalized; no state let aliens vote."
+ },
+ "masks": [
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Wendell (?:L\\. )?)?Willkie\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bNew Deal\\b",
+   "the administration's program"
+  ],
+  [
+   "\\b(?:Vice[- ]President )?(?:John (?:N\\. |Nance )?)?Garner\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Secretary )?(?:Henry (?:A\\. )?)?Wallace\\b|\\b(?:Senator )?(?:Charles (?:L\\. )?)?McNary\\b",
+   "a running mate"
+  ],
+  [
+   "\\bNorman (?:M\\. )?Thomas\\b|\\b(?:Earl )?Browder\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:Thomas E\\. )?Dewey\\b|\\bRobert (?:A\\. )?Taft\\b",
+   "a rival for the out-party nomination"
+  ],
+  [
+   "\\b(?:Herbert )?Hoover\\b",
+   "the former President"
+  ]
+ ]
+}

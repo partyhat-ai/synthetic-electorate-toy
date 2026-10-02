@@ -1,0 +1,102 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Taft",
+  "D": "Wilson",
+  "O": "Roosevelt"
+ },
+ "full_names": {
+  "R": "William H. Taft",
+  "D": "Woodrow Wilson",
+  "O": "Theodore Roosevelt"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1897",
+  "D": "nominee of the party that has held a majority in the House since the 1910 elections",
+  "O": "former President, nominee of a new party of progressive insurgents who bolted the convention of the party in office"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1897",
+  "D": "the party that has held a majority in the House since the 1910 elections",
+  "president": "Taft"
+ },
+ "third": "O",
+ "label_pool": [
+  "F",
+  "K",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist, a Prohibition and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "tariff",
+  "trusts",
+  "popular rule",
+  "labor",
+  "cost of living",
+  "courts",
+  "woman suffrage",
+  "currency"
+ ],
+ "names_re": "\\b(Taft|Wilson|Roosevelt|Sherman|(?-i:Marshall)|Hiram Johnson|Johnson|Debs|Seidel|Chafin|Reimer|Bryan|Champ Clark|La ?Follette|Bull Moose(?:rs)?|Progressive party|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Taft, Wilson, Roosevelt, Sherman, Marshall, Johnson, Debs, Bryan, Champ Clark or La Follette",
+ "corpus": null,
+ "platforms": "context/platforms_1912.json",
+ "ev_label": "435–88–8",
+ "slice_sources": {
+  "men": "1910 and 1920 censuses interpolated to November 1912; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1912 returns.",
+  "women": "1910 and 1920 censuses interpolated to November 1912; women 21+ outside the South; women could vote for president only in Wyoming, Colorado, Utah, Idaho, Washington (1910) and California (1911); Arizona, Kansas and Oregon adopted suffrage at this same election, so their women first voted for president in 1916.",
+  "south-white": "1910 and 1920 censuses interpolated to November 1912; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1912 returns.",
+  "black-south": "1910 and 1920 censuses interpolated to November 1912; Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test, grandfather clause and white primary was near complete across the region; the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1910 and 1920 censuses interpolated to November 1912; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |William H(?:oward)?\\.? )?Taft\\b",
+   "the President"
+  ],
+  [
+   "\\bProgressive party\\b|\\bBull Moose(?:rs)?\\b",
+   "the new third party"
+  ],
+  [
+   "\\b(?:[Ff]ormer |[Ee]x-)?(?:President |Colonel |Theodore )?Roosevelt\\b",
+   "the Progressive candidate"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the House majority party"
+  ],
+  [
+   "\\b(?:Governor |Woodrow )?Wilson\\b",
+   "the House majority party's nominee"
+  ],
+  [
+   "\\b(?:Sherman|Marshall|(?:Hiram )?Johnson)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:William Jennings |W\\. J\\. )?Bryan\\b|\\bChamp Clark\\b",
+   "a House majority party leader"
+  ],
+  [
+   "\\bLa ?Follette\\b",
+   "an insurgent senator"
+  ],
+  [
+   "\\b(?:Debs|Seidel|Chafin|Reimer)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

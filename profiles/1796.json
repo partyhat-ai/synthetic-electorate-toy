@@ -1,0 +1,125 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 4 November until the electors meet on 7 December 1796)",
+  "names": {
+    "R": "Adams",
+    "D": "Jefferson",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "John Adams",
+    "D": "Thomas Jefferson"
+  },
+  "descriptors": {
+    "R": "the sitting Vice President, candidate of the faction that has backed the administration's financial program and the 1795 treaty with Britain",
+    "D": "a former Secretary of State, candidate of the opposition faction that has fought the national bank and the treaty with Britain and leans toward France"
+  },
+  "compile_desc": {
+    "R": "the faction of the administration in office since 1789",
+    "D": "the opposition faction",
+    "president": "Washington"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y"
+  ],
+  "others_line": "Each side also backs a second man, and electors may scatter votes among regional favourites; any vote outside the two leading candidates counts as \"other\".",
+  "plank_order": [
+    "foreign policy",
+    "national bank",
+    "public credit",
+    "constitution",
+    "taxes"
+  ],
+  "names_re": "\\b(Adams|Jefferson|Pinckney|Burr|Washington(?! City)|Hamilton|Madison|Ellsworth|Clinton|(?-i:Jay)|Federalist|Republican|Democrat)",
+  "never_name": "Adams, Jefferson, Pinckney, Burr, Washington, Hamilton, Madison, Ellsworth, Clinton or Jay",
+  "corpus": null,
+  "platforms": "context/platforms_1796.json",
+  "ev_label": "71–68",
+  "slice_sources": {
+    "men": "1790 and 1800 census interpolated to 1796, free adult men outside the Southern states; the 1790 census gives only free white males 16 and over, so men 21+ are estimated. Voters were men meeting each state's rules: most states required a freehold, property or taxpaying qualification (Vermont, Kentucky and, for taxpayers, Georgia and Pennsylvania were broader). Electors were chosen by popular vote in 8 states; elsewhere (Connecticut, Delaware, New Jersey, New York, Rhode Island, South Carolina and Vermont (Tennessee used electors named by county-chosen electors; Massachusetts's legislature chose from district candidates)) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1790 and 1800 census interpolated to 1796, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey's propertied women could vote in state elections, but its legislature chose the electors this year. Turnout is zero by law, not by estimate.",
+    "south-white": "1790 and 1800 census interpolated to 1796, white adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina legislature chose its electors, so people there cast no presidential vote.",
+    "black-south": "1790 and 1800 census interpolated to 1796, Black adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1790 and 1800 censuses did not count aliens. Immigration was small (a few thousand a year), naturalization needed five years' residence under the 1795 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bJay(?:\\'s)? Treaty\\b",
+      "the treaty with Britain"
+    ],
+    [
+      "\\bPresident Washington\\b|\\bGeneral Washington\\b|\\bWashington\\b(?! City)",
+      "the President"
+    ],
+    [
+      "\\bSamuel Adams\\b",
+      "the governor of Massachusetts"
+    ],
+    [
+      "\\b(?:John |Vice President )?Adams\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:Thomas )?Jefferson\\b",
+      "the former Secretary of State"
+    ],
+    [
+      "\\b(?:Thomas )?Pinckney\\b",
+      "the administration faction's second candidate"
+    ],
+    [
+      "\\b(?:Aaron )?Burr\\b",
+      "the opposition faction's second candidate"
+    ],
+    [
+      "\\b(?:Alexander )?Hamilton\\b",
+      "the former Secretary of the Treasury"
+    ],
+    [
+      "\\b(?:James )?Madison\\b",
+      "a Virginia congressman"
+    ],
+    [
+      "\\b(?:Oliver )?Ellsworth\\b",
+      "the Chief Justice"
+    ],
+    [
+      "\\b(?:George )?Clinton\\b",
+      "a former governor of New York"
+    ],
+    [
+      "\\bJohn Jay\\b|\\bJay\\b",
+      "the governor of New York"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the administration faction"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

@@ -1,0 +1,1081 @@
+{
+ "l1": {
+  "n": 0,
+  "year_rate": null,
+  "names_rate": null,
+  "winner_rate": null,
+  "exposed_cohorts": [],
+  "by_cohort": {}
+ },
+ "l2": {
+  "n": 0,
+  "label_rate": null,
+  "platform_rate": null
+ },
+ "a1": [
+  {
+   "cohort": "south:M:native_white",
+   "label": "Native-born white men, south",
+   "n": 3,
+   "agent_turnout": 0.78,
+   "backbone_turnout": 0.7410709985199639,
+   "agent_r2": 0.47663944270958447,
+   "backbone_r2": 0.33025436191731117,
+   "bias_logit": 0.6135245355453343,
+   "tvd": 0.25892900148003606,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:foreign_white_naturalized",
+   "label": "Naturalized immigrant men, northeast",
+   "n": 3,
+   "agent_turnout": 0.7450000000000001,
+   "backbone_turnout": 0.7872214613297475,
+   "agent_r2": 0.7053208523217144,
+   "backbone_r2": 0.4337038151806284,
+   "bias_logit": 1.1395210679546195,
+   "tvd": 0.658579048829219,
+   "exposed": false
+  },
+  {
+   "cohort": "northeast:M:native_white",
+   "label": "Native-born white men, northeast",
+   "n": 3,
+   "agent_turnout": 0.78,
+   "backbone_turnout": 0.8131397048988436,
+   "agent_r2": 0.7087552114353781,
+   "backbone_r2": 0.5456958192557262,
+   "bias_logit": 0.7060513590479606,
+   "tvd": 0.5562730625658661,
+   "exposed": false
+  },
+  {
+   "cohort": "midwest:M:native_white",
+   "label": "Native-born white men, midwest",
+   "n": 3,
+   "agent_turnout": 0.78,
+   "backbone_turnout": 0.8636715963069739,
+   "agent_r2": 0.4556283502084575,
+   "backbone_r2": 0.551594692988379,
+   "bias_logit": -0.3850707358084703,
+   "tvd": 0.27939173936742123,
+   "exposed": false
+  }
+ ],
+ "a2": {
+  "cohorts": [
+   {
+    "cohort": "south:M:native_white",
+    "n": 3,
+    "sd_R2": 0.263121673582273,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.33025436191731117,
+    "homogenized": false
+   },
+   {
+    "cohort": "northeast:M:foreign_white_naturalized",
+    "n": 3,
+    "sd_R2": 0.02512799763981837,
+    "modal_share": 1.0,
+    "backbone_r2": 0.4337038151806284,
+    "homogenized": true
+   },
+   {
+    "cohort": "northeast:M:native_white",
+    "n": 3,
+    "sd_R2": 0.026189140043946166,
+    "modal_share": 1.0,
+    "backbone_r2": 0.5456958192557262,
+    "homogenized": true
+   },
+   {
+    "cohort": "midwest:M:native_white",
+    "n": 3,
+    "sd_R2": 0.2880805404834082,
+    "modal_share": 0.6666666666666666,
+    "backbone_r2": 0.551594692988379,
+    "homogenized": false
+   }
+  ],
+  "homogenization_index": 0.5,
+  "eligible_cohorts": 4
+ },
+ "a4": {
+  "audited": 30,
+  "flagged": 0,
+  "rate": 0.0,
+  "flagged_examples": []
+ },
+ "nationally_exposed": false,
+ "effects": {
+  "no-rum-romanism-rebellion-remark": {
+   "national": {
+    "dt": {
+     "mean": -0.06774408943342265,
+     "lo": -0.14937906187678335,
+     "hi": 0.015199124353626144
+    },
+    "dr": {
+     "mean": 0.44242216081572594,
+     "lo": -0.2802980102253654,
+     "hi": 1.072385681853182
+    },
+    "do": {
+     "mean": 0.05260402166993808,
+     "lo": -0.10081504716276445,
+     "hi": 0.1801107290977496
+    }
+   },
+   "national_bias": 0.3115017195949415,
+   "by_paraphrase": {
+    "0": {
+     "dt": 0.04187632091766358,
+     "dr": 0.9303336412412543,
+     "do": 0.10371023317542472
+    },
+    "1": {
+     "dt": -0.043184602950380846,
+     "dr": 0.42358294616500486,
+     "do": 0.06710736325406619
+    },
+    "2": {
+     "dt": -0.20430706310553504,
+     "dr": -0.09743557370909539,
+     "do": -0.02408894182764043
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": -0.0988053404964091,
+     "dr": 0.5288256705536503,
+     "do": 0.07178301942989251
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": -0.0988053404964091,
+     "dr": 0.5288256705536503,
+     "do": 0.07178301942989251
+    }
+   },
+   "agent_stats": {
+    "n": 9,
+    "measure": "dr",
+    "spans_zero": true,
+    "paraphrase_flip": true,
+    "exposed": false,
+    "borrowed": 1,
+    "checked": 0,
+    "misread": 0,
+    "belief_checked": 0,
+    "belief_failed": 0,
+    "audit_checked": 0,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": null
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "r2",
+      "agents_pp": 10.9,
+      "detail": "On the Republican two-party share, the sources point the same way as the interviews (+10.9 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the same way as the interviews (+10.9 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 0,
+    "misread": 0,
+    "rows": [],
+    "belief_checked": 0,
+    "belief_failed": 0,
+    "audit_checked": 0,
+    "audit_failed": 0,
+    "escalated": 0,
+    "dropped": 0,
+    "question": null,
+    "belief_rows": [],
+    "audit_rows": []
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.78,
+      "R2": 0.4556283502084575,
+      "O": 0.2104972375690608,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7725,
+      "R2": 0.6764839836040686,
+      "O": 0.22186629526462395,
+      "n": 3
+     },
+     "dt": -0.043184602950380846,
+     "dr": 0.9156148871361165,
+     "do": 0.06710736325406597,
+     "bias": -0.3850707358084703,
+     "n": 3,
+     "bias_used": -0.3850707358084703,
+     "weight": 0.23750949091943577,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.78,
+      "R2": 0.7087552114353781,
+      "O": 0.21049723756906077,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.7625,
+      "R2": 0.7042731385254921,
+      "O": 0.21926760563380282,
+      "n": 3
+     },
+     "dt": -0.09923148832440543,
+     "dr": -0.021616097882953267,
+     "do": 0.051991283921735354,
+     "bias": 0.7060513590479606,
+     "n": 3,
+     "bias_used": 0.7060513590479606,
+     "weight": 0.181999147014274,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.78,
+      "R2": 0.47663944270958447,
+      "O": 0.218121546961326,
+      "n": 3
+     },
+     "counterfactual": {
+      "turnout": 0.77,
+      "R2": 0.5557756781469064,
+      "O": 0.22318435754189944,
+      "n": 3
+     },
+     "dt": -0.05735516740674185,
+     "dr": 0.3175454008873331,
+     "do": 0.029441926818558617,
+     "bias": 0.6135245355453343,
+     "n": 3,
+     "bias_used": 0.6135245355453343,
+     "weight": 0.1981435807333904,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.06518419457953589,
+     "dr": 0.46149824465874717,
+     "do": 0.05374387831369362,
+     "evidence_blend": {}
+    }
+   }
+  },
+  "no-halpin-scandal-story": {
+   "national": {
+    "dt": {
+     "mean": -0.06649553884672912,
+     "lo": -0.22225000037561438,
+     "hi": 0.07541362776954075
+    },
+    "dr": {
+     "mean": -0.6217648842428654,
+     "lo": -1.1350427795466194,
+     "hi": -0.02952029157677008
+    },
+    "do": {
+     "mean": -0.01596567123229514,
+     "lo": -0.09900451484091365,
+     "hi": 0.06926661027767848
+    }
+   },
+   "national_bias": 0.23888195939086068,
+   "by_paraphrase": {
+    "0": {
+     "dt": 0.03462949901383472,
+     "dr": -0.13705416409379265,
+     "do": -0.08295418711787206
+    },
+    "1": {
+     "dt": -0.24528240940810786,
+     "dr": -1.8408040183851866,
+     "do": 0.10189614235453193
+    },
+    "2": {
+     "dt": 0.0,
+     "dr": 0.07079741355100244,
+     "do": -0.04355998875822109
+    }
+   },
+   "by_model": {
+    "haiku": {
+     "dt": -0.1566268797007122,
+     "dr": -1.0645785682983349,
+     "do": 0.013030718755689064
+    },
+    "sonnet": {
+     "dt": 0.05054416593461897,
+     "dr": -0.14835009140467015,
+     "do": -0.0628808068092459
+    }
+   },
+   "shared_subsample": {
+    "haiku": {
+     "dt": -0.1566268797007122,
+     "dr": -1.0645785682983349,
+     "do": 0.013030718755689064
+    }
+   },
+   "agent_stats": {
+    "n": 8,
+    "measure": "dr",
+    "spans_zero": false,
+    "paraphrase_flip": true,
+    "exposed": false,
+    "borrowed": 19,
+    "checked": 18,
+    "misread": 10,
+    "belief_checked": 18,
+    "belief_failed": 0,
+    "audit_checked": 18,
+    "audit_failed": 0,
+    "escalated": 2,
+    "dropped": 4,
+    "question": "Have boys and marchers in the streets this autumn taken up a chant mocking a fatherless child, 'Ma, Ma, where's my Pa?'"
+   },
+   "agreement": {
+    "verdict": "consistent",
+    "measures": [
+     {
+      "verdict": "consistent",
+      "measure": "r2",
+      "agents_pp": -15.0,
+      "detail": "On the Republican two-party share, the sources point the same way as the interviews (-15.0 points), without numbers."
+     }
+    ],
+    "detail": "On the Republican two-party share, the sources point the same way as the interviews (-15.0 points), without numbers."
+   },
+   "blended": false,
+   "manipulation": {
+    "checked": 18,
+    "misread": 10,
+    "rows": [
+     {
+      "agent": "midwest:M:native_white-0",
+      "expected": "Z",
+      "got": "Z",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "expected": "N",
+      "got": "N",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "expected": "X",
+      "got": "Z",
+      "ok": false
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "expected": "X",
+      "got": "Z",
+      "ok": false
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "expected": "K",
+      "got": "neither",
+      "ok": false
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "expected": "K",
+      "got": "K",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "expected": "K",
+      "got": "K",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "expected": "N",
+      "got": "K",
+      "ok": false
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "expected": "N",
+      "got": "neither",
+      "ok": false
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "expected": "Q",
+      "got": "Q",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "expected": "N",
+      "got": "N",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "expected": "N",
+      "got": "K",
+      "ok": false
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "expected": "N",
+      "got": "neither",
+      "ok": false
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "expected": "N",
+      "got": "N",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "expected": "Z",
+      "got": "X",
+      "ok": false
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "expected": "Z",
+      "got": "neither",
+      "ok": false
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "expected": "N",
+      "got": "Z",
+      "ok": false
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "expected": "N",
+      "got": "N",
+      "ok": true
+     }
+    ],
+    "belief_checked": 18,
+    "belief_failed": 0,
+    "audit_checked": 18,
+    "audit_failed": 0,
+    "escalated": 2,
+    "dropped": 4,
+    "question": "Have boys and marchers in the streets this autumn taken up a chant mocking a fatherless child, 'Ma, Ma, where's my Pa?'",
+    "belief_rows": [
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "got": "No, no such chant is heard",
+      "ok": true
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "sonnet",
+      "got": "No, no such chant is heard",
+      "ok": true
+     }
+    ],
+    "audit_rows": [
+     {
+      "agent": "midwest:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons only from labor pledges and the governor's record, with no mention of any private-life scandal."
+     },
+     {
+      "agent": "midwest:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites the governor's vetoes and fiscal record, which fits the changed world."
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Focuses on waste, surplus and tariff questions and never touches any scandal."
+     },
+     {
+      "agent": "midwest:M:native_white-2",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "He reasons from the railroad letters and the governor's vetoes and never brings up any scandal, which fits the changed world."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Praises the governor's vetoes and honesty, matching his upright reputation in this world."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-0",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "He says he hears nothing but good about the governor, which matches a campaign with no Halpin story."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reasons from the governor's reform record in Buffalo and Albany, as the change describes."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Calls the governor an honest man against the machine, in line with his scandal-free reputation."
+     },
+     {
+      "agent": "northeast:M:foreign_white_naturalized-2",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "He weighs the railroad letters, the vetoes and the tariff, with no reference to a scandal."
+     },
+     {
+      "agent": "northeast:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Weighs tariff and labor loyalties only and never touches the scandal."
+     },
+     {
+      "agent": "northeast:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Cites labor pledges and vetoes and makes no reference to a scandal."
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Reads favorably of the governor's character, which fits the absence of any scandal."
+     },
+     {
+      "agent": "northeast:M:native_white-2",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "His reasoning turns on tariff protection and the railroad letters and does not touch the change."
+     },
+     {
+      "agent": "south:M:native_white-0",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Sees the governor as an honest man and focuses on the surplus and tariff, which fits the changed world."
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Treats the governor as an honest reformer and raises no moral charges against him."
+     },
+     {
+      "agent": "south:M:native_white-1",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "He cites the governor's record against waste and the railroad letters and mentions no scandal."
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "haiku",
+      "verdict": "consistent",
+      "why": "Notes that the campaign's personal charges concern the Republican's railroad dealings, matching the settled facts."
+     },
+     {
+      "agent": "south:M:native_white-2",
+      "model": "sonnet",
+      "verdict": "consistent",
+      "why": "He points to the tariff and the railroad letters, which fits a world without the Halpin story."
+     }
+    ]
+   },
+   "transfer": null,
+   "cohorts": {
+    "midwest:M:native_white": {
+     "control": {
+      "turnout": 0.7566666666666667,
+      "R2": 0.5244890088700348,
+      "O": 0.2444043321299639,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7233333333333333,
+      "R2": 0.3211942643881359,
+      "O": 0.23389513108614235,
+      "n": 2
+     },
+     "dt": -0.1734338305891504,
+     "dr": -0.8463233334353898,
+     "do": -0.057763758270096055,
+     "bias": -0.10908152261510269,
+     "n": 2,
+     "bias_used": -0.10908152261510269,
+     "weight": 0.19764822750497368,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:foreign_white_naturalized": {
+     "control": {
+      "turnout": 0.7466666666666667,
+      "R2": 0.6081164807930608,
+      "O": 0.23999999999999996,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.36132113012335854,
+      "O": 0.2544444444444445,
+      "n": 2
+     },
+     "dt": -0.06931179989022862,
+     "dr": -1.0090364500776638,
+     "do": 0.07763237652094368,
+     "bias": 0.7061571815587991,
+     "n": 2,
+     "bias_used": 0.7061571815587991,
+     "weight": 0.13345273215229583,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "northeast:M:native_white": {
+     "control": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.6679841897233201,
+      "O": 0.24814814814814815,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.5,
+      "O": 0.24814814814814815,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": -0.6990819160797594,
+     "do": 0.0,
+     "bias": 0.5157871784970174,
+     "n": 2,
+     "bias_used": 0.5157871784970174,
+     "weight": 0.15797333936611738,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:M:native_white": {
+     "control": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.29642716921868867,
+      "O": 0.24185185185185187,
+      "n": 2
+     },
+     "counterfactual": {
+      "turnout": 0.7333333333333334,
+      "R2": 0.3077223088923557,
+      "O": 0.23555555555555555,
+      "n": 2
+     },
+     "dt": 0.0,
+     "dr": 0.05358046322220922,
+     "do": -0.03464910687647271,
+     "bias": -0.15733499987727118,
+     "n": 2,
+     "bias_used": -0.15733499987727118,
+     "weight": 0.19516873417685274,
+     "exposed": false,
+     "evidence_blend": {}
+    },
+    "south:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.07875045473066158,
+     "dr": -0.6039099523493494,
+     "do": -0.0204624719715725,
+     "evidence_blend": {}
+    },
+    "south:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.07787108700263042,
+     "dr": -0.634576602846861,
+     "do": -0.015775427010445604,
+     "evidence_blend": {}
+    },
+    "south:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.07141026775912795,
+     "dr": -0.6029382651819046,
+     "do": -0.018125506213233833,
+     "evidence_blend": {}
+    },
+    "west:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.05014980907308606,
+     "dr": -0.5974592455212727,
+     "do": -0.010134090672243586,
+     "evidence_blend": {}
+    },
+    "west:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.06397953690637326,
+     "dr": -0.7324746930457328,
+     "do": 0.005684927047650521,
+     "evidence_blend": {}
+    },
+    "west:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.07843049561963948,
+     "dr": -0.6062258374293323,
+     "do": -0.005205915019953227,
+     "evidence_blend": {}
+    },
+    "midwest+northeast+west:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.05108986375563165,
+     "dr": -0.6352876793225842,
+     "do": -0.016863809661108706,
+     "evidence_blend": {}
+    },
+    "northeast:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.05265779287389341,
+     "dr": -0.701005527425599,
+     "do": 0.012002302177857624,
+     "evidence_blend": {}
+    },
+    "northeast:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.068535729384155,
+     "dr": -0.5881305661973449,
+     "do": 0.0035352671385734296,
+     "evidence_blend": {}
+    },
+    "border:F:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.060595368753333004,
+     "dr": -0.6195223885254788,
+     "do": -0.00783701638022712,
+     "evidence_blend": {}
+    },
+    "border+south:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.06655154941038402,
+     "dr": -0.7331362052450581,
+     "do": 0.005899453249203649,
+     "evidence_blend": {}
+    },
+    "border:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.07290821372342117,
+     "dr": -0.6567820269962786,
+     "do": -0.022589079245858176,
+     "evidence_blend": {}
+    },
+    "border:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.07179728757317219,
+     "dr": -0.6096031879654494,
+     "do": -0.002664713480650025,
+     "evidence_blend": {}
+    },
+    "border+south:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.06878106649109891,
+     "dr": -0.717585015886502,
+     "do": 0.010541692290318191,
+     "evidence_blend": {}
+    },
+    "border:M:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.0630978257747224,
+     "dr": -0.6341772059594206,
+     "do": -0.023298246107001104,
+     "evidence_blend": {}
+    },
+    "midwest+west:F:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.04491598521624127,
+     "dr": -0.6873067012504701,
+     "do": 0.017453033815179993,
+     "evidence_blend": {}
+    },
+    "midwest:F:native_white": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its group",
+     "dt": -0.04763401488284551,
+     "dr": -0.619189224905141,
+     "do": -0.009835709843380619,
+     "evidence_blend": {}
+    },
+    "midwest+northeast+west:M:black": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "everyone interviewed",
+     "dt": -0.05739694741343295,
+     "dr": -0.646037598434547,
+     "do": -0.005696992258933647,
+     "evidence_blend": {}
+    },
+    "midwest:M:foreign_white_naturalized": {
+     "control": null,
+     "counterfactual": null,
+     "n": 0,
+     "bias": 0.0,
+     "bias_used": 0.0,
+     "weight": 0.0,
+     "exposed": false,
+     "borrowed": "its own sex and group",
+     "dt": -0.05650264532676444,
+     "dr": -0.645359325739457,
+     "do": -0.005637725352766656,
+     "evidence_blend": {}
+    }
+   }
+  }
+ }
+}

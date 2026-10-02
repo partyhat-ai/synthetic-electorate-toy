@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import {
+  boxMoved,
   DEFAULT_STAGE,
+  dragTurn,
   easeToward,
   nudgeToSlot,
   ROBOT_YAW,
@@ -91,5 +93,51 @@ describe('sameStage', () => {
     expect(sameStage(DEFAULT_STAGE, { ...DEFAULT_STAGE, yaw: 1 })).toBe(false);
     expect(sameStage(null, null)).toBe(true);
     expect(sameStage(null, DEFAULT_STAGE)).toBe(false);
+  });
+});
+
+describe('dragTurn', () => {
+  test('a press that hasn’t moved 4px is still a tap', () => {
+    expect(dragTurn(0, false)).toBeNull();
+    expect(dragTurn(3, false)).toBeNull();
+    expect(dragTurn(-3.9, false)).toBeNull();
+  });
+  test('past 4px it turns 0.6° per px, to the whole degree', () => {
+    expect(dragTurn(4, false)).toBe(2);
+    expect(dragTurn(-10, false)).toBe(-6);
+    expect(dragTurn(101, false)).toBe(61);
+  });
+  test('once a drag, back under 4px still turns (and back to zero is zero)', () => {
+    expect(dragTurn(2, true)).toBe(1);
+    expect(dragTurn(0, true)).toBe(0);
+    expect(Object.is(dragTurn(-0.4, true), 0)).toBe(true);
+  });
+  test('held to half a turn either way', () => {
+    expect(dragTurn(1000, true)).toBe(180);
+    expect(dragTurn(-1000, true)).toBe(-180);
+  });
+  test('let go, the renderer eases the turn back to rest', () => {
+    const rest = (ROBOT_YAW * Math.PI) / 180;
+    let yaw = ((ROBOT_YAW + (dragTurn(300, true) ?? 0)) * Math.PI) / 180;
+    const start = Math.abs(yaw - rest);
+    for (let i = 0; i < 15; i++) yaw = easeToward(yaw, rest, 1 / 60);
+    // A quarter second in, most of the way back, never past rest.
+    expect(Math.abs(yaw - rest)).toBeLessThan(start * 0.3);
+    expect(yaw).toBeGreaterThan(rest);
+    for (let i = 0; i < 240; i++) yaw = easeToward(yaw, rest, 1 / 60);
+    expect(yaw).toBeCloseTo(rest, 6);
+  });
+});
+
+describe('boxMoved', () => {
+  test('a turn alone is not a move', () => {
+    expect(boxMoved(DEFAULT_STAGE, { ...DEFAULT_STAGE, yaw: 123 })).toBe(false);
+    expect(boxMoved(DEFAULT_STAGE, { ...DEFAULT_STAGE })).toBe(false);
+  });
+  test.each(['right', 'bottom', 'width', 'height'] as const)('a changed %s is', (k) => {
+    expect(boxMoved(DEFAULT_STAGE, { ...DEFAULT_STAGE, [k]: DEFAULT_STAGE[k] + 1 })).toBe(true);
+  });
+  test('a flip is', () => {
+    expect(boxMoved(DEFAULT_STAGE, { ...DEFAULT_STAGE, mirror: !DEFAULT_STAGE.mirror })).toBe(true);
   });
 });

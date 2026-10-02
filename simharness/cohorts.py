@@ -26,8 +26,13 @@ GROUP_LABEL = {
 SEX_LABEL = {'M': 'men', 'F': 'women'}
 
 
-def build(cells: pd.DataFrame, cap: int = 40, min_share: float = 0.004) -> tuple[dict, dict]:
-    """Returns ({cohort key: cohort}, {cell index: cohort key})."""
+def build(cells: pd.DataFrame, cap: int = 40, min_share: float = 0.004, year: int = 1920) -> tuple[dict, dict]:
+    """Returns ({cohort key: cohort}, {cell index: cohort key}). year picks the era's group labels
+    (agentlayer.groups_for); 1868–1968 use GROUP_LABEL."""
+    labels, upper = GROUP_LABEL, str.capitalize
+    if not 1868 <= year < 1972:
+        from .agentlayer import groups_for
+        labels, upper = groups_for(year)['labels'], lambda x: x[0].upper() + x[1:]
     total = cells.adults20.sum()
     groups = {}
     for i, r in cells.iterrows():
@@ -64,7 +69,7 @@ def build(cells: pd.DataFrame, cap: int = 40, min_share: float = 0.004) -> tuple
             'key': key, 'region': k[0] if len(members[k]) == 1 else 'mixed', 'regions': sorted(members[k]),
             'sex': k[1], 'group': k[2], 'adults': float(sub.adults20.sum()),
             'adults_by_state': by_state,
-            'label': f'{GROUP_LABEL[k[2]].capitalize()} {SEX_LABEL[k[1]]}, {regions.replace("+", ", ")}',
+            'label': f'{upper(labels[k[2]])} {SEX_LABEL[k[1]]}, {regions.replace("+", ", ")}',
         }
         for i in idx:
             cell_to[i] = key

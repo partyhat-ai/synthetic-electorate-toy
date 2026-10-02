@@ -1,0 +1,111 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 5 November",
+ "names": {
+  "R": "Dole",
+  "D": "Clinton",
+  "O": "Perot"
+ },
+ "full_names": {
+  "R": "Bob Dole",
+  "D": "Bill Clinton",
+  "O": "Ross Perot"
+ },
+ "descriptors": {
+  "R": "nominee of the party that has held a majority in both houses of Congress since the 1994 elections; until June the Senate majority leader",
+  "D": "the sitting President, nominee of the party that has held the White House since 1993",
+  "O": "nominee of a newly founded third party; a self-funded business executive who ran as an independent in 1992 and took nearly a fifth of the vote, running on balancing the budget, term limits and campaign and lobbying reform"
+ },
+ "compile_desc": {
+  "R": "the party that has held a majority in both houses of Congress since the 1994 elections",
+  "D": "the party that has held the White House since 1993",
+  "president": "Clinton"
+ },
+ "third": "O",
+ "label_pool": [
+  "E",
+  "T",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Green, a Libertarian and a Taxpayers party nominee (answer \"other\").",
+ "plank_order": [
+  "taxes",
+  "budget",
+  "Medicare",
+  "term limits",
+  "education",
+  "crime",
+  "immigration",
+  "abortion",
+  "campaign reform"
+ ],
+ "names_re": "\\b(Dole|Clinton|Perot|Gore|Kemp|Choate|Gingrich|Buchanan|Forbes|Nader|Harry Browne|Hillary|Reform Party|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Dole, Clinton, Perot, Gore, Kemp, Choate, Gingrich, Buchanan, Forbes, Nader or Harry Browne",
+ "corpus": null,
+ "platforms": "context/platforms_1996.json",
+ "ev_label": "159–379–0",
+ "slice_sources": {
+  "men": "1990 and 2000 censuses (NHGIS) interpolated to November 1996; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1996); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1996 returns.",
+  "women": "1990 and 2000 censuses (NHGIS) interpolated to November 1996; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1996); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1996 returns.",
+  "south-white": "1990 and 2000 censuses (NHGIS) interpolated to November 1996; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1996); calibrated to the certified 1996 returns.",
+  "black-south": "1990 and 2000 censuses (NHGIS) interpolated to November 1996; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1996), which falls on them disproportionately; calibrated to the certified 1996 returns.",
+  "immigrants": "1990 and 2000 censuses (NHGIS) interpolated to November 1996; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b",
+   "the First Lady"
+  ],
+  [
+   "\\b(?:President )?(?:Bill )?Clinton\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Senator )?(?:Bob )?Dole\\b",
+   "the nominee of the congressional majority party"
+  ],
+  [
+   "\\b(?:H\\. )?(?:Ross )?Perot\\b",
+   "the reform-party candidate"
+  ],
+  [
+   "\\bReform Party\\b",
+   "the new reform party"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the congressional majority party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Al )?Gore\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Jack )?Kemp\\b|\\b(?:Pat )?Choate\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Newt )?Gingrich\\b",
+   "the Speaker of the House"
+  ],
+  [
+   "\\b(?:Pat )?Buchanan\\b|\\b(?:Steve )?Forbes\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Ralph )?Nader\\b|\\bHarry Browne\\b",
+   "a minor-party candidate"
+  ]
+ ]
+}

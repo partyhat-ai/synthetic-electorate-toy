@@ -1,0 +1,108 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Dewey",
+  "D": "Roosevelt",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Thomas E. Dewey",
+  "D": "Franklin D. Roosevelt"
+ },
+ "descriptors": {
+  "R": "nominee of the party that held the presidency from 1921 to 1933",
+  "D": "nominee of the party in office since 1933, renominating the sitting President for a fourth term"
+ },
+ "compile_desc": {
+  "R": "the party that held the presidency from 1921 to 1933",
+  "D": "the party in office since 1933",
+  "president": "Roosevelt"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "P",
+  "Q",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist and a Prohibition nominee, and in Texas an unpledged slate of electors (answer \"other\").",
+ "plank_order": [
+  "war",
+  "peace organization",
+  "postwar jobs",
+  "two terms",
+  "bureaucracy",
+  "civil rights",
+  "social security",
+  "agriculture"
+ ],
+ "names_re": "\\b(Dewey|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|Bricker|Truman|Wallace|Willkie|Norman Thomas|Claude Watson|Hoover|New Deal|Texas Regulars|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Dewey, Roosevelt, Bricker, Truman, Wallace, Willkie, Norman Thomas, Claude Watson or Hoover",
+ "corpus": null,
+ "platforms": "context/platforms_1944.json",
+ "ev_label": "432–99",
+ "slice_sources": {
+  "men": "1940 and 1950 censuses interpolated to November 1944; men 21+ outside the eleven Southern states, citizens only, including the millions in uniform who voted by state or federal absentee ballot; Black voters here vote heavily Democratic since 1936; calibrated to certified 1944 returns.",
+  "women": "1940–1950 interpolation to November 1944, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1944 vote.",
+  "south-white": "1940–1950 interpolation to November 1944, white adults (Mexican-origin adults counted as white, as in 1940) in the eleven former Confederate states, 18+ in Georgia, which lowered its voting age to 18 in 1943; calibrated to certified 1944 returns.",
+  "black-south": "1940–1950 interpolation to November 1944, Black adults in the eleven former Confederate states (18+ in Georgia); Smith v. Allwright struck down the white primary in April 1944, but poll taxes and literacy tests keep most disfranchised, so the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1940–1950 interpolation to November 1944, foreign-born white adults who were not naturalized (Chinese immigrants became eligible to naturalize in 1943); no state let aliens vote."
+ },
+ "masks": [
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Thomas (?:E\\. )?)?Dewey\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bNew Deal\\b",
+   "the administration's program"
+  ],
+  [
+   "\\b(?:Vice[- ]President )?(?:Henry (?:A\\. )?)?Wallace\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:President |Senator |Sen\\. )?(?:Harry (?:S\\.? )?)?Truman\\b|\\b(?:Governor |Gov\\. )?(?:John (?:W\\. )?)?Bricker\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Wendell (?:L\\. )?)?Willkie\\b",
+   "the out-party's 1940 nominee"
+  ],
+  [
+   "\\bNorman (?:M\\. )?Thomas\\b|\\bClaude (?:A\\. )?Watson\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\bTexas Regulars\\b",
+   "an unpledged Texas elector slate"
+  ],
+  [
+   "\\b(?:Herbert )?Hoover\\b",
+   "the former President"
+  ]
+ ]
+}

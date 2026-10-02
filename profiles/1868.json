@@ -1,0 +1,89 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Grant",
+  "D": "Seymour",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Ulysses S. Grant",
+  "D": "Horatio Seymour"
+ },
+ "descriptors": {
+  "R": "nominee of the party that has controlled Congress since 1861 and directed Reconstruction over the President's vetoes; the general who commanded the Union armies to victory, with no previous civil office",
+  "D": "nominee of the opposition party, which demands the immediate restoration of the Southern states, amnesty and state control of suffrage; a former wartime governor of a large Northern state"
+ },
+ "compile_desc": {
+  "R": "the party that has controlled Congress since 1861 and directed Reconstruction",
+  "D": "the opposition party, which opposes congressional Reconstruction",
+  "president": "Johnson"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "M",
+  "N",
+  "Q",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on very few ballots (answer \"other\").",
+ "plank_order": [
+  "Reconstruction",
+  "suffrage",
+  "public debt",
+  "taxes",
+  "Freedmen",
+  "corruption",
+  "amnesty",
+  "naturalized",
+  "labor"
+ ],
+ "names_re": "\\b((?-i:Grant)\\b|Colfax|Seymour|(?-i:Blair)\\b|Johnson|Lincoln|(?-i:Chase)\\b|Pendleton|Stanton|Republican|Democrat|(?-i:Democracy))",
+ "never_name": "Grant, Colfax, Seymour, Blair, Andrew Johnson, Lincoln, Chase, Pendleton or Stanton",
+ "corpus": null,
+ "platforms": "context/platforms_1868.json",
+ "ev_label": "214–80",
+ "slice_sources": {
+  "men": "1860 and 1870 censuses interpolated to November 1868, white men 21+ outside the former Confederate states; in most Northern states Black men could not yet vote (the Fifteenth Amendment came in 1870); calibrated to certified returns.",
+  "women": "No women could vote for president in 1868; women 21+ shown for population only.",
+  "south-white": "1860 and 1870 censuses interpolated to 1868, white adults in the former Confederate states; Mississippi, Texas and Virginia were not yet readmitted and cast no vote, and Florida's legislature chose its electors; some former Confederates were barred from voting by state law; calibrated to certified returns.",
+  "black-south": "1860 and 1870 censuses interpolated to 1868, Black adults in the former Confederate states; Black men voted for the first time in a presidential election under the Reconstruction Acts and federal troops, but only in the seven former Confederate states that held a popular vote, and Klan violence cut their vote sharply in Georgia and Louisiana.",
+  "immigrants": "1860 and 1870 censuses interpolated to 1868, foreign-born white men not yet naturalized; many Midwestern, Western and some Southern states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Johnson\\b|\\bJohnson\\b",
+   "the President"
+  ],
+  [
+   "\\bGrant\\b",
+   "the general"
+  ],
+  [
+   "\\bSeymour\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the opposition party"
+  ],
+  [
+   "\\b(?:Colfax|Blair)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bLincoln\\b",
+   "the late President"
+  ],
+  [
+   "\\b(?:Chase|Pendleton|Stanton)\\b",
+   "a public figure"
+  ]
+ ]
+}

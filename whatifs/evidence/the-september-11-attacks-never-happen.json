@@ -1,0 +1,681 @@
+{
+ "summary": "No source models a 2004 without 9/11. The evidence does show three things. A large 9/11 rally effect lifted Bush's approval and had faded by late 2002. In 2004 terrorism voters went heavily for Bush, while Iraq and economy voters went heavily for Kerry. White women swung toward Bush between 2000 and 2004, which Burden tentatively links to security concerns. Analogues from 1992 and 2000 suggest that peacetime elections turn on the economy and domestic issues, and that this hurt the 1992 incumbent.",
+ "findings": [
+  {
+   "claim": "In 2004, voters naming terrorism as their top issue backed Bush 86\u201314. Of the 54% who felt safer from terrorism, 79% voted Bush.",
+   "source_ids": [
+    "S18"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Terrorism as a salient 2004 issue after 9/11",
+   "when": "2004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Vote split by issue, not a causal effect; issue question sensitive to wording",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Iraq was the top issue for about 15% of 2004 voters, and they backed Kerry 73\u201326. Removing the war removes a Bush liability.",
+   "source_ids": [
+    "S18",
+    "S11"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Iraq war as a 2004 issue",
+   "when": "2004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Cross-tab of top-issue voters, not causal",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Economy and jobs was the top issue for about 20% of 2004 voters, and they backed Kerry 80\u201318. More economic salience would favor the Democrat.",
+   "source_ids": [
+    "S18",
+    "S11"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Economy-focused voters in 2004",
+   "when": "2004",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Cross-tab, not causal; issue shares vary by survey design",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "White women split evenly in 2000 but backed Bush 55\u201344 in 2004. Married white women drove the shift, which tentatively supports the 'security mom' thesis.",
+   "source_ids": [
+    "S10",
+    "S33"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "native_white",
+    "region": "any"
+   },
+   "situation": "Security-driven swing among white women after 9/11",
+   "when": "2000\u20132004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [
+    {
+     "measure": "r2",
+     "pp": -5.6,
+     "pm": 2.8
+    }
+   ],
+   "limits": "Exit polls can't confirm cause; Pew saw Bush gains among mothers already in 2000",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Men voted for Kerry as much as or more than for Gore. The gender gap shrank to three points in 2004, less than half its 2000 size.",
+   "source_ids": [
+    "S10"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Male vote in the post-9/11 2004 election",
+   "when": "2000\u20132004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Exit poll based; short article",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Terrorism voters were profiled as mostly Southern white males in a pre-election note.",
+   "source_ids": [
+    "S15"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "native_white",
+    "region": "south"
+   },
+   "situation": "Terrorism-issue voters in 2004",
+   "when": "2004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Pre-election profile, not measured data",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "After the attacks, Bush's approval rose 35 points to 86% and then to 90%. It returned to pre-9/11 levels by December 2002 and was near 50% in 2004.",
+   "source_ids": [
+    "S4",
+    "S9",
+    "S8",
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "9/11 rally effect on presidential approval",
+   "when": "2001\u20132004",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Approval, not vote choice; rally had faded before 2004",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "About 25% of House Democrats voted with Bush before 9/11 and close to 50% afterward. This support returned to pre-9/11 levels in 2002.",
+   "source_ids": [
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Congressional support for Bush after 9/11",
+   "when": "2001\u20132002",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Legislators' roll calls, not voters",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Before 9/11, Bush's approval fell to 51% (Sept 7\u201310), his lowest yet. Satisfaction with the country's direction fell to 48% as economic worries grew.",
+   "source_ids": [
+    "S3",
+    "S2",
+    "S8"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Pre-9/11 baseline of eroding approval",
+   "when": "2001",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Approval and mood, not votes; no group breakdown",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "In 1992, a peacetime incumbent with strong foreign-policy ratings lost amid economic discontent. 64% disapproved of his economic handling, and Bush won 37.5% to Clinton's 43%.",
+   "source_ids": [
+    "S21",
+    "S23",
+    "S25",
+    "S24"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Incumbent economic referendum after foreign-policy success",
+   "when": "1992",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Three-way race; post-Cold War; tax-pledge reversal",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Exit polls suggested Perot's 1992 voters would have broken roughly 2-to-1 for Bush in a two-way race.",
+   "source_ids": [
+    "S27"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Third-party effect in 1992",
+   "when": "1992",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Secondary aggregator source",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "In peacetime 2000, only 4% named foreign affairs as the top problem. Gore led health care, Social Security and Medicare voters; Bush led tax and defense voters.",
+   "source_ids": [
+    "S31",
+    "S29"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Peacetime election fought on domestic issues",
+   "when": "2000",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "mixed",
+   "effects": [],
+   "limits": "Open seat and booming economy, not an incumbent",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "mixed"
+  }
+ ],
+ "actor_positions": [],
+ "caveats": [
+  "No source models a no-9/11 2004; translating the faded rally into votes is the researcher's inference.",
+  "The 2004 most-important-issue shares depend on question wording: Pew's fixed list gave moral values 27%, Iraq 22%, the economy 21% and terrorism 14%.",
+  "In a controlled model, moral values ranked only fourth, behind terrorism, the economy and Iraq.",
+  "The economy might have followed a different path without 9/11; no source addresses this.",
+  "There is no reliable evidence by region, race or naturalization status.",
+  "Approval is not vote choice; in 1992, Bush polled 29% approval yet won 37.5% of the vote."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "the-september-11-attacks-never-happen",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-opus-5-5"
+ },
+ "queries": [
+  "Bush approval rating summer 2001 Gallup before September 11",
+  "2004 exit poll terrorism Iraq top issue vote choice married women security moms",
+  "1992 election economy voters Bush approval recession vote; 1996 economy Clinton exit poll",
+  "2000 election foreign policy least important issue vote choice Gore Bush exit poll voters"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://news.gallup.com/poll/6793/rally-effect-911-terrorist-attacks-virtually-gone.aspx",
+   "title": "Rally Effect of 9/11 Terrorist Attacks Virtually Gone",
+   "tier": "C",
+   "cited": [
+    "Nevertheless, the poll suggests that the terrorist attacks did not fundamentally alter the way Americans view their government.",
+    "The latest Gallup Poll finds that the public's trust in government has reverted to its pre-Sept. 11 levels, as has the public's general level of satis..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://news.gallup.com/poll/7591/bush-approval-drops-below-60-first-time-since-911.aspx",
+   "title": "Bush Approval Drops Below 60% for First Time Since 9/11",
+   "tier": "C",
+   "cited": [
+    "# Bush Approval Drops Below 60% for First Time Since 9/11\nForeign policy, economy ratings lower than pre-9/11 levels\n\nIn a Gallup Poll conducted just ...",
+    "Just prior to Sept. 11, Bush's foreign affairs approval rating was 54% approval to 33% disapproval, a 21 point favorable margin that is only 11 points..."
+   ],
+   "page_age": "589 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://news.gallup.com/poll/4924/bush-job-approval-highest-gallup-history.aspx",
+   "title": "Bush Job Approval Highest in Gallup History",
+   "tier": "C",
+   "cited": [
+    "Should \u00b7 Should not \u00b7 No opinion\n2001 Sep 21-22 \u00b7 89% \u00b7 7 \u00b7 4\n2001 Sep 14-15 \u00b7 88% \u00b7 8 \u00b7 4\n\nApprove \u00b7 Disapprove \u00b7 No opinion\n% \u00b7 % \u00b7 %\n2001 Sep 21-22..."
+   ],
+   "page_age": "8 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://news.gallup.com/poll/271628/highest-gallup-presidential-job-approval-rating.aspx",
+   "title": "Who Had the Highest Gallup Presidential Job Approval Rating?",
+   "tier": "C",
+   "cited": [
+    "The first poll conducted after the attacks, from Sept. 14-15, 2001, saw Bush's job approval rating surge 35 percentage points to 86%.",
+    "A subsequent Sept. 21-22 poll -- conducted after Bush addressed a joint session of Congress to discuss the U.S. response to the terrorist attacks -- s...",
+    "Bush had an 89% job approval rating in 1991 after the U.S. won the Gulf War."
+   ],
+   "page_age": "265 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://en.wikipedia.org/wiki/United_States_presidential_approval_rating",
+   "title": "United States presidential approval rating",
+   "tier": "C",
+   "cited": [],
+   "page_age": "19 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://abcnews.go.com/Politics/story?id=120971&page=1",
+   "title": "Poll: Bush Approval Rating 92 Percent - ABC News",
+   "tier": "C",
+   "cited": [],
+   "page_age": "7572 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://news.gallup.com/poll/8764/bushs-job-rating-still-above-60.aspx",
+   "title": "Bush's Job Rating Still Above 60%",
+   "tier": "C",
+   "cited": [
+    "2002 Jul 26-28 \u00b7 60 \u00b7 36 \u00b7 4\n2002 Apr 29-May 1 \u00b7 66 \u00b7 31 \u00b7 3\n2001 Oct 5-6 \u00b7 69 \u00b7 29 \u00b7 2\n2001 Jul 10-11 \u00b7 57 \u00b7 40 \u00b7 3\n2001 Apr 20-22 \u00b7 59 \u00b7 39 \u00b7 2\n\n200..."
+   ],
+   "page_age": "406 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://news.gallup.com/poll/124787/Decade-Review-Four-Key-Trends.aspx",
+   "title": "The Decade in Review: Four Key Trends",
+   "tier": "C",
+   "cited": [
+    "Bush began his term in early 2001 with ratings also in the high 50% and low 60% range, but his job approval ratings began to settle down, and by Gallu...",
+    "Satisfaction levels quickly descended in 2001 as economic concerns mounted, and fell below 50% in mid-August of that year (48%).",
+    "By the time he sought re-election in 2004, his approval rating hovered near 50%."
+   ],
+   "page_age": "212 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://www.tandfonline.com/doi/full/10.1080/07343460903206305",
+   "title": "Full article: 9/11 and Presidential Support in the 107th Congress",
+   "tier": "A",
+   "cited": [
+    "Not until December of 2002 did his approval ratings drop to pre-9/11 levels.",
+    "Before 9/11 occurred, 25% of the Democrats in the House were voting with President Bush. After 9/11, in period 2, close to 50% were voting with him.",
+    "And without exception his level of support returned to pre-9/11 levels in 2002."
+   ],
+   "page_age": "6201 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://www.uvm.edu/~dguber/POLS125/articles/burden.htm",
+   "title": "An Alternative Account of the 2004 Presidential Election",
+   "tier": "A",
+   "cited": [
+    "I posit that women were the key swing constituency. Exit polls show the gender gap at just three points in 2004, less than half of what it was in 2000...",
+    "Men actually voted for Kerry as much or more than they had for Gore, but women swung decidedly to Bush compared to 2000.",
+    "More specifically, married white women are almost entirely responsible for the change in the Bush vote.",
+    "White women split equally between the major party candidates in 2000, and had favored the Democrats by five points in 1996. But in 2004 exit polls sho...",
+    "It is also tentative support for the popular \"security mom\" thesis, though concerns about security also affected women without children.",
+    "Though we cannot be certain from exit poll data, they suggest that concerns about national security helped improve Bush's standing among white women.\n..."
+   ],
+   "page_age": "7990 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://academic.oup.com/poq/article/69/5/744/1920108",
+   "title": "Voters and Values in the 2004 Election",
+   "tier": "A",
+   "cited": [
+    "As shown in table 1, 22 percent instead cited moral values; 20 percent, the economy and jobs; and 19 percent, terrorism.^4\n\n| Which ONE Issue Mattered...",
+    "But our analysis of the exit poll data shows that \u201cmoral values,\u201d when controlling for other variables, ranked only as high as fourth of seven competi..."
+   ],
+   "page_age": "7943 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "http://goodliffe.byu.edu/328/HillygusShieldsPS.pdf",
+   "title": "Moral Issues and Voter Decision Making in the 2004 ...",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S13",
+   "url": "https://news.gallup.com/poll/10066/terrorism-tops-list-key-2004-election-issues.aspx",
+   "title": "Terrorism Tops List of Key 2004 Election Issues",
+   "tier": "C",
+   "cited": [],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://time.com/archive/6739921/2004-election-how-bush-pulled-it-off/",
+   "title": "2004 Election: How Bush Pulled It Off",
+   "tier": "C",
+   "cited": [
+    "\u00e2\u20ac\u00a25 New Mexico \u00e2\u20ac\u00a27 Iowa BREAKING DOWN THE NATIONAL VOTE National exit polls found that the top issue for voters was not Iraq (15%) or the economy (2..."
+   ],
+   "page_age": "215 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://www.ipsos.com/en-us/ipsos-presidential-poll-2004-what-we-will-look-exit-polls",
+   "title": "Ipsos Presidential Poll 2004: What We Will Look For In The Exit Polls",
+   "tier": "C",
+   "cited": [
+    "Southern white males, many of them veterans and gun owners, often well educated, homeowners and shareholders.",
+    "Northeasterners, often retired."
+   ],
+   "page_age": "400 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://www.pewresearch.org/politics/2004/11/11/voters-liked-campaign-2004-but-too-much-mud-slinging/",
+   "title": "Voters Liked Campaign 2004, But Too Much \u2019Mud-Slinging\u2019",
+   "tier": "C",
+   "cited": [
+    "### Voters and the Issues\nAmong those offered the seven-item list, a plurality of 27% selected moral values, followed by 22% who chose Iraq and 21% wh..."
+   ],
+   "page_age": "900 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://www.ipsos.com/en-us/apipsos-poll-americans-say-iraq-and-terrorism-should-be-top-priorities-bushs-second-term",
+   "title": "AP/Ipsos Poll: Americans Say Iraq And Terrorism Should Be Top Priorities For Bush's Second Term",
+   "tier": "C",
+   "cited": [
+    "- Republicans (88%) -- and over half (56%) of Independents\n- Men (62%; 65% married men) and seniors (68%)\n- Whites (61%)\n- Southerners (68%; 75% in th..."
+   ],
+   "page_age": "400 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://www.cnn.com/ELECTION/2004/pages/results/states/US/P/00/epolls.0.html",
+   "title": "us president / national / exit poll",
+   "tier": "C",
+   "cited": [
+    "BUSH KERRY NADER TOTAL 2004 2000 2004 2004 Within the Last Week (11%) 46% n/a 52% 1% ...\n\n73% * Iraq (15%) 26% n/a 73% 0% Terrorism (19%) 86% n/a 14% ..."
+   ],
+   "page_age": "8002 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://uspollingdata.com/elections/2004/",
+   "title": "2004 Presidential Election Results \u2014 Bush vs. Kerry",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S20",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1992",
+   "title": "United States presidential election of 1992",
+   "tier": "B",
+   "cited": [],
+   "page_age": "220 days ago"
+  },
+  {
+   "id": "S21",
+   "url": "https://www.cbsnews.com/news/george-h-w-bush-the-publics-view-of-him-during-his-presidency/",
+   "title": "George H.W. Bush: The public's view of him during his presidency - CBS News",
+   "tier": "C",
+   "cited": [
+    "According to the CBS News Exit Poll, the ability to bring about needed change was the most important candidate quality to voters, and the economy and ..."
+   ],
+   "page_age": "2858 days ago"
+  },
+  {
+   "id": "S22",
+   "url": "https://www.ebsco.com/research-starters/history/1992-elections-united-states/",
+   "title": "1992 Elections in the United States",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S23",
+   "url": "https://news.gallup.com/opinion/gallup/234971/george-bush-retrospective.aspx",
+   "title": "George H.W. Bush Retrospective",
+   "tier": "C",
+   "cited": [
+    "Bush's job approval rating sunk to the lowest point of his presidency, 29%, in July 1992, after Clinton and his party's leaders focused their message ...",
+    "Bush received 37.5% of the popular vote to Clinton's 43% and Perot's 19%."
+   ],
+   "page_age": "554 days ago"
+  },
+  {
+   "id": "S24",
+   "url": "https://en.wikipedia.org/wiki/1992_United_States_presidential_election",
+   "title": "1992 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Voters felt that economic conditions were worse than they actually were, which harmed Bush.",
+    "# 1992 United States presidential election\nThe economy had recovered from a recession in the spring of 1991, followed by 19 consecutive months of grow...",
+    "Bush's greatest strength, foreign policy, was regarded as much less important following the dissolution of the Soviet Union and the end of the Cold Wa..."
+   ],
+   "page_age": "6 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://en.wikipedia.org/wiki/George_H._W._Bush_1992_presidential_campaign",
+   "title": "George H. W. Bush 1992 presidential campaign",
+   "tier": "C",
+   "cited": [
+    "While 71% of the population viewed Bush's handling of foreign policy positively, only 21% approved of his handling of domestic issues."
+   ],
+   "page_age": "30 days ago"
+  },
+  {
+   "id": "S26",
+   "url": "https://grokipedia.com/page/1992_United_States_elections",
+   "title": "1992 United States elections \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "260 days ago"
+  },
+  {
+   "id": "S27",
+   "url": "https://uspollingdata.com/elections/1992/",
+   "title": "1992 Presidential Election: Clinton vs. Bush vs. Perot",
+   "tier": "C",
+   "cited": [
+    "Exit polls showed Perot voters would have broken roughly 2-to-1 for Bush over Clinton in a two-way race."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S28",
+   "url": "https://grokipedia.com/page/1992_United_States_presidential_election",
+   "title": "1992 United States presidential election \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "257 days ago"
+  },
+  {
+   "id": "S29",
+   "url": "https://www.uvm.edu/~dguber/POLS125/articles/pomper.htm",
+   "title": "The 2000 Presidential Election: Why Gore Lost",
+   "tier": "A",
+   "cited": [
+    "But Bush was favored far more strongly on taxes (a huge advantage of 63 percent) and on world affairs and defense (14 percent), as well as on lesser i...",
+    "Gore was favored among voters who emphasized the \"female\" issues of health care (an advantage of 31 percent), education (8 percent), and Social Securi..."
+   ],
+   "page_age": "9432 days ago"
+  },
+  {
+   "id": "S30",
+   "url": "https://news.gallup.com/poll/2929/little-difference-between-gore-bush-important-dimensions-election.aspx",
+   "title": "Little Difference Between Gore and Bush on Important Dimensions in Election",
+   "tier": "C",
+   "cited": [],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S31",
+   "url": "https://news.gallup.com/poll/9898/2000-presidential-election-midyear-gallup-report.aspx",
+   "title": "The 2000 Presidential Election -- A Mid-Year Gallup Report",
+   "tier": "C",
+   "cited": [
+    "- %\n- Education \u00b7 16\n- Ethics/Morals \u00b7 15\n- Crime/Violence \u00b7 13\n- Taxes \u00b7 11\n- Dissatisfied with Government \u00b7 11\n- Medicare/Social Security \u00b7 9\n- Heal..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S32",
+   "url": "https://www.brookings.edu/articles/reflections-on-the-2000-u-s-presidential-election/",
+   "title": "Reflections on the 2000 U.S. Presidential Election",
+   "tier": "A",
+   "cited": [],
+   "page_age": "772 days ago"
+  },
+  {
+   "id": "S33",
+   "url": "https://www.pewresearch.org/politics/2000/10/10/presidential-debate-clouds-voters-choice/",
+   "title": "Presidential Debate Clouds Voters\u2019 Choice",
+   "tier": "C",
+   "cited": [
+    "Bush made gains among affluent voters, and among mothers of children under 18 years of age."
+   ],
+   "page_age": "900 days ago"
+  },
+  {
+   "id": "S34",
+   "url": "https://arxiv.org/pdf/2201.07093",
+   "title": "Fragility Measures For Typical Cases",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S35",
+   "url": "https://arxiv.org/pdf/physics/0703095",
+   "title": "From 2000 Bush-Gore to 2006 Italian elections: Voting at fifty-fifty and the Contrarian Effect",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S36",
+   "url": "https://www.khanacademy.org/humanities/us-history/modern-us/1990s-america/a/the-election-of-2000",
+   "title": "The election of 2000 (article)",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S37",
+   "url": "https://www.history.com/.amp/news/2000-election-bush-gore-votes-supreme-court",
+   "title": "How the 2000 Election Came Down to a Supreme Court Decision",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2156 days ago"
+  }
+ ],
+ "notes": "**Scope note.** I ran four searches. The sources below are mostly Gallup, Britannica, *Public Opinion Quarterly* and *The Forum*. I found nothing on the specific groups you list (naturalized citizens, noncitizens, US-born Black, Hispanic and Asian adults, and the regional breakdowns), apart from a few items noted below. I found nothing on 1996 or on the 2002 midterms. I did not search for the named people, so section 3 is empty. Claims about those items are not made here.\n\n## 1. Direct evidence: Bush before 9/11 and the \"no 9/11\" counterfactual\n\n**Approval trend, summer 2001**\n- Gallup had Bush at 55% in early August, 56\u201357% in July, and 51% on Sept 7\u201310 [S3]. That last reading was the lowest of his presidency, with 51% approving and 39% disapproving [S2].\n- He began with ratings in the high 50s and low 60s, which then settled down [S8].\n- The 51% reading was a decline of about 5\u20136 points from July.\n- Public mood was souring too. Satisfaction with the country's direction fell below 50% in mid-August 2001 (48%) as economic concerns mounted [S8].\n- Pre-9/11 domestic and foreign ratings differed. Just before the attacks, foreign affairs approval was 54% to 33% [S2]. In the Gallup item with 2001 trend data, approval on one measure fell from 60% in April to 55% in August [S7]. The excerpt does not label that item, so I can't say which issue it covers.\n\n**Which groups had moved away from him**\n- I found no reliable group-level breakdown (by party, gender, region or race) of the summer 2001 decline.\n\n**What the attacks did**\n- His approval rose 35 points to 86% within days [S4], and then to a record 90% [S4].\n- It stayed high for a long time. His ratings did not fall back to pre-9/11 levels until December 2002 [S9].\n- By 2004, his approval hovered near 50% [S8].\n- Gallup argued the attacks did not fundamentally alter how Americans view their government [S1]. Trust in government and general satisfaction reverted to pre-Sept. 11 levels [S1] by September 2002.\n- Congress shows the same fade. About 25% of House Democrats voted with Bush before 9/11, and close to 50% did so afterward [S9]. His support returned to pre-9/11 levels in 2002 [S9].\n\n**Implication:** The pre-9/11 baseline was a roughly 51\u201357% approval, with eroding economic sentiment. The sources describe a rally effect that faded, not a permanent realignment. Without 9/11 there is no cushion, and 2004 would resemble a plain economic referendum. That is my inference; no source models it.\n\n## 2. Analogues\n\n**1992 (peacetime incumbent, recession)**\n- Foreign policy credit did not offset economic discontent. Bush's approval fell to 29% in July 1992 [S23] from 89% in 1991 after the Gulf War [S4].\n- 71% approved of his foreign policy while only 21% approved of his handling of domestic issues [S25] (reported on a Wikipedia page, so treat it with caution).\n- On Election Day, the economy and jobs was the top issue, and 64% disapproved of his handling of the economy [S21].\n- Bush won 37.5% of the vote, Clinton 43% and Perot 19% [S23].\n- Perot complicates the picture. Exit polls suggested his voters would have broken roughly 2-to-1 for Bush in a two-way race [S27]. The source is a secondary aggregator, so treat it with care.\n- Perception mattered. A Wikipedia summary of Lipset's argument says voters felt economic conditions were worse than they actually were [S24]. The recession had technically ended in spring 1991 [S24].\n- Verdict: a mild or ended recession still defeated an incumbent. Foreign policy strength was regarded as much less important after the Cold War [S24].\n\n**1996:** I found nothing in my searches. I won't characterize it.\n\n**2000 (peacetime, no incumbent)**\n- Foreign policy was marginal. Gallup noted the absence of any major concern about war or foreign policy, unlike 1952, 1968, 1972 and 1980 [S31].\n- International problems and foreign affairs was named by only 4% [S31] as the most important problem.\n- Bush led on world affairs and defense by 14 points and on taxes by 63 points among voters who prioritized those issues [S29]. Gore led among voters who stressed health care by 31 points, Social Security by 18 and Medicare by 21 [S29].\n\n**2004 (with 9/11, for comparison)**\n- National exit poll: 22% cited moral values, 20% the economy and jobs, and 19% terrorism [S11]. Iraq was 15%.\n- Vote by top issue: terrorism voters went Bush 86\u201314, economy and jobs voters Kerry 80\u201318, and Iraq voters Kerry 73\u201326 [S18].\n- Scholars say the \"moral values\" label misled. In a model with controls, it ranked only fourth of seven items, behind terrorism, the economy and Iraq [S11].\n- 54% said the country was safer from terrorism, and 79% of them voted Bush [S18].\n- So terrorism and Iraq together accounted for about 34% of voters naming a top issue, and they split overwhelmingly by issue. That is a rough gauge of how large the foreign policy channel was compared with 2000's 4%.\n\n**Gender and group shifts, 2000 to 2004**\n- Barry Burden argues women were the key swing group and the gender gap was just three points in 2004, less than half its 2000 size [S10].\n- Men voted for Kerry as much or more than for Gore, while women swung decidedly to Bush [S10].\n- Married white women were almost entirely responsible for the change [S10].\n- Among white women, the split was even in 2000 and Democrats led by 5 points in 1996, but Bush won them 55\u201344 in 2004 [S10]. That is roughly a 10-point swing from 2000 and a 15-point swing from 1996.\n- Burden calls this tentative support for the \"security mom\" thesis [S10], and cautions that exit poll data cannot confirm it [S10].\n- 2004 exit poll groups: married women went Bush 54\u201345, white men Bush 61\u201338, African Americans Kerry 89\u201311, and Hispanics Kerry 55\u201342 [S14].\n- Pew found in 2000 that Bush gained among affluent voters and mothers of children under 18 [S33] in the fall. So part of the women's shift may predate 9/11 or be unrelated to it.\n\n**Regional, naturalization and race breakdowns:** I found nothing reliable. One Ipsos pre-election note describes terrorism voters as mostly Southern white males [S15] and Iraq voters as often Northeasterners [S15]. It is a pre-election profile, not measured data, so it is weak evidence. The post-election AP-Ipsos poll found Southerners (68%) more likely than Great Lakes and Pacific residents (58% each) to favor a given terrorism-priority view [S17]. The excerpt does not state the exact question, so I would not rely on it.\n\n## 3. Named people\nNo named individuals appear in the scenario, and I did not search for any.\n\n## 4. Limits\n- **Counterfactual economy.** The 2001 recession and its path might differ without 9/11. The sources don't model this.\n- **Approval is not vote choice.** In 1992, approval fell to 29% and Bush still got 37.5%. The three-way race also muddies any translation to a two-party swing.\n- **Exit poll caveats.** The 2004 \"most important issue\" question is sensitive to wording. In Pew's post-election survey with a fixed list, 27% chose moral values, 22% Iraq, 21% the economy and 14% terrorism [S16]. The ordering shifts with the question's design.\n- **Iraq's effect cuts the other way.** In 2004, Iraq voters leaned strongly Kerry. Removing the war removes a Bush liability as well as a strength.\n- **Different eras.** 1992 followed the Cold War and a tax-pledge reversal. 2000 had a booming economy and an open seat. Neither is a clean model of an incumbent facing a sluggish economy in 2004.\n- **Source quality.** The Wikipedia, Grokipedia and uspollingdata.com items are secondary. I used them only for context. Burden's piece is a short journal-style article based on exit polls, not a full study.",
+ "prompt": "Scenario for the 2004 United States presidential election (election day 2004-11-02).\nA reader asked: \"911 never happened\".\nAs modelled: The hijacking attacks of 11 September 2001 never take place, so there is no war in Afghanistan or Iraq and the 2004 campaign is fought over the economy and domestic policy.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- What was the President's approval rating and its trend in the summer of 2001, before the attacks, and which groups had moved away from him?\n- How did voters weigh the economy and a mild recession in peacetime incumbent elections such as 1992 and 1996?\n- Which voter groups, such as married women and suburban security-minded voters, shifted toward the incumbent's party in 2002 and 2004 because of terrorism?\n- How large a role did foreign policy play in vote choice in the 2000 election compared with 2004?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 70335,
+  "output_tokens": 3915,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 4
+ },
+ "dollars": 0.3377
+}

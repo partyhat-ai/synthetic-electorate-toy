@@ -1,0 +1,625 @@
+{
+ "summary": "Trump's approval peaked near 49% before the pandemic and fell to about 39-42% by summer, ending at 46%. Economic approval dropped 15 points. Turnout rose sharply in 2020 (about 5-7 points) amid mail-voting expansion, but the notes cannot separate pandemic effects from polarization. Incumbents under 48% approval have not won.",
+ "findings": [
+  {
+   "claim": "Trump's approval peaked at 49% in early 2020 before the pandemic, fell to 39% by late May/early June, with Floyd protests confounding; final pre-election approval was 46%.",
+   "source_ids": [
+    "S1",
+    "S4",
+    "S5",
+    "S24"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Trump approval before and after pandemic onset",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "unclear",
+   "effects": [],
+   "limits": "Drop coincided with racial-justice protests; no counterfactual estimate.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "unclear"
+  },
+  {
+   "claim": "Trump's economic approval fell from 63% in January to 48% in August; Economic Confidence fell from +40 to -21. Gallup said the pandemic origin partly shielded him from blame.",
+   "source_ids": [
+    "S2",
+    "S8"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Pandemic recession and Trump economic ratings",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Approval, not vote choice; no vote effect given.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Approval of Trump's coronavirus handling fell from 60% in March to 36% in August; the March-April fall was 3 points among Republicans, 10 among independents, 16 among Democrats.",
+   "source_ids": [
+    "S2",
+    "S10"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Approval of pandemic handling by party",
+   "when": "March-August 2020",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Party breakdown only; approval not votes.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "June 2020 overall approval fell 7 points among Republicans and independents and 9 among Democrats; final poll showed a 92-point party gap (95% R, 3% D).",
+   "source_ids": [
+    "S4",
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Partisan polarization of Trump approval",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Approval data only.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "2020 had 17 million more voters than 2016, the largest between-election increase on record; citizen turnout rose 5 points to 67%; EAC put it at 67.7% of CVAP, up 6.7 points.",
+   "source_ids": [
+    "S14",
+    "S17",
+    "S20"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2020 turnout surge during pandemic",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -5,
+     "pm": 2
+    }
+   ],
+   "limits": "Cause not separated from polarization and campaign intensity.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Mail voting rose to 43% of voters from 21% in 2016; 69% voted nontraditionally versus about 40%; turnout rose 7.7 points in states using these methods most.",
+   "source_ids": [
+    "S13",
+    "S17"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Pandemic-era expansion of mail and early voting",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "reverses-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -7.7,
+     "pm": 3.8
+    }
+   ],
+   "limits": "Correlation with state rules; not isolated from other causes.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Women's turnout rose from 63% to 68% and men's from 59% to 65% between 2016 and 2020.",
+   "source_ids": [
+    "S14"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2020 turnout by sex",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Not attributed to pandemic specifically.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Turnout rose among White, Black, Asian and Hispanic citizens, most among Asians; Brookings found surges among Asian American, Latino and non-college white voters. Ages 18-34 rose from 49% to 57%.",
+   "source_ids": [
+    "S14",
+    "S20"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "2020 turnout by race and age",
+   "when": "2020",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "No attribution to pandemic.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Incumbents with approval at or above 50% have won reelection; none under 48% has; incumbent vote share runs about 1 point above final approval. Trump's 46% was the highest for a defeated incumbent.",
+   "source_ids": [
+    "S21",
+    "S25",
+    "S24"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Incumbent approval and reelection outcomes",
+   "when": "1948-2020",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Rule of thumb, not causal.",
+   "tier": "A",
+   "grade": 0.45,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Trump never reached 50% in any Gallup poll, the only president since 1938 not to; average approval of 41% was record low, and economic approval ran about 10 points above overall approval.",
+   "source_ids": [
+    "S1",
+    "S4"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Polarization limited economic bonus for Trump",
+   "when": "2017-2020",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Approval, not vote choice.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Trump's February 2020 economic approval of 58% matched Clinton's October 1996 record, but Clinton, Reagan and others had June approval above 50% in reelection years.",
+   "source_ids": [
+    "S8",
+    "S27"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Strong economy and incumbent reelection",
+   "when": "1996, 1984, 2020",
+   "match": "other-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "No direct test of low-unemployment effect.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "unclear"
+  },
+  {
+   "claim": "Obama rose from 46% in June 2012 to 52% before the election; Truman won in 1948 with 39% approval in late May/June.",
+   "source_ids": [
+    "S25",
+    "S27"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Incumbents recovering from sub-50% approval",
+   "when": "1948, 2012",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Isolated cases.",
+   "tier": "A",
+   "grade": 0.2,
+   "reported_direction": "none"
+  }
+ ],
+ "actor_positions": [],
+ "caveats": [
+  "No evidence by nativity or citizenship, or by region apart from mail-voting figures.",
+  "No studies of the no-pandemic counterfactual.",
+  "June 2020 approval drop confounded with Floyd protests.",
+  "Turnout rise confounded with polarization and campaign intensity.",
+  "Notes cut off mid-limits section."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "no-covid-19-pandemic-occurs",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "Trump approval rating Gallup 2020 before and after pandemic",
+  "2020 turnout 2016 mail voting share Census Bureau voting and registration",
+  "incumbent presidents reelection record approval above 50% Gallup winners losers history"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://news.gallup.com/poll/328637/last-trump-job-approval-average-record-low.aspx",
+   "title": "Last Trump Job Approval 34%; Average Is Record-Low 41%",
+   "tier": "C",
+   "cited": [
+    "## Trump Leaves on a Personal Low Note\nTrump's approval high point was 49%, achieved on several occasions in early 2020 spanning the time between the ...",
+    "His support fell below 40% in two June 2020 polls amid racial justice protests in response to the death of George Floyd at the hands of police and gro...",
+    "In Gallup's final survey before Election Day 2020, 92 points separated Republicans' (95%) and Democrats' (3%) approval of Trump, the most ever in a si...",
+    "Trump is the only president not to register a 50% job approval rating at any point in his presidency since Gallup began measuring presidential job app...",
+    "His 41% average approval rating throughout his presidency is four points lower than for any of his predecessors in Gallup's polling era."
+   ],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://news.gallup.com/poll/317477/trump-job-approval-below-seven-key-issues.aspx",
+   "title": "Trump Job Approval 42%; Below 50% on Seven Key Issues",
+   "tier": "C",
+   "cited": [
+    "In January, before the recession began, 63% of Americans approved of the way Trump was handling that issue. Now, with the economy ravaged by the coron...",
+    "That fell to 50% in an April survey and has dropped further in each of the last two surveys, falling a total of 24 points since March.",
+    "His approval rating for handling the response to the coronavirus is down from 60% in March to 36% now."
+   ],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://news.gallup.com/poll/316448/congress-approval-drops-trump-steady.aspx",
+   "title": "Congress' Approval Drops to 18%, Trump's Steady at 41%",
+   "tier": "C",
+   "cited": [
+    "Still, the current 41% remains well below the 49% earlier this year when the economy was in good shape, and Trump was enjoying a post-impeachment boun..."
+   ],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://news.gallup.com/poll/312572/trump-job-approval-slides.aspx",
+   "title": "Trump Job Approval Slides to 39%",
+   "tier": "C",
+   "cited": [
+    "President Donald Trump's job approval rating has fallen sharply, from 49% in May to 39% in the latest survey.",
+    "This includes drops of seven percentage points among Republicans (to 85%) and independents (to 39%), and nine points among Democrats (to 5%).",
+    "President Trump's economic approval rating has been 10 points higher than his overall job approval rating, on average, throughout his presidency in su..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S5",
+   "url": "https://news.gallup.com/poll/321347/trump-pre-debate-job-approval-highest-may.aspx",
+   "title": "At 46%, Trump's Pre-Debate Job Approval Highest Since May",
+   "tier": "C",
+   "cited": [
+    "## Trump's Pre-Debate Approval Rating Remains Below His Personal Best\nTrump started the year with the highest approval rating of his presidency (49%) ...",
+    "At 46%, Trump's Pre-Debate Job Approval Highest Since May\n\nPolitics\n\nOctober 1, 2020\n\n# At 46%, Trump's Pre-Debate Job Approval Highest Since May\n####...",
+    "- Approve \u00b7 Disapprove\n- % \u00b7 %\n- **The economy**: 54 \u00b7 45\n- **Crime\\***: 48 \u00b7 51\n- **Foreign affairs**: 46 \u00b7 53\n- **Relations with China\\***: 46 \u00b7 52\n...",
+    "Despite these strong indicators that suggest Trump's reelection is imperiled, more Americans still believed before the debate that he is the favorite ...",
+    "### Trump, Biden Favorable Ratings Both Below 50%\n\nJoe Biden has a slight edge on Donald Trump in favorability with the American public, but both are ..."
+   ],
+   "page_age": "681 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://news.gallup.com/poll/658661/republicans-men-push-trump-approval-higher-second-term.aspx",
+   "title": "Republicans, Men Push Trump Approval Higher in Second Term",
+   "tier": "C",
+   "cited": [
+    "He had higher support among White adults (57%), senior citizens (51%), political independents (42%) and women (42%) in early 2020 than he does now, th..."
+   ],
+   "page_age": "527 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://news.gallup.com/poll/326885/biden-favorability-rises-trump-dips.aspx",
+   "title": "Biden's Favorability Rises to 55%, Trump's Dips to 42%",
+   "tier": "C",
+   "cited": [],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://news.gallup.com/poll/313070/trump-economic-ratings-no-longer-best-class.aspx",
+   "title": "Trump's Economic Ratings No Longer Best in Class",
+   "tier": "C",
+   "cited": [
+    "Trump started 2020 with the highest economic approval rating in an election year of any president seeking reelection since Gallup began measuring econ...",
+    "Ratings of the U.S. Economy and President Donald Trump in 2020\n\n- Jan 2-15, 2020 \u00b7 May 28-Jun 5, 2020\n- **Gallup Economic Confidence Index (ECI)**: +4...",
+    "At the same time, the 2020 recession is unusual in that it was brought on by a pandemic, at least partially shielding Trump from blame.",
+    "Trump's 63% approval rating on the economy in January slipped to 58% in February, matching Clinton's prior record high in October 1996, just before he..."
+   ],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S9",
+   "url": "https://en.wikipedia.org/wiki/Opinion_polling_on_the_first_Trump_presidency",
+   "title": "Opinion polling on the first Trump presidency",
+   "tier": "C",
+   "cited": [],
+   "page_age": "72 days ago"
+  },
+  {
+   "id": "S10",
+   "url": "https://news.gallup.com/poll/309593/americans-divided-trump-handling-covid-situation.aspx",
+   "title": "Americans Divided on Trump's Handling of COVID-19 Situation",
+   "tier": "C",
+   "cited": [
+    "Changes in President Trump's Approval Rating for Handling the Coronavirus Situation\n\n- Mar 13-22 \u00b7 Apr 14-28 \u00b7 Change\n\n- **U.S. adults**: 60 \u00b7 50 \u00b7 -1..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://www.census.gov/newsroom/press-releases/2022/2020-presidential-election-voting-report.html",
+   "title": "Census Bureau Releases 2020 Presidential Election Voting Report",
+   "tier": "A",
+   "cited": [],
+   "page_age": "1687 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://en.wikipedia.org/wiki/Voter_turnout_in_United_States_presidential_elections",
+   "title": "Voter turnout in United States presidential elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": "0 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://www.census.gov/library/stories/2021/04/what-methods-did-people-use-to-vote-in-2020-election.html",
+   "title": "Majority of Voters Used Nontraditional Methods to Cast Ballots in 2020",
+   "tier": "A",
+   "cited": [
+    "In 2020, 43% of voters cast ballots by mail and another 26% voted in person before Election Day. In 2016, 21% mailed in their ballots and 19% voted in...",
+    "In the 2020 election, 69% of voters nationwide cast their ballot nontraditionally \u2014 by mail and/or before Election Day.\n\nBy comparison, about 40% of v...",
+    "### Record Turnout\nAmong those living in states that used nontraditional voting methods at the highest rate in 2020, turnout increased by 7.7 percenta..."
+   ],
+   "page_age": "1981 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://www.census.gov/library/stories/2021/04/record-high-turnout-in-2020-general-election.html",
+   "title": "Despite Pandemic Challenges, 2020 Election Had Largest Increase in Voting Between Presidential Elections on Record",
+   "tier": "A",
+   "cited": [
+    "Of the non-Hispanic ...\n\n## Despite Pandemic Challenges, 2020 Election Had Largest Increase in Voting Between Presidential Elections on Record\nThe 202...",
+    "**\n\nIn 2020, 67% of all citizens age 18 and older reported voting, up 5 percentage points from 2016 (Figure 1).",
+    "### Turnout by Sex and Age\nIn 2020, 68% of women eligible to vote reported voting \u2014 higher than the 65% turnout for men.\n\nIn the 2016 election, 63% of...",
+    "Turnout rates in 2020 were higher than in the 2016 election for non-Hispanic White, non-Hispanic Black, non-Hispanic Asian, and Hispanic race and orig...",
+    "- For citizens ages 18-34, 57% voted in 2020, up from 49% in 2016.\n- In the 35-64 age group, turnout was 69%, compared to 65% in 2016."
+   ],
+   "page_age": "1981 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://www.census.gov/content/dam/Census/library/publications/2022/demo/p20-585.pdf",
+   "title": "Voting and Registration in the Election of November 2020",
+   "tier": "A",
+   "cited": [
+    "| 154,800 | 66.9 | 118,400 | 70.3 | 109,800 | 71.0 | 4.2 |\n| Black, non-Hispanic ."
+   ],
+   "page_age": "1801 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://www.presidency.ucsb.edu/statistics/data/voter-turnout-in-presidential-elections",
+   "title": "Voter Turnout in Presidential Elections",
+   "tier": "A",
+   "cited": [],
+   "page_age": "495 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://www.eac.gov/sites/default/files/document_library/files/2020_EAVS_Report_Final_508c.pdf",
+   "title": "Executive Summary",
+   "tier": "A",
+   "cited": [
+    "verification under the provisions of the NVRA ...\n\ngeneral election recorded by the EAVS to date, with 67.7% of the citizen voting age population (CVA...",
+    "The states with the highest turnout\n\nincreases tended to be those that made mail voting easy for voters.",
+    "In addition, three states\u2014Utah, Hawaii, and Texas\u2014had turnout increases of more than 10\n\npercentage points compared to the 2016 general election."
+   ],
+   "page_age": "1871 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://usafacts.org/articles/how-many-americans-voted-in-2020/",
+   "title": "How many Americans voted in 2020?",
+   "tier": "C",
+   "cited": [
+    "Across race and ethnicity groups, Asian American voters were the most likely to vote by mail, at 64%.",
+    "The estimates do not include American Indian and Alaskan Natives because the sample is not large enough to accurately measure this population.",
+    "The Northeast expanded mail-in voting in 2020, increasing from 6% voting by mail in 2016 to 43% in 2020.",
+    "Early voting, which also increased in 2020, is the most popular in Southern states, especially among Black and Hispanic voters."
+   ],
+   "page_age": "727 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://www.census.gov/library/stories/2020/10/what-can-recent-elections-tell-us-about-the-american-voter-today.html",
+   "title": "What Recent Elections Tell Us About the American Voter ...",
+   "tier": "A",
+   "cited": [],
+   "page_age": "2187 days ago"
+  },
+  {
+   "id": "S20",
+   "url": "https://www.brookings.edu/articles/turnout-in-2020-spiked-among-both-democratic-and-republican-voting-groups-new-census-data-shows/",
+   "title": "Turnout in 2020 election spiked among both Democratic and Republican voting groups, new census data shows",
+   "tier": "A",
+   "cited": [
+    "This was the biggest turnout in a presidential election since 1992 (67.7%) and more than 5 points higher than the 2016 election.",
+    "## Turnout surged among Asian American, Latino or Hispanic, and non-college white voters\nThe Census Bureau\u2019s estimates confirm the general perception ..."
+   ],
+   "page_age": "1666 days ago"
+  },
+  {
+   "id": "S21",
+   "url": "https://news.gallup.com/poll/311825/presidential-job-approval-related-reelection-historically.aspx",
+   "title": "Presidential Job Approval Related to Reelection Historically",
+   "tier": "C",
+   "cited": [
+    "Historically, all incumbents with an approval rating of 50% or higher have won reelection, and presidents with approval ratings much lower than 50% ha...",
+    "- Year \u00b7 June of reelection year \u00b7 Final measure before election \u00b7 Won reelection\n- % Approve \u00b7 % Approve\n- **Obama**: 2012 \u00b7 46 \u00b7 52 \u00b7 Yes\n- **G.W. B..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S22",
+   "url": "https://news.gallup.com/poll/8608/reflections-presidential-job-approval-reelection-odds.aspx",
+   "title": "Reflections on Presidential Job Approval and Re-election Odds",
+   "tier": "C",
+   "cited": [
+    "Since Gallup began systematically collecting presidential job approval ...\n\n# Reflections on Presidential Job Approval and Re-election Odds\nSince Gall...",
+    "Only 3 of these 10 presidents seeking re-election have lost: Ford, Carter, and Bush.",
+    "Twenty out of the 34 re-election tries were successful, while 14 were not (these 14 include presidents who sought their party's nomination for re-elec..."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S23",
+   "url": "https://news.gallup.com/poll/13687/bush-approval-average-50-volatile-quarter.aspx",
+   "title": "Bush Approval Average at 50% in Volatile Quarter",
+   "tier": "C",
+   "cited": [],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S24",
+   "url": "https://news.gallup.com/poll/325289/mixed-patterns-job-approval-defeated-incumbents.aspx",
+   "title": "Mixed Patterns in Job Approval for Defeated Incumbents",
+   "tier": "C",
+   "cited": [
+    "His final preelection approval rating was 46%, which ranks as the highest for a defeated presidential candidate."
+   ],
+   "page_age": "271 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://www.brookings.edu/articles/presidential-job-approval-trumps-re-election-prospects-look-bleak/",
+   "title": "Presidential job approval: Trump\u2019s re-election prospects look bleak",
+   "tier": "A",
+   "cited": [
+    "The two incumbents with pre-election ratings below 40% lost badly: Jimmy Carter received just 41.0% of the popular vote in 1980, and George H. W. Bush...",
+    "On average, incumbents\u2019 share of the popular vote has been 1 point higher than their final approval number.",
+    "Indeed, no incumbent with a pre-election job approval below 48% (George W. Bush in 2004) has ever received a second term.",
+    "There\u2019s just one recorded instance of a president moving his job approval from a level suggesting defeat to one pointing to victory during the final m..."
+   ],
+   "page_age": "2298 days ago"
+  },
+  {
+   "id": "S26",
+   "url": "https://en.wikipedia.org/wiki/United_States_presidential_approval_rating",
+   "title": "United States presidential approval rating",
+   "tier": "C",
+   "cited": [],
+   "page_age": "18 days ago"
+  },
+  {
+   "id": "S27",
+   "url": "https://news.gallup.com/poll/12175/bushs-reelection-prospects-unclear-from-historical-view.aspx",
+   "title": "Bush\u2019s Re-Election Prospects Unclear From Historical View",
+   "tier": "C",
+   "cited": [
+    "The last five presidents who were re-elected -- Bill Clinton, Ronald Reagan, Richard Nixon, Lyndon Johnson, and Dwight Eisenhower -- all had approval ...",
+    "The only president who bucked these trends and went on to be re-elected was Harry S. Truman, of whom only 39% approved in late May/early June 1948."
+   ],
+   "page_age": "715 days ago"
+  },
+  {
+   "id": "S28",
+   "url": "https://www.presidency.ucsb.edu/statistics/data/final-presidential-job-approval-ratings",
+   "title": "Final Presidential Job Approval Ratings",
+   "tier": "A",
+   "cited": [],
+   "page_age": "247 days ago"
+  }
+ ],
+ "notes": "**Scope note.** I ran three searches. They covered Gallup approval series, Census and EAC turnout data, and Gallup/Brookings material on incumbents. I found nothing reliable on three things:\n- Evidence by nativity or citizenship.\n- Evidence by region (Northeast, Midwest, South, border, West).\n- Studies of the \"no pandemic\" counterfactual itself.\n\nMost of the evidence below is national or by party, sex or race. Where a group breakdown is missing, I say so.\n\n## 1. Direct evidence: Trump's standing before and after the pandemic\n\n**Overall approval**\n- Trump's approval peaked at 49% several times in early 2020, between the Senate impeachment trial and the early stage of the pandemic, when Americans gave him high marks for his response. [S1]\n- It then fell from 49% in May to 39% in the Gallup poll of May 28\u2013June 4. [S4]\n- That fall coincided with the George Floyd protests, so the drop can't be assigned to COVID alone. Gallup attributes it to the racial-justice protests and growing displeasure with his pandemic handling. [S1]\n- Approval then sat in the 38\u201342% range over the summer. [S5]\n- It reached 46% in the two weeks before the first debate. [S5]\n- His final preelection rating was 46%, the highest for any defeated incumbent in Gallup's record. [S24]\n\n**Economy**\n- Trump started 2020 with the highest economic approval of any president seeking reelection since Gallup began the current format under Reagan. [S8]\n- His economic approval was 63% in January, before the recession. It was 48% in August, down 15 points. [S2]\n- Gallup's Economic Confidence Index fell from +40 in January to \u221221 in late May/early June. [S8]\n- Gallup noted that the recession was caused by a pandemic, which at least partly shielded Trump from blame. [S8]\n\n**Handling of the pandemic**\n- Approval of his coronavirus response fell 24 points from March. [S2]\n- It went from 60% in March to 36% in August. [S2]\n\n**By group (party only)**\n- From March to April, approval of his coronavirus handling fell 3 points among Republicans, 10 among independents and 16 among Democrats. [S10]\n- In the June drop, overall approval fell 7 points among Republicans and independents and 9 among Democrats. [S4]\n- Gallup's last pre-election poll showed a 92-point party gap in approval (95% of Republicans, 3% of Democrats). [S1]\n- I found no 2020 Gallup breakdown by sex, nativity or region. The only subgroup figures I found are for Trump's second term. They show higher early-2020 support among White adults (57%) and women (42%) than he has now. [S6]\n\n**Gallup's own reading.** Gallup said that 46% was still short of the 50% threshold historically associated with incumbents winning a second term. [S5] That threshold is a useful frame for the counterfactual. Before the pandemic Trump was at 49%, and Gallup's averages for that period were his best. Even so, he never reached 50% in any Gallup poll. He is the only president since 1938 without a 50% reading at any point. [S1]\n\n## 2. Analogues\n\n**Incumbents and approval (national)**\n- Gallup finds that every incumbent with approval of 50% or higher has won reelection. Those far below 50% have lost. [S21]\n- Final pre-election approval: Obama 2012, 52% (won); G.W. Bush 2004, 48% (won); Clinton 1996, 54% (won); G.H.W. Bush 1992, 34% (lost). [S21]\n- The two incumbents under 40% lost badly. Carter got 41.0% of the popular vote in 1980 and G.H.W. Bush 37.4% in 1992. [S25]\n- On average, an incumbent's vote share has been about 1 point above his final approval. [S25]\n- No incumbent under 48% approval before the election has won a second term. [S25]\n- Trump's 46% would be roughly in the range of a toss-up or narrow loss, using this rule of thumb. That is my inference from the sources, not a finding of theirs.\n\n**Long low unemployment and steady growth.** I did not find a source that directly tests \"long low-unemployment periods\". The nearest evidence is Gallup's 2020 economic data and its incumbent record.\n- Trump's economic approval of 58% in February matched Clinton's record in October 1996, just before Clinton won in a landslide. [S8]\n- Good economic ratings did not translate into overall approval above 50% for Trump. His economic rating averaged about 10 points above his overall approval. [S4]\n- That points to polarization limiting any economic bonus. His average approval was 41%, lower than any predecessor's by at least four points. [S1]\n- Analogues where a booming economy rescued an incumbent (Clinton 1996, Reagan 1984) had higher baseline approval. Clinton, Reagan, Nixon, Johnson and Eisenhower all had June approval above 50% in their reelection years, with Reagan's 54% the lowest. [S27]\n\n**Years with no major national crisis.** The sources give approval data, not a crisis classification, so I can't cleanly sort years into crisis and non-crisis.\n- Of 10 sitting presidents seeking reelection in Gallup's era, 6 won and 3 lost. (This count leaves one out, probably Truman.) [S22]\n- The three losers were Ford, Carter and Bush. [S22]\n- Across all history, 20 of 34 reelection tries succeeded and 14 failed. [S22]\n- Truman is the outlier. Only 39% approved of him in late May or early June 1948, yet he won. [S27]\n- Obama in 2012 is the one case of a swing across the line. He rose from 46% in June to 52% before the election, which is the only recorded instance of that kind of recovery. [S25]\n\n**Turnout and voting method in 2020 (the pandemic effect, to subtract in the counterfactual)**\n- There were 17 million more voters than in 2016, the largest increase between presidential elections on record. [S14]\n- Reported turnout among citizens rose 5 points, to 67%. [S14]\n- The EAC counted turnout at 67.7% of CVAP, up 6.7 points. [S17]\n- Brookings, using Census data, put 2020 turnout at 66.8%, the highest since 1992. [S20]\n- Mail voting was 43% of voters in 2020, against 21% in 2016. Early in-person voting was 26%, against 19%. [S13]\n- In all, 69% voted nontraditionally, against about 40% in 2016. [S13]\n- Caution on cause: the turnout rise can't be assigned purely to the pandemic. The states with the largest turnout gains tended to be those that made mail voting easy. [S17] That fits with pandemic-era rule changes, but the rise also had campaign intensity and polarization behind it. I found no source that separates these causes.\n- In the states using nontraditional methods most, turnout rose 7.7 points. [S13]\n- Utah, Hawaii and Texas each rose more than 10 points. [S17]\n\n**By sex**\n- Women's turnout was 68% in 2020, against 63% in 2016. Men's was 65%, against 59%. [S14]\n- That is +5 points for women and +6 for men.\n\n**By race and ethnicity**\n- Turnout rose among non-Hispanic White, Black, Asian and Hispanic citizens. The largest increase was among non-Hispanic Asians. [S14]\n- Census gave White non-Hispanic turnout as 71.0% of citizens in 2020 (the table's columns are not fully legible). [S15]\n- Brookings found turnout surged among Asian American, Latino and non-college white voters. [S20]\n- Asian American voters were the most likely to vote by mail, at 64%. [S18]\n- The Census estimates exclude American Indians and Alaska Natives because the sample is too small. [S18] I found no usable figures for that group.\n\n**By region**\n- The Northeast went from 6% voting by mail in 2016 to 43% in 2020. [S18]\n- Early voting is most popular in Southern states, especially among Black and Hispanic voters. [S18]\n- I found no regional vote-share swings. I also found nothing on nativity or citizenship status (naturalized citizens, noncitizens).\n\n**By age and education**\n- Turnout among citizens aged 18\u201334 was 57%, up from 49%. Among those aged 35\u201364 it was 69%, up from 65%. [S14]\n\n## 3. Named people\n\nThe scenario names only the incumbent, Trump, and his 2020 challenger is implied.\n- Trump's own pre-pandemic record is covered above. By late July his 41% remained well below the 49% of earlier in the year, when the economy was in good shape and he was enjoying a post-impeachment bounce. [S3]\n- Gallup reported that more Americans expected Trump, not Biden, to win (56% to 40% in Sept. 14\u201328). [S5] This was despite indicators suggesting his reelection was imperiled.\n- Biden held a slight edge in favorability, but both men were below 50%. [S5]\n- I did not search for Trump's or Biden's statements on specific issues. I can look into that if you want it.\n\n## 4. Limits\n\n- **Confounded timing.** The June 2020 drop coincided with the Floyd protests, and Trump's January peak followed his impeachment acquittal. The pre-pandem",
+ "prompt": "Scenario for the 2020 United States presidential election (election day 2020-11-03).\nA reader asked: \"There is no COVID-19 pandemic in 2020.\".\nAs modelled: The coronavirus never spreads worldwide, so 2020 passes without a pandemic, lockdowns or a pandemic recession.\nKind of change: issue. Populations it reaches first: every voter.\nInclude how the same groups swung, by how much, when comparable issues or shocks hit nearby elections.\n\nQuestions to answer:\n- How have incumbents fared in past elections held during long periods of low unemployment and steady growth?\n- How did voters' views of the incumbent change in the 2020 polls before and after the pandemic began?\n- How did turnout and the choice of voting method change in 2020 compared with 2016 because of the pandemic?\n- How did presidents seeking reelection fare in years with no major national crisis?\n\nGroups the simulation distinguishes: men and women; US-born non-Hispanic white, naturalized citizens of any race, noncitizens, US-born Black, and US-born Hispanic, Asian, American Indian and other adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 82095,
+  "output_tokens": 4262,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 3
+ },
+ "dollars": 0.2717
+}

@@ -3,11 +3,28 @@
   "election_day": "1920-11-02",
   "context_cutoff": "1920-11-01",
   "mode": "truth",
-  "what_ifs": ["no-19th", "fifteenth", "league"],
+  "what_ifs": [
+    "no-19th",
+    "fifteenth",
+    "league"
+  ],
   "seed": 1920,
   "draws": 400,
   "prompt_version": "p1",
-  "holdout": ["CA", "FL", "ID", "IN", "LA", "MI", "MO", "MT", "NC", "NY", "OH", "OK"],
+  "holdout": [
+    "CA",
+    "FL",
+    "ID",
+    "IN",
+    "LA",
+    "MI",
+    "MO",
+    "MT",
+    "NC",
+    "NY",
+    "OH",
+    "OK"
+  ],
   "agents": {
     "bulk_model": "claude-sonnet-5-5",
     "check_model": "claude-opus-5-5",

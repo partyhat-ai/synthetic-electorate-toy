@@ -2,7 +2,8 @@
   // The robot's working, inside its bubble (WhatIf.svelte): the steps (live,
   // a mark per step; finished and opened, label / text rows), and, opened,
   // the interviews behind the rerun and what it drew on.
-  import { Check } from 'lucide-svelte';
+  import { Check, ChevronDown } from 'lucide-svelte';
+  import Places from './Places.svelte';
   import type { InterviewAnswer, WhatIf } from './schemas';
   import { day, type Message, peopleIn, splitStep } from './whatif';
 
@@ -13,8 +14,13 @@
     working?: boolean;
     /** The bubble is opened (More). */
     opened?: boolean;
+    /** The Sources fold opened or closed: the bubble's height changed. */
+    onfold?: () => void;
   }
-  let { message, whatIfs = [], working = false, opened = false }: Props = $props();
+  let { message, whatIfs = [], working = false, opened = false, onfold }: Props = $props();
+
+  // The Sources fold: closed until asked for, and kept as left across messages.
+  let sourcesOpen = $state(false);
 
   const labelOf = (key: string) => whatIfs.find((x) => x.key === key)?.label || key;
   /** A person's two rows: as it was, and in the rerun. */
@@ -36,7 +42,7 @@
         <li class={st.state} class:bare={!s.label}>
           {#if working}<span class="mark" aria-hidden="true">{#if st.state === 'done'}<Check size={11} strokeWidth={2.6} />{:else}<i></i>{/if}</span>{/if}
           {#if s.label}<span class="k">{s.label}</span>{/if}
-          <span class="v">{s.body}</span>
+          <span class="v"><Places text={s.body} /></span>
         </li>
       {/each}
     </ol>
@@ -63,14 +69,14 @@
                 {@const moved = a.after.choice !== a.before.choice}
                 <li class:misread={a.misread}>
                   <p class="iv-who">
-                    <span><b>{a.name}</b> {a.line} · {a.cohort}</span>
+                    <span><b>{a.name}</b> <Places text={a.line} /> · <Places text={a.cohort} /></span>
                     {#if a.misread}<em class="iv-flag">Misread the news</em>{:else if moved}<em class="iv-flag moved">Changed</em>{/if}
                   </p>
                   <dl class="iv-rows">
                     {#each sides(a) as { tag, x } (tag)}
                       <dt>{tag}</dt>
                       <dd class="iv-c">{x.choice}{#if x.pVote != null}<small>{x.pVote}% likely</small>{/if}</dd>
-                      <dd class="iv-say">“{x.quote}”</dd>
+                      <dd class="iv-say">“<Places text={x.quote} />”</dd>
                     {/each}
                   </dl>
                 </li>
@@ -88,14 +94,17 @@
        (each summarized in a line), the research behind the change, and
        the data. A short key column (date, year) and the line beside it. -->
   {@const src = message.sources}
-  <section class="sec src" aria-label="Sources">
-    <h3 class="sec-h">Sources</h3>
+  <details class="sec src" aria-label="Sources" bind:open={sourcesOpen} ontoggle={() => onfold?.()}>
+    <!-- A click here folds the list, not the whole bubble. -->
+    <summary class="sec-h src-sum" onclick={(e) => e.stopPropagation()}>
+      <span>Sources</span><span class="src-chev" aria-hidden="true"><ChevronDown size={12} strokeWidth={2.25} /></span>
+    </summary>
     {#if src.reading.length}
       <div class="src-g">
         <h4 class="src-h">Newspapers the voters read<span class="sec-n">{src.reading.length}</span></h4>
         <ul class="src-l">
           {#each src.reading as r, i (i)}
-            <li><span class="src-k">{day(r.date)}</span><span class="src-v">{r.summary || r.newspaper}<small>{r.newspaper}, {r.place}</small></span></li>
+            <li><span class="src-k">{day(r.date)}</span><span class="src-v"><Places text={r.summary || r.newspaper} /><small>{r.newspaper}, {r.place}</small></span></li>
           {/each}
         </ul>
       </div>
@@ -105,7 +114,7 @@
         <h4 class="src-h">Research<span class="sec-n">{src.research.length} findings</span></h4>
         <ul class="src-l">
           {#each src.research as r, i (i)}
-            <li><span class="src-k">{r.when}</span><span class="src-v">{r.text}</span></li>
+            <li><span class="src-k">{r.when}</span><span class="src-v"><Places text={r.text} /></span></li>
           {/each}
         </ul>
       </div>
@@ -118,7 +127,7 @@
         </ul>
       </div>
     {/if}
-  </section>
+  </details>
 {/if}
 
 <style>
@@ -199,6 +208,13 @@
      count) over key / line rows: a newspaper's date, its one-line summary and,
      beneath, the paper; a finding's year and claim; the data, one per row. */
   .src-g + .src-g { margin-top: 18px; }
+  .src-sum { cursor: pointer; list-style: none; user-select: none; align-items: center; gap: 6px; margin: 0; }
+  .src-sum::-webkit-details-marker { display: none; }
+  .src-sum:hover { opacity: 0.75; }
+  .src-sum:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; border-radius: 4px; }
+  .src-chev { display: inline-flex; color: var(--label-2); transition: transform 0.18s ease; }
+  details[open] > .src-sum { margin-bottom: 10px; }
+  details[open] > .src-sum .src-chev { transform: rotate(180deg); }
   .src-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 8px; font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--label-2); }
   .src-l { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: fit-content(6.5em) minmax(0, 1fr); column-gap: 14px; row-gap: 9px; align-items: baseline; }
   .src-l li { display: contents; }
@@ -207,7 +223,11 @@
   .src-v small { display: block; margin-top: 1px; font-size: 12px; line-height: 1.35; color: var(--label-2); }
   .src-l.plain { grid-template-columns: minmax(0, 1fr); row-gap: 5px; }
   .src-l.plain .src-v { grid-column: 1; font-size: 12.5px; color: var(--label-2); }
+  /* In the working (steps, interviews) every place is dotted in the text's own
+     colour; blue is kept for states in the message itself. */
+  :global(.sa .whatif) .steps :global(.place), :global(.sa .whatif) .iv :global(.place), :global(.sa .whatif) .src :global(.place) { text-decoration-color: currentColor; }
   @media (prefers-reduced-motion: reduce) {
+    .src-chev { transition: none; }
     .steps .k, .steps .v, .steps .mark { animation: none; }
     .steps .mark i { animation: none; }
   }

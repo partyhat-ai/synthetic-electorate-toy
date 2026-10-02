@@ -1,0 +1,113 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 1 November until the electors meet on 5 December 1804)",
+  "names": {
+    "R": "Pinckney",
+    "D": "Jefferson",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "Charles Cotesworth Pinckney",
+    "D": "Thomas Jefferson"
+  },
+  "descriptors": {
+    "R": "candidate of the opposition party: a South Carolina lawyer and Revolutionary War general, a former envoy to France, and the party's second candidate in 1800",
+    "D": "the incumbent President, whose administration has repealed the internal taxes, cut the national debt and bought the Louisiana territory from France"
+  },
+  "compile_desc": {
+    "R": "the opposition party, which held the presidency from 1789 to 1801",
+    "D": "the party of the administration in office since 1801",
+    "president": "Jefferson"
+  },
+  "third": null,
+  "label_pool": [
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y",
+    "U"
+  ],
+  "others_line": "A few unpledged elector tickets on some ballots (answer \"other\").",
+  "plank_order": [
+    "taxes",
+    "Louisiana",
+    "debt",
+    "military",
+    "judiciary"
+  ],
+  "names_re": "\\b(Pinckney|Jefferson|Clinton|(?-i:King)|Burr|Hamilton|Madison|Adams|Federalist|Republican|Democrat)",
+  "never_name": "Pinckney, Jefferson, Clinton, King, Burr, Hamilton, Madison or Adams",
+  "corpus": null,
+  "platforms": "context/platforms_1804.json",
+  "ev_label": "14–162",
+  "slice_sources": {
+    "men": "1800 and 1810 census interpolated to 1804, free adult men outside the Southern states; the census gives free white males in bands (16–26, 26–45, 45+), so men 21+ are split from the 16–26 band. Voters were men meeting each state's rules: many states still required a freehold, property or taxpaying qualification (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 11 states; elsewhere (Connecticut, Delaware, Georgia, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "Census of 1800 and 1810 interpolated to 1804, white women 21+ (estimated from age bands). No woman could vote for president except in New Jersey, whose constitution let any inhabitant worth £50 vote and which chose electors by popular vote this year; propertied single women and widows there could vote. The record of how many did is thin, and New Jersey ended the practice in 1807.",
+    "south-white": "1800 and 1810 census interpolated to 1804, white adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina and Georgia legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1800 and 1810 census interpolated to 1804, Black adults in Virginia, North Carolina, South Carolina, Georgia and Tennessee; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina and Georgia the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1800 and 1810 censuses did not count aliens. Immigration was small (a few thousand a year), naturalization needed five years' residence under the 1802 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bPresident Jefferson\\b|\\b(?:Thomas )?Jefferson\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:General )?(?:Charles )?(?:Cotesworth )?(?:C\\. )?Pinckney\\b",
+      "the opposition party's nominee"
+    ],
+    [
+      "\\b(?:George )?Clinton\\b",
+      "the administration party's vice-presidential nominee"
+    ],
+    [
+      "\\bRufus King\\b|\\bKing\\b(?! of)",
+      "the opposition party's vice-presidential nominee"
+    ],
+    [
+      "\\b(?:Colonel |Aaron )?Burr\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:General |Alexander )?Hamilton\\b",
+      "the late former Secretary of the Treasury"
+    ],
+    [
+      "\\b(?:James )?Madison\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:John )?Adams\\b",
+      "the former President"
+    ],
+    [
+      "\\b(?:General|President) Washington\\b",
+      "the late first President"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

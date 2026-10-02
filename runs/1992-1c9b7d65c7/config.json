@@ -1,0 +1,75 @@
+{
+  "run_id": "1992-1c9b7d65c7",
+  "config": {
+    "election": 1992,
+    "election_day": "1992-11-03",
+    "context_cutoff": "1992-11-02",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "independent-candidate-never-enters-race",
+      "no-19th"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "CA",
+      "DE",
+      "MA",
+      "MD",
+      "ME",
+      "NC",
+      "NE",
+      "NH",
+      "RI",
+      "SC",
+      "VA",
+      "VT"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_1972_2024.csv": "e36c4e5e6f7b2eda",
+    "population/adults18_1990_by_state_nhgis.csv": "1cef20af8de705e2",
+    "population/adults18_2000_by_state_nhgis.csv": "02c60d72e5dc824a",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_1992.json": "2b53705856a22094",
+    "whatifs/independent-candidate-never-enters-race.json": "6ede0fd015440058",
+    "whatifs/evidence/independent-candidate-never-enters-race.json": "f5b6274c147be411"
+  }
+}

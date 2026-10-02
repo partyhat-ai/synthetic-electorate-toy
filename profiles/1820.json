@@ -1,0 +1,92 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 1 November until the electors meet on 6 December 1820)",
+  "names": {
+    "R": null,
+    "D": "Monroe",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": null,
+    "D": "James Monroe"
+  },
+  "descriptors": {
+    "R": null,
+    "D": "the incumbent President, seeking a second term with no organized opposition"
+  },
+  "compile_desc": {
+    "R": "the old opposition party, which runs no candidate",
+    "D": "the party of the administration in office since 1801",
+    "president": "Monroe"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y"
+  ],
+  "others_line": "No one runs against the President; a few dissident and unpledged elector tickets on some ballots (answer \"other\").",
+  "plank_order": [
+    "national unity",
+    "internal improvements",
+    "military",
+    "slavery"
+  ],
+  "names_re": "\\b(Monroe|Tompkins|Adams|Clinton|Federalist|Republican|Democrat)",
+  "never_name": "Monroe, Tompkins, Adams or Clinton",
+  "corpus": null,
+  "platforms": "context/platforms_1820.json",
+  "ev_label": "0–231–1",
+  "slice_sources": {
+    "men": "1820 census at the census date, free adult men outside the Southern states; the census gives free white males 16–18, 18–26, 26–45 and 45+, so men 21+ are split from the 18–26 band. Voters were men meeting each state's rules: several states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 15 states; elsewhere (Alabama, Delaware, Georgia, Indiana, Louisiana, Missouri, New York, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1820 census at the census date, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1820 census at the census date, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia, Louisiana and Alabama legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1820 census at the census date, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia, Louisiana and Alabama the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "1820 census at the census date: the census recorded no nativity before 1850, but the 1820 count of foreigners not naturalized gives the non-citizen total (no age or sex detail). Most states barred aliens from voting. Illinois (1818) let resident white male aliens vote."
+  },
+  "masks": [
+    [
+      "\\bPresident Monroe\\b|\\b(?:James )?Monroe\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:Daniel D\\. |Vice President )?Tompkins\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:John Quincy |J\\. ?Q\\. )?Adams\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:De ?Witt |Governor )?Clinton\\b",
+      "the governor of New York"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the old opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the governing party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

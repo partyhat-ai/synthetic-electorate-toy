@@ -1,0 +1,109 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Romney",
+  "D": "Obama",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Mitt Romney",
+  "D": "Barack Obama"
+ },
+ "descriptors": {
+  "R": "nominee of the party that won control of the House of Representatives in 2010; a former governor of a New England state and business executive",
+  "D": "the sitting President, nominee of the party that has held the White House since 2009"
+ },
+ "compile_desc": {
+  "R": "the party that won control of the House of Representatives in 2010",
+  "D": "the party that has held the White House since 2009",
+  "president": "Obama"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "T",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on most ballots, including a Libertarian and a Green nominee (answer \"other\").",
+ "plank_order": [
+  "economy",
+  "taxes",
+  "health care",
+  "debt",
+  "Medicare"
+ ],
+ "names_re": "\\b(Romney\\w*|Mitt|Obama\\w*|Barack|Ryan|Biden|Bush|Clinton|Hillary|Gingrich|Santorum|Ron Paul|Gary Johnson|Stein|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Romney, Obama, Ryan, Biden, Bush, Clinton, Gingrich, Santorum, Ron Paul, Gary Johnson or Stein",
+ "corpus": null,
+ "platforms": "context/platforms_2012.json",
+ "ev_label": "206–332",
+ "slice_sources": {
+  "men": "2012 American Community Survey (1-year, IPUMS) aged to November 2012; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2012 (interpolated between their 2010 and 2016 estimates)); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2012 returns.",
+  "women": "2012 American Community Survey (1-year, IPUMS) aged to November 2012; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2012 (interpolated between their 2010 and 2016 estimates)); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2012 returns.",
+  "south-white": "2012 American Community Survey (1-year, IPUMS) aged to November 2012; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2012 (interpolated between their 2010 and 2016 estimates)); calibrated to the certified 2012 returns.",
+  "black-south": "2012 American Community Survey (1-year, IPUMS) aged to November 2012; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2012 (interpolated between their 2010 and 2016 estimates)), which falls on them disproportionately; calibrated to the certified 2012 returns.",
+  "immigrants": "2012 American Community Survey (1-year, IPUMS) aged to November 2012; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bObamacare\\b",
+   "the 2010 health care law"
+  ],
+  [
+   "\\bRomneycare\\b",
+   "the challenger's state health law"
+  ],
+  [
+   "\\b(?:President )?(?:Barack )?Obama\\b|\\bBarack\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Governor )?(?:Mitt )?Romney\\b|\\bMitt\\b",
+   "the nominee of the party out of the White House"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Joe )?Biden\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Paul )?Ryan\\b",
+   "a running mate"
+  ],
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b",
+   "the Secretary of State"
+  ],
+  [
+   "\\b(?:Bill )?Clinton\\b",
+   "a former President"
+  ],
+  [
+   "\\b(?:George )?(?:W\\. )?Bush\\b",
+   "the former President"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the party out of the White House"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of the White House"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Newt )?Gingrich\\b|\\b(?:Rick )?Santorum\\b|\\bRon Paul\\b",
+   "a primary rival"
+  ],
+  [
+   "\\bGary Johnson\\b|\\b(?:Jill )?Stein\\b",
+   "a minor-party candidate"
+  ]
+ ]
+}

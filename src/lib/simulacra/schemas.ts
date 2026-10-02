@@ -126,6 +126,10 @@ export const ToldSchema = z.object({
   news: z.array(z.string()).optional(),
   added: z.array(z.string()).optional(),
   dropped: z.array(z.string()).optional(),
+  /** A staged what-if: news from the changed world, added to the voters' newspapers. */
+  items: z.array(z.object({ date: z.string(), text: z.string() })).optional(),
+  /** A staged what-if: how many real newspaper items the change makes false, taken out. */
+  removed: z.number().int().nonnegative().optional(),
 });
 export type Told = z.infer<typeof ToldSchema>;
 
@@ -193,6 +197,7 @@ export const RunResultSchema = z.object({
   told: z.record(z.string(), ToldSchema).optional(),
   reading: z.array(ReadingSchema).optional(),
   interview: InterviewSchema.optional(),
+  queued: z.object({ text: z.string(), worker: z.boolean() }).optional(),
   mode: z.string().optional(),
   runId: z.string().optional(),
 });
@@ -207,6 +212,8 @@ export const RunStatusSchema = z.discriminatedUnion('status', [
     status: z.literal('running'),
     done: z.number(),
     total: z.number(),
+    /** New words being modelled on the server: its working so far. */
+    steps: z.array(StepSchema).optional(),
   }),
   z.object({ status: z.literal('done'), done: z.number(), total: z.number(), result: RunResultSchema }),
   z.object({ status: z.literal('failed'), error: z.string().nullable() }),

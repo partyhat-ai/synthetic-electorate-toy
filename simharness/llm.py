@@ -26,7 +26,10 @@ import random
 import time
 from pathlib import Path
 
-# $ per million tokens: input, output, cache read. Batch is half of each.
+from .config import ROOT
+
+# $ per million tokens: input, output, cache read. Batch is half of each; fast mode (Opus 5.5 only) twice.
+FAST_BETA = 'fast-mode-2026-02-01'
 PRICES = {
     'claude-sonnet-5-5': (2.00, 10.00, 0.20),
     'claude-opus-5-5': (4.00, 20.00, 0.20),
@@ -41,7 +44,12 @@ def cost(model: str, usage: dict, batch: bool = False) -> float:
     written = usage.get('cache_creation_input_tokens', 0)
     out = usage.get('output_tokens', 0)
     dollars = (fresh * p_in + written * p_in * 1.25 + cached * p_cache + out * p_out) / 1e6
-    return dollars * (0.5 if batch else 1.0)
+    return dollars * (0.5 if batch else 1.0) * (2.0 if usage.get('speed') == 'fast' else 1.0)
+
+
+def fast_ok(model: str) -> bool:
+    """Fast mode runs on Opus 5.5 only (Claude API, not batches)."""
+    return model == 'claude-opus-5-5'
 
 
 KEY_FILE = Path.home() / '.config/simulacra/anthropic.env'
@@ -58,14 +66,16 @@ def api_key() -> str | None:
     return None
 
 
-def estimate(requests: list[dict], max_tokens: int, batch: bool = False) -> dict:
+def estimate(requests: list[dict], max_tokens: int, batch: bool = False, typical_out: int = 600) -> dict:
     """Dry-run dollars: input at ~4 chars/token (system uncached, to be safe),
-    output at a typical 600 tokens and at the max_tokens worst case."""
+    output at a typical `typical_out` tokens (600 fits an interview answer) and
+    at the max_tokens worst case."""
     typical = worst = 0.0
     for r in requests:
         tin = (len(r['system']) + len(r['user']) + len(json.dumps(r['schema']))) / 4
-        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(600, max_tokens)}, batch)
-        worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens}, batch)
+        speed = {'speed': r.get('speed')} if r.get('speed') else {}
+        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(typical_out, max_tokens), **speed}, batch)
+        worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens, **speed}, batch)
     return {'requests': len(requests), 'typical': round(typical, 4), 'worst': round(worst, 4)}
 
 
@@ -103,7 +113,8 @@ class AnthropicBackend(Backend):
             'system': [{'type': 'text', 'text': r['system'], 'cache_control': {'type': 'ephemeral'}}],
             'messages': [{'role': 'user', 'content': r['user']}],
             'output_config': {
-                'effort': self.effort,
+                # A request may carry its own effort (the once-per-what-if passes run higher than the voices).
+                'effort': r.get('effort') or self.effort,
                 'format': {'type': 'json_schema', 'schema': r['schema']},
             },
         }
@@ -113,16 +124,30 @@ class AnthropicBackend(Backend):
 
     def _one(self, r: dict) -> dict:
         a = self.anthropic
+        # Fast mode (a request's speed: "fast"): the beta endpoint, Opus 5.5 only. It has its own rate
+        # limit; a 429 there falls back to standard speed rather than waiting.
+        fast = r.get('speed') == 'fast' and fast_ok(r['model'])
         for attempt in range(5):
             try:
-                msg = self.client.messages.create(**self.params(r))
+                if fast:
+                    msg = self.client.beta.messages.create(**self.params(r), speed='fast', betas=[FAST_BETA])
+                else:
+                    msg = self.client.messages.create(**self.params(r))
                 if msg.stop_reason == 'refusal':
                     return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False,
                             'error': f'refusal: {getattr(msg.stop_details, "category", None)}', 'usage': msg.usage.model_dump()}
                 text = next(b.text for b in msg.content if b.type == 'text')
+                try:
+                    data = json.loads(text)
+                except json.JSONDecodeError as e:  # truncated at max_tokens: paid for, so keep the usage
+                    return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False,
+                            'error': f'{msg.stop_reason}: {e}', 'usage': msg.usage.model_dump()}
                 return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': True,
-                        'data': json.loads(text), 'usage': msg.usage.model_dump(), 'raw': text}
+                        'data': data, 'usage': msg.usage.model_dump(), 'raw': text}
             except a.RateLimitError:
+                if fast:
+                    fast = False
+                    continue
                 time.sleep(2 ** attempt + random.random())
             except a.BadRequestError as e:
                 return {'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': False, 'error': str(e)}
@@ -277,3 +302,74 @@ def backend(name: str, folder: Path | None = None, effort: str = 'low', max_toke
     if name == 'mock':
         return MockBackend()
     raise ValueError(name)
+
+
+# ── Answer cache: an identical request is the same instrument ──
+# Keyed on model, system, user and schema (never on meta, run or prompt-version
+# labels), so a run that adds one what-if pays only for its new briefs. Only
+# live API answers are cached; transcript (subagent) and mock answers never are.
+
+def request_key(r: dict) -> str:
+    # A request's own effort is part of the instrument; requests without one keep their old keys.
+    blob = json.dumps([r['model'], r['system'], r['user'], r['schema']] + ([r['effort']] if r.get('effort') else []), sort_keys=True)
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
+class AnswerCache:
+    LIVE = ('anthropic', 'anthropic-batch')
+
+    def __init__(self, runs_dir: Path):
+        self.runs = Path(runs_dir)
+        self.file = self.runs / '_cache/answers.jsonl'
+        self.index = {}
+        if self.file.exists():
+            for line in self.file.read_text().splitlines():
+                if line.strip():
+                    row = json.loads(line)
+                    self.index[row['key']] = row['answer']
+        # Backfill from earlier runs' requests and live answers.
+        for req_file in self.runs.glob('*/agents/all_requests.jsonl'):
+            ans_file = req_file.parent / 'answers.jsonl'
+            if not ans_file.exists():
+                continue
+            answers = {}
+            for line in ans_file.read_text().splitlines():
+                if line.strip():
+                    g = json.loads(line)
+                    if g.get('ok') and g.get('backend') in self.LIVE:
+                        answers[g['id']] = g | {'cached_from': req_file.parent.parent.name}
+            for line in req_file.read_text().splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    if r['id'] in answers:
+                        self.index.setdefault(request_key(r), answers[r['id']])
+
+    def get(self, r: dict) -> dict | None:
+        hit = self.index.get(request_key(r))
+        if not hit:
+            return None
+        return {**hit, 'id': r['id'], 'cached': True, 'usage': {}}
+
+    def put(self, r: dict, answer: dict):
+        if not answer.get('ok') or answer.get('backend') not in self.LIVE:
+            return
+        k = request_key(r)
+        self.index[k] = answer
+        self.file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.file, 'a') as f:
+            f.write(json.dumps({'key': k, 'answer': answer}) + '\n')
+
+
+# ── Spend ledger: every paid call, for the record (sessions-report) ──
+
+LEDGER = ROOT / 'sessions/spend.jsonl'
+
+
+def record_spend(stage: str, dollars: float, run: str = '', note: str = ''):
+    if dollars <= 0:
+        return
+    LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    with open(LEDGER, 'a') as f:
+        f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%S'), 'day': time.strftime('%Y-%m-%d'),
+                            'stage': stage, 'dollars': round(dollars, 5), 'run': run, 'note': note}) + '\n')
+

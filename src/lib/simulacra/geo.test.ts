@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ELECTION_YEARS, GRID, STATE_BY_CODE, STATES } from './geo';
+import { segments } from './places';
 
 describe('geo', () => {
   test('60 elections, every four years from 1792, 1789 first', () => {
@@ -21,5 +22,20 @@ describe('geo', () => {
     }
     expect(cells.size).toBe(STATES.length);
     expect(STATE_BY_CODE.size).toBe(STATES.length);
+  });
+});
+
+describe('places', () => {
+  test('state names and regions become pointable runs', () => {
+    const parts = segments('New Hampshire and the Deep South went for him.');
+    expect(parts.map((p) => p.t)).toEqual(['New Hampshire', ' and the ', 'Deep South', ' went for him.']);
+    expect(parts[0]?.codes).toEqual(['NH']);
+    expect(parts[2]?.codes).toContain('MS');
+  });
+
+  test('George Washington is a man; the District of Columbia is a district', () => {
+    expect(segments('George Washington won.').every((p) => !p.codes)).toBe(true);
+    expect(segments('District of Columbia voted.')[0]?.codes).toEqual(['DC']);
+    expect(segments('Washington state voted.')[0]?.codes).toEqual(['WA']);
   });
 });

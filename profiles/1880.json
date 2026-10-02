@@ -1,0 +1,99 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 2 November",
+ "names": {
+  "R": "Garfield",
+  "D": "Hancock",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "James A. Garfield",
+  "D": "Winfield S. Hancock"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration, which has held the presidency since 1861",
+  "D": "nominee of the party that has held a majority in both houses of Congress since the 1878 elections"
+ },
+ "compile_desc": {
+  "R": "the party that has held the presidency since 1861",
+  "D": "the party that has held a majority in both houses of Congress since the 1878 elections",
+  "president": "Hayes"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "M",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Greenback-Labor and a Prohibition nominee (answer \"other\").",
+ "plank_order": [
+  "ballot",
+  "tariff",
+  "fraud",
+  "currency",
+  "Chinese immigration",
+  "civil service",
+  "labor"
+ ],
+ "names_re": "\\b(Garfield|Hancock|Arthur|(?:William H\\. |Mr\\. )English|(?-i:Weaver)|Neal Dow|Phelps|Hayes|(?-i:Grant)|Blaine|Sherman|Tilden|Conkling|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Garfield, Hancock, Arthur, English, Weaver, Hayes, Grant, Blaine, Sherman, Conkling or Tilden",
+ "corpus": null,
+ "platforms": "context/platforms_1880.json",
+ "ev_label": "214–155",
+ "slice_sources": {
+  "men": "1880 census (Tenth Census); men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1880 returns.",
+  "women": "1880 census (Tenth Census); women 21+ outside the South; no state let women vote for president in 1880 (women voted in Wyoming Territory, which had no electoral votes), so this slice casts no presidential vote.",
+  "south-white": "1880 census (Tenth Census); white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1880 returns.",
+  "black-south": "1880 census (Tenth Census); Black adults in the eleven former Confederate states; Black men still voted in large numbers after Reconstruction, but violence, fraud and ballot-box laws already cut their turnout; the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1880 census (Tenth Census); foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Mr\\. )?Hayes\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\bGarfield\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bHancock\\b",
+   "the congressional majority party's nominee"
+  ],
+  [
+   "\\b(?:Chester A\\. )?Arthur\\b|\\b(?:William H\\. |Mr\\. )English\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Samuel J\\. )?Tilden\\b",
+   "the congressional majority party's 1876 nominee"
+  ],
+  [
+   "\\b(?:General |President |Ulysses S\\. )?Grant\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Blaine|Sherman|Conkling)\\b",
+   "an administration-party leader"
+  ],
+  [
+   "\\b(?:Weaver|Neal Dow|Phelps)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

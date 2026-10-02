@@ -10,6 +10,8 @@ in both worlds, supply only within-person changes and the quotes. Every result
 carries a confidence tier, and `DISCLOSURES.md` records what is assumed rather
 than known.
 
+Read `VALIDITY.md` for what the system can and cannot claim.
+
 ## Layout
 
 | Path | What |
@@ -18,6 +20,7 @@ than known.
 | `serve/` | The API server: serves the published per-year bundles under `/api/simulacra` |
 | `simharness/` | The simulation harness (Python): backbone, interviews, what-ifs, evaluation |
 | `tests/` | Harness tests (pytest). Page and server tests sit next to their code (vitest) |
+| `configs/`, `profiles/`, `whatifs/` | Run configs, per-election profiles, compiled what-ifs and their evidence |
 | `METHOD.md`, `EVAL.md` | How the backbone works, and the 1920 results, failures included |
 
 ## Run it

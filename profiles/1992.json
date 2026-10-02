@@ -1,0 +1,110 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Bush",
+  "D": "Clinton",
+  "O": "Perot"
+ },
+ "full_names": {
+  "R": "George H. W. Bush",
+  "D": "Bill Clinton",
+  "O": "H. Ross Perot"
+ },
+ "descriptors": {
+  "R": "the sitting President, nominee of the party that has held the White House since 1981",
+  "D": "nominee of the party that has held a majority in both houses of Congress since 1987; a sitting Southern governor",
+  "O": "independent candidate outside both parties; a self-funded business executive running on cutting the federal debt and against the proposed free-trade agreement with Mexico"
+ },
+ "compile_desc": {
+  "R": "the party that has held the White House since 1981",
+  "D": "the party that has held a majority in both houses of Congress since 1987",
+  "president": "Bush"
+ },
+ "third": "O",
+ "label_pool": [
+  "E",
+  "K",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Libertarian, a Populist and a New Alliance party nominee (answer \"other\").",
+ "plank_order": [
+  "economy",
+  "deficit",
+  "trade",
+  "taxes",
+  "health care",
+  "government reform",
+  "welfare",
+  "abortion"
+ ],
+ "names_re": "\\b(Bush|Clinton|Perot|Quayle|Gore|Stockdale|Reagan|Tsongas|Jerry Brown|Buchanan|Marrou|Gritz|Fulani|Hillary|United We Stand|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Bush, Clinton, Perot, Quayle, Gore, Stockdale, Reagan, Tsongas, Jerry Brown, Buchanan, Marrou, Gritz or Fulani",
+ "corpus": null,
+ "platforms": "context/platforms_1992.json",
+ "ev_label": "168–370–0",
+ "slice_sources": {
+  "men": "1990 census (NHGIS) interpolated toward the 2000 census to November 1992; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1992); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1992 returns.",
+  "women": "1990 census (NHGIS) interpolated toward the 2000 census to November 1992; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 1992); outside the eleven former Confederate states; turnout and choice calibrated to the certified 1992 returns.",
+  "south-white": "1990 census (NHGIS) interpolated toward the 2000 census to November 1992; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1992); calibrated to the certified 1992 returns.",
+  "black-south": "1990 census (NHGIS) interpolated toward the 2000 census to November 1992; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 1992), which falls on them disproportionately; calibrated to the certified 1992 returns.",
+  "immigrants": "1990 census (NHGIS) interpolated toward the 2000 census to November 1992; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b",
+   "the out-party nominee's wife"
+  ],
+  [
+   "\\b(?:President )?(?:George )?(?:H\\. ?W\\. )?Bush\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Governor )?(?:Bill )?Clinton\\b",
+   "the nominee of the congressional majority party"
+  ],
+  [
+   "\\b(?:H\\. )?(?:Ross )?Perot\\b",
+   "the independent candidate"
+  ],
+  [
+   "\\bUnited We Stand(?: America)?\\b",
+   "the independent candidate's movement"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the congressional majority party"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Dan )?Quayle\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Al )?Gore\\b|\\b(?:James )?Stockdale\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Ronald )?Reagan\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Paul )?Tsongas\\b|\\bJerry Brown\\b|\\b(?:Pat )?Buchanan\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Andre )?Marrou\\b|\\b(?:Bo )?Gritz\\b|\\b(?:Lenora )?Fulani\\b",
+   "a minor-party candidate"
+  ]
+ ]
+}

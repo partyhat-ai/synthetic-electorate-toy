@@ -6,6 +6,8 @@
   // bubble's working is WhatIfWorking; the chips, field and Rerun are
   // WhatIfComposer.
   import { onDestroy, untrack } from 'svelte';
+  import Places from './Places.svelte';
+  import { hoverPlaces } from './places';
   import type { WhatIf } from './schemas';
   import type { Message, Still } from './whatif';
   import WhatIfComposer from './WhatIfComposer.svelte';
@@ -84,7 +86,7 @@
   // there's more past it) and a click folds it back. A new message folds.
   const CLAMP = 7;
   // The tail only on a bubble no taller than the default one ("Change one
-  // thing about … / Pick a what-if…", 66px): anything bigger drops it.
+  // thing about … / Pick a counterfactual…", 66px): anything bigger drops it.
   const TAIL_MAX = 68;
   // Less: one quiet move. The bubble shrinks while it's still lifted (its
   // bottom fixed, so only its top eases down), the content held to its end as
@@ -146,12 +148,13 @@
   const working = $derived(!!message.busy);
   const tucked = $derived(!working && !!(message.steps?.length || message.interview?.byWhatIf.length));
   const canMore = $derived(over || tucked);
-  // A new message folds the bubble.
+  // A new message folds the bubble and lets go of any lit place.
   $effect.pre(() => {
     void msgKey;
     untrack(() => {
       opened = false;
       closing = false;
+      hoverPlaces.set([]);
       queueMicrotask(measure);
     });
   });
@@ -218,14 +221,14 @@
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div class="bubble" class:busy={message.busy} class:over={canMore} class:clamped={over} class:opened class:closing class:tall role="status" aria-live="polite" onclick={toggleOpen} bind:this={bubbleEl} use:sized>
       <div class="clip" class:above={moreAbove} class:below={moreBelow} bind:this={clipEl} use:clampable onscroll={edges}>
-      <WhatIfWorking {message} {whatIfs} {working} {opened} />
+      <WhatIfWorking {message} {whatIfs} {working} {opened} onfold={() => requestAnimationFrame(() => { measure(); edges(); })} />
       {#key msgKey}<div class="lines">
       {#if message.quote}
-        <blockquote>“{message.quote}”</blockquote>
-        {#if message.by}<p class="by">{message.by}</p>{/if}
+        <blockquote>“<Places text={message.quote} />”</blockquote>
+        {#if message.by}<p class="by"><Places text={message.by} /></p>{/if}
       {/if}
-      {#if message.text}<p class="say" class:after={!!message.quote}>{message.text}</p>{/if}
-      {#if message.detail}<p class="aside">{message.detail}</p>{/if}
+      {#if message.text}<p class="say" class:after={!!message.quote}><Places text={message.text} /></p>{/if}
+      {#if message.detail}<p class="aside"><Places text={message.detail} /></p>{/if}
       {#if message.actions?.length}
         <div class="acts">
           {#each message.actions as a (a.key)}

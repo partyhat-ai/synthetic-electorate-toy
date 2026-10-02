@@ -19,7 +19,25 @@ import random
 # p1: the 1920 prototype's answers. p2: brief dated on the context cutoff (p1 dated
 # briefs 30 Oct but admitted items to 1 Nov); non-citizens get no franchise counterfactual.
 # p3: quote capped at 25 words, no letter labels (DISCLOSURES D11).
-PROMPT_VERSION = 'p3'
+# p4: a candidate what-if's counterfactual ballot carries a third labelled line (a named
+# independent); every other brief is byte-identical to p3's, so p3 answers to them are reused.
+# p5: news about one nominee sits on that nominee's ballot line, and those counterfactuals
+# carry a manipulation check (news_about) (DISCLOSURES D21). Briefs without such news are
+# byte-identical to p4's.
+# p6: a staged compiled what-if (world.py) carries a belief check, answered first (world_check),
+# its consequences among the settled facts, the dated items it contradicts removed and up to two
+# in-world items added (DISCLOSURES D33). Every other brief is byte-identical to p5's.
+PROMPT_VERSION = 'p6'
+
+NEWS_CHECK = ('Also fill news_about: the label of the candidate the recent news on the ballot concerns, '
+              '"neither" if it concerns neither, or "unsure".')
+
+
+def world_check_line(check: dict) -> str:
+    """The belief check, asked before the election question: what the person takes to be true."""
+    opts = '; '.join(f'"{o}"' for o in check['options'])
+    return (f'Before anything else, fill world_check: as this person understands things on this date, {check["question"].rstrip("?")}? '
+            f'Answer with one of: {opts}.')
 
 # No H(arding), C(ox), D(ebs), R(epublican), D(emocrat), S(ocialist),
 # F(armer-Labor), W(ilson), L(eague).
@@ -47,6 +65,23 @@ QUESTIONS = [
     'Think about Tuesday\'s presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?',
 ]
 
+WEEKDAYS = ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+
+
+def questions(day_phrase: str = 'Tuesday, 2 November') -> list[str]:
+    """The three paraphrases for an election day (1920's are QUESTIONS, unchanged). Before
+    1845 states chose electors on different days, and the profile's day_phrase is a clause
+    ("the day this person's state has set…"): the questions then say "election day"."""
+    day = day_phrase.split(',')[0].strip()
+    if day == 'Tuesday':
+        return [q.replace('Tuesday, 2 November', day_phrase) for q in QUESTIONS]
+    if day in WEEKDAYS:
+        return [q.replace('Tuesday, 2 November', day_phrase).replace('Election Day is Tuesday.', f'Election Day is {day}.')
+                .replace("Tuesday's presidential election", f"{day}'s presidential election") for q in QUESTIONS]
+    return [q.replace('Tuesday, 2 November', 'election day').replace('Election Day is Tuesday.', 'The presidential election is near.')
+            .replace("Tuesday's presidential election", 'the coming presidential election') for q in QUESTIONS]
+
+
 PROBE_QUESTION = (
     'Set the person aside. Which year\'s United States presidential election does this brief describe? '
     'Which real candidates stand behind each label? Who won that election? '
@@ -54,9 +89,20 @@ PROBE_QUESTION = (
 )
 
 
-def answer_schema(labels: list[str]) -> dict:
+def answer_schema(labels: list[str], news_check: bool = False, world_options: list[str] | None = None) -> dict:
     choice_props = {l: {'type': 'integer'} for l in labels}
     choice_props['other'] = {'type': 'integer'}
+    if world_options:
+        # p6: the belief check comes first, so the person settles what is true before choosing.
+        s = answer_schema(labels, news_check)
+        s['properties'] = {'world_check': {'type': 'string', 'enum': list(world_options)}, **s['properties']}
+        s['required'] = ['world_check'] + s['required']
+        return s
+    if news_check:
+        s = answer_schema(labels)
+        s['properties']['news_about'] = {'type': 'string', 'enum': labels + ['neither', 'unsure']}
+        s['required'].append('news_about')
+        return s
     return {
         'type': 'object',
         'properties': {
@@ -99,19 +145,24 @@ def long_date(iso: str) -> str:
 OTHERS_1920 = 'Other candidates on some ballots, including a Socialist and a Farmer-Labor nominee (answer "other").'
 
 
-def ballot_block(state_name: str, parties: list[dict], labels: list[str], others: str = OTHERS_1920) -> list[str]:
+def ballot_block(state_name: str, parties: list[dict], labels: list[str], others: str = OTHERS_1920,
+                 note: str | None = None) -> list[str]:
     """parties: [{key, descriptor, planks: [str]}] in display order, already
-    paired with labels in the same order."""
+    paired with labels in the same order. note: a profile's ballot note for this
+    state (profile 'ballot_notes', e.g. 1964 Alabama's unpledged electors), last."""
     lines = [f'On the ballot for president in {state_name}:']
     for label, p in zip(labels, parties):
         planks = ' '.join(p['planks'])
-        lines.append(f'- Candidate {label}: {p["descriptor"]}. {planks}'.rstrip())
+        news = f' Recent news: {" ".join(p["news"])}' if p.get('news') else ''
+        lines.append(f'- Candidate {label}: {p["descriptor"]}.{news} {planks}'.rstrip())
     lines.append(f'- {others}')
+    if note:
+        lines.append(f'- {note}')
     return lines
 
 
-def brief(persona: dict, world: dict, items: list[dict], ballot: list[str], asof: str) -> str:
-    lines = [f'Date: {long_date(asof)}. The presidential election is on Tuesday, 2 November.', '', 'This person:']
+def brief(persona: dict, world: dict, items: list[dict], ballot: list[str], asof: str, day_phrase: str = 'Tuesday, 2 November') -> str:
+    lines = [f'Date: {long_date(asof)}. The presidential election is on {day_phrase}.', '', 'This person:']
     lines += [f'- {line}' for line in persona['lines']]
     if world.get('facts'):
         lines += ['', 'How things stand:']

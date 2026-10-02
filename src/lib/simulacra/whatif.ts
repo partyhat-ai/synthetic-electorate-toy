@@ -49,10 +49,11 @@ export interface Still {
 }
 
 /** A what-if's kind, in the chips' tooltips. */
-export const KIND_LABEL: Readonly<Partial<Record<Kind, string>>> = {
+export const KIND_LABEL: Readonly<Record<Kind, string>> = {
   franchise: 'Who can vote',
   population: 'Who lives where',
   issue: 'What people care about',
+  candidate: 'Who is on the ballot',
 };
 
 /** Whether a what-if reaches the open group (no group open: every one does). */

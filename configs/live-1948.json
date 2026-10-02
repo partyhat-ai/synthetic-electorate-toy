@@ -1,0 +1,72 @@
+{
+  "election": 1948,
+  "election_day": "1948-11-02",
+  "context_cutoff": "1948-11-01",
+  "mode": "truth",
+  "what_ifs": [
+    "everyone",
+    "farm-prices-stay-high"
+  ],
+  "seed": 1920,
+  "draws": 100,
+  "prompt_version": "p5",
+  "holdout": [
+    "AL",
+    "CA",
+    "DE",
+    "ID",
+    "KS",
+    "LA",
+    "MN",
+    "MS",
+    "NC",
+    "NE",
+    "TX",
+    "WY"
+  ],
+  "agents": {
+    "bulk_model": "claude-sonnet-5-5",
+    "check_model": "claude-haiku-4-5",
+    "check_share": 0,
+    "per_cohort": 3,
+    "paraphrases": 3,
+    "effort": "medium",
+    "backend": "anthropic",
+    "max_cohorts": 36,
+    "only_cohorts": [
+      "midwest:M:native_white",
+      "midwest:F:native_white",
+      "northeast:F:native_white",
+      "northeast:M:native_white",
+      "south:M:native_white",
+      "south:F:native_white"
+    ],
+    "arms": [
+      "control",
+      "cf"
+    ],
+    "max_tokens": 6000,
+    "replace_barred": true,
+    "focus_cohorts": 6,
+    "escalate_model": "claude-opus-5-5",
+    "escalate_max": 24,
+    "fast": true
+  },
+  "research": {
+    "compile_model": "claude-opus-5-5",
+    "research_model": "claude-sonnet-5-5",
+    "extract_model": "claude-opus-5-5",
+    "max_searches": 4,
+    "research_max_tokens": 8000,
+    "compile_effort": "high",
+    "research_effort": "medium",
+    "extract_effort": "high",
+    "world_model": "claude-opus-5-5",
+    "world_effort": "high",
+    "audit_model": "claude-opus-5-5",
+    "audit_effort": "medium",
+    "pass_max_tokens": 16000,
+    "fast": true
+  },
+  "max_combo": 3
+}

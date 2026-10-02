@@ -1,0 +1,85 @@
+{
+  "run_id": "2008-85fcf44f4c",
+  "config": {
+    "election": 2008,
+    "election_day": "2008-11-04",
+    "context_cutoff": "2008-11-03",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "nominee-backs-nuclear-first-strike"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "AZ",
+      "DC",
+      "FL",
+      "IL",
+      "ME",
+      "MN",
+      "MO",
+      "MS",
+      "NE",
+      "NY",
+      "WI",
+      "WY"
+    ],
+    "agents": {
+      "bulk_model": "claude-sonnet-5-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 3,
+      "paraphrases": 3,
+      "effort": "medium",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_tokens": 6000,
+      "replace_barred": true,
+      "focus_cohorts": 6,
+      "escalate_model": "claude-opus-5-5",
+      "escalate_max": 24,
+      "fast": true
+    },
+    "research": {
+      "compile_model": "claude-opus-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-opus-5-5",
+      "world_model": "claude-opus-5-5",
+      "audit_model": "claude-opus-5-5",
+      "compile_effort": "high",
+      "research_effort": "medium",
+      "extract_effort": "high",
+      "world_effort": "high",
+      "audit_effort": "medium",
+      "pass_max_tokens": 16000,
+      "fast": true,
+      "max_searches": 4,
+      "research_max_tokens": 8000
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_1972_2024.csv": "e36c4e5e6f7b2eda",
+    "population/adults18_2008_by_state_nhgis.csv": "282d994062a69f3e",
+    "population/adults18_2010_by_state_nhgis.csv": "8a1806706812392c",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_2008.json": "0ec2b5d43dc1542d",
+    "whatifs/nominee-backs-nuclear-first-strike.json": "644bf6454749d63c",
+    "whatifs/evidence/nominee-backs-nuclear-first-strike.json": "dae8df9a26ce8a67"
+  }
+}

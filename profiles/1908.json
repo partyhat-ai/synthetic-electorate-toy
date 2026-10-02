@@ -1,0 +1,95 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Taft",
+  "D": "Bryan",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "William H. Taft",
+  "D": "William Jennings Bryan"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1897, chosen with the outgoing President's backing",
+  "D": "nominee of the party that held the presidency from 1893 to 1897, renominating its candidate of 1896 and 1900"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1897",
+  "D": "the party that held the presidency from 1893 to 1897",
+  "president": "Roosevelt"
+ },
+ "third": null,
+ "label_pool": [
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist, a Prohibition, an Independence party, a People's party and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "tariff",
+  "trusts",
+  "injunctions",
+  "banking",
+  "income tax",
+  "campaign contributions",
+  "Black citizens"
+ ],
+ "names_re": "\\b(Taft|Bryan|Sherman|Kern|Debs|Chafin|Hisgen|Watson|Gillhaus|Roosevelt|Hearst|(?-i:Cannon)|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Taft, Bryan, Sherman, Kern, Debs, Chafin, Hisgen, Watson, Roosevelt, Hearst or Cannon",
+ "corpus": null,
+ "platforms": "context/platforms_1908.json",
+ "ev_label": "321–162",
+ "slice_sources": {
+  "men": "1900 and 1910 censuses interpolated to November 1908; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1908 returns.",
+  "women": "1900 and 1910 censuses interpolated to November 1908; women 21+ outside the South; women could vote for president only in Wyoming, Colorado (1893), Utah and Idaho (1896).",
+  "south-white": "1900 and 1910 censuses interpolated to November 1908; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1908 returns.",
+  "black-south": "1900 and 1910 censuses interpolated to November 1908; Black adults in the eleven former Confederate states; disfranchisement was near complete across the region (Georgia's October 1908 amendment joined the poll taxes, literacy tests and grandfather clauses already in force); the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1900 and 1910 censuses interpolated to November 1908; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Theodore )?Roosevelt\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:William H(?:oward)?\\.? |Secretary )?Taft\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\b(?:William Jennings |W\\. J\\. )?Bryan\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Sherman|Kern)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Speaker |Joseph G\\. )?Cannon\\b",
+   "the Speaker"
+  ],
+  [
+   "\\bHearst\\b",
+   "a newspaper publisher"
+  ],
+  [
+   "\\b(?:Debs|Chafin|Hisgen|Watson|Gillhaus)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

@@ -1,0 +1,99 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 6 November",
+ "names": {
+  "R": "Lincoln",
+  "D": "Douglas",
+  "O": "Breckinridge"
+ },
+ "full_names": {
+  "R": "Abraham Lincoln",
+  "D": "Stephen A. Douglas",
+  "O": "John C. Breckinridge"
+ },
+ "descriptors": {
+  "R": "nominee of the party, organized since 1854 and strongest in the free states, that would bar slavery from every territory; a former one-term congressman and lawyer from the Northwest",
+  "D": "nominee of the Northern wing of the administration party, which split at its convention; a senator from the Northwest who holds that each territory's settlers should decide on slavery for themselves",
+  "O": "nominee of the Southern wing of the divided administration party; the sitting Vice-President, who holds that the federal government must protect slaveholders' property in every territory"
+ },
+ "compile_desc": {
+  "R": "the party organized since 1854 against the extension of slavery",
+  "D": "the Northern wing of the divided administration party",
+  "president": "Buchanan"
+ },
+ "third": "O",
+ "label_pool": [
+  "G",
+  "K",
+  "M",
+  "Q",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including the nominee of a new Union-first party of conservatives from the border states, a former senator (answer \"other\").",
+ "plank_order": [
+  "slavery",
+  "Union",
+  "fugitive",
+  "tariff",
+  "homestead",
+  "immigration",
+  "Pacific railroad",
+  "Cuba",
+  "corruption"
+ ],
+ "names_re": "\\b(Lincoln|Hamlin|Douglas|Johnson|Breckinridge|(?-i:Lane)\\b|(?-i:Bell)\\b|Everett|Buchanan|Seward|Republican|Democrat|(?-i:Democracy)|Constitutional Union)",
+ "never_name": "Lincoln, Hamlin, Douglas, Herschel Johnson, Breckinridge, Lane, Bell, Everett, Buchanan or Seward",
+ "corpus": null,
+ "platforms": "context/platforms_1860.json",
+ "ev_label": "180–12–111",
+ "slice_sources": {
+  "men": "1860 census (Eighth Census), white men 21+ outside the eleven later-Confederate states; property tests had mostly ended, and only five New England states let Black men vote on equal terms; calibrated to certified returns.",
+  "women": "No women could vote for president in 1860; 1860 census women 21+ shown for population only.",
+  "south-white": "1860 census, white adults in the eleven later-Confederate states; white men voted except in South Carolina, whose legislature chose its electors; the free-soil nominee was on no ballot in ten of these states; calibrated to certified returns.",
+  "black-south": "1860 census, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote and no Southern state let free Black men vote.",
+  "immigrants": "1860 census, foreign-born white men not yet naturalized; several Midwestern and Western states let declarant aliens vote, elsewhere only naturalized men could."
+ },
+ "masks": [
+  [
+   "\\bPresident Buchanan\\b|\\bBuchanan\\b",
+   "the President"
+  ],
+  [
+   "\\bLincoln\\b",
+   "the free-soil nominee"
+  ],
+  [
+   "\\bBreckinridge\\b",
+   "the Southern nominee"
+  ],
+  [
+   "\\bDouglas\\b",
+   "the Northern administration-party nominee"
+  ],
+  [
+   "\\bConstitutional Union(?:ists?)?\\b",
+   "the Union-first party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the free-soil party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b",
+   "the administration party"
+  ],
+  [
+   "\\b(?:Bell|Everett)\\b",
+   "the Union-first party's candidate"
+  ],
+  [
+   "\\b(?:Hamlin|Johnson|Lane)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bSeward\\b",
+   "a senator"
+  ]
+ ]
+}

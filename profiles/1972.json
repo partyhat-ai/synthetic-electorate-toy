@@ -1,0 +1,107 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 7 November",
+ "names": {
+  "R": "Nixon",
+  "D": "McGovern",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Richard M. Nixon",
+  "D": "George McGovern"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1969",
+  "D": "nominee of the party that held the presidency from 1961 to 1969 and holds majorities in both houses of Congress"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1969",
+  "D": "the party that held the presidency from 1961 to 1969 and holds majorities in both houses of Congress",
+  "president": "Nixon"
+ },
+ "third": null,
+ "label_pool": [
+  "B",
+  "F",
+  "P",
+  "Q",
+  "V",
+  "X"
+ ],
+ "others_line": "Other candidates on some ballots, including American Party, People's Party and Libertarian nominees (answer \"other\").",
+ "plank_order": [
+  "Vietnam",
+  "economy",
+  "busing",
+  "taxes",
+  "welfare",
+  "crime",
+  "amnesty"
+ ],
+ "names_re": "\\b(Nixon|McGovern|Agnew|Shriver|Eagleton|Schmitz|Hospers|MacBride|Wallace|Humphrey|Muskie|Johnson|Kennedy|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Nixon, McGovern, Agnew, Shriver, Eagleton, Schmitz, Hospers, MacBride, Wallace, Humphrey, Muskie, Johnson or Kennedy",
+ "corpus": null,
+ "platforms": "context/platforms_1972.json",
+ "ev_label": "520–17–1",
+ "slice_sources": {
+  "men": "1970 and 1980 censuses interpolated to November 1972; men who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1972 returns.",
+  "women": "1970 and 1980 censuses interpolated to November 1972; women who are citizens 18+ (Twenty-sixth Amendment) outside the eleven Southern states: white non-Hispanic US-born, naturalized citizens of any race, Black US-born, and US-born Hispanic, Asian, Native American and other; 50 states and DC; calibrated to certified 1972 returns.",
+  "south-white": "1970 and 1980 censuses interpolated to November 1972; citizens 18+ in the eleven former Confederate states other than Black US-born (white non-Hispanic US-born, naturalized of any race, and US-born Hispanic, Asian, Native American and other); calibrated to certified 1972 returns.",
+  "black-south": "1970 and 1980 censuses interpolated to November 1972; Black US-born citizens 18+ in the eleven former Confederate states; first election with 18-year-olds voting nationwide; Voting Rights Act coverage continues. Any shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1970 and 1980 censuses interpolated to November 1972; noncitizen adults of any race, who could not vote in any state."
+ },
+ "masks": [
+  [
+   "\\bPresident Nixon\\b|\\bNixon\\b",
+   "the President"
+  ],
+  [
+   "\\bMcGovern\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Vice President )?Agnew\\b",
+   "the Vice President"
+  ],
+  [
+   "\\bShriver\\b",
+   "a running mate"
+  ],
+  [
+   "\\bEagleton\\b",
+   "the withdrawn running mate"
+  ],
+  [
+   "\\bWallace\\b",
+   "a Southern governor"
+  ],
+  [
+   "\\b(?:Humphrey|Muskie)\\b",
+   "a rival for the nomination of the party out of power"
+  ],
+  [
+   "\\b(?:Schmitz|Hospers|MacBride)\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\bJohnson\\b",
+   "the former President"
+  ],
+  [
+   "\\bKennedy\\b",
+   "a senator"
+  ]
+ ]
+}

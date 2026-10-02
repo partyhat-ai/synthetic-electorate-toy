@@ -1,5 +1,5 @@
-// Pure placement math: the robot's box, its turn with the time bar, and the
-// page-side measuring that stands it in a slot.
+// Pure placement math: the robot's box, its turn with the time bar and by
+// hand, and the page-side measuring that stands it in a slot.
 import type { RobotAnchors, RobotStage } from './messages';
 
 /** The box the frame uses until the page sends one. */
@@ -14,6 +14,10 @@ export const ROBOT_YAW = 40;
 export const YAW_SWAY = 8;
 /** How quickly the renderer eases toward a new yaw, per second. */
 export const YAW_EASE_RATE = 5;
+/** Degrees the robot turns per pixel of a drag across it. */
+export const DRAG_DEG_PER_PX = 0.6;
+/** A press moves this far, px, before it's a drag rather than a tap. */
+export const DRAG_START_PX = 4;
 
 /**
  * The robot's yaw for the election at `index` of `count` (the time bar),
@@ -28,6 +32,16 @@ export function yawForYear(index: number, count: number, base: number = ROBOT_YA
 /** One frame of the yaw easing: `current` moves toward `target` (radians) by dt seconds' worth. */
 export function easeToward(current: number, target: number, dt: number, rate: number = YAW_EASE_RATE): number {
   return current + (target - current) * Math.min(1, Math.max(0, dt) * rate);
+}
+
+/**
+ * The turn a drag of `dx` px across the robot gives, degrees, or null while
+ * the press is still a tap (`started`: it's already a drag). Held to ±180° so
+ * the way back, eased by the renderer on release, is never more than half a turn.
+ */
+export function dragTurn(dx: number, started: boolean): number | null {
+  if (!started && Math.abs(dx) < DRAG_START_PX) return null;
+  return Math.max(-180, Math.min(180, Math.round(dx * DRAG_DEG_PER_PX))) || 0;
 }
 
 export interface Rect {
@@ -62,6 +76,14 @@ export function stageInSlot(host: Rect, slot: Rect, nudge: Nudge, yaw: number): 
 /** Pixels the robot must move to be centred on the slot with its feet `floorGap` px above its floor. */
 export function nudgeToSlot(slot: Rect, anchors: RobotAnchors, floorGap = 6): Nudge {
   return { x: slot.left + slot.width / 2 - anchors.centerX, y: slot.bottom - floorGap - anchors.feetY };
+}
+
+/**
+ * Whether the box moved, resized or flipped between two stages: only then
+ * does the frame re-place its canvas. A turn alone is read live and eased.
+ */
+export function boxMoved(a: RobotStage, b: RobotStage): boolean {
+  return a.right !== b.right || a.bottom !== b.bottom || a.width !== b.width || a.height !== b.height || a.mirror !== b.mirror;
 }
 
 export function sameStage(a: RobotStage | null, b: RobotStage | null): boolean {

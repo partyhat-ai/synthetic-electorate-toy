@@ -1,0 +1,4551 @@
+{
+ "year": 1912,
+ "runId": "1912-35cab0e7d4",
+ "election": {
+  "slices": [
+   {
+    "key": "men",
+    "label": "Men outside the South",
+    "adults": 19.076,
+    "barred": 0.0035,
+    "home": 0.3249,
+    "A": 0.2613,
+    "B": 0.1675,
+    "O": 0.2428,
+    "source": "1910 and 1920 censuses interpolated to November 1912; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1912 returns."
+   },
+   {
+    "key": "women",
+    "label": "Women outside the South",
+    "adults": 17.708,
+    "barred": 0.8889,
+    "home": 0.0767,
+    "A": 0.0134,
+    "B": 0.0048,
+    "O": 0.0162,
+    "source": "1910 and 1920 censuses interpolated to November 1912; women 21+ outside the South; women could vote for president only in Wyoming, Colorado, Utah, Idaho, Washington (1910) and California (1911); Arizona, Kansas and Oregon adopted suffrage at this same election, so their women first voted for president in 1916."
+   },
+   {
+    "key": "south-white",
+    "label": "White Southerners",
+    "adults": 7.251,
+    "barred": 0.4848,
+    "home": 0.3076,
+    "A": 0.1408,
+    "B": 0.0234,
+    "O": 0.0434,
+    "source": "1910 and 1920 censuses interpolated to November 1912; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1912 returns."
+   },
+   {
+    "key": "black-south",
+    "label": "Black Southerners",
+    "adults": 3.773,
+    "barred": 0.9806,
+    "home": 0.0118,
+    "A": 0.0013,
+    "B": 0.0053,
+    "O": 0.001,
+    "source": "1910 and 1920 censuses interpolated to November 1912; Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test, grandfather clause and white primary was near complete across the region; the shortfall against white turnout is counted as exclusion."
+   },
+   {
+    "key": "immigrants",
+    "label": "Immigrants not yet citizens",
+    "adults": 5.772,
+    "barred": 0.9536,
+    "home": 0.0292,
+    "A": 0.0086,
+    "B": 0.0028,
+    "O": 0.0059,
+    "source": "1910 and 1920 censuses interpolated to November 1912; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+   }
+  ],
+  "whatIfs": [
+   {
+    "key": "everyone",
+    "label": "Everyone Votes",
+    "kind": "franchise",
+    "detail": "Every adult can vote, and turns out.",
+    "slices": [],
+    "assumption": "Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1912.",
+    "confidenceTier": "high",
+    "evidence": "not-researched",
+    "exploratory": false
+   }
+  ]
+ },
+ "runs": {
+  "": {
+   "ev": {
+    "A": 435,
+    "B": 8,
+    "O": 88
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "AL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 48.1,
+     "marginRange": [
+      48.1,
+      48.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "AR",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 30.5,
+     "marginRange": [
+      30.5,
+      30.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "AZ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.2,
+     "marginRange": [
+      0.2,
+      0.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 15.8,
+     "marginRange": [
+      15.8,
+      15.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 7.6,
+     "marginRange": [
+      7.6,
+      7.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.3,
+     "marginRange": [
+      3.3,
+      3.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "DE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 13.6,
+     "marginRange": [
+      13.6,
+      13.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "FL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 47.5,
+     "marginRange": [
+      47.5,
+      47.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "GA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 57.5,
+     "marginRange": [
+      57.5,
+      57.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.4,
+     "marginRange": [
+      0.4,
+      0.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ID",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 4.8,
+     "marginRange": [
+      4.8,
+      4.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 7.2,
+     "marginRange": [
+      7.2,
+      7.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.3,
+     "marginRange": [
+      9.3,
+      9.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.9,
+     "marginRange": [
+      0.9,
+      0.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 22.5,
+     "marginRange": [
+      22.5,
+      22.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "LA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 58.5,
+     "marginRange": [
+      58.5,
+      58.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.0,
+     "marginRange": [
+      3.0,
+      3.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MD",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 20.8,
+     "marginRange": [
+      20.8,
+      20.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ME",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.7,
+     "marginRange": [
+      0.7,
+      0.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MI",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 17.3,
+     "marginRange": [
+      17.3,
+      17.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MN",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 17.1,
+     "marginRange": [
+      17.1,
+      17.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 17.4,
+     "marginRange": [
+      17.4,
+      17.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 80.2,
+     "marginRange": [
+      80.2,
+      80.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 6.8,
+     "marginRange": [
+      6.8,
+      6.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 30.4,
+     "marginRange": [
+      30.4,
+      30.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ND",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 5.1,
+     "marginRange": [
+      5.1,
+      5.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.1,
+     "marginRange": [
+      9.1,
+      9.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 2.0,
+     "marginRange": [
+      2.0,
+      2.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NJ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 2.9,
+     "marginRange": [
+      2.9,
+      2.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NM",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 5.5,
+     "marginRange": [
+      5.5,
+      5.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NV",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 4.7,
+     "marginRange": [
+      4.7,
+      4.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.2,
+     "marginRange": [
+      11.2,
+      11.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 8.7,
+     "marginRange": [
+      8.7,
+      8.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OK",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.2,
+     "marginRange": [
+      11.2,
+      11.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OR",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 6.0,
+     "marginRange": [
+      6.0,
+      6.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "PA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 12.6,
+     "marginRange": [
+      12.6,
+      12.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "RI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.5,
+     "marginRange": [
+      3.5,
+      3.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 93.0,
+     "marginRange": [
+      93.0,
+      93.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SD",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 15.9,
+     "marginRange": [
+      15.9,
+      15.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 28.8,
+     "marginRange": [
+      28.8,
+      28.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TX",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 54.0,
+     "marginRange": [
+      54.0,
+      54.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "UT",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 4.8,
+     "marginRange": [
+      4.8,
+      4.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 48.9,
+     "marginRange": [
+      48.9,
+      48.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VT",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 1.3,
+     "marginRange": [
+      1.3,
+      1.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 24.4,
+     "marginRange": [
+      24.4,
+      24.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 8.4,
+     "marginRange": [
+      8.4,
+      8.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WV",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 5.3,
+     "marginRange": [
+      5.3,
+      5.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 1.8,
+     "marginRange": [
+      1.8,
+      1.8
+     ],
+     "pFlip": 0.0
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 19.076,
+     "barred": 0.0035,
+     "home": 0.3249,
+     "A": 0.2613,
+     "B": 0.1675,
+     "O": 0.2428,
+     "source": "1910 and 1920 censuses interpolated to November 1912; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1912 returns."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 17.708,
+     "barred": 0.8889,
+     "home": 0.0767,
+     "A": 0.0134,
+     "B": 0.0048,
+     "O": 0.0162,
+     "source": "1910 and 1920 censuses interpolated to November 1912; women 21+ outside the South; women could vote for president only in Wyoming, Colorado, Utah, Idaho, Washington (1910) and California (1911); Arizona, Kansas and Oregon adopted suffrage at this same election, so their women first voted for president in 1916."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 7.251,
+     "barred": 0.4848,
+     "home": 0.3076,
+     "A": 0.1408,
+     "B": 0.0234,
+     "O": 0.0434,
+     "source": "1910 and 1920 censuses interpolated to November 1912; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1912 returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 3.773,
+     "barred": 0.9806,
+     "home": 0.0118,
+     "A": 0.0013,
+     "B": 0.0053,
+     "O": 0.001,
+     "source": "1910 and 1920 censuses interpolated to November 1912; Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test, grandfather clause and white primary was near complete across the region; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.772,
+     "barred": 0.9536,
+     "home": 0.0292,
+     "A": 0.0086,
+     "B": 0.0028,
+     "O": 0.0059,
+     "source": "1910 and 1920 censuses interpolated to November 1912; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+    }
+   ],
+   "summary": "Rerun with nothing changed, 1912 comes out as it did: Wilson wins, 435\u20138\u201388. The closest state was Arizona, which went to Wilson by 0.2 points. Every one of my 100 reruns reproduces it exactly.",
+   "confidence": "high",
+   "applied": [],
+   "unknown": null,
+   "range": {
+    "A": [
+     435,
+     435
+    ],
+    "B": [
+     8,
+     8
+    ],
+    "O": [
+     88,
+     88
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 6295923,
+    "B": 3485391,
+    "O": 5272153
+   },
+   "popularRange": {
+    "A": [
+     6295923,
+     6295923
+    ],
+    "B": [
+     3485391,
+     3485391
+    ],
+    "O": [
+     5272153,
+     5272153
+    ]
+   },
+   "assumptions": [],
+   "howIGotThis": [
+    "The numbers: the 1910 and 1920 census counts interpolated to 1912 and certified returns; every draw reproduces 1912 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "1910 United States census (population by state, sex, race, nativity and citizenship, via NHGIS)",
+     "url": "https://www.nhgis.org/"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868\u20132020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "National Archives, 1912 Electoral College results",
+     "url": "https://www.archives.gov/electoral-college/1912"
+    },
+    {
+     "title": "Gray & Jenkins, state-level franchise data (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/QIY9EM"
+    },
+    {
+     "title": "Teele, women's suffrage dates (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/JZYGRB"
+    },
+    {
+     "title": "American Presidency Project, 1912 party platforms (William H. Taft, Woodrow Wilson, Theodore Roosevelt)",
+     "url": "https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1912-35cab0e7d4",
+   "validation": null,
+   "cohortEffects": []
+  },
+  "everyone": {
+   "ev": {
+    "A": 435,
+    "B": 4,
+    "O": 92
+   },
+   "winner": "A",
+   "states": [
+    {
+     "code": "AL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 15.4,
+     "marginRange": [
+      14.4,
+      34.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "AR",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 13.6,
+     "marginRange": [
+      13.5,
+      26.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "AZ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.2,
+     "marginRange": [
+      0.2,
+      0.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 15.8,
+     "marginRange": [
+      15.8,
+      15.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 7.7,
+     "marginRange": [
+      7.6,
+      7.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "CT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 10.6,
+     "marginRange": [
+      7.3,
+      16.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "DE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 19.7,
+     "marginRange": [
+      19.7,
+      28.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "FL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 19.7,
+     "marginRange": [
+      16.8,
+      34.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "GA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 23.2,
+     "marginRange": [
+      15.8,
+      39.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.4,
+     "marginRange": [
+      0.4,
+      0.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ID",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 4.9,
+     "marginRange": [
+      4.8,
+      5.0
+     ],
+     "pFlip": 0.01
+    },
+    {
+     "code": "IL",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 7.5,
+     "marginRange": [
+      7.4,
+      7.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "IN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.6,
+     "marginRange": [
+      9.6,
+      10.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.9,
+     "marginRange": [
+      0.9,
+      1.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "KY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 23.1,
+     "marginRange": [
+      23.2,
+      24.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "LA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 21.1,
+     "marginRange": [
+      17.3,
+      40.0
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.2,
+     "marginRange": [
+      3.1,
+      3.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MD",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 21.7,
+     "marginRange": [
+      21.6,
+      22.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ME",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 0.7,
+     "marginRange": [
+      0.7,
+      0.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MI",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 18.3,
+     "marginRange": [
+      18.2,
+      19.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MN",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 17.6,
+     "marginRange": [
+      17.5,
+      18.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MO",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 22.0,
+     "marginRange": [
+      22.1,
+      25.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "MS",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.7,
+     "marginRange": [
+      4.9,
+      42.7
+     ],
+     "pFlip": 0.02
+    },
+    {
+     "code": "MT",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 7.0,
+     "marginRange": [
+      6.9,
+      7.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 20.8,
+     "marginRange": [
+      20.3,
+      25.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "ND",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 5.3,
+     "marginRange": [
+      5.2,
+      5.5
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NE",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.4,
+     "marginRange": [
+      9.4,
+      9.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.2,
+     "marginRange": [
+      7.9,
+      19.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NJ",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 3.0,
+     "marginRange": [
+      3.0,
+      3.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NM",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.5,
+     "marginRange": [
+      10.7,
+      20.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NV",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 4.8,
+     "marginRange": [
+      4.7,
+      4.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "NY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.8,
+     "marginRange": [
+      11.6,
+      12.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OH",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 9.1,
+     "marginRange": [
+      9.1,
+      9.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OK",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 16.6,
+     "marginRange": [
+      16.6,
+      26.1
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "OR",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 6.1,
+     "marginRange": [
+      6.1,
+      6.3
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "PA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 13.1,
+     "marginRange": [
+      12.9,
+      13.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "RI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 11.1,
+     "marginRange": [
+      7.9,
+      15.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SC",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 20.0,
+     "marginRange": [
+      14.8,
+      51.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "SD",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 15.9,
+     "marginRange": [
+      15.9,
+      15.9
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TN",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 14.7,
+     "marginRange": [
+      17.1,
+      27.6
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "TX",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 45.2,
+     "marginRange": [
+      45.8,
+      49.4
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "UT",
+     "won": "B",
+     "flipped": 0.0,
+     "margin": 2.6,
+     "marginRange": [
+      0.7,
+      5.5
+     ],
+     "pFlip": 0.12
+    },
+    {
+     "code": "VA",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 23.3,
+     "marginRange": [
+      21.3,
+      39.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "VT",
+     "won": "O",
+     "flipped": 1.0,
+     "margin": 7.7,
+     "marginRange": [
+      7.4,
+      16.3
+     ],
+     "pFlip": 0.99
+    },
+    {
+     "code": "WA",
+     "won": "O",
+     "flipped": 0.0,
+     "margin": 24.8,
+     "marginRange": [
+      24.3,
+      25.2
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WI",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 14.3,
+     "marginRange": [
+      13.6,
+      16.8
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WV",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 5.5,
+     "marginRange": [
+      5.5,
+      5.7
+     ],
+     "pFlip": 0.0
+    },
+    {
+     "code": "WY",
+     "won": "A",
+     "flipped": 0.0,
+     "margin": 4.5,
+     "marginRange": [
+      1.2,
+      7.2
+     ],
+     "pFlip": 0.05
+    }
+   ],
+   "slices": [
+    {
+     "key": "men",
+     "label": "Men outside the South",
+     "adults": 19.076,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.3883,
+     "B": 0.2462,
+     "O": 0.3655,
+     "source": "1910 and 1920 censuses interpolated to November 1912; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1912 returns."
+    },
+    {
+     "key": "women",
+     "label": "Women outside the South",
+     "adults": 17.708,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.4148,
+     "B": 0.2007,
+     "O": 0.3845,
+     "source": "1910 and 1920 censuses interpolated to November 1912; women 21+ outside the South; women could vote for president only in Wyoming, Colorado, Utah, Idaho, Washington (1910) and California (1911); Arizona, Kansas and Oregon adopted suffrage at this same election, so their women first voted for president in 1916."
+    },
+    {
+     "key": "south-white",
+     "label": "White Southerners",
+     "adults": 7.251,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.7093,
+     "B": 0.0899,
+     "O": 0.2008,
+     "source": "1910 and 1920 censuses interpolated to November 1912; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1912 returns."
+    },
+    {
+     "key": "black-south",
+     "label": "Black Southerners",
+     "adults": 3.773,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.1665,
+     "B": 0.6995,
+     "O": 0.134,
+     "source": "1910 and 1920 censuses interpolated to November 1912; Black adults in the eleven former Confederate states; disfranchisement by poll tax, literacy test, grandfather clause and white primary was near complete across the region; the shortfall against white turnout is counted as exclusion."
+    },
+    {
+     "key": "immigrants",
+     "label": "Immigrants not yet citizens",
+     "adults": 5.772,
+     "barred": 0.0,
+     "home": 0.0,
+     "A": 0.4264,
+     "B": 0.1796,
+     "O": 0.394,
+     "source": "1910 and 1920 censuses interpolated to November 1912; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+    }
+   ],
+   "summary": "38.5 million more adults vote. Vermont flips, but Wilson still wins, 435\u20134\u201392. The closest call is Arizona, which holds for Wilson by 0.2 points. Taft wins in 0 of 100 draws.",
+   "confidence": "high",
+   "applied": [
+    {
+     "key": "everyone",
+     "label": "Everyone Votes",
+     "kind": "franchise"
+    }
+   ],
+   "unknown": null,
+   "range": {
+    "A": [
+     435,
+     439
+    ],
+    "B": [
+     0,
+     4
+    ],
+    "O": [
+     92,
+     92
+    ]
+   },
+   "drawsWon": {
+    "A": 100,
+    "B": 0,
+    "O": 0,
+    "none": 0,
+    "of": 100
+   },
+   "popular": {
+    "A": 22986562,
+    "B": 12576672,
+    "O": 18017808
+   },
+   "popularRange": {
+    "A": [
+     23130726,
+     24477153
+    ],
+    "B": [
+     9864006,
+     12298771
+    ],
+    "O": [
+     18041200,
+     19136474
+    ]
+   },
+   "assumptions": [
+    "Every adult votes. Non-citizens choose like naturalized citizens of their state and sex; Black Southerners like Black voters outside the South; everyone else as their group did in 1912."
+   ],
+   "howIGotThis": [
+    "What changed: Every adult can vote, and turns out.",
+    "New voters borrow the behaviour of naturalized citizens of the same state and sex; Black voters outside the South.",
+    "The numbers: the 1910 and 1920 census counts interpolated to 1912 and certified returns; every draw reproduces 1912 exactly before the change.",
+    "How sure: I reran it 100 times with different population and parameter draws."
+   ],
+   "sources": [
+    {
+     "title": "1910 United States census (population by state, sex, race, nativity and citizenship, via NHGIS)",
+     "url": "https://www.nhgis.org/"
+    },
+    {
+     "title": "Algara & Amlani, county presidential returns 1868\u20132020 (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/DGUMFI"
+    },
+    {
+     "title": "National Archives, 1912 Electoral College results",
+     "url": "https://www.archives.gov/electoral-college/1912"
+    },
+    {
+     "title": "Gray & Jenkins, state-level franchise data (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/QIY9EM"
+    },
+    {
+     "title": "Teele, women's suffrage dates (Harvard Dataverse, CC0)",
+     "url": "https://doi.org/10.7910/DVN/JZYGRB"
+    },
+    {
+     "title": "American Presidency Project, 1912 party platforms (William H. Taft, Woodrow Wilson, Theodore Roosevelt)",
+     "url": "https://www.presidency.ucsb.edu/documents/app-categories/elections-and-transitions/party-platforms"
+    }
+   ],
+   "confidenceTier": "high",
+   "confidenceLabel": "High confidence",
+   "confidenceFlags": [
+    "not-researched"
+   ],
+   "confidenceReasons": [],
+   "evidence": [],
+   "mode": "truth",
+   "runId": "1912-35cab0e7d4",
+   "validation": null,
+   "cohortEffects": []
+  }
+ },
+ "tables": {
+  "": [
+   {
+    "state": "AL",
+    "slice": "black-south",
+    "adults": 450108.7300543892,
+    "barred": 0.9782413022174424,
+    "home": 0.013480557265218109,
+    "A": 0.0013779684852825976,
+    "B": 0.005790884913803712,
+    "O": 0.0011092871182530146
+   },
+   {
+    "state": "AL",
+    "slice": "immigrants",
+    "adults": 7127.997843693251,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "AL",
+    "slice": "south-white",
+    "adults": 596418.0254418097,
+    "barred": 0.4947226783667291,
+    "home": 0.3137456579148446,
+    "A": 0.13718191078036507,
+    "B": 0.012072861380172958,
+    "O": 0.04227689155788845
+   },
+   {
+    "state": "AR",
+    "slice": "black-south",
+    "adults": 213267.7635249755,
+    "barred": 0.9779559530764226,
+    "home": 0.0126822579076643,
+    "A": 0.0015583512025161067,
+    "B": 0.006548939664035698,
+    "O": 0.0012544981493612997
+   },
+   {
+    "state": "AR",
+    "slice": "immigrants",
+    "adults": 4408.240141344446,
+    "barred": 0.3772904889753247,
+    "home": 0.47117282630533835,
+    "A": 0.08858737831426346,
+    "B": 0.023575630772407163,
+    "O": 0.03937367563266638
+   },
+   {
+    "state": "AR",
+    "slice": "south-white",
+    "adults": 547872.0987308233,
+    "barred": 0.47175890748330684,
+    "home": 0.3047593302930732,
+    "A": 0.12428291136508814,
+    "B": 0.04395988643842213,
+    "O": 0.055238964420109796
+   },
+   {
+    "state": "AZ",
+    "slice": "immigrants",
+    "adults": 31163.668339654807,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "AZ",
+    "slice": "men",
+    "adults": 61506.29365195101,
+    "barred": 0.06378602841685863,
+    "home": 0.632966408678905,
+    "A": 0.1311751134194058,
+    "B": 0.04022392643879019,
+    "O": 0.13184852304604047
+   },
+   {
+    "state": "AZ",
+    "slice": "women",
+    "adults": 41520.780207073854,
+    "barred": 0.06543806193199342,
+    "home": 0.8132885342046642,
+    "A": 0.05433195000269224,
+    "B": 0.012330581605010138,
+    "O": 0.05461087225564021
+   },
+   {
+    "state": "CA",
+    "slice": "immigrants",
+    "adults": 243797.989952771,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "CA",
+    "slice": "men",
+    "adults": 850331.9909729501,
+    "barred": 0.028480688631573922,
+    "home": 0.41355208506493457,
+    "A": 0.23319460165835915,
+    "B": 0.003414673510004916,
+    "O": 0.32135795113512744
+   },
+   {
+    "state": "CA",
+    "slice": "women",
+    "adults": 679897.4409365162,
+    "barred": 0.00798570501362364,
+    "home": 0.6928226738508421,
+    "A": 0.12522943162484187,
+    "B": 0.0013875532087155506,
+    "O": 0.17257463630197697
+   },
+   {
+    "state": "CO",
+    "slice": "immigrants",
+    "adults": 45648.49855920591,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "CO",
+    "slice": "men",
+    "adults": 248534.66412583296,
+    "barred": 0.0038257367036791516,
+    "home": 0.2845180222871451,
+    "A": 0.29878102361920844,
+    "B": 0.16722387645464581,
+    "O": 0.24565134093532145
+   },
+   {
+    "state": "CO",
+    "slice": "women",
+    "adults": 202482.40223210663,
+    "barred": 0.000999010886495532,
+    "home": 0.5590479157317706,
+    "A": 0.19584200014033623,
+    "B": 0.08309398667018703,
+    "O": 0.1610170865712106
+   },
+   {
+    "state": "CT",
+    "slice": "immigrants",
+    "adults": 175694.747505547,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "CT",
+    "slice": "men",
+    "adults": 278170.62334664556,
+    "barred": 0.000773196054288655,
+    "home": 0.3147620042147443,
+    "A": 0.26804052528100947,
+    "B": 0.245619034742957,
+    "O": 0.1708052397070005
+   },
+   {
+    "state": "CT",
+    "slice": "women",
+    "adults": 285048.7657344094,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "DE",
+    "slice": "immigrants",
+    "adults": 8401.39078573696,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "DE",
+    "slice": "men",
+    "adults": 58939.79725572799,
+    "barred": 0.00025163133223107315,
+    "home": 0.17365119380400346,
+    "A": 0.38396806663226063,
+    "B": 0.27141253863846804,
+    "O": 0.17071656959303677
+   },
+   {
+    "state": "DE",
+    "slice": "women",
+    "adults": 56313.38731195779,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "FL",
+    "slice": "black-south",
+    "adults": 167569.29730126978,
+    "barred": 0.9759957769377605,
+    "home": 0.014733578246078623,
+    "A": 0.0015431794577732308,
+    "B": 0.006485180711138032,
+    "O": 0.0012422846472497158
+   },
+   {
+    "state": "FL",
+    "slice": "immigrants",
+    "adults": 17085.503077190297,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "FL",
+    "slice": "south-white",
+    "adults": 245582.33136381803,
+    "barred": 0.4731218363290826,
+    "home": 0.3261979099697047,
+    "A": 0.14286211189394663,
+    "B": 0.012998829385137979,
+    "O": 0.04481931242212791
+   },
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 516009.7232342864,
+    "barred": 0.9766051444594467,
+    "home": 0.015741550631487,
+    "A": 0.0012739591640009236,
+    "B": 0.005353787827812309,
+    "O": 0.001025557917252936
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5261.232522351221,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 728565.0858000951,
+    "barred": 0.5058245564984611,
+    "home": 0.332870952602162,
+    "A": 0.12686529520196327,
+    "B": 0.0033331180317225807,
+    "O": 0.03110607766569099
+   },
+   {
+    "state": "IA",
+    "slice": "immigrants",
+    "adults": 51327.71315792497,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IA",
+    "slice": "men",
+    "adults": 653869.6592890333,
+    "barred": 0.00019339623103121055,
+    "home": 0.24682320255817367,
+    "A": 0.28342345812862413,
+    "B": 0.18322458963912547,
+    "O": 0.2863353534430455
+   },
+   {
+    "state": "IA",
+    "slice": "women",
+    "adults": 615183.0355921226,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ID",
+    "slice": "immigrants",
+    "adults": 13241.305336295907,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ID",
+    "slice": "men",
+    "adults": 105784.24248938481,
+    "barred": 0.0106661352727086,
+    "home": 0.28229644142513827,
+    "A": 0.22098751140695033,
+    "B": 0.2318240442163297,
+    "O": 0.25422586767887306
+   },
+   {
+    "state": "ID",
+    "slice": "women",
+    "adults": 70567.05601381212,
+    "barred": 0.006151901197853714,
+    "home": 0.5551082177126574,
+    "A": 0.14941821441835565,
+    "B": 0.11742971238968569,
+    "O": 0.17189195428144755
+   },
+   {
+    "state": "IL",
+    "slice": "immigrants",
+    "adults": 451194.4576777334,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IL",
+    "slice": "men",
+    "adults": 1580307.041135004,
+    "barred": 0.0006386573003061124,
+    "home": 0.27407633784595464,
+    "A": 0.2563096850546497,
+    "B": 0.16047071448836817,
+    "O": 0.30850460531072155
+   },
+   {
+    "state": "IL",
+    "slice": "women",
+    "adults": 1448440.9946325067,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "IN",
+    "slice": "immigrants",
+    "adults": 63745.104892311254,
+    "barred": 0.3842503753912936,
+    "home": 0.2287527259374562,
+    "A": 0.17882052197867201,
+    "B": 0.0677811109376974,
+    "O": 0.14039526575488082
+   },
+   {
+    "state": "IN",
+    "slice": "men",
+    "adults": 796313.0472948478,
+    "barred": 0.00017108309670218382,
+    "home": 0.20892784572192044,
+    "A": 0.3396793107746037,
+    "B": 0.18453331447256957,
+    "O": 0.2666884459342041
+   },
+   {
+    "state": "IN",
+    "slice": "women",
+    "adults": 791727.0251991864,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "KS",
+    "slice": "immigrants",
+    "adults": 36375.67449555236,
+    "barred": 0.0,
+    "home": 0.7534637653446715,
+    "A": 0.10310557439043493,
+    "B": 0.03789283267610459,
+    "O": 0.10553782758878895
+   },
+   {
+    "state": "KS",
+    "slice": "men",
+    "adults": 483742.20739520685,
+    "barred": 0.0005139109936117648,
+    "home": 0.4882667747310779,
+    "A": 0.19712455572202603,
+    "B": 0.1123200485213329,
+    "O": 0.2017747100319514
+   },
+   {
+    "state": "KS",
+    "slice": "women",
+    "adults": 444774.26969294855,
+    "barred": 0.0003459549156954818,
+    "home": 0.7539255349758682,
+    "A": 0.10017440420439287,
+    "B": 0.04301659459841181,
+    "O": 0.1025375113056317
+   },
+   {
+    "state": "KY",
+    "slice": "immigrants",
+    "adults": 7830.098386581998,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "KY",
+    "slice": "men",
+    "adults": 603442.9613711726,
+    "barred": 5.655965933547666e-05,
+    "home": 0.2497250618358906,
+    "A": 0.363719546087797,
+    "B": 0.19141825722457936,
+    "O": 0.19508057519239758
+   },
+   {
+    "state": "KY",
+    "slice": "women",
+    "adults": 565613.5538146744,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "LA",
+    "slice": "black-south",
+    "adults": 356279.06990695966,
+    "barred": 0.9767727749449825,
+    "home": 0.01537514639303241,
+    "A": 0.0013070467839380055,
+    "B": 0.005492837886775032,
+    "O": 0.0010521939912719507
+   },
+   {
+    "state": "LA",
+    "slice": "immigrants",
+    "adults": 25024.07353802892,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "LA",
+    "slice": "south-white",
+    "adults": 447529.2368564291,
+    "barred": 0.4879571705941266,
+    "home": 0.3412149539926796,
+    "A": 0.13497515159356518,
+    "B": 0.0041919424968888275,
+    "O": 0.03166078132273965
+   },
+   {
+    "state": "MA",
+    "slice": "immigrants",
+    "adults": 515160.88367799856,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MA",
+    "slice": "men",
+    "adults": 818218.5613186954,
+    "barred": 0.0011494037780218022,
+    "home": 0.4023644944970106,
+    "A": 0.21193359353755375,
+    "B": 0.1905945518382824,
+    "O": 0.19395795634913143
+   },
+   {
+    "state": "MA",
+    "slice": "women",
+    "adults": 848097.4723399702,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MD",
+    "slice": "immigrants",
+    "adults": 39192.283539519136,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MD",
+    "slice": "men",
+    "adults": 361604.20752235537,
+    "barred": 0.00044466135489355525,
+    "home": 0.3580224273178557,
+    "A": 0.31159482565762975,
+    "B": 0.15197832009907078,
+    "O": 0.17795976557055032
+   },
+   {
+    "state": "MD",
+    "slice": "women",
+    "adults": 367496.64213398396,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ME",
+    "slice": "immigrants",
+    "adults": 52694.271951587216,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ME",
+    "slice": "men",
+    "adults": 211928.53421963466,
+    "barred": 0.0007670371535166293,
+    "home": 0.38751259929390475,
+    "A": 0.24118035916497552,
+    "B": 0.12525448778264703,
+    "O": 0.24528551660495607
+   },
+   {
+    "state": "ME",
+    "slice": "women",
+    "adults": 202089.35400016533,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MI",
+    "slice": "immigrants",
+    "adults": 224734.23154813648,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MI",
+    "slice": "men",
+    "adults": 811294.0221876476,
+    "barred": 0.0011415935641810077,
+    "home": 0.3234300351994567,
+    "A": 0.18513756528812292,
+    "B": 0.18665735955049556,
+    "O": 0.3036334463977437
+   },
+   {
+    "state": "MI",
+    "slice": "women",
+    "adults": 746344.1347336451,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MN",
+    "slice": "immigrants",
+    "adults": 153522.46150917016,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MN",
+    "slice": "men",
+    "adults": 578619.8406285198,
+    "barred": 0.0016560212326482446,
+    "home": 0.4207298415871296,
+    "A": 0.1839307824024836,
+    "B": 0.11118526445682494,
+    "O": 0.2824980903209134
+   },
+   {
+    "state": "MN",
+    "slice": "women",
+    "adults": 470663.29594424454,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MO",
+    "slice": "immigrants",
+    "adults": 69961.12249261298,
+    "barred": 0.41694425108101657,
+    "home": 0.2751780411767221,
+    "A": 0.15976599994944302,
+    "B": 0.06713122409285033,
+    "O": 0.08098048369996781
+   },
+   {
+    "state": "MO",
+    "slice": "men",
+    "adults": 960068.2544594138,
+    "barred": 0.00027456988358409,
+    "home": 0.28657558186795185,
+    "A": 0.3328602834444023,
+    "B": 0.21157289939110843,
+    "O": 0.1687166654129533
+   },
+   {
+    "state": "MO",
+    "slice": "women",
+    "adults": 929636.928633074,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MS",
+    "slice": "black-south",
+    "adults": 465029.7595395433,
+    "barred": 0.9876831384922863,
+    "home": 0.008480480794308482,
+    "A": 0.0006385989352977806,
+    "B": 0.0026836992136497393,
+    "O": 0.0005140825644576624
+   },
+   {
+    "state": "MS",
+    "slice": "immigrants",
+    "adults": 3112.2486548988595,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MS",
+    "slice": "south-white",
+    "adults": 379662.2437515966,
+    "barred": 0.4815311044610452,
+    "home": 0.3533248238509483,
+    "A": 0.15020464486234483,
+    "B": 0.0008217830588972247,
+    "O": 0.014117643766764353
+   },
+   {
+    "state": "MT",
+    "slice": "immigrants",
+    "adults": 33367.259132136736,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "MT",
+    "slice": "men",
+    "adults": 136870.0349376861,
+    "barred": 0.015618548953400686,
+    "home": 0.39801497545872666,
+    "A": 0.20551613078012743,
+    "B": 0.1357126854577511,
+    "O": 0.24513765934999407
+   },
+   {
+    "state": "MT",
+    "slice": "women",
+    "adults": 82873.91711383256,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NC",
+    "slice": "black-south",
+    "adults": 311285.03736951423,
+    "barred": 0.9797172145112947,
+    "home": 0.007383864283282537,
+    "A": 0.002147137618404284,
+    "B": 0.009023302764233998,
+    "O": 0.0017284808227844661
+   },
+   {
+    "state": "NC",
+    "slice": "immigrants",
+    "adults": 2225.462242974843,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NC",
+    "slice": "south-white",
+    "adults": 755708.0900968182,
+    "barred": 0.5008930052940926,
+    "home": 0.18184062959417968,
+    "A": 0.19020390289280562,
+    "B": 0.0348285021787343,
+    "O": 0.0922339600401878
+   },
+   {
+    "state": "ND",
+    "slice": "immigrants",
+    "adults": 35249.374451142576,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "ND",
+    "slice": "men",
+    "adults": 149787.40734554324,
+    "barred": 0.004663493825098655,
+    "home": 0.4180249582120349,
+    "A": 0.1972729251659045,
+    "B": 0.15348419742002106,
+    "O": 0.2265544253769407
+   },
+   {
+    "state": "ND",
+    "slice": "women",
+    "adults": 112585.30095801382,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NE",
+    "slice": "immigrants",
+    "adults": 48395.04092327891,
+    "barred": 0.4012314744174852,
+    "home": 0.26915258869867553,
+    "A": 0.1514963831066287,
+    "B": 0.058251916407953755,
+    "O": 0.11986763736925689
+   },
+   {
+    "state": "NE",
+    "slice": "men",
+    "adults": 324841.04805398075,
+    "barred": 0.0018802749997607372,
+    "home": 0.2792135872305611,
+    "A": 0.31300024103554014,
+    "B": 0.15825246356582814,
+    "O": 0.24765343316830982
+   },
+   {
+    "state": "NE",
+    "slice": "women",
+    "adults": 285515.2918716978,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NH",
+    "slice": "immigrants",
+    "adults": 44769.29964366328,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NH",
+    "slice": "men",
+    "adults": 114003.39957218683,
+    "barred": 0.0002635375251236273,
+    "home": 0.2281717518602319,
+    "A": 0.30458740818341,
+    "B": 0.2888247203477535,
+    "O": 0.17815258208348084
+   },
+   {
+    "state": "NH",
+    "slice": "women",
+    "adults": 116916.2859350423,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NJ",
+    "slice": "immigrants",
+    "adults": 309118.8098614202,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NJ",
+    "slice": "men",
+    "adults": 657451.5318521031,
+    "barred": 0.0007660425022119098,
+    "home": 0.33962183555424313,
+    "A": 0.2717128051933721,
+    "B": 0.13547158335724255,
+    "O": 0.25242773339293045
+   },
+   {
+    "state": "NJ",
+    "slice": "women",
+    "adults": 641370.4427242351,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NM",
+    "slice": "immigrants",
+    "adults": 11676.637577555668,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NM",
+    "slice": "men",
+    "adults": 88516.26999594197,
+    "barred": 0.02239347030722046,
+    "home": 0.4197881760470187,
+    "A": 0.2308841075270821,
+    "B": 0.2003360512257846,
+    "O": 0.12659819489289414
+   },
+   {
+    "state": "NM",
+    "slice": "women",
+    "adults": 71467.29570428279,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NV",
+    "slice": "immigrants",
+    "adults": 8232.38545645671,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NV",
+    "slice": "men",
+    "adults": 32033.033877867936,
+    "barred": 0.03744873370299748,
+    "home": 0.3346057499062578,
+    "A": 0.24930514014136915,
+    "B": 0.0997720044943552,
+    "O": 0.27886837175502044
+   },
+   {
+    "state": "NV",
+    "slice": "women",
+    "adults": 16559.356493293802,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1380617.530749302,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2293832.4287246177,
+    "barred": 0.0013670510751855203,
+    "home": 0.30620442620002625,
+    "A": 0.2857981218618884,
+    "B": 0.19857030282527577,
+    "O": 0.208060098037624
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2242349.066185232,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 282140.0585337961,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1422292.5906401346,
+    "barred": 0.00018581308437276572,
+    "home": 0.2706294841160271,
+    "A": 0.2986966273967887,
+    "B": 0.1955771982731223,
+    "O": 0.23491087712968917
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1364716.289030644,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OK",
+    "slice": "immigrants",
+    "adults": 12553.181397239885,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OK",
+    "slice": "men",
+    "adults": 464865.27803854377,
+    "barred": 0.012082025664300881,
+    "home": 0.4421813663652383,
+    "A": 0.2562957605746193,
+    "B": 0.19516622188492028,
+    "O": 0.09427462551092122
+   },
+   {
+    "state": "OK",
+    "slice": "women",
+    "adults": 393401.88412415504,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "OR",
+    "slice": "immigrants",
+    "adults": 39037.50485482358,
+    "barred": 0.0,
+    "home": 0.7906200177604871,
+    "A": 0.07567960434670296,
+    "B": 0.04477234034551354,
+    "O": 0.08892803754729635
+   },
+   {
+    "state": "OR",
+    "slice": "men",
+    "adults": 229396.75718612818,
+    "barred": 0.015868589710054386,
+    "home": 0.5602084395627683,
+    "A": 0.14260238540285614,
+    "B": 0.11375429856965619,
+    "O": 0.1675662867546649
+   },
+   {
+    "state": "OR",
+    "slice": "women",
+    "adults": 164243.1002852539,
+    "barred": 0.004245600787675433,
+    "home": 0.8032362776572566,
+    "A": 0.06939184830266287,
+    "B": 0.04158672313708611,
+    "O": 0.08153955011531895
+   },
+   {
+    "state": "PA",
+    "slice": "immigrants",
+    "adults": 714288.6549791759,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "PA",
+    "slice": "men",
+    "adults": 1859104.364613261,
+    "barred": 0.00045772172655834915,
+    "home": 0.3445300997326643,
+    "A": 0.2128105379843327,
+    "B": 0.14703854458359636,
+    "O": 0.2951630959728483
+   },
+   {
+    "state": "PA",
+    "slice": "women",
+    "adults": 1871992.2234991598,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "RI",
+    "slice": "immigrants",
+    "adults": 78143.15970775316,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "RI",
+    "slice": "men",
+    "adults": 129345.79259920622,
+    "barred": 0.0010602930065724283,
+    "home": 0.3967245252335996,
+    "A": 0.23512167955948424,
+    "B": 0.2141778208891043,
+    "O": 0.1529156813112395
+   },
+   {
+    "state": "RI",
+    "slice": "women",
+    "adults": 131882.80222052132,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "SC",
+    "slice": "black-south",
+    "adults": 367935.7412476842,
+    "barred": 0.9936599845134316,
+    "home": 0.004627409457012294,
+    "A": 0.00028507816839907975,
+    "B": 0.0011980352832949319,
+    "O": 0.00022949257786211905
+   },
+   {
+    "state": "SC",
+    "slice": "immigrants",
+    "adults": 2038.848291031968,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "SC",
+    "slice": "south-white",
+    "adults": 349091.07021476567,
+    "barred": 0.48779872536292357,
+    "home": 0.3696228036368613,
+    "A": 0.1382163958620936,
+    "B": 0.0003156769376464184,
+    "O": 0.004046398200475037
+   },
+   {
+    "state": "SD",
+    "slice": "immigrants",
+    "adults": 22026.14237812538,
+    "barred": 0.3876749689346492,
+    "home": 0.31010072242575853,
+    "A": 0.1271541612322718,
+    "B": 0.0,
+    "O": 0.17507014740732058
+   },
+   {
+    "state": "SD",
+    "slice": "men",
+    "adults": 166150.64921139865,
+    "barred": 0.012185582216619655,
+    "home": 0.327749802518248,
+    "A": 0.2777075176081485,
+    "B": 0.0,
+    "O": 0.38235709765698395
+   },
+   {
+    "state": "SD",
+    "slice": "women",
+    "adults": 128853.11179669951,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 258292.0656463034,
+    "barred": 0.9784957485909971,
+    "home": 0.009760010327593048,
+    "A": 0.001954931069344252,
+    "B": 0.008215558597967564,
+    "O": 0.0015737514140981468
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 4913.632751232119,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 903936.8735551047,
+    "barred": 0.494951887163592,
+    "home": 0.22969751812868883,
+    "A": 0.1465987954364252,
+    "B": 0.064554271550929,
+    "O": 0.06419752772036495
+   },
+   {
+    "state": "TX",
+    "slice": "black-south",
+    "adults": 361319.5129770258,
+    "barred": 0.9780220494870155,
+    "home": 0.014235449048478127,
+    "A": 0.0012888067064091488,
+    "B": 0.00541618432690294,
+    "O": 0.0010375104311943432
+   },
+   {
+    "state": "TX",
+    "slice": "immigrants",
+    "adults": 112784.93675076318,
+    "barred": 0.40352028541022417,
+    "home": 0.4822120266463696,
+    "A": 0.0852128722717439,
+    "B": 0.007319876743084183,
+    "O": 0.02173493892857821
+   },
+   {
+    "state": "TX",
+    "slice": "south-white",
+    "adults": 1545139.249844069,
+    "barred": 0.4608550570605425,
+    "home": 0.35182537985575724,
+    "A": 0.13688902187899604,
+    "B": 0.015514753821729692,
+    "O": 0.034915787382974656
+   },
+   {
+    "state": "UT",
+    "slice": "immigrants",
+    "adults": 22922.72882089284,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "UT",
+    "slice": "men",
+    "adults": 95217.42197411055,
+    "barred": 0.01330595924889676,
+    "home": 0.23626474059852406,
+    "A": 0.23487975619823576,
+    "B": 0.2992477387261835,
+    "O": 0.21630180522815984
+   },
+   {
+    "state": "UT",
+    "slice": "women",
+    "adults": 82176.50922535216,
+    "barred": 0.004359120225792189,
+    "home": 0.49892889905840115,
+    "A": 0.17293695333230366,
+    "B": 0.16451662299013067,
+    "O": 0.15925840439337224
+   },
+   {
+    "state": "VA",
+    "slice": "black-south",
+    "adults": 305488.3476811901,
+    "barred": 0.9790372886133032,
+    "home": 0.013579995275267114,
+    "A": 0.0012289173052849058,
+    "B": 0.005164500320213925,
+    "O": 0.0009892984859310333
+   },
+   {
+    "state": "VA",
+    "slice": "immigrants",
+    "adults": 11398.687784957496,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VA",
+    "slice": "south-white",
+    "adults": 751798.7657797703,
+    "barred": 0.4890626973967743,
+    "home": 0.331740857509321,
+    "A": 0.1196551313685357,
+    "B": 0.02887781454189099,
+    "O": 0.030663499183478105
+   },
+   {
+    "state": "VT",
+    "slice": "immigrants",
+    "adults": 19661.69484764835,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "VT",
+    "slice": "men",
+    "adults": 99376.45716863131,
+    "barred": 6.569541223828934e-05,
+    "home": 0.3675813128387655,
+    "A": 0.15450339484394354,
+    "B": 0.23478397866999468,
+    "O": 0.2430656182350581
+   },
+   {
+    "state": "VT",
+    "slice": "women",
+    "adults": 98621.6793971007,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WA",
+    "slice": "immigrants",
+    "adults": 97961.42972808253,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WA",
+    "slice": "men",
+    "adults": 382104.5169269442,
+    "barred": 0.015759986812180937,
+    "home": 0.37362939228557307,
+    "A": 0.16154722950570086,
+    "B": 0.14116002723215443,
+    "O": 0.3079033641643907
+   },
+   {
+    "state": "WA",
+    "slice": "women",
+    "adults": 264331.0115591924,
+    "barred": 0.007422444726345612,
+    "home": 0.654055324598318,
+    "A": 0.0950023750952474,
+    "B": 0.06244865439058319,
+    "O": 0.18107120118950557
+   },
+   {
+    "state": "WI",
+    "slice": "immigrants",
+    "adults": 180633.02870703832,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WI",
+    "slice": "men",
+    "adults": 587697.0939752703,
+    "barred": 0.0019577269592505535,
+    "home": 0.31746208283679644,
+    "A": 0.27944667700930614,
+    "B": 0.22221651483241825,
+    "O": 0.17891699836222869
+   },
+   {
+    "state": "WI",
+    "slice": "women",
+    "adults": 548417.8468334137,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WV",
+    "slice": "immigrants",
+    "adults": 39543.91673595112,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WV",
+    "slice": "men",
+    "adults": 325679.08266379323,
+    "barred": 0.00010513378455781719,
+    "home": 0.1744565304119789,
+    "A": 0.34757221456651055,
+    "B": 0.17426357116954797,
+    "O": 0.30360255006740466
+   },
+   {
+    "state": "WV",
+    "slice": "women",
+    "adults": 295056.9402783623,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WY",
+    "slice": "immigrants",
+    "adults": 12948.600277195696,
+    "barred": 1.0,
+    "home": 0.0,
+    "A": 0.0,
+    "B": 0.0,
+    "O": 0.0
+   },
+   {
+    "state": "WY",
+    "slice": "men",
+    "adults": 55069.472920877146,
+    "barred": 0.014946885426899321,
+    "home": 0.38930133094529656,
+    "A": 0.21103194047846993,
+    "B": 0.21361994261413703,
+    "O": 0.17109990053519708
+   },
+   {
+    "state": "WY",
+    "slice": "women",
+    "adults": 29262.972430616483,
+    "barred": 0.006676377317870117,
+    "home": 0.6695266021842784,
+    "A": 0.12604947351117116,
+    "B": 0.09554949899746763,
+    "O": 0.10219804798921266
+   }
+  ],
+  "everyone": [
+   {
+    "state": "AL",
+    "slice": "black-south",
+    "adults": 450108.7300543892,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531267,
+    "O": 0.13400196770391984
+   },
+   {
+    "state": "AL",
+    "slice": "immigrants",
+    "adults": 7127.997843693251,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7306817766897882,
+    "B": 0.044135806323052446,
+    "O": 0.22518241698715927
+   },
+   {
+    "state": "AL",
+    "slice": "south-white",
+    "adults": 596418.0254418097,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7221991506174005,
+    "B": 0.05523261862851176,
+    "O": 0.2225682307540879
+   },
+   {
+    "state": "AR",
+    "slice": "black-south",
+    "adults": 213267.7635249755,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391984
+   },
+   {
+    "state": "AR",
+    "slice": "immigrants",
+    "adults": 4408.240141344446,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5939562364932189,
+    "B": 0.1420531065903899,
+    "O": 0.26399065691639134
+   },
+   {
+    "state": "AR",
+    "slice": "south-white",
+    "adults": 547872.0987308233,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5704228469192724,
+    "B": 0.1760461808875332,
+    "O": 0.25353097219319454
+   },
+   {
+    "state": "AZ",
+    "slice": "immigrants",
+    "adults": 31163.668339654807,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.45298839471673324,
+    "B": 0.09169771804128055,
+    "O": 0.4553138872419861
+   },
+   {
+    "state": "AZ",
+    "slice": "men",
+    "adults": 61506.29365195101,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4351021907584317,
+    "B": 0.12756194781048596,
+    "O": 0.4373358614310824
+   },
+   {
+    "state": "AZ",
+    "slice": "women",
+    "adults": 41520.780207073854,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4501524097321287,
+    "B": 0.09738424701897742,
+    "O": 0.452463343248894
+   },
+   {
+    "state": "CA",
+    "slice": "immigrants",
+    "adults": 243797.989952771,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.41880751954934897,
+    "B": 0.004047360258117668,
+    "O": 0.5771451201925333
+   },
+   {
+    "state": "CA",
+    "slice": "men",
+    "adults": 850331.9909729501,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.417994617426688,
+    "B": 0.005980496548954184,
+    "O": 0.5760248860243579
+   },
+   {
+    "state": "CA",
+    "slice": "women",
+    "adults": 679897.4409365162,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.41858982118732085,
+    "B": 0.004565061703790745,
+    "O": 0.5768451171088885
+   },
+   {
+    "state": "CO",
+    "slice": "immigrants",
+    "adults": 45648.49855920591,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4554631660014822,
+    "B": 0.17006480053528578,
+    "O": 0.3744720334632322
+   },
+   {
+    "state": "CO",
+    "slice": "men",
+    "adults": 248534.66412583296,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.42055164719834714,
+    "B": 0.23367982033120407,
+    "O": 0.34576853247044875
+   },
+   {
+    "state": "CO",
+    "slice": "women",
+    "adults": 202482.40223210663,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4458780688451611,
+    "B": 0.18753055872196214,
+    "O": 0.3665913724328768
+   },
+   {
+    "state": "CT",
+    "slice": "immigrants",
+    "adults": 175694.747505547,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4438350709813545,
+    "B": 0.27333696630716187,
+    "O": 0.28282796271148364
+   },
+   {
+    "state": "CT",
+    "slice": "men",
+    "adults": 278170.62334664556,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.39289874768927835,
+    "B": 0.3567317803463936,
+    "O": 0.2503694719643281
+   },
+   {
+    "state": "CT",
+    "slice": "women",
+    "adults": 285048.7657344094,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.430417587984875,
+    "B": 0.295304560884999,
+    "O": 0.27427785113012615
+   },
+   {
+    "state": "DE",
+    "slice": "immigrants",
+    "adults": 8401.39078573696,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5629378312080164,
+    "B": 0.18677360630582907,
+    "O": 0.25028856248615455
+   },
+   {
+    "state": "DE",
+    "slice": "men",
+    "adults": 58939.79725572799,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.46532512650391594,
+    "B": 0.3277860297468053,
+    "O": 0.20688884374927868
+   },
+   {
+    "state": "DE",
+    "slice": "women",
+    "adults": 56313.38731195779,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5045342844905741,
+    "B": 0.2711440341629403,
+    "O": 0.22432168134648556
+   },
+   {
+    "state": "FL",
+    "slice": "black-south",
+    "adults": 167569.29730126978,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.1664586971429534,
+    "B": 0.6995393351531268,
+    "O": 0.1340019677039199
+   },
+   {
+    "state": "FL",
+    "slice": "immigrants",
+    "adults": 17085.503077190297,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7268819700270511,
+    "B": 0.0450775112044828,
+    "O": 0.22804051876846598
+   },
+   {
+    "state": "FL",
+    "slice": "south-white",
+    "adults": 245582.33136381803,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7177580706516787,
+    "B": 0.05706379929294125,
+    "O": 0.22517813005537984
+   },
+   {
+    "state": "GA",
+    "slice": "black-south",
+    "adults": 516009.7232342864,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295333,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "GA",
+    "slice": "immigrants",
+    "adults": 5261.232522351221,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7917002592727199,
+    "B": 0.014182904332579243,
+    "O": 0.19411683639470076
+   },
+   {
+    "state": "GA",
+    "slice": "south-white",
+    "adults": 728565.0858000951,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.788662949512585,
+    "B": 0.01796493149665911,
+    "O": 0.1933721189907558
+   },
+   {
+    "state": "IA",
+    "slice": "immigrants",
+    "adults": 51327.71315792497,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.40893674655065526,
+    "B": 0.17792508686084926,
+    "O": 0.41313816658849545
+   },
+   {
+    "state": "IA",
+    "slice": "men",
+    "adults": 653869.6592890333,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.37681959590804226,
+    "B": 0.2424893600583732,
+    "O": 0.3806910440335845
+   },
+   {
+    "state": "IA",
+    "slice": "women",
+    "adults": 615183.0355921226,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.40176694907798177,
+    "B": 0.19233834437387454,
+    "O": 0.4058947065481436
+   },
+   {
+    "state": "ID",
+    "slice": "immigrants",
+    "adults": 13241.305336295907,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3450279552639189,
+    "B": 0.2580490207064144,
+    "O": 0.39692302402966667
+   },
+   {
+    "state": "ID",
+    "slice": "men",
+    "adults": 105784.24248938481,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.31350841138092433,
+    "B": 0.3258289095359632,
+    "O": 0.36066267908311245
+   },
+   {
+    "state": "ID",
+    "slice": "women",
+    "adults": 70567.05601381212,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.34139822587180985,
+    "B": 0.2658544209238722,
+    "O": 0.39274735320431786
+   },
+   {
+    "state": "IL",
+    "slice": "immigrants",
+    "adults": 451194.4576777334,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.38365653105016184,
+    "B": 0.1545590979797188,
+    "O": 0.4617843709701192
+   },
+   {
+    "state": "IL",
+    "slice": "men",
+    "adults": 1580307.041135004,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.35403096989298455,
+    "B": 0.2198431714165041,
+    "O": 0.42612585869051145
+   },
+   {
+    "state": "IL",
+    "slice": "women",
+    "adults": 1448440.9946325067,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.37445604275739913,
+    "B": 0.1748336625752149,
+    "O": 0.4507102946673861
+   },
+   {
+    "state": "IN",
+    "slice": "immigrants",
+    "adults": 63745.104892311254,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4706026960086281,
+    "B": 0.1599185112889607,
+    "O": 0.36947879270241124
+   },
+   {
+    "state": "IN",
+    "slice": "men",
+    "adults": 796313.0472948478,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.42967447558531674,
+    "B": 0.2329802269041187,
+    "O": 0.3373452975105646
+   },
+   {
+    "state": "IN",
+    "slice": "women",
+    "adults": 791727.0251991864,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4572776108226809,
+    "B": 0.18370536481775276,
+    "O": 0.35901702435956623
+   },
+   {
+    "state": "KS",
+    "slice": "immigrants",
+    "adults": 36375.67449555236,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.421620817572916,
+    "B": 0.14681235962508998,
+    "O": 0.43156682280199404
+   },
+   {
+    "state": "KS",
+    "slice": "men",
+    "adults": 483742.20739520685,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.38616349982410586,
+    "B": 0.21856343073746198,
+    "O": 0.3952730694384321
+   },
+   {
+    "state": "KS",
+    "slice": "women",
+    "adults": 444774.26969294855,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.40821003802007444,
+    "B": 0.1739502780707281,
+    "O": 0.4178396839091976
+   },
+   {
+    "state": "KY",
+    "slice": "immigrants",
+    "adults": 7830.098386581998,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5589656197417687,
+    "B": 0.14123378998234426,
+    "O": 0.299800590275887
+   },
+   {
+    "state": "KY",
+    "slice": "men",
+    "adults": 603442.9613711726,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.48499887137803877,
+    "B": 0.25487252180451797,
+    "O": 0.2601286068174432
+   },
+   {
+    "state": "KY",
+    "slice": "women",
+    "adults": 565613.5538146744,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.510377422072574,
+    "B": 0.2158822135888616,
+    "O": 0.2737403643385644
+   },
+   {
+    "state": "LA",
+    "slice": "black-south",
+    "adults": 356279.06990695966,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "LA",
+    "slice": "immigrants",
+    "adults": 25024.07353802892,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7963882790663499,
+    "B": 0.016804928321648017,
+    "O": 0.18680679261200198
+   },
+   {
+    "state": "LA",
+    "slice": "south-white",
+    "adults": 447529.2368564291,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7926512935943643,
+    "B": 0.02141848906276947,
+    "O": 0.18593021734286608
+   },
+   {
+    "state": "MA",
+    "slice": "immigrants",
+    "adults": 515160.88367799856,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3976640392260224,
+    "B": 0.23840071542481123,
+    "O": 0.3639352453491664
+   },
+   {
+    "state": "MA",
+    "slice": "men",
+    "adults": 818218.5613186954,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3565602426664373,
+    "B": 0.31712199511113287,
+    "O": 0.3263177622224298
+   },
+   {
+    "state": "MA",
+    "slice": "women",
+    "adults": 848097.4723399702,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3876381642060945,
+    "B": 0.2576020977204766,
+    "O": 0.35475973807342887
+   },
+   {
+    "state": "MD",
+    "slice": "immigrants",
+    "adults": 39192.283539519136,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5691371099324108,
+    "B": 0.10581414624679357,
+    "O": 0.3250487438207956
+   },
+   {
+    "state": "MD",
+    "slice": "men",
+    "adults": 361604.20752235537,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4865858085494832,
+    "B": 0.23551260487356926,
+    "O": 0.27790158657694763
+   },
+   {
+    "state": "MD",
+    "slice": "women",
+    "adults": 367496.64213398396,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5163468542169628,
+    "B": 0.18875426568896772,
+    "O": 0.29489888009406945
+   },
+   {
+    "state": "ME",
+    "slice": "immigrants",
+    "adults": 52694.271951587216,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.42323689498485445,
+    "B": 0.1463222482552243,
+    "O": 0.4304408567599212
+   },
+   {
+    "state": "ME",
+    "slice": "men",
+    "adults": 211928.53421963466,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3945856662142527,
+    "B": 0.20411238151496264,
+    "O": 0.4013019522707848
+   },
+   {
+    "state": "ME",
+    "slice": "women",
+    "adults": 202089.35400016533,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.416708372331228,
+    "B": 0.15949041626515678,
+    "O": 0.42380121140361515
+   },
+   {
+    "state": "MI",
+    "slice": "immigrants",
+    "adults": 224734.23154813648,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3002040768574619,
+    "B": 0.20744852548162726,
+    "O": 0.49234739766091073
+   },
+   {
+    "state": "MI",
+    "slice": "men",
+    "adults": 811294.0221876476,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.27474347643484304,
+    "B": 0.2746655886817739,
+    "O": 0.450590934883383
+   },
+   {
+    "state": "MI",
+    "slice": "women",
+    "adults": 746344.1347336451,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.2953555446166299,
+    "B": 0.22024885590001092,
+    "O": 0.4843955994833593
+   },
+   {
+    "state": "MN",
+    "slice": "immigrants",
+    "adults": 153522.46150917016,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.33702907949741695,
+    "B": 0.14533015316058545,
+    "O": 0.5176407673419976
+   },
+   {
+    "state": "MN",
+    "slice": "men",
+    "adults": 578619.8406285198,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3192155975104742,
+    "B": 0.19050324607043237,
+    "O": 0.49028115641909326
+   },
+   {
+    "state": "MN",
+    "slice": "women",
+    "adults": 470663.29594424454,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3353385413156376,
+    "B": 0.1496171779213334,
+    "O": 0.5150442807630289
+   },
+   {
+    "state": "MO",
+    "slice": "immigrants",
+    "adults": 69961.12249261298,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5320222123575864,
+    "B": 0.19831205081807146,
+    "O": 0.269665736824342
+   },
+   {
+    "state": "MO",
+    "slice": "men",
+    "adults": 960068.2544594138,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4672503402199258,
+    "B": 0.29591479771957474,
+    "O": 0.2368348620604995
+   },
+   {
+    "state": "MO",
+    "slice": "women",
+    "adults": 929636.928633074,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5033696437272983,
+    "B": 0.24148772741664767,
+    "O": 0.25514262885605404
+   },
+   {
+    "state": "MS",
+    "slice": "black-south",
+    "adults": 465029.7595395433,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531267,
+    "O": 0.13400196770391984
+   },
+   {
+    "state": "MS",
+    "slice": "immigrants",
+    "adults": 3112.2486548988595,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9109894774853198,
+    "B": 0.0033871722501459833,
+    "O": 0.08562335026453431
+   },
+   {
+    "state": "MS",
+    "slice": "south-white",
+    "adults": 379662.2437515966,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9101105591151241,
+    "B": 0.00434869962661997,
+    "O": 0.08554074125825586
+   },
+   {
+    "state": "MT",
+    "slice": "immigrants",
+    "adults": 33367.259132136736,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3744181649710905,
+    "B": 0.17897945773265397,
+    "O": 0.4466023772962556
+   },
+   {
+    "state": "MT",
+    "slice": "men",
+    "adults": 136870.0349376861,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3518153557710785,
+    "B": 0.2285426798257703,
+    "O": 0.41964196440315127
+   },
+   {
+    "state": "MT",
+    "slice": "women",
+    "adults": 82873.91711383256,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.37225424122052303,
+    "B": 0.1837244888698404,
+    "O": 0.44402126990963653
+   },
+   {
+    "state": "NC",
+    "slice": "black-south",
+    "adults": 311285.03736951423,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531267,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "NC",
+    "slice": "immigrants",
+    "adults": 2225.462242974843,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.6213217143777916,
+    "B": 0.07738603396784001,
+    "O": 0.3012922516543683
+   },
+   {
+    "state": "NC",
+    "slice": "south-white",
+    "adults": 755708.0900968182,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.6084200040080541,
+    "B": 0.09654406095671197,
+    "O": 0.29503593503523406
+   },
+   {
+    "state": "ND",
+    "slice": "immigrants",
+    "adults": 35249.374451142576,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3689332745851151,
+    "B": 0.20737216136981393,
+    "O": 0.423694564045071
+   },
+   {
+    "state": "ND",
+    "slice": "men",
+    "adults": 149787.40734554324,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.34292600521910466,
+    "B": 0.2632469959979332,
+    "O": 0.393826998782962
+   },
+   {
+    "state": "ND",
+    "slice": "women",
+    "adults": 112585.30095801382,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3679414295236158,
+    "B": 0.20950307246271074,
+    "O": 0.4225554980136735
+   },
+   {
+    "state": "NE",
+    "slice": "immigrants",
+    "adults": 48395.04092327891,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4685587521850175,
+    "B": 0.1607061223857886,
+    "O": 0.37073512542919385
+   },
+   {
+    "state": "NE",
+    "slice": "men",
+    "adults": 324841.04805398075,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4360416673709789,
+    "B": 0.2189515186675088,
+    "O": 0.3450068139615123
+   },
+   {
+    "state": "NE",
+    "slice": "women",
+    "adults": 285515.2918716978,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4618333036788825,
+    "B": 0.17275290996383794,
+    "O": 0.3654137863572794
+   },
+   {
+    "state": "NH",
+    "slice": "immigrants",
+    "adults": 44769.29964366328,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.45050158458290585,
+    "B": 0.2860009156195442,
+    "O": 0.26349749979754994
+   },
+   {
+    "state": "NH",
+    "slice": "men",
+    "adults": 114003.39957218683,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3953734331737972,
+    "B": 0.37337341546576175,
+    "O": 0.23125315136044106
+   },
+   {
+    "state": "NH",
+    "slice": "women",
+    "adults": 116916.2859350423,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4380680217768817,
+    "B": 0.3057068451054691,
+    "O": 0.2562251331176493
+   },
+   {
+    "state": "NJ",
+    "slice": "immigrants",
+    "adults": 309118.8098614202,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.44781512487594755,
+    "B": 0.1361538497512928,
+    "O": 0.4160310253727597
+   },
+   {
+    "state": "NJ",
+    "slice": "men",
+    "adults": 657451.5318521031,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.41287099745603906,
+    "B": 0.20356191229462559,
+    "O": 0.3835670902493355
+   },
+   {
+    "state": "NJ",
+    "slice": "women",
+    "adults": 641370.4427242351,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4314521404956608,
+    "B": 0.16771844031175265,
+    "O": 0.4008294191925867
+   },
+   {
+    "state": "NM",
+    "slice": "immigrants",
+    "adults": 11676.637577555668,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.46811480871481326,
+    "B": 0.27520884218230846,
+    "O": 0.25667634910287823
+   },
+   {
+    "state": "NM",
+    "slice": "men",
+    "adults": 88516.26999594197,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.416100714679707,
+    "B": 0.3557432639453046,
+    "O": 0.2281560213749885
+   },
+   {
+    "state": "NM",
+    "slice": "women",
+    "adults": 71467.29570428279,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4589435650118347,
+    "B": 0.2894088551243469,
+    "O": 0.2516475798638187
+   },
+   {
+    "state": "NV",
+    "slice": "immigrants",
+    "adults": 8232.38545645671,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4146711862874304,
+    "B": 0.12148487343871377,
+    "O": 0.4638439402738558
+   },
+   {
+    "state": "NV",
+    "slice": "men",
+    "adults": 32033.033877867936,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.39843609822658654,
+    "B": 0.15588024720509744,
+    "O": 0.44568365456831605
+   },
+   {
+    "state": "NV",
+    "slice": "women",
+    "adults": 16559.356493293802,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4136225317269796,
+    "B": 0.12370653465935852,
+    "O": 0.4626709336136618
+   },
+   {
+    "state": "NY",
+    "slice": "immigrants",
+    "adults": 1380617.530749302,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.45736318573713114,
+    "B": 0.20967791081264597,
+    "O": 0.33295890345022283
+   },
+   {
+    "state": "NY",
+    "slice": "men",
+    "adults": 2293832.4287246177,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4138350309849274,
+    "B": 0.28489441986942027,
+    "O": 0.3012705491456522
+   },
+   {
+    "state": "NY",
+    "slice": "women",
+    "adults": 2242349.066185232,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.44410153181890705,
+    "B": 0.23259400541225497,
+    "O": 0.32330446276883823
+   },
+   {
+    "state": "OH",
+    "slice": "immigrants",
+    "adults": 282140.0585337961,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4542482492913484,
+    "B": 0.18850682429069898,
+    "O": 0.3572449264179525
+   },
+   {
+    "state": "OH",
+    "slice": "men",
+    "adults": 1422292.5906401346,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.410101946307767,
+    "B": 0.26737212241757025,
+    "O": 0.32252593127466284
+   },
+   {
+    "state": "OH",
+    "slice": "women",
+    "adults": 1364716.289030644,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4401430879840212,
+    "B": 0.21370503289366366,
+    "O": 0.3461518791223151
+   },
+   {
+    "state": "OK",
+    "slice": "immigrants",
+    "adults": 12553.181397239885,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5539748938804622,
+    "B": 0.24225359017271955,
+    "O": 0.20377151594681814
+   },
+   {
+    "state": "OK",
+    "slice": "men",
+    "adults": 464865.27803854377,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.47147109268046095,
+    "B": 0.35510520104354487,
+    "O": 0.17342370627599413
+   },
+   {
+    "state": "OK",
+    "slice": "women",
+    "adults": 393401.88412415504,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5155585714663533,
+    "B": 0.29480079169687334,
+    "O": 0.18964063683677337
+   },
+   {
+    "state": "OR",
+    "slice": "immigrants",
+    "adults": 39037.50485482358,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.365131996312814,
+    "B": 0.20581618506150115,
+    "O": 0.429051818625685
+   },
+   {
+    "state": "OR",
+    "slice": "men",
+    "adults": 229396.75718612818,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.33784187811086436,
+    "B": 0.26517381573372256,
+    "O": 0.3969843061554131
+   },
+   {
+    "state": "OR",
+    "slice": "women",
+    "adults": 164243.1002852539,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.36123820663458717,
+    "B": 0.2142854092665829,
+    "O": 0.4244763840988299
+   },
+   {
+    "state": "PA",
+    "slice": "immigrants",
+    "adults": 714288.6549791759,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3554134491544045,
+    "B": 0.1516366480991173,
+    "O": 0.49294990274647826
+   },
+   {
+    "state": "PA",
+    "slice": "men",
+    "adults": 1859104.364613261,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.32545008180194274,
+    "B": 0.22315848505225006,
+    "O": 0.4513914331458072
+   },
+   {
+    "state": "PA",
+    "slice": "women",
+    "adults": 1871992.2234991598,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.34467924234320857,
+    "B": 0.17725894149293658,
+    "O": 0.47806181616385496
+   },
+   {
+    "state": "RI",
+    "slice": "immigrants",
+    "adults": 78143.15970775316,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.44442008226677576,
+    "B": 0.2665431951496397,
+    "O": 0.28903672258358454
+   },
+   {
+    "state": "RI",
+    "slice": "men",
+    "adults": 129345.79259920622,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.39218321662049144,
+    "B": 0.35275326103348176,
+    "O": 0.2550635223460268
+   },
+   {
+    "state": "RI",
+    "slice": "women",
+    "adults": 131882.80222052132,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4307413816065655,
+    "B": 0.28911808877184075,
+    "O": 0.2801405296215937
+   },
+   {
+    "state": "SC",
+    "slice": "black-south",
+    "adults": 367935.7412476842,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295336,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "SC",
+    "slice": "immigrants",
+    "adults": 2038.848291031968,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9701068577716742,
+    "B": 0.0014924693626230637,
+    "O": 0.02840067286570277
+   },
+   {
+    "state": "SC",
+    "slice": "south-white",
+    "adults": 349091.07021476567,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.9696807936955799,
+    "B": 0.001931006813529494,
+    "O": 0.028388199490890467
+   },
+   {
+    "state": "SD",
+    "slice": "immigrants",
+    "adults": 22026.14237812538,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.42072777601720085,
+    "B": 0.0,
+    "O": 0.5792722239827992
+   },
+   {
+    "state": "SD",
+    "slice": "men",
+    "adults": 166150.64921139865,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4207277760172009,
+    "B": 0.0,
+    "O": 0.5792722239827992
+   },
+   {
+    "state": "SD",
+    "slice": "women",
+    "adults": 128853.11179669951,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4207277760172008,
+    "B": 0.0,
+    "O": 0.5792722239827991
+   },
+   {
+    "state": "TN",
+    "slice": "black-south",
+    "adults": 258292.0656463034,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.16645869714295333,
+    "B": 0.6995393351531267,
+    "O": 0.1340019677039199
+   },
+   {
+    "state": "TN",
+    "slice": "immigrants",
+    "adults": 4913.632751232119,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5765857534978823,
+    "B": 0.17091981240289536,
+    "O": 0.2524944340992223
+   },
+   {
+    "state": "TN",
+    "slice": "south-white",
+    "adults": 903936.8735551047,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.5496587185279187,
+    "B": 0.2096385477668855,
+    "O": 0.24070273370519582
+   },
+   {
+    "state": "TX",
+    "slice": "black-south",
+    "adults": 361319.5129770258,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.1664586971429534,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "TX",
+    "slice": "immigrants",
+    "adults": 112784.93675076318,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7508616827654956,
+    "B": 0.057618745324368247,
+    "O": 0.19151957191013627
+   },
+   {
+    "state": "TX",
+    "slice": "south-white",
+    "adults": 1545139.249844069,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7384215858301421,
+    "B": 0.07323189276191847,
+    "O": 0.18834652140793942
+   },
+   {
+    "state": "UT",
+    "slice": "immigrants",
+    "adults": 22922.72882089284,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.35556598459296457,
+    "B": 0.3169917292345501,
+    "O": 0.32744228617248533
+   },
+   {
+    "state": "UT",
+    "slice": "men",
+    "adults": 95217.42197411055,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3143330727487319,
+    "B": 0.3961962117712939,
+    "O": 0.28947071547997416
+   },
+   {
+    "state": "UT",
+    "slice": "women",
+    "adults": 82176.50922535216,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3494149317701039,
+    "B": 0.3288073137785507,
+    "O": 0.32177775445134543
+   },
+   {
+    "state": "VA",
+    "slice": "black-south",
+    "adults": 305488.3476811901,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.1664586971429534,
+    "B": 0.6995393351531268,
+    "O": 0.13400196770391987
+   },
+   {
+    "state": "VA",
+    "slice": "immigrants",
+    "adults": 11398.687784957496,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.7032691277127162,
+    "B": 0.1165071570421317,
+    "O": 0.18022371524515204
+   },
+   {
+    "state": "VA",
+    "slice": "south-white",
+    "adults": 751798.7657797703,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.6821613213899156,
+    "B": 0.14302416892545905,
+    "O": 0.1748145096846255
+   },
+   {
+    "state": "VT",
+    "slice": "immigrants",
+    "adults": 19661.69484764835,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.2779540162135859,
+    "B": 0.2847671469031676,
+    "O": 0.4372788368832465
+   },
+   {
+    "state": "VT",
+    "slice": "men",
+    "adults": 99376.45716863131,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.244750015331366,
+    "B": 0.37020787054779725,
+    "O": 0.38504211412083683
+   },
+   {
+    "state": "VT",
+    "slice": "women",
+    "adults": 98621.6793971007,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.27107418792185695,
+    "B": 0.30247036013585005,
+    "O": 0.42645545194229295
+   },
+   {
+    "state": "WA",
+    "slice": "immigrants",
+    "adults": 97961.42972808253,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.2837591619421874,
+    "B": 0.1754058089347385,
+    "O": 0.540835029123074
+   },
+   {
+    "state": "WA",
+    "slice": "men",
+    "adults": 382104.5169269442,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.26547716986924436,
+    "B": 0.22853263790219044,
+    "O": 0.5059901922285652
+   },
+   {
+    "state": "WA",
+    "slice": "women",
+    "adults": 264331.0115591924,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.28138045192272293,
+    "B": 0.18231825697995374,
+    "O": 0.5363012910973232
+   },
+   {
+    "state": "WI",
+    "slice": "immigrants",
+    "adults": 180633.02870703832,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4540186095110826,
+    "B": 0.2552939230848567,
+    "O": 0.29068746740406054
+   },
+   {
+    "state": "WI",
+    "slice": "men",
+    "adults": 587697.0939752703,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.41172514735254334,
+    "B": 0.32466596560347094,
+    "O": 0.26360888704398583
+   },
+   {
+    "state": "WI",
+    "slice": "women",
+    "adults": 548417.8468334137,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4489386963464485,
+    "B": 0.26362627361995516,
+    "O": 0.2874350300335964
+   },
+   {
+    "state": "WV",
+    "slice": "immigrants",
+    "adults": 39543.91673595112,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.46438767492034533,
+    "B": 0.12997206841664566,
+    "O": 0.405640256663009
+   },
+   {
+    "state": "WV",
+    "slice": "men",
+    "adults": 325679.08266379323,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4211569164771687,
+    "B": 0.21096467304498337,
+    "O": 0.3678784104778478
+   },
+   {
+    "state": "WV",
+    "slice": "women",
+    "adults": 295056.9402783623,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.4476470118809737,
+    "B": 0.16133561491898685,
+    "O": 0.3910173732000393
+   },
+   {
+    "state": "WY",
+    "slice": "immigrants",
+    "adults": 12948.600277195696,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3973060715817329,
+    "B": 0.2805671964385656,
+    "O": 0.3221267319797015
+   },
+   {
+    "state": "WY",
+    "slice": "men",
+    "adults": 55069.472920877146,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3560394010485968,
+    "B": 0.3552919454390166,
+    "O": 0.28866865351238674
+   },
+   {
+    "state": "WY",
+    "slice": "women",
+    "adults": 29262.972430616483,
+    "barred": 0.0,
+    "home": 0.0,
+    "A": 0.3905999219132201,
+    "B": 0.29271053982597794,
+    "O": 0.316689538260802
+   }
+  ]
+ },
+ "voters": {
+  "": {
+   "south-white": {
+    "name": "Anna Reed",
+    "line": "40, a city or town, Alabama",
+    "quote": "I wish I could vote tomorrow, but the law doesn't allow it. My husband will have to cast our household's ballot.",
+    "history": "barred",
+    "now": "barred",
+    "controlQuote": "I wish I could vote tomorrow, but the law doesn't allow it. My husband will have to cast our household's ballot.",
+    "cohort": "Native-born white women, south",
+    "cohortAdults": 3435263,
+    "weight": 1717631,
+    "contextDate": "1912-11-04",
+    "sources": [
+     {
+      "title": "The Birmingham Age-herald, 1912-09-08",
+      "url": "https://www.loc.gov/resource/sn85038485/1912-09-08/ed-1/?sp=27",
+      "date": "1912-09-08"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   },
+   "women": {
+    "name": "Ruth Robinson",
+    "line": "36, the countryside, New York",
+    "quote": "I cannot vote\u2014women have no say in this election in New York. My husband will cast our ballot tomorrow.",
+    "history": "barred",
+    "now": "barred",
+    "controlQuote": "I cannot vote\u2014women have no say in this election in New York. My husband will cast our ballot tomorrow.",
+    "cohort": "Native-born white women, northeast",
+    "cohortAdults": 5145710,
+    "weight": 2572855,
+    "contextDate": "1912-11-04",
+    "sources": [
+     {
+      "title": "The Sun, 1912-10-03",
+      "url": "https://www.loc.gov/resource/sn83030272/1912-10-03/ed-1/?sp=2",
+      "date": "1912-10-03"
+     },
+     {
+      "title": "The Sun, 1912-10-06",
+      "url": "https://www.loc.gov/resource/sn83030272/1912-10-06/ed-1/?sp=45",
+      "date": "1912-10-06"
+     },
+     {
+      "title": "The Sun, 1912-09-26",
+      "url": "https://www.loc.gov/resource/sn83030272/1912-09-26/ed-1/?sp=8",
+      "date": "1912-09-26"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   },
+   "men": {
+    "name": "Ernest Reed",
+    "line": "55, a city or town, Massachusetts",
+    "quote": "The big trusts have gotten too powerful, squeezing out smaller concerns and keeping working men's wages down. That former President understands what needs fixing.",
+    "history": "O",
+    "now": "O",
+    "controlQuote": "The big trusts have gotten too powerful, squeezing out smaller concerns and keeping working men's wages down. That former President understands what needs fixing.",
+    "cohort": "Native-born white men, northeast",
+    "cohortAdults": 4904381,
+    "weight": 2452190,
+    "contextDate": "1912-11-04",
+    "sources": [
+     {
+      "title": "The Republican Journal, 1912-09-05",
+      "url": "https://www.loc.gov/resource/sn78000873/1912-09-05/ed-1/?sp=2",
+      "date": "1912-09-05"
+     },
+     {
+      "title": "Daily Kennebec Journal 1870-1975 [microfilm Reel], 1912-09-02",
+      "url": "https://www.loc.gov/resource/sn82014248/1912-09-02/ed-1/?sp=9",
+      "date": "1912-09-02"
+     },
+     {
+      "title": "The Sun, 1912-10-03",
+      "url": "https://www.loc.gov/resource/sn83030272/1912-10-03/ed-1/?sp=2",
+      "date": "1912-10-03"
+     }
+    ],
+    "model": "claude-haiku-4-5",
+    "promptVersion": "p5",
+    "memorizationExposed": false,
+    "namesRestored": true,
+    "unchanged": true,
+    "change": null
+   }
+  }
+ },
+ "interviews": {
+  "questions": [
+   "Election Day is Tuesday. Can this person vote, how likely are they to vote, and if they vote, for whom?",
+   "A neighbour asks what this person will do on Tuesday, 5 November. Will they cast a ballot for president, and for which candidate?",
+   "Think about Tuesday's presidential election from where this person stands. How likely are they to vote, and which candidate would get their vote?"
+  ],
+  "byWhatIf": {}
+ },
+ "ev": {
+  "AL": 12,
+  "AR": 9,
+  "AZ": 3,
+  "CA": 13,
+  "CO": 6,
+  "CT": 7,
+  "DE": 3,
+  "FL": 6,
+  "GA": 14,
+  "IA": 13,
+  "ID": 4,
+  "IL": 29,
+  "IN": 15,
+  "KS": 10,
+  "KY": 13,
+  "LA": 10,
+  "MA": 18,
+  "MD": 8,
+  "ME": 6,
+  "MI": 15,
+  "MN": 12,
+  "MO": 18,
+  "MS": 10,
+  "MT": 4,
+  "NC": 12,
+  "ND": 5,
+  "NE": 8,
+  "NH": 4,
+  "NJ": 14,
+  "NM": 3,
+  "NV": 3,
+  "NY": 45,
+  "OH": 24,
+  "OK": 10,
+  "OR": 5,
+  "PA": 38,
+  "RI": 5,
+  "SC": 9,
+  "SD": 5,
+  "TN": 12,
+  "TX": 20,
+  "UT": 4,
+  "VA": 12,
+  "VT": 4,
+  "WA": 7,
+  "WI": 13,
+  "WV": 8,
+  "WY": 3
+ },
+ "historyWinner": {
+  "AL": "A",
+  "AR": "A",
+  "AZ": "A",
+  "CA": "O",
+  "CO": "A",
+  "CT": "A",
+  "DE": "A",
+  "FL": "A",
+  "GA": "A",
+  "IA": "A",
+  "ID": "A",
+  "IL": "A",
+  "IN": "A",
+  "KS": "A",
+  "KY": "A",
+  "LA": "A",
+  "MA": "A",
+  "MD": "A",
+  "ME": "A",
+  "MI": "O",
+  "MN": "O",
+  "MO": "A",
+  "MS": "A",
+  "MT": "A",
+  "NC": "A",
+  "ND": "A",
+  "NE": "A",
+  "NH": "A",
+  "NJ": "A",
+  "NM": "A",
+  "NV": "A",
+  "NY": "A",
+  "OH": "A",
+  "OK": "A",
+  "OR": "A",
+  "PA": "O",
+  "RI": "A",
+  "SC": "A",
+  "SD": "O",
+  "TN": "A",
+  "TX": "A",
+  "UT": "B",
+  "VA": "A",
+  "VT": "B",
+  "WA": "O",
+  "WI": "A",
+  "WV": "A",
+  "WY": "A"
+ },
+ "words": [
+  {
+   "key": "everyone",
+   "words": [
+    "everyone",
+    "all adults",
+    "universal"
+   ]
+  }
+ ]
+}

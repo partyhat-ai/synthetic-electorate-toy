@@ -44,7 +44,8 @@ export function traceOf(res: RunResult, text: string, keys: readonly string[], y
   // borrow) first; the research, the numbers and how sure after the
   // interviews.
   const how = res.howIGotThis ?? [];
-  const isChange = (l: string) => /^(What changed|New voters borrow)/.test(l);
+  // A typed change the server reinterpreted ("Not quite what you asked") leads.
+  const isChange = (l: string) => /^(Not quite what you asked|What changed|New voters borrow)/.test(l);
   out.push(...how.filter(isChange));
   const applied = res.applied.map((a) => a.key);
   const labelOf = (k: string) => res.applied.find((a) => a.key === k)?.label || k;
@@ -85,6 +86,9 @@ export function traceOf(res: RunResult, text: string, keys: readonly string[], y
     const planks = [
       t.added?.length ? ` Added to the platforms: ${t.added.map((p) => p.replace(/\.$/, '')).join('; ')}.` : '',
       t.dropped?.length ? ` Taken off the platforms: ${t.dropped.join(', ')}.` : '',
+      // Staged: real items the change makes false come out; news from the changed world goes in.
+      t.removed ? ` Took out ${t.removed} newspaper item${t.removed === 1 ? '' : 's'} the change makes false.` : '',
+      t.items?.length ? ` Their newspapers also carried: ${t.items.map((i) => `“${i.text}”`).join(' ')}` : '',
     ].join('');
     out.push(`Told the voters: ${lead}${said}${where}${planks}`);
   }
@@ -194,6 +198,13 @@ function running(y: number, r: ActiveRun): Message {
   const steps: Step[] = [];
   if (r.text) steps.push({ text: `Reading “${r.text}”.`, state: 'done' });
   if (r.labels.length) steps.push({ text: `Applying ${r.labels.join(', ')}.`, state: 'done' });
+  if (r.steps?.length) {
+    return {
+      text: 'That’s new to me, so I’m modelling it. This will take a minute.',
+      steps: [...steps.slice(r.text ? 1 : 0), ...r.steps],
+      busy: true,
+    };
+  }
   steps.push({ text: r.total ? `Rerunning ${y}: ${r.done} of ${r.total} states counted.` : `Rerunning ${y}.`, state: 'doing' });
   return { text: `Rerunning ${y}…`, steps, busy: true };
 }
@@ -286,6 +297,6 @@ export function say(i: SayInput): Message {
   if (res) return { text: `This is ${y} as it happened. Switch to Rerun to see yours.` };
   return {
     text: `Change one thing about ${y} and I’ll rerun it.`,
-    detail: 'Pick a what-if or type your own. Tap a group to meet someone in it.',
+    detail: 'Pick a counterfactual or type your own. Tap a group to meet someone in it.',
   };
 }

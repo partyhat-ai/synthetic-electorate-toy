@@ -31,6 +31,7 @@ export interface PageStateOptions {
   /** A rerun finished for the year on show: its steps start coming out. */
   readonly onFresh?: (steps: number) => void;
   readonly sleep?: (ms: number) => Promise<void>;
+  readonly now?: () => number;
 }
 
 export class PageState {
@@ -87,10 +88,16 @@ export class PageState {
     this.#runner = createRunner({
       api: o.api,
       ...(o.sleep ? { sleep: o.sleep } : {}),
+      ...(o.now ? { now: o.now } : {}),
       getRun: () => this.run,
       setRun: (r) => {
         this.run = r;
       },
+      reloadSim: async (y) => {
+        this.sims.delete(y);
+        await this.loadSim(y);
+      },
+      whatIfsOf: (y) => this.sims.get(y)?.whatIfs ?? [],
       finished: (f) => this.#finish(f),
       failed: (message) => {
         this.runError = message;
@@ -202,12 +209,14 @@ export class PageState {
   }
 
   #finish(f: Finished): void {
-    const { year: y, id, result, keys, text } = f;
+    const { year: y, id, result, keys, text, applied } = f;
     // ask: the page's state right after this run, so pressing Rerun again
     // with nothing changed just shows this.
     const trace = traceOf(result, text, keys, y);
-    this.results.set(y, { ...result, runId: id, keys, text, trace, ask: this.askOf(y, keys, ''), ran: keys });
+    this.results.set(y, { ...result, runId: id, keys, text, trace, ask: this.askOf(y, applied, ''), ran: applied });
     if (y === this.year) this.#onFresh?.(trace.length);
+    // What was applied, typed words included, shows as the chosen what-ifs.
+    this.chosen.set(y, applied);
     this.run = null;
     if (y === this.year) {
       this.typed = '';

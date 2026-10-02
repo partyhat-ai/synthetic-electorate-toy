@@ -1,0 +1,100 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 31 October until the electors meet on 3 December 1828)",
+  "names": {
+    "R": "Adams",
+    "D": "Jackson",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "John Quincy Adams",
+    "D": "Andrew Jackson"
+  },
+  "descriptors": {
+    "R": "the incumbent President, chosen by the House in 1825, who has pressed for federal roads and canals and signed the 1828 protective tariff",
+    "D": "the general celebrated for the 1815 victory at New Orleans, who led the popular vote in 1824 and charges that a corrupt bargain in the House denied him the presidency"
+  },
+  "compile_desc": {
+    "R": "the party of the administration in office since 1825",
+    "D": "the opposition party organized around the 1824 popular-vote leader",
+    "president": "Adams"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "X",
+    "Z",
+    "Y",
+    "P",
+    "T"
+  ],
+  "others_line": "A few unpledged tickets on some ballots (answer \"other\").",
+  "plank_order": [
+    "tariff",
+    "internal improvements",
+    "reform",
+    "Indian"
+  ],
+  "names_re": "\\b(Adams|Jackson|Old Hickory|Calhoun|(?-i:Rush)|(?-i:Clay)|Van ?Buren|Republican|Democrat)",
+  "never_name": "Adams, Jackson, Calhoun, Rush, Clay or Van Buren",
+  "corpus": null,
+  "platforms": "context/platforms_1828.json",
+  "ev_label": "83–178",
+  "slice_sources": {
+    "men": "1820 and 1830 census interpolated to 1828, free adult men outside the Southern states; the census gives free white males 16–18, 18–26, 26–45 and 45+, so men 21+ are split from the 18–26 band. Voters were men meeting each state's rules: a few states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold). Electors were chosen by popular vote in 22 states; elsewhere (Delaware and South Carolina) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1820 and 1830 census interpolated to 1828, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1820 and 1830 census interpolated to 1828, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina legislature chose its electors, so people there cast no presidential vote.",
+    "black-south": "1820 and 1830 census interpolated to 1828, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee, Louisiana, Mississippi and Alabama; the census gives free people of colour and enslaved people by sex and age band. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "1820 and 1830 census interpolated to 1828: the census recorded no nativity before 1850, but the 1820 count of foreigners not naturalized gives the non-citizen total (no age or sex detail). Most states barred aliens from voting. Illinois (1818) let resident white male aliens vote."
+  },
+  "masks": [
+    [
+      "\\bPresident Adams\\b|\\b(?:John Quincy |J\\. ?Q\\. )?Adams\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:General |Andrew )?Jackson\\b|\\bOld Hickory\\b",
+      "the challenger"
+    ],
+    [
+      "\\b(?:John C\\. )?Calhoun\\b",
+      "the Vice President"
+    ],
+    [
+      "\\bRichard Rush\\b|\\bRush\\b",
+      "the President's running mate"
+    ],
+    [
+      "\\b(?:Henry )?Clay\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:Martin )?Van ?Buren\\b",
+      "a New York senator"
+    ],
+    [
+      "\\bNational Republicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bJacksonians?\\b",
+      "the opposition"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

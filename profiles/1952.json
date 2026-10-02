@@ -1,0 +1,123 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 4 November",
+ "names": {
+  "R": "Eisenhower",
+  "D": "Stevenson",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Dwight D. Eisenhower",
+  "D": "Adlai E. Stevenson"
+ },
+ "descriptors": {
+  "R": "nominee of the party out of the presidency since 1933",
+  "D": "nominee of the party in office since 1933; the sitting President is not running again"
+ },
+ "compile_desc": {
+  "R": "the party out of the presidency since 1933",
+  "D": "the party in office since 1933",
+  "president": "Truman"
+ },
+ "third": null,
+ "label_pool": [
+  "B",
+  "G",
+  "L",
+  "Q",
+  "X",
+  "Y"
+ ],
+ "others_line": "Other candidates on some ballots, including a Progressive and a Prohibition nominee (answer \"other\").",
+ "plank_order": [
+  "Korea",
+  "Communism",
+  "corruption",
+  "taxes",
+  "labor",
+  "civil rights",
+  "agriculture"
+ ],
+ "names_re": "\\b(Eisenhower|Ike\\b|Stevenson|Nixon|Sparkman|Truman|Taft|Kefauver|MacArthur|McCarthy|Hallinan|Hamblen|Roosevelt|F\\.?\\s?D\\.?\\s?R\\b|Fair Deal|Republican|Democrat|G\\.\\s?O\\.\\s?P)",
+ "never_name": "Eisenhower, Stevenson, Nixon, Sparkman, Truman, Taft, Kefauver, MacArthur, McCarthy, Hallinan or Franklin Roosevelt",
+ "corpus": null,
+ "platforms": "context/platforms_1952.json",
+ "ev_label": "442–89",
+ "slice_sources": {
+  "men": "1950 census aged to November 1952 along each group's 1940→1950 trend; men 21+ outside the eleven Southern states, citizens only; Black voters here vote heavily Democratic since 1936; calibrated to certified 1952 returns.",
+  "women": "1950 census aged to November 1952, women 21+ outside the South, all enfranchised by the Nineteenth Amendment; turnout from the carried-forward women-to-men ratio, calibrated to each state's 1952 vote.",
+  "south-white": "1950 census aged to November 1952, white adults in the eleven former Confederate states, 18+ in Georgia; poll taxes remain only in Alabama, Arkansas, Mississippi, Texas and Virginia; calibrated to certified 1952 returns.",
+  "black-south": "1950 census aged to November 1952, Black adults in the eleven former Confederate states (18+ in Georgia); registration keeps rising after the white primary's fall, but poll taxes, literacy tests and intimidation keep most disfranchised, so the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1950 census aged to November 1952, foreign-born white adults who were not naturalized; no state let aliens vote (the 1952 immigration act ending racial bars to naturalization takes effect after the election)."
+ },
+ "masks": [
+  [
+   "\\bTruman Doctrine\\b",
+   "the President's policy of aid to Greece and Turkey"
+  ],
+  [
+   "\\b(?:President |Senator |Sen\\. )?(?:Harry (?:S\\.? )?)?Truman\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:General |Gen\\. )?(?:Dwight (?:D\\. )?)?Eisenhower\\b|\\bIke\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Governor |Gov\\. )?(?:Adlai (?:E\\. )?)?Stevenson\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bTaft-Hartley(?: Act| [Ll]aw)?\\b",
+   "the 1947 labor-relations law"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the party out of power"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bFair Deal\\b",
+   "the administration's program"
+  ],
+  [
+   "\\b(?:Senator )?(?:Richard (?:M\\. )?)?Nixon\\b|\\b(?:Senator )?(?:John (?:J\\. )?)?Sparkman\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Senator )?(?:Robert (?:A\\. )?)?Taft\\b",
+   "a rival for the out-party nomination"
+  ],
+  [
+   "\\b(?:Senator )?(?:Estes )?Kefauver\\b",
+   "a rival for the administration-party nomination"
+  ],
+  [
+   "\\b(?:General )?(?:Douglas )?MacArthur\\b",
+   "the former Far East commander"
+  ],
+  [
+   "\\b(?:Senator )?(?:Joseph (?:R\\. )?)?McCarthy\\b",
+   "a Wisconsin senator"
+  ],
+  [
+   "\\b(?:Vincent )?Hallinan\\b|\\b(?:Stuart )?Hamblen\\b",
+   "a minor-party nominee"
+  ],
+  [
+   "\\b(?:Theodore|Teddy|Colonel) Roosevelt\\b",
+   "a former President"
+  ],
+  [
+   "\\bF\\.\\s?D\\.\\s?R\\.?|\\bFDR\\b|\\b(?:President |Governor |Gov\\. )?(?:Franklin (?:D\\. |Delano )?)?Roosevelt\\b",
+   "the late President"
+  ]
+ ]
+}

@@ -1,0 +1,109 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 2 November until the electors meet on 5 December 1792)",
+  "names": {
+    "R": "Washington",
+    "D": null,
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "George Washington",
+    "D": null
+  },
+  "descriptors": {
+    "R": "the incumbent President, seeking a second term with no candidate running against him",
+    "D": null
+  },
+  "compile_desc": {
+    "R": "the faction of the administration in office since 1789",
+    "D": "the emerging opposition faction, which runs no one against the President",
+    "president": "Washington"
+  },
+  "third": null,
+  "label_pool": [
+    "K",
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y"
+  ],
+  "others_line": "No one runs against the President; some elector tickets favour an opposition man for the second office (answer \"other\").",
+  "plank_order": [
+    "public credit",
+    "national bank",
+    "frontier",
+    "defense",
+    "excise"
+  ],
+  "names_re": "\\b(Washington|Adams|Clinton|Jefferson|Burr|Hamilton|Madison|Federalist|Republican|Democrat)",
+  "never_name": "Washington, Adams, Clinton, Jefferson, Burr, Hamilton or Madison",
+  "corpus": null,
+  "platforms": "context/platforms_1792.json",
+  "ev_label": "132–0",
+  "slice_sources": {
+    "men": "1790 census projected to 1792, free adult men outside the Southern states; the 1790 census gives only free white males 16 and over, so men 21+ are estimated. Voters were men meeting each state's rules: most states required a freehold, property or taxpaying qualification (Vermont and Kentucky did not). Electors were chosen by popular vote in 6 states; elsewhere (Connecticut, Delaware, Georgia, New Jersey, New York, North Carolina, Rhode Island, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1790 census projected to 1792, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey's propertied women could vote in state elections, but its legislature chose the electors this year. Turnout is zero by law, not by estimate.",
+    "south-white": "1790 census projected to 1792, white adults in Virginia, North Carolina, South Carolina and Georgia; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia and North Carolina legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1790 census projected to 1792, Black adults in Virginia, North Carolina, South Carolina and Georgia; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia and North Carolina the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1790 census did not count aliens. Immigration was small (a few thousand a year), naturalization needed two years' residence under the 1790 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bPresident Washington\\b|\\bGeneral Washington\\b|\\bWashington\\b(?! City)",
+      "the President"
+    ],
+    [
+      "\\b(?:John |Vice President )?Adams\\b",
+      "the Vice President"
+    ],
+    [
+      "\\b(?:George )?Clinton\\b",
+      "the governor of New York"
+    ],
+    [
+      "\\b(?:Thomas )?Jefferson\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:Alexander )?Hamilton\\b",
+      "the Secretary of the Treasury"
+    ],
+    [
+      "\\b(?:Aaron )?Burr\\b",
+      "a New York senator"
+    ],
+    [
+      "\\b(?:James )?Madison\\b",
+      "a Virginia congressman"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bAnti-?Federalists?\\b",
+      "opponents of the administration"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the administration faction"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the opposition faction"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

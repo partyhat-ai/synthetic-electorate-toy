@@ -13,7 +13,12 @@ import type { SimulacraOptions } from './simulacra';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const scratch = mkdtempSync(path.join(tmpdir(), 'simulacra-test-'));
 const options: SimulacraOptions = {
-  bundles: path.join(ROOT, 'serve', 'bundles')
+  bundles: path.join(ROOT, 'serve', 'bundles'),
+  sessions: path.join(scratch, 'sessions'),
+  devLog: false,
+  autorun: null,
+  python: 'python3',
+  root: ROOT
 };
 
 let server: Server;
@@ -73,6 +78,15 @@ describe('/api/simulacra', () => {
     const res = await fetch(`${base}/api/simulacra/elections/1999`);
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ slices: [], whatIfs: [], simulated: false });
+  });
+
+  it('matches keywords as whole words: "flu" is not in "influence"', async () => {
+    const miss = await run({ year: 1920, text: 'the influence of the press' });
+    expect(miss.applied).toEqual([]);
+    expect(miss.unknown).toBe('the influence of the press');
+    const hit = await run({ year: 1920, text: 'the flu comes back' });
+    expect(hit.applied.map((a) => a.key)).toEqual(['influenza-returns-in-october-1920']);
+    expect(hit.unknown).toBeNull();
   });
 
   it('hand edits re-tally one run with no range', async () => {

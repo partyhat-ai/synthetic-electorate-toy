@@ -1,0 +1,103 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Roosevelt",
+  "D": "Parker",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Theodore Roosevelt",
+  "D": "Alton B. Parker"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1897",
+  "D": "nominee of the party that held the presidency from 1893 to 1897, chosen by its conservative gold-standard wing after two defeats on free silver"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1897",
+  "D": "the party that held the presidency from 1893 to 1897",
+  "president": "Roosevelt"
+ },
+ "third": null,
+ "label_pool": [
+  "K",
+  "N",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including a Socialist, a Prohibition, a People's party and a Socialist Labor nominee (answer \"other\").",
+ "plank_order": [
+  "tariff",
+  "trusts",
+  "Philippines",
+  "executive power",
+  "currency",
+  "labor",
+  "ballot"
+ ],
+ "names_re": "\\b(Roosevelt|Parker|Fairbanks|Davis|Debs|(?-i:Swallow)|Watson|Corregan|Hanna|McKinley|Bryan|Cleveland|Hearst|Republicans?|(?<!Social )Democrat(?:s|ic)?|G\\.\\s?O\\.\\s?P)\\b",
+ "never_name": "Roosevelt, Parker, Fairbanks, Davis, Debs, Swallow, Watson, McKinley, Bryan, Cleveland or Hearst",
+ "corpus": null,
+ "platforms": "context/platforms_1904.json",
+ "ev_label": "336–140",
+ "slice_sources": {
+  "men": "1900 and 1910 censuses interpolated to November 1904; men 21+ outside the eleven Southern states (including declarant aliens where they could vote); turnout and choice from the backbone, calibrated to certified 1904 returns.",
+  "women": "1900 and 1910 censuses interpolated to November 1904; women 21+ outside the South; women could vote for president only in Wyoming, Colorado (1893), Utah and Idaho (1896).",
+  "south-white": "1900 and 1910 censuses interpolated to November 1904; white adults in the eleven former Confederate states (includes a small number of American Indian and Asian adults); calibrated to certified 1904 returns.",
+  "black-south": "1900 and 1910 censuses interpolated to November 1904; Black adults in the eleven former Confederate states; disfranchisement was near complete across the region (Alabama 1901, Virginia 1902 and Texas's 1902 poll tax had joined Mississippi, South Carolina, Louisiana and North Carolina); the shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1900 and 1910 censuses interpolated to November 1904; foreign-born white adults who were aliens or had only declared their intent (first papers); declarant aliens could vote in several Midwestern and Western states (fewer each decade as states repealed it), so part of this slice could vote."
+ },
+ "masks": [
+  [
+   "\\b(?:President |Theodore )?Roosevelt\\b",
+   "the President"
+  ],
+  [
+   "\\bG\\.\\s?O\\.\\s?P\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "(?<!Social )\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Judge |Alton B\\. )?Parker\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:Fairbanks|(?:Henry G\\. )?Davis)\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:President )?McKinley\\b",
+   "the late President"
+  ],
+  [
+   "\\b(?:[Ff]ormer |[Ee]x-)?(?:President |Grover )?Cleveland\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:William Jennings |W\\. J\\. )?Bryan\\b",
+   "the out-party's two-time nominee"
+  ],
+  [
+   "\\bHearst\\b",
+   "a newspaper publisher"
+  ],
+  [
+   "\\b(?:Mark )?Hanna\\b",
+   "the late senator"
+  ],
+  [
+   "\\b(?:Debs|Swallow|Watson|Corregan)\\b",
+   "a minor-party nominee"
+  ]
+ ]
+}

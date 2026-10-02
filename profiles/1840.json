@@ -1,0 +1,95 @@
+{
+ "base": null,
+ "day_phrase": "the day appointed in this person's state (the states vote between Friday, 30 October and Wednesday, 2 December)",
+ "names": {
+  "R": "Harrison",
+  "D": "Van Buren",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "William Henry Harrison",
+  "D": "Martin Van Buren"
+ },
+ "descriptors": {
+  "R": "nominee of the opposition party formed in the 1830s against the administration; a retired general and former officeholder in the Northwest, running on the hard times since the panic of 1837",
+  "D": "the sitting President, nominee of the party that has held the presidency since 1829, standing on the independent treasury and strict construction of federal power"
+ },
+ "compile_desc": {
+  "R": "the opposition party formed in the 1830s against the administration",
+  "D": "the party that has held the presidency since 1829",
+  "president": "Van Buren"
+ },
+ "third": null,
+ "label_pool": [
+  "G",
+  "K",
+  "N",
+  "Q",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other candidates on some ballots, including the nominee of a small new antislavery party (answer \"other\").",
+ "plank_order": [
+  "hard times",
+  "national bank",
+  "treasury",
+  "executive power",
+  "internal improvements",
+  "slavery",
+  "immigration"
+ ],
+ "names_re": "\\b(Harrison|Tyler|Van ?Buren|Johnson|Birney|Earle|(?-i:Clay)\\b|Webster|Jackson|Calhoun|Tippecanoe|Whigs?\\b|Democrat|(?-i:Democracy)|Loco-?focos?|Liberty party)",
+ "never_name": "Harrison, Tyler, Van Buren, Richard Johnson, Birney, Clay, Webster, Jackson or Calhoun",
+ "corpus": null,
+ "platforms": "context/platforms_1840.json",
+ "ev_label": "234–60",
+ "slice_sources": {
+  "men": "1840 census (Sixth Census), free white men aged 20 and over (its nearest bracket to 21+) outside the eleven later-Confederate states; property and taxpaying tests had largely gone (Rhode Island kept a freehold test) and a few New England states let free Black men vote; calibrated to certified returns.",
+  "women": "No women could vote for president in 1840; the 1840 census count of women aged 20 and over is shown for population only.",
+  "south-white": "1840 census, free white adults (20+) in the eleven later-Confederate states; white men voted, except that South Carolina's legislature chose its electors; calibrated to certified returns.",
+  "black-south": "1840 census, Black adults in the eleven later-Confederate states, overwhelmingly enslaved; enslaved people could not vote, and every Southern state had barred free Black men from voting by 1840 (Tennessee 1834, North Carolina 1835).",
+  "immigrants": "Estimate only: the census did not record nativity before 1850, so the foreign-born count is back-projected from the 1850 census and arrival records; naturalized immigrant men (five years' residence) could vote, aliens could not."
+ },
+ "masks": [
+  [
+   "\\bPresident Van Buren\\b|\\bVan ?Buren\\b",
+   "the President"
+  ],
+  [
+   "\\bHarrison\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\bWhigs?\\b",
+   "the opposition party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b|\\bDemocracy\\b|\\bLoco-?focos?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bTippecanoe\\b",
+   "the opposition nominee"
+  ],
+  [
+   "\\b(?:Tyler|Johnson)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bBirney\\b",
+   "an antislavery nominee"
+  ],
+  [
+   "\\bLiberty [Pp]arty\\b",
+   "a small antislavery party"
+  ],
+  [
+   "\\bJackson\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Clay|Webster|Calhoun)\\b",
+   "a senator"
+  ]
+ ]
+}

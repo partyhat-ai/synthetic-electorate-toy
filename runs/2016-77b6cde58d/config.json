@@ -1,0 +1,77 @@
+{
+  "run_id": "2016-77b6cde58d",
+  "config": {
+    "election": 2016,
+    "election_day": "2016-11-08",
+    "context_cutoff": "2016-11-07",
+    "mode": "truth",
+    "what_ifs": [
+      "everyone",
+      "no-october-comey-letter",
+      "democratic-nominee-is-a-man"
+    ],
+    "seed": 1920,
+    "draws": 100,
+    "prompt_version": "p5",
+    "holdout": [
+      "CA",
+      "CO",
+      "DE",
+      "KS",
+      "LA",
+      "ND",
+      "NH",
+      "NJ",
+      "OH",
+      "TX",
+      "VA",
+      "WA"
+    ],
+    "agents": {
+      "bulk_model": "claude-haiku-4-5",
+      "check_model": "claude-haiku-4-5",
+      "check_share": 0,
+      "per_cohort": 2,
+      "paraphrases": 3,
+      "effort": "low",
+      "backend": "anthropic",
+      "max_cohorts": 36,
+      "arms": [
+        "control",
+        "cf"
+      ],
+      "only_cohorts": [
+        "midwest:M:native_white",
+        "midwest:F:native_white",
+        "northeast:F:native_white",
+        "northeast:M:native_white",
+        "south:M:native_white",
+        "south:F:native_white"
+      ],
+      "max_requests": 60,
+      "max_dollars": 0.5,
+      "max_tokens": 1500
+    },
+    "research": {
+      "compile_model": "claude-sonnet-5-5",
+      "research_model": "claude-sonnet-5-5",
+      "extract_model": "claude-sonnet-5-5",
+      "max_searches": 4,
+      "research_max_tokens": 4000,
+      "whatif_dollars": 0.5
+    },
+    "max_combo": 3
+  },
+  "data": {
+    "labels/state_pres_all.csv": "7345fbba7595f33e",
+    "franchise/state_franchise_1972_2024.csv": "e36c4e5e6f7b2eda",
+    "population/adults18_2016_by_state_nhgis.csv": "f400971a74c6f2a1",
+    "population/adults18_2020_by_state_nhgis.csv": "2f8145e9c82a4aa2",
+    "franchise/women_suffrage_pre19th.csv": "54da193f57a1e799",
+    "context/platforms_2016.json": "3b6614f3d5a9e8d0",
+    "whatifs/no-october-comey-letter.json": "ab2454ca6ee1f9ce",
+    "whatifs/evidence/no-october-comey-letter.json": "be28eb74a4be8a74",
+    "whatifs/democratic-nominee-is-a-man.json": "9de60d3c82dcfdd3",
+    "whatifs/evidence/democratic-nominee-is-a-man.json": "fb973315f6c9c6be"
+  }
+}

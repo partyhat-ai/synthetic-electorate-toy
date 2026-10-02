@@ -20,8 +20,10 @@
     label?: string;
     tile?: number;
     gap?: number;
+    /** State codes lit from outside (a place named in the text, places.ts). */
+    highlight?: readonly string[];
   }
-  let { year, states = [], colors, names, label = '', tile = 13, gap = 2 }: Props = $props();
+  let { year, states = [], colors, names, label = '', tile = 13, gap = 2, highlight = [] }: Props = $props();
 
   function detailOf(r: MapState | undefined): string {
     if (!r) return 'No electoral votes';
@@ -52,8 +54,9 @@
   let svg = $state<SVGSVGElement | null>(null);
   /** A tile's code. */
   let hovered = $state<string | null>(null);
-  // Lit: the tile under the pointer. One lit tile gets its label.
-  const lit = $derived<readonly string[]>(hovered ? [hovered] : []);
+  // Lit: the tile under the pointer, else any named from outside (those that
+  // exist this year). One lit tile gets its label.
+  const lit = $derived(hovered ? [hovered] : highlight.filter((c) => tiles.some((t) => t.code === c)));
   const hot = $derived(lit.length === 1 ? (tiles.find((t) => t.code === lit[0]) ?? null) : null);
   function point(e: PointerEvent) {
     if (!svg) return;

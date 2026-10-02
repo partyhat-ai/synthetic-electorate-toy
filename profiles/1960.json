@@ -1,0 +1,94 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 8 November",
+ "names": {
+  "R": "Nixon",
+  "D": "Kennedy",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Richard M. Nixon",
+  "D": "John F. Kennedy"
+ },
+ "descriptors": {
+  "R": "nominee of the party of the administration in office since 1953",
+  "D": "nominee of the party that held the presidency from 1933 to 1953 and has held a majority in Congress since the 1954 elections"
+ },
+ "compile_desc": {
+  "R": "the party of the administration in office since 1953",
+  "D": "the party that held the presidency from 1933 to 1953 and has held a majority in Congress since the 1954 elections",
+  "president": "Eisenhower"
+ },
+ "third": null,
+ "label_pool": [
+  "M",
+  "P",
+  "Q",
+  "V",
+  "X",
+  "Z"
+ ],
+ "others_line": "Other choices on some ballots, including unpledged elector slates in parts of the South and National States' Rights and Socialist Labor nominees (answer \"other\").",
+ "plank_order": [
+  "national defense",
+  "economy",
+  "civil rights",
+  "medical care",
+  "agriculture",
+  "communism"
+ ],
+ "names_re": "\\b(Nixon|Kennedy|JFK|Johnson|LBJ|Lodge|Eisenhower|Ike|Byrd|Thurmond|Goldwater|Faubus|Truman|Republican|Democrat|G\\.?\\s?O\\.?\\s?P\\b\\.?)",
+ "never_name": "Nixon, Kennedy, Johnson, Lodge, Eisenhower, Byrd, Thurmond, Goldwater, Faubus or Truman",
+ "corpus": null,
+ "platforms": "context/platforms_1960.json",
+ "ev_label": "303–219–15",
+ "slice_sources": {
+  "men": "1960 census (April) carried to November 1960 along the 1950→1960 trend; men 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states (first election with Alaska and Hawaii; no presidential vote in DC); calibrated to certified 1960 returns.",
+  "women": "1960 census (April) carried to November 1960 along the 1950→1960 trend; women 21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii) outside the eleven Southern states, in the 50 states (first election with Alaska and Hawaii; no presidential vote in DC); calibrated to certified 1960 returns.",
+  "south-white": "1960 census (April) carried to November 1960 along the 1950→1960 trend; white adults (21+ (18+ in Georgia and Kentucky, 19+ in Alaska, 20+ in Hawaii)) in the eleven former Confederate states (includes a small number of American Indian and Asian adults), where poll taxes still applied in Alabama, Arkansas, Mississippi, Texas and Virginia; calibrated to certified 1960 returns.",
+  "black-south": "1960 census (April) carried to November 1960 along the 1950→1960 trend; Black adults in the eleven former Confederate states; registration held to under a third of Black adults by literacy tests, poll taxes, registrar discretion and intimidation. The shortfall against white turnout is counted as exclusion.",
+  "immigrants": "1960 census (April) carried to November 1960 along the 1950→1960 trend; foreign-born white adults who were not naturalized citizens (aliens could not vote in any state)."
+ },
+ "masks": [
+  [
+   "\\bPresident Eisenhower\\b|\\bEisenhower\\b|\\bIke\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?Nixon\\b",
+   "the administration party's nominee"
+  ],
+  [
+   "\\bKennedy\\b|\\bJFK\\b",
+   "the nominee of the party out of power"
+  ],
+  [
+   "\\b(?:the )?G\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of power"
+  ],
+  [
+   "\\b(?:Johnson|Lodge)\\b",
+   "a running mate"
+  ],
+  [
+   "\\bTruman\\b",
+   "the former President"
+  ],
+  [
+   "\\b(?:Byrd|Thurmond|Goldwater)\\b",
+   "a senator"
+  ],
+  [
+   "\\bFaubus\\b",
+   "a governor"
+  ]
+ ]
+}

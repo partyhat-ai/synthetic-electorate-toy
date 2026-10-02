@@ -1,0 +1,653 @@
+{
+ "summary": "No source tests this counterfactual directly. 1856 returns show Fillmore's 873,053 votes were concentrated in the slave states, where the contest was Buchanan against Fillmore, so Buchanan was the likely beneficiary there. In the North, Fillmore voters' destinations are only loosely described. 1912 and 1924 analogues give only loose guidance.",
+ "findings": [
+  {
+   "claim": "Fillmore won 873,053 votes against Buchanan's 1,836,072 and Fr\u00e9mont's 1,342,345.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1856 national result with the American ticket on the ballot",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Shows the size of the vote at stake, not where it would have gone.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "In slave states Buchanan had 56.1%, Fillmore 43.8% and Fr\u00e9mont 0.1%. In free states Fr\u00e9mont had 45.2%, Buchanan 41.5% and Fillmore 13.3%. Without Fillmore, Buchanan is the only plausible southern destination.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "Fillmore's regional vote shares, 1856",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Inference from returns; destination of Fillmore voters not documented.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Fillmore gave Northern voters worried about disunion a place to land other than the Republicans. Without him they might have gone to Buchanan or stayed home.",
+   "source_ids": [
+    "S10"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "northeast"
+   },
+   "situation": "Conservative northern Fillmore voters",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Single popular source, no numbers.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Know-Nothings in the Northeast supported Fr\u00e9mont. The North American faction also nominated Fr\u00e9mont.",
+   "source_ids": [
+    "S13",
+    "S12"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "northeast"
+   },
+   "situation": "Anti-slavery northern Know-Nothings backing Fr\u00e9mont",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Already Fr\u00e9mont supporters; S12 is an alternate-history wiki.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Turnout was 78.3% nationally and 83% in the North, the highest since 1840, with Fillmore on the ballot.",
+   "source_ids": [
+    "S10"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1856 turnout with a three-way race",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Popular source; no counterfactual turnout estimate.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Fillmore stressed national unity, and Anbinder says the party had dropped nativism from its agenda.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Fillmore's campaign emphasis",
+   "when": "1856",
+   "match": "same-event",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Wikipedia citing Anbinder.",
+   "tier": "C",
+   "grade": 0.25,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "The Know-Nothings won more than a fourth of German and British Protestants in numerous state elections.",
+   "source_ids": [
+    "S11"
+   ],
+   "population": {
+    "sex": "M",
+    "group": "foreign_white_naturalized",
+    "region": "any"
+   },
+   "situation": "Know-Nothing support among immigrant Protestants",
+   "when": "1850s",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Wikipedia summary; not specific to 1856 presidential vote.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "In 1912 Wilson won 41.8%, Roosevelt 27.4% and Taft 23.2%. The St. Louis Fed says Taft would have had 50.5% if all Roosevelt votes had gone to him.",
+   "source_ids": [
+    "S20",
+    "S26"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Third-party run splitting a major party, 1912",
+   "when": "1912",
+   "match": "distant",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-R",
+   "effects": [],
+   "limits": "Extreme assumption; different party system.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "In 1912 turnout was 59%. In the former Confederacy Taft took 12.22% and Roosevelt 16.76%.",
+   "source_ids": [
+    "S20"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "south"
+   },
+   "situation": "1912 turnout and southern shares",
+   "when": "1912",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Wikipedia figures; Black disenfranchisement.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "La Follette won 16.6% in 1924. The total vote rose by 2.3 million, but both major parties' totals fell; Davis polled 750,000 fewer than Cox in 1920.",
+   "source_ids": [
+    "S30"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Third-party run in 1924",
+   "when": "1924",
+   "match": "distant",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "mixed",
+   "effects": [],
+   "limits": "Different party system.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "mixed"
+  },
+  {
+   "claim": "La Follette's support: about 52% farmers, 20% socialists, 20% AFL members, 8% railroad workers. Also strong among Scandinavians and some Northeastern Catholics.",
+   "source_ids": [
+    "S32",
+    "S38"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Composition of La Follette's 1924 vote",
+   "when": "1924",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Wikipedia-reported estimate.",
+   "tier": "C",
+   "grade": 0.05,
+   "reported_direction": "none"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Fillmore was reported by Nevins as not a Know-Nothing or nativist, abroad when nominated and not consulted. He kept quiet about his party membership.",
+   "date": "1856",
+   "source_ids": [
+    "S1",
+    "S11"
+   ]
+  },
+  {
+   "text": "Nathaniel Banks publicly declined the American nomination and broke from the Know-Nothings, though he joined the Republicans only after the election.",
+   "date": "1856",
+   "source_ids": [
+    "S1"
+   ]
+  },
+  {
+   "text": "Ulysses S. Grant feared a Republican victory would bring disunion and voted for Buchanan.",
+   "date": "1856",
+   "source_ids": [
+    "S17"
+   ]
+  }
+ ],
+ "caveats": [
+  "No scholarly study of this exact counterfactual was found.",
+  "No data on abstention by Fillmore voters or on splits by group.",
+  "Most 1856 narrative rests on Wikipedia and popular summaries; Anbinder and Gienapp were seen only as citations.",
+  "1912 and 1924 were different party systems."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "nativist-party-does-not-run",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "1856 election Fillmore American Party vote share former Whigs border South Republican Fremont Buchanan",
+  "Know-Nothings 1856 North American Party Fremont nativists Banks Fillmore northern vote scholarship",
+  "1912 election Theodore Roosevelt Progressive 27.4% Taft 23.2% popular vote Wilson 41.8%",
+  "1924 election La Follette Progressive 16.6% popular vote Coolidge Davis"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://en.wikipedia.org/wiki/1856_United_States_presidential_election",
+   "title": "1856 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "In the free states, there was a three-way campaign, which Fr\u00e9mont won with 45.2% of the vote to 41.5% for Buchanan and 13.3% for Fillmore; Fr\u00e9mont rec...",
+    "## Nominations\n### American (Know-Nothing) Party nomination\nAlthough the nativist argument of the American Party had considerable success in local and...",
+    "In the slave states, however, the contest was for all intents and purposes between Buchanan and Fillmore; Buchanan won 56.1% of the vote to 43.8% for ...",
+    "Historian Allan Nevins says that Fillmore was not a Know-Nothing or a nativist. He was out of the country when the presidential nomination came and ha...",
+    "While Banks was the early favorite for the party's presidential nomination, he publicly declined the nomination and effectively broke from the Know-No..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1856",
+   "title": "United States presidential election of 1856",
+   "tier": "B",
+   "cited": [],
+   "page_age": "338 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://guides.loc.gov/presidential-election-1856",
+   "title": "Introduction - Presidential Election of 1856: A Resource Guide - Research Guides at Library of Congress",
+   "tier": "A",
+   "cited": [
+    "| Political Party | Presidential Nominee | VP Nominee | Electoral College | Popular Vote |\n| --- | --- | --- | --- | --- |\n| Democratic | James Buchan...",
+    "The new Republican Party, which was founded in opposition to the Kansas-Nebraska Act, nominated John C. Fr\u00e9mont, a famous Western explorer and former ..."
+   ],
+   "page_age": "1106 days ago"
+  },
+  {
+   "id": "S4",
+   "url": "https://www.270towin.com/1856-election/",
+   "title": "Presidential Election of 1856 - 270toWin",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S5",
+   "url": "https://en.wikipedia.org/wiki/1856_United_States_elections",
+   "title": "1856 United States elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": "79 days ago"
+  },
+  {
+   "id": "S6",
+   "url": "https://userpages.umbc.edu/~nmiller/POLI423/F2008.1856.pdf",
+   "title": "The Presidential Election of 1856 Introduction",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S7",
+   "url": "https://grokipedia.com/page/1856_United_States_presidential_election",
+   "title": "1856 United States presidential election \u2014 Grokipedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": "260 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://www.historycentral.com/elections//1856.html",
+   "title": "1856 Election Results Buchanan vs Freemont",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S9",
+   "url": "https://ballotpedia.org/Millard_Fillmore",
+   "title": "Millard Fillmore - Ballotpedia",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S10",
+   "url": "https://startingpointsjournal.com/slavery-disunion-and-the-violent-election-of-1856/",
+   "title": "Slavery, Disunion, and the Violent Election of 1856 - Starting Points",
+   "tier": "C",
+   "cited": [
+    "Turnout was 78.3 percent \u2013 83 percent in the North \u2013 the highest since 1840.",
+    "Fillmore gave Northern voters worried about disunion a place to land that didn\u2019t involve supporting the Republicans whose victory they feared would le..."
+   ],
+   "page_age": "894 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://en.wikipedia.org/wiki/Know_Nothing",
+   "title": "Know Nothing",
+   "tier": "C",
+   "cited": [
+    "The party's voters were by no means all native-born Americans, for it won more than a fourth of the German and British Protestants in numerous state e...",
+    "The American Party nominated former president Millard Fillmore in the 1856 presidential election, but he kept quiet about his membership in it and he ..."
+   ],
+   "page_age": "10 days ago"
+  },
+  {
+   "id": "S12",
+   "url": "https://althistory.fandom.com/wiki/US_Presidential_Election_1856_(Compromise_of_1856)",
+   "title": "US Presidential Election 1856 (Compromise of 1856)",
+   "tier": "C",
+   "cited": [
+    "Nathaniel P. Banks was nominated for President on the 10th ballot over John C. Fremont and John McLean, but Banks immediately wired the convention tha..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S13",
+   "url": "https://www.encyclopedia.com/history/united-states-and-canada/us-history/american-party",
+   "title": "American Party",
+   "tier": "C",
+   "cited": [
+    "In 1856 Know-Nothings in the Northeast supported the Republican candidate John C. Fr\u00e9mont."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S14",
+   "url": "https://dp.la/exhibitions/outsiders-president-elections/anti-outsider-platforms/know-nothing-party-1856?item=2100",
+   "title": "Political Outsiders in US Presidential Elections",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S15",
+   "url": "https://www.alternatehistory.com/forum/threads/wi-a-know-nothing-president.539789/",
+   "title": "WI: A Know-Nothing President?",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1273 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://www.pbs.org/wgbh/americanexperience/features/lincolns-timeline/",
+   "title": "Political Party Timeline: 1836-1864",
+   "tier": "B",
+   "cited": [],
+   "page_age": "2590 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://courses.lumenlearning.com/wm-ushistory1/chapter/the-election-of-1856/",
+   "title": "The Election of 1856",
+   "tier": "C",
+   "cited": [
+    "Ulysses S. Grant of Missouri, then an obscure former Mexican War officer,\u00a0worried that Fr\u00e9mont and Republicans signaled trouble for the Union itself. ..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S18",
+   "url": "https://www.alternatehistory.com/forum/threads/know-nothing-what-ifs.433805/",
+   "title": "Know Nothing what ifs",
+   "tier": "C",
+   "cited": [],
+   "page_age": "3189 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://www.ebsco.com/research-starters/history/know-nothing-party",
+   "title": "Know-Nothing Party",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S20",
+   "url": "https://en.wikipedia.org/wiki/1912_United_States_presidential_election",
+   "title": "1912 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Wilson was the first Democrat to win a presidential election since 1892 as well as the first presidential candidate to receive over 400 electoral vote...",
+    "The eleven states of the former Confederacy provided 5.44% of Taft's votes, with him taking 12.22% of the vote in that region while Roosevelt took 16....",
+    "## Results\nTurnout in the election was 59%, with 27.9% of the voting age population participating in the election."
+   ],
+   "page_age": "8 days ago"
+  },
+  {
+   "id": "S21",
+   "url": "https://www.presidency.ucsb.edu/statistics/elections/1912",
+   "title": "1912",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S22",
+   "url": "https://teachingamericanhistory.org/resource/election-of-1912/",
+   "title": "The Presidential Election of 1912 - Teaching American History",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1631 days ago"
+  },
+  {
+   "id": "S23",
+   "url": "https://millercenter.org/node/67706",
+   "title": "Wilson defeats Taft and Roosevelt",
+   "tier": "A",
+   "cited": [],
+   "page_age": "2284 days ago"
+  },
+  {
+   "id": "S24",
+   "url": "https://www.alternatehistory.com/forum/threads/who-wins-in-1912-if-roosevelt-sits-out.523146/",
+   "title": "Who Wins in 1912 if Roosevelt Sits Out?",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1714 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://en.wikipedia.org/wiki/Bull_Moose_Party",
+   "title": "Bull Moose Party",
+   "tier": "C",
+   "cited": [],
+   "page_age": "7 days ago"
+  },
+  {
+   "id": "S26",
+   "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/publications/review/pdfs/2025/may/theodore-roosevelt-election-of-1912-founding-of-federal-reserve.pdf",
+   "title": "Theodore Roosevelt, the Election of 1912, and the ...",
+   "tier": "C",
+   "cited": [
+    "Taft would have received 50.5 percent of\n\nthe popular vote and 377 votes in the Electoral College if all of Roosevelt\u2019s votes had instead gone to Taft..."
+   ],
+   "page_age": "518 days ago"
+  },
+  {
+   "id": "S27",
+   "url": "https://www.hungarianconservative.com/articles/culture_society/theodore-roosevelt-woodrow-wilson-us-election-1912/",
+   "title": "Theodore Roosevelt Spoils It for the Republicans: The Election of 1912 - Hungarian Conservative",
+   "tier": "C",
+   "cited": [],
+   "page_age": "744 days ago"
+  },
+  {
+   "id": "S28",
+   "url": "https://fairvote.org/heed_the_lessons_of_1912_implement_ranked_choice_voting/",
+   "title": "Heed the Lessons of 1912: Implement Ranked Choice Voting - FairVote",
+   "tier": "C",
+   "cited": [],
+   "page_age": "1503 days ago"
+  },
+  {
+   "id": "S29",
+   "url": "https://teachdemocracy.org/wp-content/uploads/2025/01/election_1912.pdf",
+   "title": "The 1912 presidential election was a race between four leaders",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S30",
+   "url": "https://en.wikipedia.org/wiki/1924_United_States_presidential_election",
+   "title": "1924 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "**1924 United States presidential election**\n\nNovember 4, 1924\n\n**531 members of the Electoral College 266 electoral votes needed to win**\n\n- **Turnou...",
+    "The total vote increased by 2,300,000 but, because of the great drawing power of the La Follette candidacy, both the Republican and Democratic totals ...",
+    "The eleven states of the former Confederacy provided 4.43% of Coolidge's votes, with him taking 27.94% of the vote in that region while La Follette to..."
+   ],
+   "page_age": "1 days ago"
+  },
+  {
+   "id": "S31",
+   "url": "https://uspollingdata.com/elections/1924/",
+   "title": "1924 Presidential Election: Coolidge vs. Davis vs. La Follette \u2014 Three-Way Split",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S32",
+   "url": "https://en.wikipedia.org/wiki/Progressive_Party_(United_States,_1924%E2%80%931934)",
+   "title": "Progressive Party (United States, 1924\u20131927)",
+   "tier": "C",
+   "cited": [
+    "Kenneth McKay estimates that about 52 percent of the LaFollette's support (2,530,000 votes) came from farmers; 20 percent (1,000,000) from socialists;..."
+   ],
+   "page_age": "306 days ago"
+  },
+  {
+   "id": "S33",
+   "url": "https://www.ebsco.com/research-starters/history/progressive-party-1924/",
+   "title": "Progressive Party of 1924",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S34",
+   "url": "https://www.britannica.com/event/United-States-presidential-election-of-1924",
+   "title": "United States presidential election of 1924",
+   "tier": "B",
+   "cited": [],
+   "page_age": "338 days ago"
+  },
+  {
+   "id": "S35",
+   "url": "https://en.wikipedia.org/wiki/Robert_M._La_Follette",
+   "title": "Robert M. La Follette",
+   "tier": "C",
+   "cited": [],
+   "page_age": "13 days ago"
+  },
+  {
+   "id": "S36",
+   "url": "https://brilliantmaps.com/us-elections/1924-us-presidential-election/",
+   "title": "1924 US Presidential Election Map: Coolidge vs Davis vs La Follette",
+   "tier": "C",
+   "cited": [],
+   "page_age": "216 days ago"
+  },
+  {
+   "id": "S37",
+   "url": "https://www.presidency.ucsb.edu/statistics/elections/1924",
+   "title": "1924",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S38",
+   "url": "https://www.encyclopedia.com/history/dictionaries-thesauruses-pictures-and-press-releases/progressive-party-1924-la-follettes",
+   "title": "Progressive Party of 1924, La Follette's",
+   "tier": "C",
+   "cited": [
+    "The ticket had sectional appeal and was also strong among Scandinavians and in certain Catholic communities in the urban Northeast."
+   ],
+   "page_age": "2049 days ago"
+  },
+  {
+   "id": "S39",
+   "url": "https://www.americanheritage.com/lafollette-and-progressive-movement",
+   "title": "LaFollette and the Progressive Movement (Win 20,Vol:64 Issue:1)",
+   "tier": "B",
+   "cited": [],
+   "page_age": null
+  }
+ ],
+ "notes": "**Bottom line:** I found no scholarly study of this exact counterfactual. I also found no source that says how many Fillmore voters would have abstained, or how old Whigs in the border and upper South split by group. Most of what follows is state-level returns plus secondary summaries. Several of those summaries come from Wikipedia or other weak sources, and I flag them below. Anbinder's *Nativism and Slavery* (1992) and Gienapp's *Origins of the Republican Party* (1987) are the scholarly works to consult. I could only see them cited, not read.\n\n## 1. Direct evidence\n\n**What Fillmore's vote was.**\n- Fillmore took 873,053 votes, against 1,836,072 for Buchanan and 1,342,345 for Fr\u00e9mont. [S3]\n- In the free states, Fr\u00e9mont led with 45.2%, Buchanan had 41.5% and Fillmore 13.3%. In the slave states, Buchanan had 56.1%, Fillmore 43.8% and Fr\u00e9mont 0.1%. [S1] The Wikipedia page cites Anbinder for the next point. Fillmore stressed national unity, and Anbinder says the party \"had dropped nativism from its agenda.\" [S1]\n- Turnout was 78.3% nationally and 83% in the North, the highest since 1840. [S10] That is a popular-press source. It means turnout was high with a Fillmore option on the ballot.\n\n**Where a Fillmore voter would likely have gone.** The sources point to different answers in different regions.\n- **North, Fillmore's anti-slavery Know-Nothings:** The Fillmore ticket was one of two non-Democratic options in the North. Encyclopedia.com says Know-Nothings in the Northeast supported Fr\u00e9mont. [S13] A separate faction, the North Americans, nominated Fr\u00e9mont themselves. They first named Banks, who declined, and then nominated Fr\u00e9mont on the 11th ballot. [S12] That account comes from an alternate-history wiki, so treat it cautiously.\n- **North, conservative Fillmore voters:** One popular-history source says Fillmore gave Northern voters worried about disunion a place to land that did not involve supporting the Republicans. [S10] That suggests those voters would have gone to Buchanan, or stayed home, if Fillmore were absent. It is one source and gives no numbers.\n- **Upper South and border, former Whigs:** There is little direct evidence. Fr\u00e9mont got almost nothing in the slave states, so the contest there was Buchanan against Fillmore. [S1] That makes Buchanan the only plausible destination for a Fillmore voter who did not abstain. Whether they would have gone to him is not documented.\n\n## 2. Analogues\n\nI found no case of the same populations facing a vanished nativist or Whig option. These are the nearest third-party runs, with the sources I found.\n\n**1912, Roosevelt (Progressive).**\n- Wilson won 41.8%, Roosevelt 27.4%, Taft 23.2% and Debs 6.0%. [S20]\n- A St. Louis Fed study says Taft would have had 50.5% of the popular vote if all of Roosevelt's votes had gone to him. [S26] That is a deliberately extreme assumption.\n- In the former Confederacy, Taft took 12.22% and Roosevelt 16.76%. [S20] That is a Wikipedia figure.\n- Turnout was 59%. [S20] That is Wikipedia's figure.\n- Roosevelt was a former president and a politician, not a non-politician.\n\n**1924, La Follette (Progressive).**\n- He won 16.6%, against 54.0% for Coolidge and 28.8% for Davis. [S30]\n- Kenneth McKay estimates about 52% of his support came from farmers, 20% from socialists, another 20% from AFL union members and about 8% from railroad workers. [S32] That figure is as reported on Wikipedia.\n- The total vote rose by 2.3 million, but both major parties' totals fell. Davis polled 750,000 fewer votes than Cox had in 1920. [S30]\n- Support was also strong among Scandinavians and in some urban Northeastern Catholic communities. [S38]\n- In the former Confederacy, La Follette took 4.80%. [S30]\n\n**Famous non-politician runs.** I found none among the strongest third-party runs. Fr\u00e9mont, an explorer, had been a senator. The Library of Congress calls him a famous Western explorer and former senator from California. [S3]\n\n**Gender, naturalization and race.** I found no 1856-era turnout data by sex, naturalization status or race. Only men could vote in this period. One summary says the Know-Nothings won more than a fourth of German and British Protestants in numerous state elections. [S11] That is a Wikipedia summary, so verify it in Anbinder.\n\n## 3. Named people\n\n- **Fillmore:** Wikipedia says Nevins held that he was not a Know-Nothing or a nativist, was abroad when nominated, and had not been consulted. [S1] It also says he kept quiet about his membership in the party. [S11]\n- **Nathaniel Banks:** He publicly declined the American nomination and effectively broke from the Know-Nothings, though he did not formally join the Republicans until after the election. [S1]\n- **Ulysses S. Grant:** He feared a Republican victory would bring disunion and voted for Buchanan. [S17] That is from a course text, not a scholarly source.\n- **Fr\u00e9mont:** I found only the Republican nomination and the \"North American\" nomination. I found nothing on his stated views on nativism.\n\n## 4. Limits\n\n- **1912 and 1924:** These were run in a different party system, with no nativist-versus-slavery cleavage and little overlap with Fillmore's Whig base. Their share figures show that third-party voters usually split between the major parties. They don't tell us how.\n- **1912:** In the South, Black men were largely disenfranchised by then, so the electorate was different.\n- **1856 returns:** The state returns show where Fillmore's votes were, but not who the voters were or where they would have gone. In the South, Fillmore's share was 33% to 48% in most states. Whig loyalists there may have voted for Fillmore as a Whig, not as a nativist.\n- **Source quality:** Most 1856 narrative above rests on Wikipedia, encyclopedia entries and popular summaries. Anbinder and Gienapp should be checked directly.",
+ "prompt": "Scenario for the 1856 United States presidential election (election day 1856-11-04).\nA reader asked: \"Millard Fillmore and the American (Know-Nothing) Party don't run in 1856.\".\nAs modelled: The nativist party's nominee never enters the race, leaving only the two main parties' tickets on the ballot.\nKind of change: candidate. Populations it reaches first: sex: M, group: native_white, foreign_white_naturalized.\nInclude the strongest third-party and independent runs nearest in time (1912 and 1924 above all), which groups they drew from and what share they took; and any run by a famous non-politician.\n\nQuestions to answer:\n- Where third-party voters in 1856 had no candidate of their own, which major ticket did former Whigs and nativists choose, and how many abstained?\n- How did old-line Whig voters in the border and upper South behave when forced to choose between the two major parties?\n- Did nativist voters in the North lean toward the new anti-slavery-extension party or the administration party when the nativist ticket was absent?\n\nGroups the simulation distinguishes: men and women; native-born white, naturalized immigrant, non-citizen immigrant and Black (free and enslaved) adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 103080,
+  "output_tokens": 3068,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 4
+ },
+ "dollars": 0.3086
+}

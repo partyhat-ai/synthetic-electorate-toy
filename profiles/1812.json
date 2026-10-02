@@ -1,0 +1,109 @@
+{
+  "base": null,
+  "day_phrase": "the day this person's state has set for choosing presidential electors (states choose on different days, from 30 October until the electors meet on 2 December 1812)",
+  "names": {
+    "R": "Clinton",
+    "D": "Madison",
+    "O": "another candidate"
+  },
+  "full_names": {
+    "R": "DeWitt Clinton",
+    "D": "James Madison"
+  },
+  "descriptors": {
+    "R": "the mayor of New York City and lieutenant governor of New York, a dissident from the administration party backed by the opposition party, who attacks the administration's conduct of the war",
+    "D": "the incumbent President, who asked Congress in June 1812 to declare war on Britain"
+  },
+  "compile_desc": {
+    "R": "the coalition of the opposition party and dissidents from the administration party",
+    "D": "the party of the administration in office since 1801",
+    "president": "Madison"
+  },
+  "third": null,
+  "label_pool": [
+    "N",
+    "V",
+    "X",
+    "Z",
+    "Y",
+    "P"
+  ],
+  "others_line": "A ticket of the opposition party's holdouts, who refuse to back the dissident, on a few ballots (answer \"other\").",
+  "plank_order": [
+    "war",
+    "trade",
+    "military",
+    "sectional power",
+    "taxes"
+  ],
+  "names_re": "\\b(Clinton|Madison|Gerry|Ingersoll|(?-i:King)|Davie|Monroe|Jefferson|Federalist|Republican|Democrat)",
+  "never_name": "Clinton, Madison, Gerry, Ingersoll, King, Davie, Monroe or Jefferson",
+  "corpus": null,
+  "platforms": "context/platforms_1812.json",
+  "ev_label": "89–128",
+  "slice_sources": {
+    "men": "1810 census projected to 1812, free adult men outside the Southern states; the census gives free white males in bands (16–26, 26–45, 45+), so men 21+ are split from the 16–26 band. Voters were men meeting each state's rules: many states still required property or taxpaying qualifications (Virginia and Rhode Island a freehold; Maryland dropped its test in 1810). Electors were chosen by popular vote in 9 states; elsewhere (Connecticut, Delaware, Georgia, Louisiana, New Jersey, New York, North Carolina, South Carolina and Vermont) men cast no presidential vote. Free Black men could vote in some Northern states on the same or stricter terms.",
+    "women": "1810 census projected to 1812, women 21+ (estimated from age bands). No woman could vote for president this year: New Jersey had ended women's voting in 1807. Turnout is zero by law, not by estimate.",
+    "south-white": "1810 census projected to 1812, white adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee and Louisiana; only men meeting their state's property or taxpaying rules could vote (Virginia required a freehold). The South Carolina, Georgia, North Carolina and Louisiana legislatures chose their electors, so people there cast no presidential vote.",
+    "black-south": "1810 census projected to 1812, Black adults in Virginia, North Carolina, South Carolina, Georgia, Tennessee and Louisiana; the census gives free people of colour without age or sex before 1820, so adults are estimated. The great majority were enslaved and could not vote. Free Black men meeting the property tests could legally vote only in North Carolina (until its 1835 constitution) and Tennessee (until its 1834 constitution); the other Southern states limited the vote to white men. In South Carolina, Georgia, North Carolina and Louisiana the legislature chose the electors, so no one there voted for president directly.",
+    "immigrants": "No source: before 1850 the census recorded no nativity, and the 1810 census did not count aliens. Immigration was small (a few thousand a year), naturalization needed five years' residence under the 1802 act, and aliens could not vote in most states; any slice here is an assumption, not a measurement."
+  },
+  "masks": [
+    [
+      "\\bPresident Madison\\b|\\b(?:James )?Madison\\b",
+      "the President"
+    ],
+    [
+      "\\b(?:De ?Witt |Mayor |Governor )?Clinton\\b",
+      "the New York challenger"
+    ],
+    [
+      "\\b(?:Elbridge )?Gerry\\b",
+      "the administration party's vice-presidential nominee"
+    ],
+    [
+      "\\b(?:Jared )?Ingersoll\\b",
+      "the challenger's running mate"
+    ],
+    [
+      "\\bRufus King\\b|\\bKing\\b(?! of)",
+      "the holdouts' candidate"
+    ],
+    [
+      "\\b(?:William R\\. )?Davie\\b",
+      "the holdouts' running mate"
+    ],
+    [
+      "\\b(?:James )?Monroe\\b",
+      "the Secretary of State"
+    ],
+    [
+      "\\b(?:Thomas )?Jefferson\\b",
+      "the former President"
+    ],
+    [
+      "\\bDemocratic[- ]Republicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bFederalists?\\b",
+      "the opposition party"
+    ],
+    [
+      "\\bRepublicans?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bDemocrat(?:s|ic)?\\b",
+      "the administration party"
+    ],
+    [
+      "\\bMr\\.? (?=the )",
+      ""
+    ],
+    [
+      "\\b([Tt]he) the\\b",
+      "\\1"
+    ]
+  ]
+}

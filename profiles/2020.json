@@ -1,0 +1,113 @@
+{
+ "base": null,
+ "day_phrase": "Tuesday, 3 November",
+ "names": {
+  "R": "Trump",
+  "D": "Biden",
+  "O": "another candidate"
+ },
+ "full_names": {
+  "R": "Donald Trump",
+  "D": "Joe Biden"
+ },
+ "descriptors": {
+  "R": "the sitting President, nominee of the party that has held the White House since 2017",
+  "D": "nominee of the party that has held a majority in the House of Representatives since the 2018 elections; a former Vice President"
+ },
+ "compile_desc": {
+  "R": "the party that has held the White House since 2017",
+  "D": "the party that has held a majority in the House of Representatives since the 2018 elections",
+  "president": "Trump"
+ },
+ "third": null,
+ "label_pool": [
+  "U",
+  "Q",
+  "V",
+  "X",
+  "Y",
+  "Z"
+ ],
+ "others_line": "Other candidates on most ballots, including a Libertarian and a Green nominee (answer \"other\").",
+ "plank_order": [
+  "platform",
+  "pandemic",
+  "health care",
+  "economy",
+  "taxes",
+  "immigration",
+  "trade",
+  "climate",
+  "racial justice"
+ ],
+ "names_re": "\\b(Trump\\w*|Biden|Pence|Harris|Kamala|Obama\\w*|Clinton|Hillary|Sanders|Bernie|Warren|Buttigieg|Jorgensen|Hawkins|Pelosi|MAGA|Make America Great Again|Republican\\w*|Democrat\\w*|G\\.?\\s?O\\.?\\s?P)\\b",
+ "never_name": "Trump, Biden, Pence, Harris, Obama, Clinton, Sanders, Warren, Buttigieg, Jorgensen, Hawkins or Pelosi",
+ "corpus": null,
+ "platforms": "context/platforms_2020.json",
+ "ev_label": "232–306",
+ "slice_sources": {
+  "men": "2019 and 2021 American Community Survey (1-year, IPUMS; the 2020 1-year release is experimental only) interpolated to November 2020; men who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2020); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2020 returns.",
+  "women": "2019 and 2021 American Community Survey (1-year, IPUMS; the 2020 1-year release is experimental only) interpolated to November 2020; women who are citizens 18+ (the native_white, naturalized, black and other slots) less those barred for a felony conviction (Sentencing Project / Uggen et al. state estimates for 2020); outside the eleven former Confederate states; turnout and choice calibrated to the certified 2020 returns.",
+  "south-white": "2019 and 2021 American Community Survey (1-year, IPUMS; the 2020 1-year release is experimental only) interpolated to November 2020; white non-Hispanic adults in the eleven former Confederate states (US-born in the native_white slot; white naturalized citizens sit in the naturalized slot), less felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2020); calibrated to the certified 2020 returns.",
+  "black-south": "2019 and 2021 American Community Survey (1-year, IPUMS; the 2020 1-year release is experimental only) interpolated to November 2020; US-born Black adults in the eleven former Confederate states, all citizens with no legal bar beyond felony disenfranchisement (Sentencing Project / Uggen et al. state estimates for 2020), which falls on them disproportionately; calibrated to the certified 2020 returns.",
+  "immigrants": "2019 and 2021 American Community Survey (1-year, IPUMS; the 2020 1-year release is experimental only) interpolated to November 2020; noncitizen adults (the alien slot), who cannot vote in federal elections; naturalized citizens are counted in the naturalized slot and can vote."
+ },
+ "masks": [
+  [
+   "\\bObamacare\\b",
+   "the 2010 health care law"
+  ],
+  [
+   "\\bMake America Great Again\\b|\\bMAGA\\b",
+   "the President's slogan"
+  ],
+  [
+   "\\b(?:President )?(?:Donald )?(?:J\\. )?Trump\\b",
+   "the President"
+  ],
+  [
+   "\\b(?:Vice President )?(?:Mike )?Pence\\b",
+   "the Vice President"
+  ],
+  [
+   "\\b(?:Former Vice President |former Vice President )?(?:Joe )?Biden\\b",
+   "the nominee of the party out of the White House"
+  ],
+  [
+   "\\b(?:Kamala )?Harris\\b|\\bKamala\\b",
+   "a running mate"
+  ],
+  [
+   "\\b(?:Barack )?Obama\\b",
+   "a former President"
+  ],
+  [
+   "\\bHillary (?:Rodham )?Clinton\\b|\\bHillary\\b|\\bClinton\\b",
+   "a former nominee"
+  ],
+  [
+   "\\b(?:Bernie )?Sanders\\b|\\bBernie\\b|\\b(?:Elizabeth )?Warren\\b|\\b(?:Pete )?Buttigieg\\b",
+   "a primary rival"
+  ],
+  [
+   "\\b(?:Jo )?Jorgensen\\b|\\b(?:Howie )?Hawkins\\b",
+   "a minor-party candidate"
+  ],
+  [
+   "\\b(?:Nancy )?Pelosi\\b",
+   "the Speaker of the House"
+  ],
+  [
+   "\\bG\\.?\\s?O\\.?\\s?P\\b\\.?",
+   "the administration party"
+  ],
+  [
+   "\\bRepublicans?\\b",
+   "the administration party"
+  ],
+  [
+   "\\bDemocrat(?:s|ic)?\\b",
+   "the party out of the White House"
+  ]
+ ]
+}

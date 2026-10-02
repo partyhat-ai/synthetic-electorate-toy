@@ -110,7 +110,7 @@ describe('createSimulacraApi', () => {
 
   test('startRun posts the ask and returns the run id; run parses each status', async () => {
     const statuses = [
-      { status: 'running', done: 0, total: 0, error: null },
+      { status: 'running', done: 0, total: 0, error: null, steps: [{ text: 'Reading.', state: 'doing' }] },
       { status: 'failed', error: 'That combination has not been computed.' },
     ];
     const { fetch, calls } = fakeFetch((url) => (url.endsWith('/runs') ? json({ id: 'r1' }) : json(statuses.shift())));

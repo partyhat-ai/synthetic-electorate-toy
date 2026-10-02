@@ -1,0 +1,555 @@
+{
+ "summary": "No source studies a ban on women voting. Analogues show women favored Roosevelt slightly more than men in 1932 (60% vs 57%), so removing them would have trimmed his share only slightly. Women's turnout was lower than men's in 1920 and was still rising, and sex-specific figures are inferences.",
+ "findings": [
+  {
+   "claim": "60% of women and 57% of men voted for Roosevelt in 1932, so removing women would lower his share only slightly and not change the winner.",
+   "source_ids": [
+    "S18"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1932 presidential vote choice by sex",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Sex-specific vote shares are inferred, not counted; no breakdown by region or group.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "A 1932 League of Women Voters study in 37 states found a larger share of women than men voted for Socialist Norman Thomas.",
+   "source_ids": [
+    "S7"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "1932 women's third-party vote",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-other",
+   "effects": [],
+   "limits": "Contemporary study; no figures given in the notes.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-other"
+  },
+  {
+   "claim": "Roosevelt may have received a greater share of women's votes, likely influenced by the Depression's effects on family life.",
+   "source_ids": [
+    "S20"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Women's 1932 Depression-era vote",
+   "when": "1932",
+   "match": "same-event",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "toward-D",
+   "effects": [],
+   "limits": "Hedged museum exhibit claim.",
+   "tier": "A",
+   "grade": 1.0,
+   "reported_direction": "toward-D"
+  },
+  {
+   "claim": "Women's 1920 turnout was about 36% against 68% for men, a gap of roughly 32 points; a Berkeley exhibit estimates 35\u201345%.",
+   "source_ids": [
+    "S1",
+    "S5"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "First national election with women voting",
+   "when": "1920",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "less-turnout",
+   "effects": [
+    {
+     "measure": "turnout",
+     "pp": -32,
+     "pm": 10
+    }
+   ],
+   "limits": "Inferred estimates; first-time voters behave differently from 1932 women.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Digital History claims women's 1920 turnout matched men's at about 50%, conflicting with political scientists' estimates.",
+   "source_ids": [
+    "S3"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Women's turnout in 1920",
+   "when": "1920",
+   "match": "same-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Conflicts with other estimates.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Overall turnout rose from 32.7% in 1916 to 44.3% in 1920 and 59.8% in 1940, so women's weight in 1932 was still limited.",
+   "source_ids": [
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Turnout growth after women's enfranchisement",
+   "when": "1916-1940",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "No direct data on turnout by sex.",
+   "tier": "C",
+   "grade": 0.175,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Women's suffrage raised turnout by 56% in the short term, using variation in states' adoption timing.",
+   "source_ids": [
+    "S9"
+   ],
+   "population": {
+    "sex": "any",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Turnout effect of states adopting women's suffrage",
+   "when": "pre-1920 to 1920s",
+   "match": "other-period-similar",
+   "relation": "like-scenario",
+   "role_direction": "none",
+   "direction": "more-turnout",
+   "effects": [],
+   "limits": "The 56% is a relative change, not points; short-term effect.",
+   "tier": "C",
+   "grade": 0.113,
+   "reported_direction": "more-turnout"
+  },
+  {
+   "claim": "Southern states that had barred women imposed registration rules limiting participation, especially by Black people; only about 12.5% of eligible Black women registered in Richmond.",
+   "source_ids": [
+    "S1"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "black",
+    "region": "south"
+   },
+   "situation": "Southern barriers to women voters in 1920",
+   "when": "1920",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Registration figures for one city; shows a ban would change little for Southern Black women.",
+   "tier": "B",
+   "grade": 0.42,
+   "reported_direction": "less-turnout"
+  },
+  {
+   "claim": "Women voted for Hoover in 1928 in greater numbers, per polling, due to his support for Prohibition.",
+   "source_ids": [
+    "S20"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Women's Prohibition-driven vote",
+   "when": "1928",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Does not carry to 1932, when repeal was popular.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "toward-R"
+  },
+  {
+   "claim": "Women voted 'pretty much as men did' when they voted, though women prioritized children, education and health care more.",
+   "source_ids": [
+    "S6",
+    "S3"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "any"
+   },
+   "situation": "Sex differences in vote choice",
+   "when": "1920s",
+   "match": "same-period-similar",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "Low-reliability sources, no numbers.",
+   "tier": "A",
+   "grade": 0.7,
+   "reported_direction": "none"
+  },
+  {
+   "claim": "Early women's suffrage came first in Western states such as Wyoming, Utah, Colorado and Idaho, so a ban would hit long-standing voters there.",
+   "source_ids": [
+    "S14",
+    "S13",
+    "S10"
+   ],
+   "population": {
+    "sex": "F",
+    "group": "any",
+    "region": "west"
+   },
+   "situation": "Pre-1920 state women's suffrage",
+   "when": "1869-1918",
+   "match": "distant",
+   "relation": "context",
+   "role_direction": "none",
+   "direction": "none",
+   "effects": [],
+   "limits": "No 1932 comparison of early- and late-suffrage states.",
+   "tier": "A",
+   "grade": 0.2,
+   "reported_direction": "none"
+  }
+ ],
+ "actor_positions": [
+  {
+   "text": "Eleanor Roosevelt led the New York Democratic Party's effort to mobilize women voters in 1928.",
+   "date": "1928",
+   "source_ids": [
+    "S20"
+   ]
+  }
+ ],
+ "caveats": [
+  "Scenario never happened; all evidence is from women's actual voting.",
+  "Sex-specific turnout and vote figures are inferences, not counts.",
+  "No data by region, naturalized or alien status, or Black voters in 1932.",
+  "1920 first-time-voter behavior does not match women with years of voting."
+ ],
+ "dropped_ungrounded": 0,
+ "no_reliable_evidence": false,
+ "key": "women-barred-from-voting",
+ "version": "e1",
+ "models": {
+  "research": "claude-sonnet-5-5",
+  "extract": "claude-sonnet-5-5"
+ },
+ "queries": [
+  "women turnout 1920s 1932 election men women gap suffrage states political scientists",
+  "states with woman suffrage before 1920 list Wyoming Colorado Utah Idaho Washington California",
+  "Wolbrecht Corder women voters 1932 Roosevelt Prohibition repeal Depression turnout"
+ ],
+ "sources": [
+  {
+   "id": "S1",
+   "url": "https://www.smithsonianmag.com/history/what-first-women-voters-experienced-when-registering-1920-election-180975435/",
+   "title": "What the First Women Voters Experienced When Registering for the 1920 Election",
+   "tier": "B",
+   "cited": [
+    "Data cited in Wolbrecht and Corder\u2019s 2016 book, *Counting Women\u2019s Ballots: Female Voters From Suffrage Through the New Dea*l, suggests that around 36 ...",
+    "As Wolbrecht and J. Kevin Corder, a political scientist at Western Michigan University, explain in A Century of Votes for Women: American Elections Si...",
+    "She adds, \u201c[These states] are dominated by the Democratic Party, and the entire system is designed to minimize participation in elections,\u201d particular...",
+    "The 2,410 black women who managed to register represented just 12.5 percent of those eligible, according to a 1993 essay by historian Suzanne Lebsock...."
+   ],
+   "page_age": "2255 days ago"
+  },
+  {
+   "id": "S2",
+   "url": "https://www.smithsonianmag.com/history/how-have-women-voted-suffrage-180975979/",
+   "title": "How Women Vote: Separating Myth From Reality",
+   "tier": "B",
+   "cited": [
+    "While one-third of voting-age women turned out in 1920, compared to two-thirds of voting-age men, women\u2019s turnout varied by state.",
+    "States did not record turnout in the 1920s, and polling as a science did not emerge until the 1940s, but nevertheless, American textbooks repeated cla..."
+   ],
+   "page_age": "2189 days ago"
+  },
+  {
+   "id": "S3",
+   "url": "https://www.digitalhistory.uh.edu/disp_textbook.cfm?smtID=2&psid=3208",
+   "title": "Digital History",
+   "tier": "A",
+   "cited": [
+    "In fact, women's turnout matched that of men, about 50 percent--one of the lowest turnouts in years.",
+    "Women voters were more likely than men to attach priority to issues involving children, education, and health care."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S4",
+   "url": "https://www.nber.org/system/files/working_papers/w26709/w26709.pdf",
+   "title": "SEX GAPS IN POLITICAL PARTICIPATION, ...",
+   "tier": "A",
+   "cited": [
+    "particularly by race, which serves as a reminder that the notion of a \u201cwoman voter\u201d is a vast\n\nsimplification, as is the notion of a \u201cman voter."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S5",
+   "url": "https://exhibits.lib.berkeley.edu/spotlight/women-vote/feature/the-1920-election",
+   "title": "The 1920 Election",
+   "tier": "A",
+   "cited": [
+    "Yet turnout by women in the 1920 presidential election was relatively low, with women voters estimated to have turned out at a 35 to 45 percent rate (..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S6",
+   "url": "https://www.marieclaire.com/politics/a33808321/how-women-vote-statistics/",
+   "title": "Women Voting Statistics",
+   "tier": "C",
+   "cited": [
+    "Women didn\u2019t vote at nearly the level men did\u201436 percent of eligible women cast a ballot in 1920, versus 68 percent of men\u2014and when they did vote, the...",
+    "Graphic of the share of the two party vote by gender 1920-1936\n\n\n\nMen and women voted similarly in the early days after suffrage, but all the while wo..."
+   ],
+   "page_age": "2187 days ago"
+  },
+  {
+   "id": "S7",
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3046394/",
+   "title": "WOMEN\u2019S SUFFRAGE, POLITICAL RESPONSIVENESS, AND CHILD SURVIVAL IN AMERICAN HISTORY* - PMC",
+   "tier": "A",
+   "cited": [
+    "## Footnotes\nOne rare piece of early data \u2013 a 1932 study conducted by the National League of Women Voters in thirty-seven states \u2013 did find, however, ..."
+   ],
+   "page_age": "6630 days ago"
+  },
+  {
+   "id": "S8",
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10288652/",
+   "title": "Part of the gender gap in voting for Democrats arises because a higher proportion of women than men voters are Black",
+   "tier": "A",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S9",
+   "url": "https://www.naamashenhav.com/uploads/9/8/0/4/9804891/cs_jep_2020.pdf",
+   "title": "Journal of Economic Perspectives\u2014Volume 34, Number 2\u2014Spring 2020\u2014Pages 24\u201348 T",
+   "tier": "C",
+   "cited": [
+    "There is not any direct data on voter participation of men and women in the\n\n1920 election, or for the several elections that follow. Thus, researcher...",
+    "Between 1916 and 1920, voter turnout increased\n\nby only 35 percent, from 32.7 to 44.3 percent. However, over the next 20 years, voter\n\nturnout continu...",
+    "Using variation in the timing of state suffrage initiatives in addition\n\nto ratification of the Nineteenth Amendment, Kose, Kuka, and Shenhav (2019)\n\n..."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S10",
+   "url": "https://www.nps.gov/subjects/womenshistory/19th-amendment-by-state.htm",
+   "title": "19th Amendment By State - Women's History (U.S. National Park Service)",
+   "tier": "A",
+   "cited": [
+    "Other women felt they should focus on getting their state or territory to recognize ...\n\n# 19th Amendment By State\nSeveral states and territories reco..."
+   ],
+   "page_age": "2262 days ago"
+  },
+  {
+   "id": "S11",
+   "url": "https://www.crusadeforthevote.org/western-suffrage",
+   "title": "History of U.S. Woman's Suffrage - Crusade for the Vote",
+   "tier": "C",
+   "cited": [],
+   "page_age": null
+  },
+  {
+   "id": "S12",
+   "url": "https://www.historycolorado.org/story/womens-history/2019/07/25/which-state-had-womens-suffrage-first",
+   "title": "Which State Had Women\u2019s Suffrage First?",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2625 days ago"
+  },
+  {
+   "id": "S13",
+   "url": "https://en.wikipedia.org/wiki/Women's_suffrage_in_the_United_States",
+   "title": "Women's suffrage in the United States",
+   "tier": "C",
+   "cited": [
+    "This was followed by Utah in 1870; Colorado in 1893; Idaho in 1896; Washington in 1910; California in 1911; Oregon and Arizona in 1912; Illinois in 19..."
+   ],
+   "page_age": "7 days ago"
+  },
+  {
+   "id": "S14",
+   "url": "https://247wallst.com/special-report/2019/08/26/states-and-territories-where-women-won-the-right-to-vote-before-the-19th-amendment/",
+   "title": "States and Territories Where Women Won the Right to Vote Before the 19th Amendment - 24/7 Wall St.",
+   "tier": "C",
+   "cited": [
+    "The first seven states to enfranchise women were all in the West.",
+    "Idaho** **> Year of women\u2019s suffrage:** 1896\n\nIdaho became the fourth state to pass a law enfranchising women to vote, largely as a result of a coalit..."
+   ],
+   "page_age": "2450 days ago"
+  },
+  {
+   "id": "S15",
+   "url": "https://edsitement.neh.gov/lesson-plans/womens-suffrage-why-west-first",
+   "title": "Women's Suffrage: Why the West First?",
+   "tier": "A",
+   "cited": [],
+   "page_age": "6166 days ago"
+  },
+  {
+   "id": "S16",
+   "url": "https://www.nps.gov/articles/woman-suffrage-in-the-west.htm",
+   "title": "Woman Suffrage in the West (U.S. National Park Service)",
+   "tier": "A",
+   "cited": [],
+   "page_age": "1799 days ago"
+  },
+  {
+   "id": "S17",
+   "url": "https://kids.kiddle.co/Women's_suffrage_in_the_United_States",
+   "title": "Women's suffrage in the United States facts for kids",
+   "tier": "C",
+   "cited": [],
+   "page_age": "8 days ago"
+  },
+  {
+   "id": "S18",
+   "url": "https://www.cambridge.org/core/books/abs/century-of-votes-for-women/explaining-women-voters/C4B7DB6FFF3C8FD35273FC97CDB140A7",
+   "title": "Explaining Women Voters (Chapter 3) - A Century of Votes for Women",
+   "tier": "A",
+   "cited": [
+    "# Chapter 3 - Explaining Women Voters\nChristina Wolbrecht \u00a0and\n\nJ. Kevin Corder\n\n**Christina Wolbrecht**: Affiliation: University of Notre Dame, India..."
+   ],
+   "page_age": "2463 days ago"
+  },
+  {
+   "id": "S19",
+   "url": "https://www.cambridge.org/core/books/abs/counting-womens-ballots/female-voters-and-the-emerging-democratic-majority-19321936/F80B8F1C56D50199DD439B34E89F01C1",
+   "title": "Female Voters and the Emerging Democratic Majority, 1932\u20131936 (Chapter 8) - Counting Women's Ballots",
+   "tier": "A",
+   "cited": [],
+   "page_age": "3800 days ago"
+  },
+  {
+   "id": "S20",
+   "url": "https://www.roosevelthouse.hunter.cuny.edu/womentakethelead/exhibit/fdr-suffrage-and-elections/",
+   "title": "IV. FDR: Suffrage and Elections : Women Take the Lead",
+   "tier": "A",
+   "cited": [
+    "FDR may have received a greater percentage of the women\u2019s vote, an outcome likely influenced by the detrimental effects of the Great Depression on fam...",
+    "Polling at the time indicated that more women voted for Hoover because he supported Prohibition while Smith was for its repeal as women\u2019s groups were ...",
+    "In 1928, when FDR ran for Governor of New York, Eleanor Roosevelt led the NYS Democratic Party\u2019s effort to mobilize women voters."
+   ],
+   "page_age": "3765 days ago"
+  },
+  {
+   "id": "S21",
+   "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1468-2508.2006.00367.x",
+   "title": "Political Context and the Turnout of New Women Voters after Suffrage - Corder - 2006 - Journal of Politics - Wiley Online Library",
+   "tier": "A",
+   "cited": [],
+   "page_age": "7604 days ago"
+  },
+  {
+   "id": "S22",
+   "url": "https://en.wikipedia.org/wiki/1932_United_States_presidential_election",
+   "title": "1932 United States presidential election",
+   "tier": "C",
+   "cited": [
+    "Roosevelt's Protestant background prevented the anti-Catholic attacks Smith faced in 1928, and the Depression ...\n\n# 1932 United States presidential e...",
+    "Prohibition was increasingly unpopular, and wets offered the argument that states and localities needed the tax money."
+   ],
+   "page_age": "1 days ago"
+  },
+  {
+   "id": "S23",
+   "url": "https://depts.washington.edu/depress/fdr_election_support_seattle.shtml",
+   "title": "Seattle Newspapers' Support for FDR during the 1932 Election - Great Depression Project",
+   "tier": "A",
+   "cited": [
+    "\u201d[6] Roosevelt went with his party\u2019s platform, based on reducing federal expenditures, a balanced budget, and the repeal of prohibition."
+   ],
+   "page_age": null
+  },
+  {
+   "id": "S24",
+   "url": "https://electionlawblog.org/2020/a-century-of-votes-for-women/",
+   "title": "\u201cA Century of Votes for Women\u201d - Election Law Blog",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2463 days ago"
+  },
+  {
+   "id": "S25",
+   "url": "https://news.nd.edu/news/political-scientist-releases-definitive-research-on-the-first-century-of-women-voters/",
+   "title": "Political scientist releases definitive research on the first century of women voters",
+   "tier": "A",
+   "cited": [],
+   "page_age": "2435 days ago"
+  },
+  {
+   "id": "S26",
+   "url": "https://www.kirkusreviews.com/book-reviews/christina-wolbrecht/a-century-of-votes-for-women/",
+   "title": "A CENTURY OF VOTES FOR WOMEN",
+   "tier": "C",
+   "cited": [],
+   "page_age": "2465 days ago"
+  },
+  {
+   "id": "S27",
+   "url": "https://www.cambridge.org/core/books/century-of-votes-for-women/773D75DD40FA858F0412D8F2EE322B5C",
+   "title": "A Century of Votes for Women",
+   "tier": "A",
+   "cited": [],
+   "page_age": "2435 days ago"
+  }
+ ],
+ "notes": "**Scope.** The scenario (a federal ban on women voting in 1932) never happened, and I found no scholarship on it. The evidence below comes from actual women's voting in 1920\u20131936. The sources I found do not give 1932 turnout or vote choice by region, by group (native-born white, naturalized, Black), or by state. I have not filled those gaps from memory.\n\n## 1. Direct evidence\n- No direct evidence exists on a ban. Scholars also lack direct data on how many men and women voted. There is no direct data on voter participation of men and women in 1920 or the next several elections, so researchers infer women's rates from overall turnout. [S9]\n- Women's weight in the electorate was still limited in 1932. Turnout rose only from 32.7% to 44.3% between 1916 and 1920, then kept rising for 20 years to 59.8% in 1940. [S9] A ban would therefore remove a smaller share of the 1932 electorate than their share of adults suggests. It would still remove a large one.\n- Other findings point the same way:\n  - Wolbrecht and Corder report that 60% of women and 57% of men voted for Roosevelt, despite differences in turnout. [S18] That is a 3-point gap. Removing women would have lowered Roosevelt's share only slightly. It would not have changed the winner.\n  - The national turnout figure for 1932 is listed as 56.8%. [S22] This comes from Wikipedia's election page, so treat it as a pointer only.\n\n## 2. Analogues (the evidence on women's first elections)\n- **Turnout, 1920, national.**\n  - Wolbrecht and Corder's data suggest about 36% of eligible women and 68% of eligible men voted. [S1] That is a gap of roughly 32 points.\n  - A Berkeley exhibit gives women's 1920 turnout as an estimated 35\u201345%. [S5]\n  - One older source says women's turnout matched men's at about 50%. Digital History makes this claim. [S3] It conflicts with the political scientists' estimates, and I would not rely on it.\n- **Regional and state variation.** Women's turnout varied by state. [S2] I did not retrieve the state figures.\n- **South.**\n  - Arkansas, Georgia, Mississippi and South Carolina, where women had been barred entirely, ruled that anyone who hadn't registered six months before the election could not vote. [S1]\n  - Wolbrecht says these Democratic-dominated states designed their systems to minimize participation, particularly by African Americans. [S1]\n  - In Richmond, Virginia, 2,410 Black women registered, about 12.5% of those eligible, according to Lebsock. [S1]\n  - Southern Black women were already close to excluded. A ban would change little for them in practice.\n- **Pre-1920 suffrage states.**\n  - The National Park Service lists Wyoming, Utah, Colorado, Idaho, Washington, California, Oregon, Montana, Arizona, Kansas, Alaska, Illinois, North Dakota, Indiana, Nebraska, Michigan, Arkansas, New York, South Dakota and Oklahoma as recognizing women's suffrage before 1920. [S10] Some of these were only partial rights, so this list is broader than the full-suffrage list.\n  - Wikipedia's fuller-suffrage sequence runs: Wyoming 1869, Utah 1870, Colorado 1893, Idaho 1896, Washington 1910, California 1911, Oregon and Arizona 1912, Illinois 1913, Montana 1914, North Dakota, New York and Rhode Island 1917, Louisiana, Oklahoma and Michigan 1918. [S13] I have only used Wikipedia for the list. The NPS and History Colorado sources agree on the early states.\n  - The first seven states to enfranchise women were all in the West. [S14] A ban would therefore hit longstanding Western voters first. It would also cut off women who had voted for decades in Wyoming, Colorado, Utah and Idaho.\n  - Kose, Kuka and Shenhav (2019) find that women's suffrage raised turnout by 56% in the short term. [S9] This estimate uses variation in when states adopted suffrage.\n  - I found nothing comparing 1932 results in early-suffrage states with other states.\n- **Depression and party choice.**\n  - Both sexes gave a large majority to Roosevelt, who promised to fight the Depression: 60% of women and 57% of men. [S18]\n  - A 1932 National League of Women Voters study in 37 states found a larger share of women than men voted for Norman Thomas, the Socialist. [S7] That study is one of the few contemporary data points.\n  - A Hunter College exhibit says Roosevelt may have received a greater share of women's votes, likely influenced by the Depression's effects on family life. [S20] This is hedged, and it is a museum exhibit rather than a scholarly source.\n- **Prohibition.**\n  - Polling at the time indicated more women voted for Hoover in 1928 because he supported Prohibition and Smith was for repeal. [S20] I have no equivalent 1932 data.\n  - Roosevelt's platform in 1932 included repealing Prohibition. [S23]\n  - In the Idaho case, a coalition of suffragists and temperance supporters expected women to vote dry, and Idaho went dry in 1916, four years before the nation. [S14] I did not find evidence that women as a group moved against repeal in 1932.\n- **Where men and women differed.**\n  - One source says women voted 'pretty much as men did' when they did vote. [S6]\n  - Digital History says women were more likely than men to prioritize children, education and health care. [S3]\n\n## 3. Named people\n- No person is named in the scenario. Other people appear in the sources:\n  - Eleanor Roosevelt led the New York Democratic Party's effort to mobilize women voters in 1928. [S20]\n  - Frances Perkins was FDR's secretary of labor and the first woman to hold a cabinet post. [S6] The source places this after 1932.\n\n## 4. Limits\n- **Estimates, not counts.** States did not record turnout by sex in the 1920s, and polling as a science did not emerge until the 1940s. [S2] All sex-specific numbers are statistical inferences.\n- **Not a reversal.** The 1920 numbers describe women voting for the first time, with low habit and organization. A 1932 ban would remove women who had voted for 12 years, and for much longer in the early Western states. Their behavior would not match first-time voters.\n- **Conflicting 1920 figures.** The estimates range from 35\u201345% to about 50%. I could not resolve this.\n- **Race.** The notion of a 'woman voter' is a vast simplification, particularly by race. [S4] The South's registration barriers limit what the national averages show for Black women.\n- **Immigrants and region.** I found nothing on naturalized or non-citizen immigrant women, or on women's turnout in the Northeast, Midwest and border states. I also found nothing on the West's 1932 results by sex. The Wolbrecht and Corder chapters on 1932\u20131936 (*Counting Women's Ballots*, ch. 8) are the best place to look next.\n- **Prohibition.** The 1928 Prohibition evidence does not carry directly to 1932, when Prohibition had become increasingly unpopular [S22] and the Depression dominated.",
+ "prompt": "Scenario for the 1932 United States presidential election (election day 1932-11-08).\nA reader asked: \"the u.s. government prohibits women from voting\".\nAs modelled: No woman may vote for president anywhere in the country, even where states had long allowed it.\nKind of change: franchise. Populations it reaches first: sex: F.\nInclude how newly enfranchised or newly barred groups actually turned out and voted the first times the rules changed for them.\n\nQuestions to answer:\n- How did women's turnout and party choice differ from men's in 1932 across regions?\n- Which states had women voting before 1920, and how did their results differ from other states?\n- How did women voters respond to Depression-era economic issues and to Prohibition?\n\nGroups the simulation distinguishes: men and women; native-born white, naturalized immigrant, non-citizen immigrant and Black adults; the Northeast, Midwest, South (the eleven former Confederate states), border states and West. Evidence by these groups is most useful.",
+ "usage": {
+  "input_tokens": 60528,
+  "output_tokens": 3174,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "web_search_requests": 3
+ },
+ "dollars": 0.2129
+}
