@@ -141,3 +141,48 @@ votes, not 416, and flips NC, AR, VA and AL in over half the draws.
 The bundle's range (404–475) already carries that, so please show the range
 for this what-if rather than only the point. `EVAL.md` has the
 details.
+
+## Update: confidence tiers, historical evidence, typed what-ifs
+
+Everything is still additive, and nothing in your files was edited.
+
+**New what-ifs arrive by name.** Typed text the router couldn't match is
+compiled offline into a new what-if (for example `charlie-chaplin-runs`). It
+then shows up in `election.whatIfs` and `words` like any other. Kinds now include `candidate`, alongside
+`franchise`, `population` and `issue`; a `candidate` what-if's votes are in
+`O`.
+
+### `GET /elections/:year` → `whatIfs[]`
+
+| Field | Meaning |
+|---|---|
+| `confidenceTier` | `high`, `medium`, `low` or `very-low` |
+| `evidence` | How strong the historical record is: `strong`, `moderate`, `weak`, `none` or `not-researched` |
+| `exploratory` | `true` for what-ifs compiled from typed text. They were not planned in advance. |
+
+### `result`
+
+| Field | Meaning |
+|---|---|
+| `confidence` | Unchanged enum. `very-low` arrives as `low`, so `CONFIDENCE[res.confidence]` keeps working. |
+| `confidenceTier` | The true tier, including `very-low`. Suggested label for it: "Extremely low confidence". |
+| `confidenceLabel` | Ready copy, for example "Extremely low confidence" |
+| `confidenceFlags` | Short codes: `fantastical`, `anachronism`, `far-from-record`, `no-evidence`, `weak-evidence`, `contradicts-record`, `unstable-interviews`, `few-interviews`, `model-knows-outcome`, `positions-inferred`, `ineligible-candidate`, `exploratory`, `not-researched` |
+| `confidenceReasons` | One sentence each, reader-facing |
+| `evidence[]` | Per applied what-if: `{ whatIf, strength, summary, agreement, agreementDetail, findings: [{ claim, when, match, tier, sources: [{ title, url, tier }] }], caveats }`. `agreement` is `corroborated`, `consistent`, `contradicted` or `untested`. |
+| `queued` | Dev only: `{ text }` when the unknown text was queued for offline modelling |
+
+**Already visible with no page change.**
+- A `very-low` run's `summary` ends with "Extremely low confidence." plus
+  the first reason.
+- `howIGotThis` gains a "What historians found…" line and a confidence
+  line.
+- `sources` gains the evidence's cited pages.
+
+**Suggested use:**
+- The ⓘ or About popover can list `evidence[].findings` with their
+  sources.
+- When `confidenceTier === 'very-low'`, the bubble's detail line can read
+  `confidenceLabel` instead of the kind's default.
+- Copy for `queued`: "I haven't modelled that yet. I'm looking into it;
+  try again in a minute."

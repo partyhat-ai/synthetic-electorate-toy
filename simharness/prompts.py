@@ -19,7 +19,9 @@ import random
 # p1: the 1920 prototype's answers. p2: brief dated on the context cutoff (p1 dated
 # briefs 30 Oct but admitted items to 1 Nov); non-citizens get no franchise counterfactual.
 # p3: quote capped at 25 words, no letter labels (DISCLOSURES D11).
-PROMPT_VERSION = 'p3'
+# p4: a candidate what-if's counterfactual ballot carries a third labelled line (a named
+# independent); every other brief is byte-identical to p3's, so p3 answers to them are reused.
+PROMPT_VERSION = 'p4'
 
 # No H(arding), C(ox), D(ebs), R(epublican), D(emocrat), S(ocialist),
 # F(armer-Labor), W(ilson), L(eague).

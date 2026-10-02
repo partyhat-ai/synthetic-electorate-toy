@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import random
 
-from . import prompts
+from . import prompts, scenario
 from .agents import persona_lines, sample_agents
 from .geo import SOUTH, STATE_NAME
 
@@ -99,9 +99,11 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         a['eligibility'] = elig
         q = prompts.QUESTIONS[a['paraphrase']]
 
-        def parties(drop=frozenset(), swap=False):
+        def parties(drop=frozenset(), swap=False, add=()):
             desc = {'R': R_DESCRIPTOR, 'D': D_DESCRIPTOR}
             plank = {p: party_planks(platforms, p, drop) for p in keys}
+            for x in add:  # a compiled what-if's added plank, after the party's own
+                plank[x['party']] = plank[x['party']] + [x['text'].rstrip('.') + '.']
             if swap:
                 plank = {**plank, 'R': plank['D'], 'D': plank['R']}
                 desc = {**desc, 'R': desc['D'], 'D': desc['R']}
@@ -130,7 +132,7 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             spec = registry[wk]
             if spec['facts'] is None:
                 continue
-            if spec['mode'] == 'backbone' and not agent_reached(a, wk):
+            if spec['mode'] == 'backbone' and not reached(spec, a, wk):
                 continue
             if a['group'] == 'foreign_white_alien' and spec['mode'] == 'agents':
                 continue  # can't vote in either world; no effect to measure
@@ -138,12 +140,22 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
             if not f['facts'] and f.get('eligibility') is None:
                 continue
             items = items_for(a, f.get('drop_topics', set()), f.get('drop_after'))
-            drop_planks = {'League of Nations'} if 'platform_override' in f else frozenset()
+            drop_planks = set(f.get('drop_planks') or ()) or ({'League of Nations'} if 'platform_override' in f else frozenset())
             change = {'what_if': wk, 'facts': f['facts'], 'eligibility': f.get('eligibility'),
-                      'dropped_sources': [i['id'] for i in ctl_items if i not in items], 'dropped_planks': sorted(drop_planks)}
+                      'dropped_sources': [i['id'] for i in ctl_items if i not in items], 'dropped_planks': sorted(drop_planks),
+                      'added_planks': list(f.get('add_planks') or [])}
+            ballot, cf_labels, extra = parties(drop_planks, add=f.get('add_planks') or ()), labels, {}
+            cand = f.get('candidate')
+            if cand:
+                # p4: a third labelled line, after the two parties (their order and labels as in the control).
+                third = scenario.third_label(random.Random(f'{cfg.seed}:{a["id"]}:{wk}'), labels, cand['name'], prompts.LABEL_POOL)
+                line = f'{cand["name"]}, {cand["descriptor"].rstrip(".")}, running as an independent'
+                ballot = ballot + [{'key': 'X', 'descriptor': line, 'planks': [p.rstrip('.') + '.' for p in cand['positions']]}]
+                cf_labels = labels + [third]
+                extra = {**extra, 'candidate': {'label': third, 'name': cand['name']}}
             for model in (models if spec['mode'] == 'agents' else [ag.bulk_model]):
                 reqs.append(request(f'cf:{wk}', model, f.get('eligibility') or elig, {'facts': f['facts']}, items,
-                                    parties(drop_planks), labels, meta={'change': change}))
+                                    ballot, cf_labels, meta={'change': change, **extra}))
         # L2: the platform descriptions trade labels, and the display order flips.
         if n % 2 == 0 and 'R' in label_of and 'D' in label_of:
             swapped_labels = list(reversed(labels))
@@ -158,6 +170,13 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     if ag.arms:
         reqs = [r for r in reqs if r['meta']['kind'] in ag.arms]
     return agents, reqs
+
+
+def reached(spec: dict, a: dict, what_if: str) -> bool:
+    """Whether a backbone-mode what-if's cross-check interviews this person."""
+    if spec.get('generated'):
+        return scenario.agent_reached(spec, a)
+    return agent_reached(a, what_if)
 
 
 def agent_reached(a: dict, what_if: str) -> bool:

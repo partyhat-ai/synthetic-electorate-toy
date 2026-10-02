@@ -10,8 +10,14 @@
 //     state × group table and re-tallied; an edited run carries no draws, and
 //     says so in `howIGotThis`.
 // Signed-out requests are allowed: the demo has to work without an account.
+//
+// Dev only (SIMULACRA_LOG set; production never sets it):
+//   - every POST /runs appends one line to sessions/requests.jsonl
+//     (ts, year, text, whatIfs, matched, unknown, combo, exists; no IPs, no ids);
+//   - unmatched text is queued in sessions/queue.jsonl for
+//     `python -m simharness.run whatif --queue`, and the result says `queued`.
 import { randomUUID } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import express, { type ErrorRequestHandler, type Router } from 'express';
 import { Bundle, type Edits, FIELDS, type Field, type PageKey, type Result, RunRequest, type Slice, type TableRow } from './bundle';
@@ -21,17 +27,24 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 export interface SimulacraOptions {
   /** Folder of `<year>.json` bundles. */
   bundles: string;
+  /** Where dev logs and the queue live. */
+  sessions: string;
+  /** Dev logging and queueing (SIMULACRA_LOG). */
+  devLog: boolean;
 }
 
 export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraOptions {
   return {
-    bundles: env.SIMULACRA_BUNDLES || path.join(ROOT, 'serve', 'bundles')
+    bundles: env.SIMULACRA_BUNDLES || path.join(ROOT, 'serve', 'bundles'),
+    sessions: path.join(ROOT, 'sessions'),
+    devLog: Boolean(env.SIMULACRA_LOG)
   };
 }
 
 /** The result the page receives: a bundle result plus the interviews behind it. */
 export type RunResult = Result & {
   interview?: { questions: string[] | undefined; byWhatIf: { whatIf: string; answers: unknown[] }[] };
+  queued?: { text: string };
 };
 
 interface RunEntry {
@@ -154,6 +167,15 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     return bundle;
   }
 
+  function appendLine(name: string, row: unknown): void {
+    try {
+      mkdirSync(opts.sessions, { recursive: true });
+      appendFileSync(path.join(opts.sessions, name), `${JSON.stringify(row)}\n`);
+    } catch (e) {
+      console.warn('simulacra: session log failed', e instanceof Error ? e.message : e);
+    }
+  }
+
   function newRun(entry: RunEntry): string {
     const id = randomUUID();
     runs.set(id, entry);
@@ -192,11 +214,21 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     const read = readText(b, text);
     const keys = [...chosen, ...read.keys];
     const done = compute(b, keys, edits, read.unknown);
+    let queued = false;
+    if (opts.devLog) {
+      const ts = new Date().toISOString();
+      appendLine('requests.jsonl', { ts, year, text, whatIfs, matched: read.keys, unknown: read.unknown, combo: comboKey(keys), exists: Boolean(done) });
+      if (read.unknown) {
+        appendLine('queue.jsonl', { ts, year, text: read.unknown });
+        queued = true;
+      }
+    }
     if (!done) {
       res.status(422).json({ error: 'That combination has not been computed.' });
       return;
     }
-    res.json({ id: newRun({ year, created: Date.now(), key: done.key, result: done.result }) });
+    const result: RunResult = queued && read.unknown ? { ...done.result, queued: { text: read.unknown } } : done.result;
+    res.json({ id: newRun({ year, created: Date.now(), key: done.key, result }) });
   });
 
   router.get('/runs/:id', (req, res) => {

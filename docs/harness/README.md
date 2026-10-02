@@ -1,7 +1,7 @@
 # Simulacra Americana harness
 
 This is the simulation behind `/api/simulacra`. Its code and data sit at the repo
-root (`simharness/`, `configs/`, `extracts/`, `runs/`,
+root (`simharness/`, `configs/`, `whatifs/`, `extracts/`, `runs/`,
 `serve/`); this README and the UI note live in `docs/harness/`, and the method
 documents stay at the root.
 
@@ -35,6 +35,9 @@ server. The contract changes the page could use are described in
 | `simharness/quotes.py` | Quote selection and the stereotype audit |
 | `simharness/aggregate.py`, `serialize.py` | Draws → states, EV and ranges → the page's shape |
 | `simharness/evaluate.py`, `benchmarks.py` | Pre-registered checks. Only these read held-out benchmarks. |
+| `simharness/scenario.py` | Any typed what-if → a spec of one of five kinds (franchise, population, issue/event, candidate) with generic mechanics |
+| `simharness/evidence.py` | Historical evidence: web-search research, grounded extraction, source tiers, agreement, blend, confidence tiers |
+| `simharness/intake.py` | Typed what-if intake: compile → research → register → run → `serve/bundles/`; the router's queue |
 | `simharness/run.py` | The command line (`python3 -m simharness.run <stage>`) |
 | `simharness/pipeline.py` | The stages: backbone, plan, ask, analyze, evaluate (`Run`) |
 | `simharness/publish.py` | The publish stage: every what-if combination → the bundle |
@@ -42,7 +45,11 @@ server. The contract changes the page could use are described in
 | `serve/bundles/<year>.json` | The bundles the server serves (`SIMULACRA_BUNDLES` overrides the folder) |
 | `extracts/` | IPUMS extract definitions: we ship definitions, never microdata |
 | `runs/<id>/` | Everything a run wrote: config, fit, requests, answers, analysis, validation, `published/1920.json`. The repo keeps only `config.json`, `analysis.json`, `validation.json` and `published/`; `fit.pkl`, `effects.pkl` and `agents/` are regenerable and stay local |
+| `runs/_cache/` | Identical-request answer cache (regenerable from `runs/*`; gitignored) |
+| `whatifs/<key>.json`, `whatifs/evidence/<key>.json` | Compiled what-ifs (exploratory) and every what-if's researched evidence; both hashed into run ids |
+| `sessions/` | Dev only, gitignored: typed requests, the unknown-text queue, intake outcomes, the spend ledger |
 | `scripts/harness/bundle_fixture.py` | Trims the served 1920 bundle into the shared contract example |
+| `scripts/harness/sessions-report.py` | What people typed, the share unmodelled, unknowns by kind, today's spend |
 
 The raw data lives outside the repo, in `SIMHARNESS_CACHE`. It defaults to
 `~/research_notes/historical_election_sim_data/harness_cache`, and each folder
@@ -64,6 +71,42 @@ python3 -m simharness.run evaluate      # pre-registered checks → validation.j
 python3 -m simharness.run publish       # every what-if combination → published/1920.json
 python3 -m pytest -q                    # fast unit checks (tests/)
 ```
+
+Typed what-ifs and historical evidence (all paid stages priced first; $0.50 per
+what-if, $2 a day via `SIMULACRA_DAILY_DOLLARS`; see `simharness/intake.py`):
+
+```sh
+H=~/.venvs/simharness/bin/python
+$H -m simharness.run whatif --text "charlie chaplin ran as an independent" --config configs/live-1920.json
+$H -m simharness.run whatif --queue --config configs/live-1920.json     # what the page couldn't model
+$H -m simharness.run research --config configs/live-1920.json           # evidence for the config's what-ifs
+$H -m simharness.run research --key league --refresh                     # one what-if; search again
+```
+
+How a typed what-if is modelled:
+1. **Compile** (Sonnet): the words become a settled-fact change of one kind,
+   with who it reaches, a plausibility grade, keywords and research questions.
+   Nominee and party names are sent back and masked. A request that means an
+   existing what-if only adds keywords.
+2. **Research** (Sonnet + web search): scholarship, official statistics and
+   archives on the change itself, the same groups in the most similar
+   situations, and any named person's record before the context date.
+3. **Extract** (Haiku, structured): findings grounded in the sources the
+   search returned. Each is graded by source tier × match.
+4. **Interview**: the usual paired control/counterfactual briefs. A candidate
+   gets a third labelled ballot line (p4). Identical earlier requests are
+   reused, so only the new arm is paid for.
+5. **Evaluate**: the interviews against the record on votes and turnout
+   (corroborated, consistent, contradicted, untested). For exploratory
+   what-ifs, the evidence is also a precision-weighted prior on each cohort's
+   effect.
+6. **Confidence**: high, medium, low or very low ("Extremely low
+   confidence"), with the reasons. The tier reaches the page as
+   `confidenceTier`, `confidenceFlags` and `confidenceReasons`, and as a
+   sentence in the summary.
+
+With `SIMULACRA_LOG=1`, the server (`pnpm serve`) logs requests to `sessions/` and queues unknown text
+for `run whatif --queue`.
 
 The `ask` stage depends on the backend:
 - **`anthropic` or `anthropic-batch`:** needs `pip install -e '.[llm]'`

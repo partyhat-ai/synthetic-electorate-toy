@@ -138,6 +138,8 @@ REGISTRY = {
         'detail': 'Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.',
         'assumption': 'Women in states without their own presidential suffrage can\'t vote. Everyone else turns out and chooses exactly as in 1920; men\'s votes don\'t change.',
         'borrowed': None,
+        'research_questions': ['How did women vote and turn out in their first presidential elections in 1920, by state and group (e.g. Corder and Wolbrecht)?',
+                               'In states where women already voted for president before 1920, did their votes change the result or the parties\' shares?'],
     },
     'fifteenth': {
         'label': 'Enforce the 15th Amendment', 'kind': 'franchise', 'mode': 'backbone', 'apply': fifteenth,
@@ -145,6 +147,8 @@ REGISTRY = {
         'detail': 'Black Southerners vote as freely as white Southerners: no literacy tests, poll taxes or terror.',
         'assumption': 'Black adults in the eleven former Confederate states turn out at the rate white adults of their own state and sex did in 1920, and split like Black voters outside the South in 1920.',
         'borrowed': 'Black voters outside the South in 1920',
+        'research_questions': ['How did Black voters outside the South vote in 1916–1924, and did the Great Migration change that?',
+                               'When Black Southerners could vote (Reconstruction; after 1965), how did turnout and party choice compare with white Southerners?'],
     },
     'league': {
         'label': 'The Senate Ratifies the League', 'kind': 'issue', 'mode': 'agents', 'apply': None,
@@ -152,6 +156,8 @@ REGISTRY = {
         'detail': 'The Senate ratifies the peace treaty with its reservations in March 1920, and the League is no longer a campaign issue.',
         'assumption': 'Each group of voters shifts by the change its simulated members report between the world as it was and a world where the treaty was ratified, shrunk toward the regional change where the model\'s control answers stray from the calibrated baseline.',
         'borrowed': None,
+        'research_questions': ['How much did the League of Nations and the treaty fight shape votes in 1920, by region and ethnic group?',
+                               'Which groups (German, Irish and Italian Americans; Midwestern farmers) moved against the administration over the treaty, and by how much?'],
     },
     'everyone': {
         'label': 'Everyone Votes', 'kind': 'franchise', 'mode': 'backbone', 'apply': everyone,
@@ -161,3 +167,9 @@ REGISTRY = {
         'borrowed': 'naturalized citizens of the same state and sex; Black voters outside the South',
     },
 }
+
+# Compiled what-ifs (harness/whatifs/*.json, exploratory) join the registry
+# after the pre-registered ones, never replacing them.
+from .scenario import load_generated  # noqa: E402
+
+load_generated(REGISTRY)

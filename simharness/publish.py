@@ -11,13 +11,11 @@ import pickle
 
 import numpy as np
 
-from . import aggregate, paired, quotes, serialize
+from . import aggregate, evidence, paired, prompts, quotes, scenario, serialize
 from .geo import STATE_NAME
 from .whatifs import REGISTRY, apply_effects
 
-CONF = {'franchise': 'high', 'population': 'medium', 'issue': 'low'}
-TIERS = ['low', 'medium', 'high']
-TIER_LABEL = {'high': 'High confidence', 'medium': 'Medium confidence', 'low': 'Low confidence'}
+CONF = {'franchise': 'high', 'population': 'medium', 'issue': 'low', 'candidate': 'low'}
 NAMES = {'R': 'Harding', 'D': 'Cox', 'O': 'another candidate'}
 SLICE_SOURCES = {
     'men': '1920 census (Fourteenth Census, voting-age tables), men 21+ outside the eleven Southern states; turnout and choice from the backbone (1916→1920 natural experiment, calibrated to certified returns).',
@@ -26,7 +24,7 @@ SLICE_SOURCES = {
     'black-south': '1920 census, Black adults in the eleven former Confederate states; turnout from a Goodman regression of 1916 turnout on Black share across those states; the shortfall against white turnout is counted as exclusion.',
     'immigrants': '1920 census, foreign-born white adults who were aliens or had only declared their intent (first papers).',
 }
-KIND_ORDER = ['franchise', 'population', 'issue']
+KIND_ORDER = ['franchise', 'population', 'issue', 'candidate']
 
 
 class Publisher:
@@ -50,10 +48,12 @@ class Publisher:
         available = [k for k in self.cfg.what_ifs if REGISTRY[k]['mode'] == 'backbone' or k in eff['effects']]
         available += ['everyone'] if 'everyone' not in available else []
         runs, tables, results_meta = {}, {}, {}
-        for n in range(0, len(available) + 1):
+        for n in range(0, min(len(available), self.cfg.max_combo) + 1):
             for combo in itertools.combinations(sorted(available), n):
                 if 'everyone' in combo and len(combo) > 1:
                     continue
+                if sum(REGISTRY[k]['kind'] == 'candidate' for k in combo) > 1:
+                    continue  # two named third candidates would share the one O column
                 world = fit.world
                 for k in sorted(combo, key=lambda k: KIND_ORDER.index(REGISTRY[k]['kind'])):
                     spec = REGISTRY[k]
@@ -77,12 +77,17 @@ class Publisher:
         base_world = runs[''][0]
         base_point = base_sum['point']
         used = sorted({k for key in runs for k in key.split('+') if k})
+        evs = {k: scenario.load_evidence(k) for k in used}
+        conf_of = {k: evidence.confidence(REGISTRY[k], evs[k], eff['effects'].get(k, {}).get('agreement'),
+                                          eff['effects'].get(k, {}).get('agent_stats'), bool(REGISTRY[k].get('generated')))
+                   for k in used}
         election = {
             'slices': serialize.slices(fit, base_world, base_point, sources_by_slice),
             'whatIfs': [{'key': k, 'label': REGISTRY[k]['label'], 'kind': REGISTRY[k]['kind'], 'detail': REGISTRY[k]['detail'],
                          'slices': REGISTRY[k]['slices'], 'assumption': REGISTRY[k]['assumption'],
-                         # additive: the kind's confidence; no historical evidence is researched yet
-                         'confidenceTier': CONF[REGISTRY[k]['kind']], 'evidence': 'not-researched', 'exploratory': False}
+                         # additive
+                         'confidenceTier': conf_of[k]['tier'], 'evidence': conf_of[k]['evidence'],
+                         'exploratory': bool(REGISTRY[k].get('generated'))}
                         for k in used],
         }
         validation = {}
@@ -95,20 +100,30 @@ class Publisher:
         single = {k: self._lead([k], fit, runs[''][0], runs[k][0], runs[k][1]) for k in runs if k and '+' not in k}
         for key, (world, summ, out) in runs.items():
             combo = [k for k in key.split('+') if k]
-            # A combination is as sure as its least sure what-if.
-            conf = min((CONF[REGISTRY[k]['kind']] for k in combo), key=TIERS.index) if combo else 'high'
+            tier = evidence.combine_tiers([conf_of[k] for k in combo])
+            # The page knows high, medium and low; "very-low" reaches it as low plus the flag.
+            conf = tier['tier'] if tier['tier'] in CONF.values() else 'low'
             sl = serialize.slices(fit, world, summ['point'], sources_by_slice)
             lead = ' '.join(single[k] for k in combo) if combo else self._lead([], fit, runs[''][0], world, summ)
-            text = serialize.verdict(lead=lead, names=states, state_names=STATE_NAME, cand=self.cand, summary=summ,
+            cand = dict(self.cand)
+            for k in combo:
+                if REGISTRY[k]['kind'] == 'candidate' and REGISTRY[k].get('candidate'):
+                    cand[2] = REGISTRY[k]['candidate']['name']
+            text = serialize.verdict(lead=lead, names=states, state_names=STATE_NAME, cand=cand, summary=summ,
                                      base_summary=base_sum, base_winner=base_winner)
+            if tier['reasons'] and (tier['tier'] == 'very-low' or any(REGISTRY[k].get('generated') for k in combo)):
+                text += f' {tier["label"]}. {tier["reasons"][0]}'
+            ev_page = [x for x in (evidence.page_evidence(k, evs[k], eff['effects'].get(k, {}).get('agreement')) for k in combo) if x]
+            ev_sources = list({s['url']: {'title': s['title'], 'url': s['url']} for x in ev_page for f in x['findings']
+                               for s in f['sources']}.values())
             extras = {
                 'assumptions': [REGISTRY[k]['assumption'] for k in combo],
-                'howIGotThis': self._how(combo, summ),
-                'sources': sources_for(self.year),
-                # additive: how sure (no flags or evidence until what-ifs are researched)
-                'confidenceTier': conf, 'confidenceLabel': TIER_LABEL[conf],
-                'confidenceFlags': [], 'confidenceReasons': [],
-                'evidence': [],
+                'howIGotThis': self._how(combo, summ, evs, tier),
+                'sources': sources_for(self.year) + ev_sources,
+                # additive: how sure, and why
+                'confidenceTier': tier['tier'], 'confidenceLabel': tier['label'],
+                'confidenceFlags': tier['flags'], 'confidenceReasons': tier['reasons'],
+                'evidence': ev_page,
                 'mode': 'truth',
                 'runId': self.id,
                 'validation': validation.get('summary'),
@@ -121,7 +136,7 @@ class Publisher:
         voters = self._voters(eff, runs)
         return {
             'year': self.cfg.election, 'runId': self.id, 'election': election, 'runs': out_runs, 'tables': tables,
-            'voters': voters, 'interviews': {'questions': [], 'byWhatIf': {}}, 'ev': dict(zip(states, self.inp.ev.reindex(states).fillna(0).astype(int).tolist())),
+            'voters': voters, 'interviews': self._interviews(eff), 'ev': dict(zip(states, self.inp.ev.reindex(states).fillna(0).astype(int).tolist())),
             'historyWinner': {s: serialize.PARTY_TO_KEY[int(w)] for s, w in zip(states, base_winner)},
             'words': self._words(used),
         }
@@ -131,9 +146,10 @@ class Publisher:
                 'fifteenth': ['15th', 'fifteenth', 'black southern', 'black voters', 'poll tax', 'jim crow'],
                 'league': ['league', 'treaty', 'versailles'],
                 'everyone': ['everyone', 'all adults', 'universal']}
+        extra = scenario.extra_words()
         out = []
         for k in used:
-            words = base.get(k, [])
+            words = base.get(k, []) + REGISTRY[k].get('words', []) + extra.get(k, [])
             if words:
                 out.append({'key': k, 'words': list(dict.fromkeys(w.lower() for w in words))})
         return out
@@ -161,17 +177,46 @@ class Publisher:
                 toward = self.cand[1] if shift < 0 else self.cand[0]
                 parts.append(f'With the treaty settled, the voters I interviewed lean {abs(shift):.1f} points further toward {toward} '
                              'than the same people did in the world as it was.')
+            elif REGISTRY[k].get('generated'):
+                parts.append(self._lead_generated(REGISTRY[k], base, world, p, change))
         return ' '.join(parts)
 
-    def _how(self, combo, summ):
+    def _lead_generated(self, spec, base, world, p, change):
+        def shares(wd):
+            v = (wd.adults[p] * wd.can[p] * wd.t[p])[:, None] * wd.share[p]
+            r, d, o = v[:, 0].sum(), v[:, 1].sum(), v[:, 2].sum()
+            return r / (r + d) * 100, o / (r + d + o) * 100
+        (r2_0, o_0), (r2_1, o_1) = shares(base), shares(world)
+        toward = self.cand[1] if r2_1 < r2_0 else self.cand[0]
+        if spec['kind'] == 'candidate':
+            name = spec['candidate']['name']
+            return (f'With {name} on the ballot, candidates outside the two parties take {o_1:.1f}% of the vote, against {o_0:.1f}% '
+                    f'in {self.year}, and the two-party split moves {abs(r2_1 - r2_0):.1f} points toward {toward}.')
+        if spec['kind'] == 'franchise':
+            return f'{serialize.fmt_m(abs(change))} {"more" if change >= 0 else "fewer"} adults vote.'
+        if spec['kind'] == 'population':
+            d = float((world.adults[p] - base.adults[p]).sum())
+            return (f'{serialize.fmt_m(abs(d))} {"more" if d >= 0 else "fewer"} adults live in the country, and those who can vote '
+                    f'turn out and choose as their group did in {self.year}.')
+        return (f'In this world, the voters I interviewed lean {abs(r2_1 - r2_0):.1f} points further toward {toward} than the same '
+                f'people did in {self.year} as it was.')
+
+    def _how(self, combo, summ, evs=None, tier=None):
         lines = []
         for k in combo:
             spec = REGISTRY[k]
             lines.append(f'What changed: {spec["detail"]}')
             if spec.get('borrowed'):
                 lines.append(f'New voters borrow the behaviour of {spec["borrowed"]}.')
+            ev = (evs or {}).get(k)
+            if ev and ev.get('summary'):
+                n, level = len(ev.get('findings', [])), evidence.strength(ev)['level']
+                count = f' ({n} finding{"s" if n != 1 else ""}, {level} evidence)' if n else ''
+                lines.append(f'What historians found{count}: {ev["summary"]}')
         lines.append(f'The numbers: the 1920 census voting-age tables and certified returns; every draw reproduces {self.year} exactly before the change.')
         lines.append(f'How sure: I reran it {summ["draws"]} times with different population and parameter draws.')
+        if tier and tier['tier'] in ('low', 'very-low') and combo:
+            lines.append(f'{tier["label"]}: ' + ' '.join(tier['reasons'][:3]))
         return lines
 
     def _cohort_effects(self, combo, eff):
@@ -237,6 +282,8 @@ class Publisher:
                 a = p['agent']
                 x = answers[a['id']]
                 names = {a['label_of'][k]: NAMES[k] for k in a['label_of']}
+                if x['cf_req']['meta'].get('candidate'):
+                    names[x['cf_req']['meta']['candidate']['label']] = x['cf_req']['meta']['candidate']['name']
                 srcs = [corpus[i] for i in x['cf']['raw'].get('sources_used', []) if i in corpus] or \
                        [corpus[i] for i in x['cf_req']['meta']['sources'] if i in corpus]
                 key_map = {'R': 'A', 'D': 'B', 'O': 'O', 'home': 'home', 'barred': 'barred'}
@@ -261,6 +308,47 @@ class Publisher:
                 }
             out[wk] = per
         return out
+
+    def _interviews(self, eff):
+        """Every paired interview, per what-if (additive): the question wordings
+        once, and each person's two answers (as it was / in the what-if), names
+        restored. The page shows it in the robot's opened bubble."""
+        if not (self.dir / 'agents/agents.json').exists():
+            return {}
+        agents = {a['id']: a for a in json.loads((self.dir / 'agents/agents.json').read_text())}
+        cohorts = json.loads((self.dir / 'agents/cohorts.json').read_text())['cohorts']
+        reqs = {r['id']: r for r in self.requests()}
+        ans = self.answers()
+        says = {'R': self.cand[0], 'D': self.cand[1], 'O': self.cand[2], 'home': 'stays home', 'barred': 'can’t vote'}
+
+        def one(rid, a, lab):
+            d = ans[rid]['data']
+            n = paired.normalize(d, lab)
+            names = {a['label_of'][k]: NAMES[k] for k in a['label_of']}
+            c = reqs[rid]['meta'].get('candidate')
+            if c:
+                names[c['label']] = c['name']
+            choice = c['name'] if c and d.get('choice') == c['label'] and n['choice'] == 'O' else says.get(n['choice'], n['choice'])
+            return {'choice': choice, 'pVote': d.get('p_vote'),
+                    'quote': quotes.deblind(d.get('quote', ''), names), 'reason': quotes.deblind(d.get('reason', ''), names)}
+
+        out = {'questions': prompts.QUESTIONS, 'byWhatIf': {}}
+        for wk in eff['pairs']:
+            rows = []
+            for aid, a in agents.items():
+                c_id, f_id = f'control|{aid}|{self.bulk}', f'cf:{wk}|{aid}|{self.bulk}'
+                if c_id not in ans or f_id not in ans:
+                    continue
+                lab = {v: k for k, v in reqs[c_id]['meta']['label_of'].items()}
+                rows.append({
+                    'question': a['paraphrase'], 'name': a['name'], 'cohort': cohorts[a['cohort']]['label'],
+                    'line': f'{a["age"]}, {"a city or town" if a["urban"] else "the countryside"}, {STATE_NAME.get(a["state"], a["state"])}',
+                    'before': one(c_id, a, lab), 'after': one(f_id, a, lab),
+                })
+            out['byWhatIf'][wk] = sorted(rows, key=lambda r: (r['question'], r['cohort'], r['name']))
+        return out
+
+
 
 
 def sources_for(year: int) -> list[dict]:

@@ -13,7 +13,9 @@ import type { SimulacraOptions } from './simulacra';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const scratch = mkdtempSync(path.join(tmpdir(), 'simulacra-test-'));
 const options: SimulacraOptions = {
-  bundles: path.join(ROOT, 'serve', 'bundles')
+  bundles: path.join(ROOT, 'serve', 'bundles'),
+  sessions: path.join(scratch, 'sessions'),
+  devLog: false
 };
 
 let server: Server;

@@ -13,7 +13,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-# The repo root: configs/, extracts/, runs/ and serve/bundles/
+# The repo root: configs/, whatifs/, extracts/, runs/, sessions/ and serve/bundles/
 # all sit next to the simharness package.
 ROOT = HERE.parent
 RUNS = ROOT / 'runs'
@@ -44,6 +44,17 @@ class AgentConfig:
 
 
 @dataclass
+class ResearchConfig:
+    """The compile → research → extract calls behind a typed what-if (scenario.py, evidence.py)."""
+    compile_model: str = 'claude-sonnet-5-5'
+    research_model: str = 'claude-sonnet-5-5'
+    extract_model: str = 'claude-haiku-4-5'
+    max_searches: int = 4              # web_search max_uses per research call
+    research_max_tokens: int = 4000
+    whatif_dollars: float = 0.5        # hard stop for one typed what-if, all stages together
+
+
+@dataclass
 class RunConfig:
     election: int = 1920
     election_day: str = '1920-11-02'
@@ -55,12 +66,15 @@ class RunConfig:
     prompt_version: str = 'p1'
     holdout: list = field(default_factory=lambda: 'CA FL ID IN LA MI MO MT NC NY OH OK'.split())
     agents: AgentConfig = field(default_factory=AgentConfig)
+    research: ResearchConfig = field(default_factory=ResearchConfig)
+    max_combo: int = 3                  # largest what-if combination published (2^n grows fast)
 
     @classmethod
     def load(cls, path: str | Path) -> 'RunConfig':
         raw = json.loads(Path(path).read_text())
         agents = AgentConfig(**raw.pop('agents', {}))
-        return cls(**raw, agents=agents)
+        research = ResearchConfig(**raw.pop('research', {}))
+        return cls(**raw, agents=agents, research=research)
 
     def to_dict(self) -> dict:
         return asdict(self)

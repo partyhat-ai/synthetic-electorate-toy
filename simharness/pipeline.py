@@ -11,7 +11,7 @@ import time
 
 import numpy as np
 
-from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, llm, paired, quotes
+from . import agentlayer, aggregate, backbone, cohorts as cohorts_mod, data, evaluate, evidence, llm, paired, quotes, scenario
 from .config import RUNS, RunConfig
 from .publish import Publisher
 from .stats import logit
@@ -25,7 +25,8 @@ class Run(Publisher):
     def __init__(self, cfg: RunConfig):
         self.cfg = cfg
         self.inp, self.extras = data.load(cfg)
-        self.manifest = self.extras['manifest']
+        # Compiled what-ifs' specs and every what-if's evidence are part of the instrument.
+        self.manifest = {**self.extras['manifest'], **scenario.manifest(cfg.what_ifs)}
         self.id = cfg.run_id(self.manifest)
         # Short model names in request ids; the analysis pairs on these, not on a hardcoded 'sonnet'.
         self.bulk = agentlayer.SHORT.get(cfg.agents.bulk_model, cfg.agents.bulk_model)
@@ -81,7 +82,8 @@ class Run(Publisher):
     def requests(self):
         return [json.loads(l) for l in (self.dir / 'agents/all_requests.jsonl').read_text().splitlines() if l.strip()]
 
-    def ask(self):
+    def ask(self, cap: float | None = None):
+        """cap: an extra dollar ceiling from the caller (a typed what-if's remaining budget)."""
         ag = self.cfg.agents
         be = llm.backend(ag.backend, self.dir / 'agents/transcript', ag.effort, ag.max_tokens)
         reqs = self.requests()
@@ -94,22 +96,40 @@ class Run(Publisher):
         if path.exists():
             have = {json.loads(l)['id'] for l in path.read_text().splitlines() if l.strip() and json.loads(l).get('ok')}
         todo = [r for r in reqs if r['id'] not in have]
+        live = ag.backend in llm.AnswerCache.LIVE
+        cache = llm.AnswerCache(RUNS) if live else None
+        reused = [c for c in (cache.get(r) for r in todo) if c] if cache else []
+        todo = [r for r in todo if r['id'] not in {c['id'] for c in reused}]
         batch = ag.backend == 'anthropic-batch'
         est = llm.estimate(todo, ag.max_tokens, batch)
-        print(f"estimate: {est['requests']} requests, ~${est['typical']} typical, ${est['worst']} worst case", flush=True)
+        print(f"estimate: {est['requests']} requests, ~${est['typical']} typical, ${est['worst']} worst case"
+              f" ({len(reused)} reused from identical earlier requests)", flush=True)
         if ag.max_requests is not None and len(todo) > ag.max_requests:
             raise SystemExit(f'refusing: {len(todo)} requests > max_requests {ag.max_requests}')
         if ag.max_dollars is not None and est['worst'] > ag.max_dollars:
             raise SystemExit(f"refusing: worst case ${est['worst']} > max_dollars {ag.max_dollars}")
+        if cap is not None and est['worst'] > cap:
+            raise SystemExit(f"refusing: worst case ${est['worst']} > ${cap:.3f} left for this what-if")
+        if live and todo:
+            llm.guard_daily(est['worst'], 'ask')
         t0 = time.time()
         got = be.run(todo) if todo else []
         spent = sum(llm.cost(g['model'], g.get('usage') or {}, batch) for g in got)
-        with open(path, 'a') as f:
+        if live:
+            llm.record_spend('ask', spent, self.id)
+            by_id = {r['id']: r for r in todo}
             for g in got:
+                cache.put(by_id[g['id']], g)
+        with open(path, 'a') as f:
+            for g in got + reused:
                 f.write(json.dumps(g) + '\n')
-        return {'sent': len(todo), 'seconds': round(time.time() - t0, 1), 'dollars': round(spent, 4),
-                'answered': sum(1 for g in got if g.get('ok')), 'failed': sum(1 for g in got if not g.get('ok')),
-                'merge': None if merged is None else {'merged': merged['merged'], 'rejected': len(merged['rejected']), 'missing': len(merged['missing'])}}
+        out = {'sent': len(todo), 'reused': len(reused), 'seconds': round(time.time() - t0, 1), 'dollars': round(spent, 4),
+               'answered': sum(1 for g in got if g.get('ok')), 'failed': sum(1 for g in got if not g.get('ok')),
+               'merge': None if merged is None else {'merged': merged['merged'], 'rejected': len(merged['rejected']), 'missing': len(merged['missing'])}}
+        if spent > 0.01 and spent > 1.5 * est['typical']:
+            raise SystemExit(f"STOP: ask cost ${spent:.4f}, more than 1.5x its ${est['typical']} estimate. Answers are saved; "
+                             f"check output lengths before the next run. {json.dumps(out)}")
+        return out
 
     def answers(self) -> dict:
         path = self.dir / 'agents/answers.jsonl'
@@ -234,6 +254,25 @@ class Run(Publisher):
             ids_opus = {c['agent'] for c, f, m in both if m == self.check}
             shared = {m: [(c, f) for c, f, mm in both if mm == m and c['agent'] in ids_opus] for m in self.models}
             eff['shared_subsample'] = {m: nat(ps) for m, ps in shared.items() if ps}
+            # History: does the record agree with the interviews? For compiled
+            # (exploratory) what-ifs the evidence is also a prior on each cohort.
+            spec, ev = REGISTRY[wk], scenario.load_evidence(wk)
+            wts = {k: cohorts[k]['adults'] for k in pairs}
+            tot = sum(wts.values()) or 1.0
+            nat_base = {m: sum(b[k] * wts[k] for k in pairs) / tot
+                        for m, b in (('turnout', backbone_turn), ('r2', backbone_r2), ('o', backbone_o))}
+            mkey = 'do' if spec['kind'] == 'candidate' else 'dr'
+            signs = {float(np.sign(v[mkey])) for v in eff['by_paraphrase'].values() if abs(v[mkey]) > 0.02}
+            eff['agent_stats'] = {'n': sum(len(ps) for ps in pairs.values()), 'measure': mkey,
+                                  'spans_zero': bool(eff['national'][mkey]['lo'] < 0 < eff['national'][mkey]['hi']),
+                                  'paraphrase_flip': len(signs) > 1, 'exposed': nationally_exposed}
+            eff['agreement'] = evidence.agreement(ev, eff['national'], nat_base, spec['kind'])
+            eff['blended'] = False
+            if ev and spec.get('evidence_mode') == 'blend':
+                eff['cohorts'] = {k: evidence.blend(c, evidence.prior(ev, cohorts[k], {'turnout': backbone_turn[k], 'r2': backbone_r2[k],
+                                                                                        'o': backbone_o[k]}))
+                                  for k, c in eff['cohorts'].items()}
+                eff['blended'] = any(c['evidence_blend'] for c in eff['cohorts'].values())
             effects[wk] = eff
             pairs_out[wk] = {k: [{'control': c, 'cf': f, 'paraphrase': p, 'model': m} for c, f, p, m in ps] for k, ps in pairs.items()}
 
@@ -281,6 +320,7 @@ class Run(Publisher):
                   'effects': {wk: {'national': e['national'], 'national_bias': e['national_bias'],
                                    'by_paraphrase': e['by_paraphrase'], 'by_model': e['by_model'],
                                    'shared_subsample': e.get('shared_subsample'),
+                                   'agent_stats': e.get('agent_stats'), 'agreement': e.get('agreement'), 'blended': e.get('blended'),
                                    'cohorts': {k: {kk: vv for kk, vv in c.items() if kk != 'draws'} for k, c in e['cohorts'].items()}}
                               for wk, e in effects.items()}}
         (self.dir / 'analysis.json').write_text(json.dumps(result, indent=1, default=float))

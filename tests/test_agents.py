@@ -1,15 +1,21 @@
-"""Agent cohorts, invented people and their quotes (cohorts.py, quotes.py)."""
+"""Agent cohorts, invented people and their quotes (cohorts.py, quotes.py, scenario.py)."""
 import threading
 
 import pandas as pd
 
 from simharness import cohorts
 from simharness.quotes import deblind
+from simharness.scenario import clean_position
 
 
 def test_deblind():
     assert deblind('I will vote for Candidate K, not M.', {'K': 'Harding', 'M': 'Cox'}) == 'I will vote for Harding, not Cox.'
     assert deblind('K’s men', {'K': 'Harding'}) == 'K’s men'
+
+
+def test_clean_position_strips_notes_and_names():
+    assert clean_position('Backs the League (inferred: no record).') == 'Backs the League.'
+    assert 'Wilson' not in clean_position('Opposes President Wilson on the treaty.')
 
 
 def _build_with_timeout(cells, seconds=20, **kw):

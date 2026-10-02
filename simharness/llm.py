@@ -26,6 +26,8 @@ import random
 import time
 from pathlib import Path
 
+from .config import ROOT
+
 # $ per million tokens: input, output, cache read. Batch is half of each.
 PRICES = {
     'claude-sonnet-5-5': (2.00, 10.00, 0.20),
@@ -58,13 +60,14 @@ def api_key() -> str | None:
     return None
 
 
-def estimate(requests: list[dict], max_tokens: int, batch: bool = False) -> dict:
+def estimate(requests: list[dict], max_tokens: int, batch: bool = False, typical_out: int = 600) -> dict:
     """Dry-run dollars: input at ~4 chars/token (system uncached, to be safe),
-    output at a typical 600 tokens and at the max_tokens worst case."""
+    output at a typical `typical_out` tokens (600 fits an interview answer) and
+    at the max_tokens worst case."""
     typical = worst = 0.0
     for r in requests:
         tin = (len(r['system']) + len(r['user']) + len(json.dumps(r['schema']))) / 4
-        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(600, max_tokens)}, batch)
+        typical += cost(r['model'], {'input_tokens': tin, 'output_tokens': min(typical_out, max_tokens)}, batch)
         worst += cost(r['model'], {'input_tokens': tin, 'output_tokens': max_tokens}, batch)
     return {'requests': len(requests), 'typical': round(typical, 4), 'worst': round(worst, 4)}
 
@@ -277,3 +280,87 @@ def backend(name: str, folder: Path | None = None, effort: str = 'low', max_toke
     if name == 'mock':
         return MockBackend()
     raise ValueError(name)
+
+
+# ── Answer cache: an identical request is the same instrument ──
+# Keyed on model, system, user and schema (never on meta, run or prompt-version
+# labels), so a run that adds one what-if pays only for its new briefs. Only
+# live API answers are cached; transcript (subagent) and mock answers never are.
+
+def request_key(r: dict) -> str:
+    blob = json.dumps([r['model'], r['system'], r['user'], r['schema']], sort_keys=True)
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
+class AnswerCache:
+    LIVE = ('anthropic', 'anthropic-batch')
+
+    def __init__(self, runs_dir: Path):
+        self.runs = Path(runs_dir)
+        self.file = self.runs / '_cache/answers.jsonl'
+        self.index = {}
+        if self.file.exists():
+            for line in self.file.read_text().splitlines():
+                if line.strip():
+                    row = json.loads(line)
+                    self.index[row['key']] = row['answer']
+        # Backfill from earlier runs' requests and live answers.
+        for req_file in self.runs.glob('*/agents/all_requests.jsonl'):
+            ans_file = req_file.parent / 'answers.jsonl'
+            if not ans_file.exists():
+                continue
+            answers = {}
+            for line in ans_file.read_text().splitlines():
+                if line.strip():
+                    g = json.loads(line)
+                    if g.get('ok') and g.get('backend') in self.LIVE:
+                        answers[g['id']] = g | {'cached_from': req_file.parent.parent.name}
+            for line in req_file.read_text().splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    if r['id'] in answers:
+                        self.index.setdefault(request_key(r), answers[r['id']])
+
+    def get(self, r: dict) -> dict | None:
+        hit = self.index.get(request_key(r))
+        if not hit:
+            return None
+        return {**hit, 'id': r['id'], 'cached': True, 'usage': {}}
+
+    def put(self, r: dict, answer: dict):
+        if not answer.get('ok') or answer.get('backend') not in self.LIVE:
+            return
+        k = request_key(r)
+        self.index[k] = answer
+        self.file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.file, 'a') as f:
+            f.write(json.dumps({'key': k, 'answer': answer}) + '\n')
+
+
+# ── Spend ledger: every paid call, for the daily cap ──
+
+LEDGER = ROOT / 'sessions/spend.jsonl'
+DAILY_DOLLARS = float(os.environ.get('SIMULACRA_DAILY_DOLLARS', '2.0'))
+
+
+def record_spend(stage: str, dollars: float, run: str = '', note: str = ''):
+    if dollars <= 0:
+        return
+    LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    with open(LEDGER, 'a') as f:
+        f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%S'), 'day': time.strftime('%Y-%m-%d'),
+                            'stage': stage, 'dollars': round(dollars, 5), 'run': run, 'note': note}) + '\n')
+
+
+def spent_today() -> float:
+    if not LEDGER.exists():
+        return 0.0
+    day = time.strftime('%Y-%m-%d')
+    return sum(json.loads(l)['dollars'] for l in LEDGER.read_text().splitlines() if l.strip() and json.loads(l)['day'] == day)
+
+
+def guard_daily(worst: float, what: str):
+    today = spent_today()
+    if today + worst > DAILY_DOLLARS:
+        raise SystemExit(f'refusing {what}: ${today:.2f} spent today + ${worst:.2f} worst case > daily cap ${DAILY_DOLLARS:.2f} '
+                         '(SIMULACRA_DAILY_DOLLARS)')

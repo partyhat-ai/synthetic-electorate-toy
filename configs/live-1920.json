@@ -1,0 +1,65 @@
+{
+  "election": 1920,
+  "election_day": "1920-11-02",
+  "context_cutoff": "1920-11-01",
+  "mode": "truth",
+  "what_ifs": [
+    "no-19th",
+    "fifteenth",
+    "league",
+    "charlie-chaplin-runs"
+  ],
+  "seed": 1920,
+  "draws": 100,
+  "prompt_version": "p4",
+  "holdout": [
+    "CA",
+    "FL",
+    "ID",
+    "IN",
+    "LA",
+    "MI",
+    "MO",
+    "MT",
+    "NC",
+    "NY",
+    "OH",
+    "OK"
+  ],
+  "agents": {
+    "bulk_model": "claude-haiku-4-5",
+    "check_model": "claude-haiku-4-5",
+    "check_share": 0,
+    "per_cohort": 2,
+    "paraphrases": 3,
+    "effort": "low",
+    "backend": "anthropic",
+    "max_cohorts": 36,
+    "only_cohorts": [
+      "border:F:black",
+      "south:F:black",
+      "midwest:M:native_white",
+      "midwest:F:native_white",
+      "northeast:F:native_white",
+      "northeast:M:native_white",
+      "south:M:native_white",
+      "south:F:native_white"
+    ],
+    "arms": [
+      "control",
+      "cf"
+    ],
+    "max_requests": 60,
+    "max_dollars": 0.5,
+    "max_tokens": 1500
+  },
+  "research": {
+    "compile_model": "claude-sonnet-5-5",
+    "research_model": "claude-sonnet-5-5",
+    "extract_model": "claude-haiku-4-5",
+    "max_searches": 4,
+    "research_max_tokens": 4000,
+    "whatif_dollars": 0.5
+  },
+  "max_combo": 3
+}

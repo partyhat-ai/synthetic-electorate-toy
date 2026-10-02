@@ -367,3 +367,65 @@ The five 1920 groups are a partition, but they carry small misfits:
   combination can say "3.1 million women" measured in a different world
   from the combined one.
 - The League verdict's "2.7 points" is measured in the point draw only.
+
+**E5 · by design · compiled what-ifs (`whatifs/*.json`)**
+A typed what-if's facts, ballot line and assumption are written by a model
+(`scenario.py`, compiler c1). They are checked for nominee and party
+names, and are exploratory, never pre-registered. Post-hoc edits:
+- **`charlie-chaplin-runs`**: the positions carried "(documented)" and
+  "(inferred…)" notes, which voters saw in the brief. The notes were
+  stripped, "Would likely speak for" became "Speaks for", and the
+  interviews were re-asked.
+
+**E6 · by design · `charlie-chaplin-runs`**
+Chaplin was born in England and was not a citizen, so the Constitution
+barred him. The ballot line is modelled anyway, flagged
+`ineligible-candidate`. His positions are inferred, since nothing on record
+predates 1920, and flagged `positions-inferred`.
+
+**G4 · Low · by design · answer cache (`llm.AnswerCache`)**
+Identical requests reuse earlier live answers across runs. A request is
+identical when it has the same model, system, user text and schema; meta,
+run id and prompt-version labels are ignored. So p4 requests whose text
+equals p3's reuse p3 answers. Transcript and mock answers are never cached.
+Each answer records `cached_from`.
+
+**G5 · Medium · open · evidence reproducibility**
+Web search results change over time. The saved
+`whatifs/evidence/<key>.json` is the record: queries, every source, the
+cited text and the notes. It is hashed into the run id. Re-researching
+(`--refresh`) makes a new instrument.
+
+**H1 · by design · evidence never enters a brief**
+Research results are used only after the interviews:
+- **Agreement:** do the interviews move votes or turnout the way the record
+  does?
+- **Blend:** a prior on cohort effects, for compiled, exploratory what-ifs
+  only.
+- **Confidence tier.**
+
+Pre-registered what-ifs are never blended; their numbers follow
+METHOD.md.
+
+**H2 · Medium · open · source grading**
+Tiers come from a domain list (`evidence.TIER_A`, `TIER_B`; everything else,
+including Wikipedia, is C). A .edu course page counts as A. A finding's
+grade is its tier × the extractor's match judgement (same-event …
+distant). Neither is validated.
+
+**H3 · Medium · open · blend weights**
+Evidence sd grows as 1/√grade. Weak evidence barely moves numbers:
+Chaplin's evidence weight is under 1%.
+
+**H4 · Medium · open · confidence tiers**
+`evidence.confidence` is a rule set:
+- a kind's base tier;
+- plausibility and anachronism;
+- evidence strength;
+- agreement;
+- interview stability, for agent-mode what-ifs only;
+- the number of interviews.
+
+"Extremely low" (very-low) reaches the page as `confidence: low`, plus
+`confidenceTier` and a sentence in the summary. The rules were written
+after seeing the first three results, and nothing calibrates them.

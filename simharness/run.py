@@ -21,9 +21,27 @@ from .pipeline import Run
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'all', 'id'])
+    ap.add_argument('stage', choices=['backbone', 'plan', 'ask', 'analyze', 'publish', 'evaluate', 'all', 'id',
+                                      'research', 'whatif'])
     ap.add_argument('--config', default=str(ROOT / 'configs/prototype-1920.json'))
+    ap.add_argument('--text', help='whatif: the words a reader typed')
+    ap.add_argument('--queue', action='store_true', help='whatif: model what the router queued as unknown')
+    ap.add_argument('--limit', type=int, default=3, help='whatif --queue: at most this many texts')
+    ap.add_argument('--refresh', action='store_true', help='research again even if evidence is saved')
+    ap.add_argument('--key', help='research: only this what-if')
     args = ap.parse_args(argv)
+    if args.stage in ('research', 'whatif'):
+        from . import intake
+        if args.stage == 'research':
+            out = intake.research_config(args.config, args.refresh, args.key)
+        elif args.queue:
+            out = intake.process_queue(args.config, args.limit)
+        elif args.text:
+            out = intake.whatif(args.text, args.config, args.refresh)
+        else:
+            ap.error('whatif needs --text or --queue')
+        print(json.dumps(out, indent=1, default=float))
+        return
     run = Run(RunConfig.load(args.config))
     stages = ['backbone', 'plan', 'ask', 'analyze', 'evaluate', 'publish'] if args.stage == 'all' else [args.stage]
     for s in stages:
