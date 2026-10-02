@@ -429,3 +429,11 @@ Chaplin's evidence weight is under 1%.
 "Extremely low" (very-low) reaches the page as `confidence: low`, plus
 `confidenceTier` and a sentence in the summary. The rules were written
 after seeing the first three results, and nothing calibrates them.
+
+**D14 · Medium · open · paraphrase assignment**
+An agent's question wording is `n % paraphrases`, where n is its place in the
+run's sorted agent list. Adding a cohort renumbers everyone after it, so each
+of them gets a different question. The live config
+(`configs/live-1920.json`) keeps rung 1's six cohorts so answers stay
+comparable and cached. Fix before widening: key the paraphrase on the
+agent id.
