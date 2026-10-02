@@ -1,0 +1,21 @@
+/* The robot's frame (/robot) is its own document: nothing but the canvas on
+   a transparent page, so the host page shows through around the robot.
+   color-scheme matches RobotFrame's iframe, or browsers paint the frame opaque. */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  color-scheme: normal;
+}
+
+.robot-scene {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  touch-action: none;
+}

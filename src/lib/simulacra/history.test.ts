@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ELECTION_YEARS, STATE_BY_CODE } from './geo';
-import { electionOf } from './history';
+import { electionOf, FEATURED } from './history';
 
 // Years whose per-state electoral votes don't sum to the electoral votes cast,
 // with the per-state sum the table holds: these list the electors each state
@@ -51,8 +51,9 @@ describe('electionOf', () => {
     expect(ELECTION_YEARS.filter((y) => electionOf(y)?.unopposed)).toEqual([1789, 1792, 1820]);
   });
 
-  test('a year with no election is null', () => {
+  test('a year with no election is null; story years are elections', () => {
     expect(electionOf(1790)).toBeNull();
+    for (const y of FEATURED) expect(electionOf(y)).not.toBeNull();
   });
 
   test('every winner and runner-up has a name and a portrait', () => {
