@@ -471,7 +471,10 @@
        what-if is drawn over the robot standing behind it; the content is
        transparent elsewhere, so the robot shows through. A sideways drag
        over it turns the robot; vertical scrolling and pinch-zoom stay. */
-    .main { padding: 0 16px; gap: 28px; position: relative; z-index: 4; touch-action: pan-y pinch-zoom; }
+    .main { padding: 0 16px; gap: 1px; position: relative; z-index: 4; touch-action: pan-y pinch-zoom; }
+    /* 84px = the time bar (68) + the side padding (16); plus the what-if's
+       nudge, so its foot clears the bar by the same 16px as its sides. */
+    .page { padding-bottom: calc(84px + var(--ui-y, 0px)); }
     /* Phones: Who voted is one height every year (up to five groups, each
        label up to two lines; the key up to two lines), so nothing below it
        moves with the year. */

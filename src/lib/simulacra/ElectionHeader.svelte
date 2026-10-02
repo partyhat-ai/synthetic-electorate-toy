@@ -74,9 +74,12 @@
       {/if}
     {/each}
   </div>
-  <!-- Always both, empty or not: on phones each holds its room (below). -->
-  <p class="note">{#if note}<Places text={note} />{/if}</p>
-  <p class="also">{#if alsoRan}Also ran: {alsoRan}{/if}</p>
+  <!-- Always both, empty or not. On a narrow window .foot holds the room of
+       the longest pair (below); on a wide one it isn't a box at all. -->
+  <div class="foot">
+    <p class="note">{#if note}<Places text={note} />{/if}</p>
+    <p class="also">{#if alsoRan}Also ran: {alsoRan}{/if}</p>
+  </div>
 </section>
 
 <style>
@@ -125,7 +128,8 @@
     .matchup { grid-template-columns: 1fr 1fr; gap: 22px 12px; }
     .matchup.solo { grid-template-columns: 1fr; gap: 22px 12px; } /* = .matchup: an unopposed year is as tall as any */
     .center { grid-column: 1 / -1; grid-row: 1; }
-    .cand, .cand.b { flex-direction: column; gap: 12px; }
+    /* The candidates sit 22px into the gap under the map. */
+    .cand, .cand.b { flex-direction: column; gap: 12px; margin-top: -22px; }
     .facts, .b .facts { align-items: center; text-align: center; }
     .name { font-size: 15px; }
     /* Phones: the block is one height every year, so the what-if and the
@@ -134,8 +138,17 @@
        (measured over all 60 years at 320-430px). */
     .name { min-height: calc(2 * 1.2em); }
     .party { line-height: 1.25; min-height: calc(2 * 1.25em); }
-    .note { min-height: calc(3 * 1.45em); }
-    .also { min-height: calc(2 * 1.45em); }
+    /* The note sits 23px under the candidates at its own height, the
+       also-ran under it; the pair's room is their most (three lines of note,
+       two of also-ran), the spare at its foot, so the block stays one height. */
+    .note { margin-top: 23px; }
+    .foot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: calc(23px + 3 * 1.45 * 15px + 6px + 2 * 1.45 * 12px);
+    }
   }
   /* The narrowest phones: a long name ("Charles Cotesworth Pinckney") takes three lines. */
   @media (max-width: 359px) {
@@ -143,6 +156,7 @@
   }
   /* Empty, they take no room on a wide window. */
   @media (min-width: 761px) {
+    .foot { display: contents; }
     .note:empty, .also:empty, .sub-room { display: none; }
   }
 </style>
