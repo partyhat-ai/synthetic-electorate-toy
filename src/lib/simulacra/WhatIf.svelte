@@ -147,19 +147,26 @@
   :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
   .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
-  /* The what-if section's colours, as tokens the pieces read too:
-       --label / --label-2 / --label-3   text, secondary text, placeholder
+  /* The what-if section is a dark island on the light page: the robot's
+     voice and the controls you answer it with, in the Test Chat's dark
+     materials (iOS system greys), so talking to the harness reads as a
+     different place from the record above it. Tokens, read by the pieces too:
+       --label / --label-2 / --label-3   text on the dark greys (92 / 62 / 42% white)
        --separator                       hairlines
-       --tint                            the accent (#3876b7) */
+       --tint                            #3876b7 lifted for dark surfaces (4.6:1 on --fill-press) */
   .whatif {
-    --bubble: #fff;
-    --label: rgba(0, 0, 0, 0.88);
-    --label-2: rgba(0, 0, 0, 0.55);
-    --label-3: rgba(0, 0, 0, 0.4);
-    --separator: rgba(0, 0, 0, 0.16);
-    --fill: rgba(255, 255, 255, 0.55);   /* chips at rest */
-    --fill-press: #fff;                  /* hovers */
-    --tint: #3876b7;
+    --bubble: #262628;           /* iOS dark incoming bubble */
+    --label: rgba(255, 255, 255, 0.92);
+    --label-2: rgba(255, 255, 255, 0.62);
+    --label-3: rgba(255, 255, 255, 0.42);
+    --separator: rgba(255, 255, 255, 0.14);
+    --fill: #2c2c2e;             /* raised: chips at rest */
+    --fill-press: #3a3a3c;       /* raised further: hovers */
+    --tint: #6ea8e0;
+    /* The island: the section's own ground, rounded, the page's grey round it. */
+    background: #0b0b0c;
+    border-radius: 28px;
+    padding: 18px 20px 20px;
   }
   .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
   /* On the stage the talk column fills the robot's height: the bubble pins to
@@ -181,7 +188,7 @@
   }
   .bubble.busy { opacity: 0.85; }
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
-     filled with --bubble (#fff). */
+     filled with --bubble (#262628). */
   .bubble::after {
     content: '';
     position: absolute;
@@ -190,7 +197,7 @@
     width: 14px;
     height: 8px;
     transform: scaleX(-1);
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 93 76'%3E%3Cpath d='M-0.000,27.000 C12.839,31.371 39.956,53.698 40.1000,53.1000 C47.980,58.824 74.560,73.398 80.000,75.000 C85.440,76.602 89.403,76.321 92.156,73.836 C92.113,73.760 94.162,69.566 91.1000,64.1000 C88.060,59.218 84.265,53.211 82.000,49.000 C78.871,45.122 75.825,34.278 76.000,30.000 C75.936,25.444 77.127,19.864 78.1000,15.1000 C80.494,12.811 79.838,10.855 87.1000,2.1000 C64.644,-3.831 32.484,7.267 -0.000,27.000 Z' fill='%23fff'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 93 76'%3E%3Cpath d='M-0.000,27.000 C12.839,31.371 39.956,53.698 40.1000,53.1000 C47.980,58.824 74.560,73.398 80.000,75.000 C85.440,76.602 89.403,76.321 92.156,73.836 C92.113,73.760 94.162,69.566 91.1000,64.1000 C88.060,59.218 84.265,53.211 82.000,49.000 C78.871,45.122 75.825,34.278 76.000,30.000 C75.936,25.444 77.127,19.864 78.1000,15.1000 C80.494,12.811 79.838,10.855 87.1000,2.1000 C64.644,-3.831 32.484,7.267 -0.000,27.000 Z' fill='%23262628'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
     pointer-events: none;
   }
   .lines { animation: float-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
@@ -201,7 +208,8 @@
   .by { margin: 6px 0 0; font-size: 12.5px; color: var(--label-2); }
   .aside { margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--label-2); }
   .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  /* In the bubble: text buttons on a hairline, the primary filled in ink. */
+  /* In the bubble: text buttons on a hairline; the primary is the one
+     light thing, white on the dark. */
   .act {
     height: 30px;
     padding: 0 13px;
@@ -213,11 +221,11 @@
     font-size: 13px;
     cursor: pointer;
   }
-  .act:hover { background: rgba(0, 0, 0, 0.06); }
-  .act:active { background: rgba(0, 0, 0, 0.1); }
-  .act.primary { background: #111; border-color: #111; color: #fff; }
-  .act.primary:hover { background: #333; }
-  .act.primary:active { background: #000; }
+  .act:hover { background: var(--fill); }
+  .act:active { background: var(--fill-press); }
+  .act.primary { background: #fff; border-color: #fff; color: #000; }
+  .act.primary:hover { background: #e5e5ea; }
+  .act.primary:active { background: #d1d1d6; }
   .act:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) {
     .bubble { transition: none; }

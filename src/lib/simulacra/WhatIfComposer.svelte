@@ -85,8 +85,9 @@
   /* On the stage the composer pins to the column's floor (WhatIf.svelte). */
   :global(.whatif.stage) .compose { margin-top: auto; }
   .ask { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  /* The field: white on a hairline, a caret in the tint, its ring turning
-     the tint while typing (the creator-rows search field's behaviour). */
+  /* The field: the bubble's grey on a hairline, a caret in the tint, its
+     ring turning the tint while typing (the creator-rows search field's
+     behaviour). */
   input {
     flex: 1;
     min-width: 0;
@@ -94,7 +95,7 @@
     padding: 0 14px;
     border: 1px solid var(--separator);
     border-radius: 999px;
-    background: #fff;
+    background: var(--bubble);
     color: var(--label);
     caret-color: var(--tint);
     font: inherit;
@@ -104,7 +105,7 @@
   input::placeholder { color: var(--label-3); }
   input:focus { outline: none; border-color: var(--tint); }
   input:disabled { opacity: 0.6; }
-  /* Rerun: filled in ink. */
+  /* Rerun: the one filled accent, in the brand blue (white label, 4.7:1). */
   .run {
     display: inline-flex;
     align-items: center;
@@ -113,20 +114,20 @@
     padding: 0 18px;
     border: none;
     border-radius: 999px;
-    background: #111;
+    background: #3876b7;
     color: #fff;
     font: inherit;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
   }
-  .run:hover { background: #333; }
-  .run:active { background: #000; }
-  .run:disabled { opacity: 0.35; cursor: default; background: #111; }
+  .run:hover { background: #2f66a0; }
+  .run:active { background: #285a8e; }
+  .run:disabled { opacity: 0.35; cursor: default; background: #3876b7; }
   /* Nothing new to run: at rest, the button dims (pressing it shows the
      rerun already made). It brightens as soon as there's a change. */
   .run.rest { opacity: 0.6; }
-  /* Reset: text only, in the tint. */
+  /* Reset: text only, in --tint (on the island, #3876b7 would be 3.9:1). */
   .reset {
     height: 36px;
     padding: 0 10px;
@@ -138,7 +139,7 @@
     cursor: pointer;
     border-radius: 10px;
   }
-  .reset:hover { background: rgba(56, 118, 183, 0.08); }
+  .reset:hover { background: rgba(110, 168, 224, 0.12); }
   .reset:active { opacity: 0.6; }
   .run:focus-visible, .reset:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
 </style>
