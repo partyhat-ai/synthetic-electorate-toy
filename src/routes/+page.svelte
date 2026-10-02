@@ -24,6 +24,7 @@
   import Narrator from '$lib/simulacra/Narrator.svelte';
   import { hoverPlaces } from '$lib/simulacra/places';
   import RevisitOnDesktop from '$lib/simulacra/RevisitOnDesktop.svelte';
+  import { ROBOT_YAW } from '$lib/robot/stage';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
@@ -66,6 +67,8 @@
   // slider for each, kept in this browser; Reset returns to the defaults.
   const UI_Y = 10;
   const BOT_Y = -168;
+  // …and the robot's resting turn there, degrees (a wide window: ROBOT_YAW, 40).
+  const NARROW_YAW = -30;
   const TUNE_MIN = -2000;
   const TUNE_MAX = 800;
   const tuning = new URLSearchParams(location.search).has('tune');
@@ -80,6 +83,29 @@
   }
   let uiY = $state(tuning ? readTune('ui', UI_Y) : UI_Y);
   let botY = $state(tuning ? readTune('bot', BOT_Y) : BOT_Y);
+  // ?tune=1 also overrides the robot's resting turn (at any width); NaN: the default.
+  function readYaw(): number {
+    try {
+      const raw = localStorage.getItem('sa-tune-yaw');
+      const v = raw === null ? Number.NaN : Number(raw);
+      return Number.isFinite(v) ? Math.min(180, Math.max(-180, v)) : Number.NaN;
+    } catch {
+      return Number.NaN;
+    }
+  }
+  let yawTune = $state(tuning ? readYaw() : Number.NaN);
+  const defaultYaw = $derived(narrow ? NARROW_YAW : ROBOT_YAW);
+  const restYaw = $derived(Number.isFinite(yawTune) ? yawTune : defaultYaw);
+  $effect(() => {
+    const y = yawTune;
+    if (!tuning) return;
+    try {
+      if (Number.isFinite(y)) localStorage.setItem('sa-tune-yaw', String(y));
+      else localStorage.removeItem('sa-tune-yaw');
+    } catch {
+      // private window: the slider still works for this visit
+    }
+  });
   $effect(() => {
     const ui = uiY;
     const bot = botY;
@@ -233,7 +259,7 @@
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
-      ontap={blast} />
+      ontap={blast} {restYaw} />
     <header class="top">
       <span class="brand">Simulacra Americana</span>
       <!-- Always there, always both: the switch sets the look and the robot's
@@ -307,13 +333,18 @@
 
 {/if}
 
-{#if tuning && narrow}
+{#if tuning}
   <div class="tune" role="group" aria-label="Positions">
-    <label>What-if <span>{uiY}</span>
-      <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={uiY} /></label>
-    <label>Robot <span>{botY}</span>
-      <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={botY} /></label>
-    <button type="button" onclick={() => { uiY = UI_Y; botY = BOT_Y; }}>Reset</button>
+    {#if narrow}
+      <label>What-if <span>{uiY}</span>
+        <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={uiY} /></label>
+      <label>Robot <span>{botY}</span>
+        <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={botY} /></label>
+    {/if}
+    <label>Yaw <span>{restYaw}°{Number.isFinite(yawTune) ? '' : ' (default)'}</span>
+      <input type="range" min="-180" max="180" step="1" value={restYaw}
+        oninput={(e) => (yawTune = Number(e.currentTarget.value))} /></label>
+    <button type="button" onclick={() => { uiY = UI_Y; botY = BOT_Y; yawTune = Number.NaN; }}>Reset</button>
   </div>
 {/if}
 
@@ -448,9 +479,8 @@
     left: 12px;
     right: 12px;
     z-index: 30;
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    align-items: end;
+    display: flex;
+    align-items: flex-end;
     gap: 10px;
     padding: 10px 12px;
     border-radius: 14px;
@@ -459,7 +489,7 @@
     font-size: 12px;
     color: #000;
   }
-  .tune label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+  .tune label { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
   .tune span { font-weight: 400; font-variant-numeric: tabular-nums; color: rgba(0, 0, 0, 0.6); }
   .tune input { width: 100%; }
   .tune button { height: 30px; padding: 0 10px; border: none; border-radius: 999px; background: #f2f2f7; font: inherit; }

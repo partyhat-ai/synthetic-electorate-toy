@@ -26,7 +26,7 @@
   import type { Paint } from '$lib/robot/characters';
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
   import RobotFrame from '$lib/robot/RobotFrame.svelte';
-  import { dragTurn, type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
+  import { dragTurn, easeToward, type Nudge, nudgeToSlot, ROBOT_YAW, sameStage, stageInSlot, YAW_EASE_RATE, yawForYear } from '$lib/robot/stage';
   import { ELECTION_YEARS } from './geo';
 
   interface Props {
@@ -45,8 +45,10 @@
     shown?: boolean;
     /** The robot was tapped (not dragged). */
     ontap?: () => void;
+    /** Its resting turn, degrees, which the time bar sways around (stage.ts ROBOT_YAW). */
+    restYaw?: number;
   }
-  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), ontap }: Props = $props();
+  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), ontap, restYaw = ROBOT_YAW }: Props = $props();
 
   const SETTLE_MS = 150;
   let host = $state<HTMLElement | null>(null);
@@ -63,10 +65,32 @@
   let dragYaw = $state(0);
   let dragFrom: number | null = null;
   let dragged = false;
+  /** The turn a new drag starts from (mid-way through a snap back). */
+  let dragBase = 0;
+  // Let go, the robot eases back three times slower than it follows the
+  // time bar: the page eases the drag's turn to 0 at a third of the
+  // renderer's rate, and the renderer follows that.
+  const SNAP_RATE = YAW_EASE_RATE / 3;
+  let snapFrame = 0;
+  function snapBack(): void {
+    cancelAnimationFrame(snapFrame);
+    let last = performance.now();
+    const step = (now: number) => {
+      dragYaw = easeToward(dragYaw, 0, (now - last) / 1000, SNAP_RATE);
+      last = now;
+      if (Math.abs(dragYaw) < 0.05) {
+        dragYaw = 0;
+        snapFrame = 0;
+        return;
+      }
+      snapFrame = requestAnimationFrame(step);
+    };
+    snapFrame = requestAnimationFrame(step);
+  }
 
   // The robot turns a little with the time bar (yawForYear) and by hand,
   // eased in the renderer.
-  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length) + dragYaw);
+  const yawNow = $derived(yawForYear(ELECTION_YEARS.indexOf(year), ELECTION_YEARS.length, restYaw) + dragYaw);
   const stage = $derived(box ? { ...box, yaw: yawNow } : null);
 
   /** A shot from the robot's chest reactor in `color` (#rrggbb). */
@@ -87,6 +111,9 @@
     if (t && !spot.contains(t) && t.closest('button, input, a, label, [role="status"], [role="group"]')) return;
     dragFrom = e.clientX;
     dragged = false;
+    cancelAnimationFrame(snapFrame);
+    snapFrame = 0;
+    dragBase = dragYaw;
     e.preventDefault(); // no text selection while turning
   }
   function robotMove(e: PointerEvent): void {
@@ -94,13 +121,13 @@
     const turn = dragTurn(e.clientX - dragFrom, dragged);
     if (turn === null) return;
     dragged = true;
-    dragYaw = turn;
+    dragYaw = dragBase + turn;
   }
   function robotUp(): void {
     if (dragFrom === null) return;
     if (!dragged) ontap?.();
     dragFrom = null;
-    dragYaw = 0;
+    snapBack();
     // The click (if any) lands before this; a drag released off the page leaves none.
     setTimeout(() => (dragged = false));
   }
@@ -175,6 +202,7 @@
   onDestroy(() => {
     clearTimeout(readyTimer);
     cancelAnimationFrame(measureFrame);
+    cancelAnimationFrame(snapFrame);
   });
 </script>
 
