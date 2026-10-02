@@ -204,17 +204,6 @@
 </script>
 
 <section class="whatif" class:stage aria-label="What if">
-  <!-- The robot stands over this spot (drawn by the page's overlay, which
-       lets clicks through): pressing it is talking to it. -->
-  <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
-    disabled={closed || running} onclick={() => input?.focus()}>
-    {#if stage && still}
-      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
-        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
-    {:else if !robotShown && face}
-      <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
-    {/if}
-  </button>
   <div class="talk">
     <div class="hold" class:lifted={opened} style:height={opened ? `${holdH}px` : null}>
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -246,18 +235,30 @@
         {ontoggle} {onrun} {onstop} {onreset} {onfocus} />
     {/if}
   </div>
+  <!-- The robot stands over this spot (drawn by the page's overlay, which
+       lets clicks through): pressing it is talking to it. -->
+  <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
+    disabled={closed || running} onclick={() => input?.focus()}>
+    {#if stage && still}
+      <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
+        style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
+    {:else if !robotShown && face}
+      <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
+    {/if}
+  </button>
 </section>
 
 <style>
+  /* The bubble and the composer take the full width; the robot stands
+     below them, centred, in a slot its size (stage.ts STAGE_SIZE, 200px
+     wide; the slot's floor is its feet). */
   .whatif {
     margin-top: -10px;
-    display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 12px;
   }
-  /* Room for the robot to stand in, feet on the field's baseline. */
-  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); align-items: end; min-height: 220px; }
   .bot {
     position: relative;
     height: 44px;
@@ -269,8 +270,9 @@
   }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
-  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
-  .stage .bot { height: 220px; align-self: start; }
+  /* Below the what-if, centred: a horizontal drag turns the robot, a
+     vertical one still scrolls the page. */
+  .stage .bot { width: 200px; height: 236px; margin-top: 4px; align-self: center; touch-action: pan-y; }
   .face {
     position: absolute;
     left: 0;
@@ -315,7 +317,7 @@
      the top and the composer to the floor, so a year with more chips or a
      longer line never moves either while the time bar is scrubbed; a long
      bubble grows the column downward, like any message. */
-  .stage .talk { align-self: stretch; }
+  .talk { min-width: 0; }
   /* Opened (More), the bubble leaves the flow: its slot keeps the folded
      height, so nothing below or around moves, and the bubble grows upward
      from the slot's bottom, over the page above. The bubble's column is the
@@ -336,7 +338,8 @@
     transition: opacity 0.2s ease;
   }
   .bubble.busy { opacity: 0.85; }
-  .bubble.tall::after { display: none; }
+  /* The tail pointed at the robot beside the bubble; it now stands below. */
+  .bubble::after { display: none; }
   /* The Test Chat's tail (MechaHud .msg--you.tail), mirrored to the left,
      filled with --bubble (#fff). */
   .bubble::after {

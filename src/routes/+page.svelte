@@ -55,9 +55,12 @@
   let robotShown = $state(false);
   let tabIcon = $state<TabIcon | null>(null);
   let revealing = $state(false);
-  // Phone-width windows get RevisitOnDesktop instead of the page.
+  // Phone-width windows got RevisitOnDesktop instead of the page. Stubbed
+  // out: phones get the page (and the robot). Set true to bring it back.
+  const REVISIT_ON_DESKTOP = false;
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
+  const revisit = $derived(REVISIT_ON_DESKTOP && narrow);
   // Dragging the time bar: the robot holds still (no restaging) and the
   // election and the groups hold their height while each year loads, so
   // nothing jumps; the robot is placed once more on release.
@@ -77,9 +80,8 @@
   const baseSlices = $derived(new Map((page.sim?.slices ?? []).map((s) => [s.key, s])));
   const reached = $derived(new Set(page.selected.flatMap((k) => page.whatIfs.find((w) => w.key === k)?.slices ?? [])));
   const hasOthers = $derived(slices.some((s) => s.O > 0.005));
-  // A browser tab draws the robot into the slot beside the field; a
-  // phone-width window shows its face.
-  const stageMode = $derived(!narrow);
+  // The 3D robot is drawn at every width, in the slot below the what-if.
+  const stageMode = $derived(!revisit);
 
   // The composer's chips and field, held from the last loaded year while a
   // scrubbed-to year is still loading.
@@ -94,7 +96,7 @@
 
   $effect(() => {
     const y = page.year;
-    if (narrow) return;
+    if (revisit) return;
     untrack(() => void page.loadSim(y));
   });
   $effect(() => {
@@ -190,7 +192,7 @@
 </svelte:head>
 <svelte:window onkeydown={onKey} />
 
-{#if narrow}
+{#if revisit}
   <RevisitOnDesktop />
 {:else}
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
@@ -272,7 +274,7 @@
 {/if}
 
 <!-- Its own block: toBody moves it, so it must not be the edge of the one above. -->
-{#if !narrow}
+{#if !revisit}
 <div class="timebar" class:dark={!page.light} use:toBody>
   <TimeBar dark={!page.light} years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
     onchange={(y) => page.setYear(y)} onscrub={scrub} />
