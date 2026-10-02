@@ -168,8 +168,11 @@ For draw d, "adults" means legally eligible adults.
 - **T4: Black Southerners.**
   - Run a Goodman regression of 1916 men's turnout on the Black share of
     eligible men across the eleven former Confederate states.
-  - The Black rate relative to the white rate is `t_rel`: the regression's
-    implied Black rate over its white rate, floored at 0.
+  - The implied Black rate is drawn from the regression posterior truncated
+    to [0, white rate] (Goodman with Duncan–Davis bounds). The unbounded
+    estimate is −0.18 ± 0.15.
+  - The Black rate relative to the white rate is `t_rel`: median 0.09, 80%
+    interval 0.01–0.25.
   - The fraction `1 − t_rel` of Black Southern adults is counted as excluded
     (`extralegal_exclusion`). The rest turn out at the white rate of their own
     state and sex.
@@ -209,6 +212,16 @@ For draw d, "adults" means legally eligible adults.
 - **C3: calibration.** Per state, a Republican intercept and an "other"
   intercept are solved by iterative scaling. Each state's R, D and other votes
   then match the certified returns to within 1e-7 of the vote.
+- **C3b: Black Southern voters.** They split like Black voters outside the
+  South.
+  - **Accounting bound.** Their votes for either party may not exceed 80% of
+    that party's certified vote in the state.
+  - Where the bound binds, their turnout is lowered, the difference is
+    counted as exclusion, and the state's other voters of the same sex make up
+    the total.
+  - The rest of the state is then recalibrated.
+  - The bound binds in South Carolina in 70% of draws (Harding got 2,610
+    votes there) and in Mississippi in 18%.
 - Naturalized voters' choice isn't separately identified in 1920. They share
   their state's intercept [I].
 

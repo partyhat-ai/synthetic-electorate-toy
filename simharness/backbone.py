@@ -91,6 +91,45 @@ def _solve(v, shift, tR, tO, iters=300):
     return pR, pO
 
 
+def _black_south_bound(D, S, sidx, south_state, black, south_cell, female, votes_cell, share, can_eff, t, R, Dm, O, T, shift_R):
+    """C3b (in place): Black Southern voters split like Black voters outside the
+    South, bounded by the state's certified ledger; the rest of the state is
+    re-calibrated. Returns how many draws hit the bound, per state."""
+    nsb, bsc = black & ~south_cell, black & south_cell
+    bound_hits = np.zeros(S)
+    for d in range(D):
+        vn = votes_cell[d, nsb]
+        nb_nat = (vn[:, None] * share[d, nsb, :]).sum(axis=0) / max(vn.sum(), 1e-9)
+        for s in np.where(south_state)[0]:
+            nb = nb_nat
+            idx = np.where(sidx == s)[0]
+            b_idx, o_idx = idx[bsc[idx]], idx[~bsc[idx]]
+            vb = votes_cell[d, b_idx]
+            if vb.sum() <= 0:
+                continue
+            scale = min(1.0, 0.8 * R[s] / max(vb.sum() * nb[0], 1e-9), 0.8 * Dm[s] / max(vb.sum() * nb[1], 1e-9))
+            if scale < 1.0:
+                bound_hits[s] += 1
+                for sex_m in (female, ~female):
+                    bi = b_idx[sex_m[b_idx]]
+                    oi = o_idx[sex_m[o_idx]]
+                    lost = votes_cell[d, bi].sum() * (1 - scale)
+                    can_eff[d, bi] *= scale
+                    votes_cell[d, bi] *= scale
+                    vo = votes_cell[d, oi].sum()
+                    if vo > 0:
+                        t[d, oi] *= 1 + lost / vo
+                        votes_cell[d, oi] *= 1 + lost / vo
+                vb = votes_cell[d, b_idx]
+            share[d, b_idx, :] = nb
+            v = votes_cell[d, o_idx]
+            tR = R[s] / T[s] * votes_cell[d, idx].sum() - vb.sum() * nb[0]
+            tO = O[s] / T[s] * votes_cell[d, idx].sum() - vb.sum() * nb[2]
+            pR, pO = _solve(v, shift_R[d, o_idx], tR, max(tO, 0.0))
+            share[d, o_idx, 0], share[d, o_idx, 2], share[d, o_idx, 1] = pR, pO, 1 - pR - pO
+    return bound_hits
+
+
 def legal_can(inp: Inputs, year: int) -> tuple[np.ndarray, list]:
     """Fraction of each cell legally able to vote, and the reason for the rest.
 
@@ -189,7 +228,10 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
     votes_F = T20 - votes_M
     clipped = ((W < 0) & new[None, :] & ~closed[None, :]).mean(axis=0)
 
-    # T4: Black Southern turnout (Goodman on 1916 men, 11 Southern states)
+    # T4: Black Southern turnout (Goodman on 1916 men, 11 Southern states),
+    # drawn from the regression posterior truncated to its logical bounds
+    # [0, white rate] (Goodman with Duncan–Davis bounds).
+    from scipy.stats import truncnorm
     blk_men16 = per_state(a16 * can16, ~female & black) / np.maximum(M16, 1)
     t_bs = np.empty(D)
     goodman_south = {}
@@ -198,10 +240,14 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
         y = m16[d, south_state]
         _, _, info = bayes_ols(X, y, 1, rng)
         b0, b1 = info['beta_hat']
+        cov = info['resid_sd'] ** 2 * np.linalg.inv(X.T @ X)
         white = max(b0, 1e-3)
-        t_bs[d] = np.clip((b0 + b1) / white, 0.0, 1.0)
+        mu, sd = b0 + b1, float(np.sqrt(cov[0, 0] + cov[1, 1] + 2 * cov[0, 1]))
+        a_, b_ = (0 - mu) / sd, (white - mu) / sd
+        black_rate = float(truncnorm.rvs(a_, b_, loc=mu, scale=sd, random_state=rng))
+        t_bs[d] = black_rate / white
         if d == 0:
-            goodman_south = {'white_rate': float(b0), 'black_rate': float(b0 + b1)}
+            goodman_south = {'white_rate': float(b0), 'black_rate_unbounded': float(mu), 'black_rate_se': sd}
 
     # Build the world: can, t, and the exclusion split
     can = np.broadcast_to(can20, (D, C)).copy()
@@ -254,6 +300,7 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
     shift_R = np.where(female, 1, 0)[None, :] * delta[:, None] + black[None, :] * beta_B[:, None]
     votes_cell = a20 * can_eff * t
     R20, O20 = ret.R20.to_numpy(), ret.O20.to_numpy()
+    D20 = ret.D20.to_numpy()
     for d in range(D):
         for s in range(S):
             idx = np.where(sidx == s)[0]
@@ -262,6 +309,17 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
                 continue
             pR, pO = _solve(v, shift_R[d, idx], R20[s] / T20[0, s] * v.sum(), O20[s] / T20[0, s] * v.sum())
             share[d, idx, 0], share[d, idx, 2], share[d, idx, 1] = pR, pO, 1 - pR - pO
+
+    # C3b: Black Southern voters split like Black voters outside the South
+    # (the assumption `fifteenth` borrows), subject to an accounting bound:
+    # their votes for either major party can't exceed 80% of that party's
+    # certified vote in the state (in South Carolina Harding got 2,610 votes).
+    # Where the bound binds, Black Southern turnout is lowered, the difference
+    # is counted as exclusion, and the state's other voters of the same sex
+    # make up the total. The rest of the state is then re-calibrated.
+    bound_hits = _black_south_bound(D, S, sidx, south_state, black, south_cell, female, votes_cell, share, can_eff, t,
+                                    R20, D20, O20, T20[0], shift_R)
+    excluded = can - can_eff
 
     barred_by = {
         'legal': a20 * 0 + (1 - can),
@@ -279,6 +337,7 @@ def fit(inp: Inputs, draws: int, seed: int, pop_cv: dict | None = None, beta_b_p
         'women_negative_share': dict(zip(states, clipped.tolist())),
         'men_turnout_over_1': dict(zip(states, over.tolist())),
         'goodman_south_first_draw': goodman_south,
+        'black_south_bound_share': dict(zip(states, (bound_hits / D).tolist())),
         'E16': E16, 'E20': E20, 'T16': T16[0], 'T20': T20[0], 'm16': m16,
         'votes_F': votes_F, 'votes_M': votes_M, 'F20': F20, 'M20': M20,
     }

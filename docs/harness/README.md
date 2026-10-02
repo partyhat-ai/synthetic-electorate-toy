@@ -9,6 +9,9 @@ This is the simulation behind the page. Its code and data sit at the repo root
 
 Read [`METHOD.md`](../../METHOD.md) first. Then read [`EVAL.md`](../../EVAL.md) (the 1920 prototype's results, failures included).
 
+**[`DISCLOSURES.md`](../../DISCLOSURES.md)** is the running log of every known inaccuracy and honesty flag.
+Add to it the moment something is found.
+
 Nothing here is imported by the page. The bundle's shape is
 `simharness.serialize.Bundle`, with a shared example at
 `tests/fixtures/bundle.example.json` (the page's zod schema parses the same file).

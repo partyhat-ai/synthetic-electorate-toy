@@ -48,6 +48,15 @@ its effect. None changes a threshold.
    - The first fit's Goodman regression (intercept, lag) gave β_B = −1.5
      after the prior, driven by region.
    - Changed to region intercepts.
+4. **Black Southern turnout.** The first fit clipped a negative Goodman
+   estimate to 0 in every draw. Changed to the regression posterior truncated
+   to [0, white rate], which is Goodman with Duncan–Davis bounds: median 9%
+   of the white rate (1–25%).
+5. **Black Southern choice.** The first fit gave Black Southern voters a
+   shift relative to white Southerners.
+   - Changed to the borrowed Northern split, with an accounting bound: their
+     votes for either party are at most 80% of its certified vote.
+   - The bound binds in South Carolina (70% of draws) and Mississippi (18%).
 6. **Sex turnout cap.** R1 first failed in Utah in 4 of 400 draws: a drawn
    men/women ratio implied men's turnout above 100%. Each sex is now capped at
    98%, and the excess moves to the other sex, so state totals stay exact.
