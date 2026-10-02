@@ -29,11 +29,13 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import hashlib
+import http.client
 import json
 import math
 import os
 import re
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.parse
@@ -43,7 +45,7 @@ UA = ("SimulacraHarness-corpus-builder/1.0 (historical election research; "
       "single-threaded, cached, backs off on 429)")
 SEARCH = "https://www.loc.gov/collections/chronicling-america/"
 DEFAULT_CACHE = os.environ.get("CORPUS_BUILD_CACHE") or os.path.join(
-    __import__("tempfile").gettempdir(), "simharness_corpus_build_cache")
+    tempfile.gettempdir(), "simharness_corpus_build_cache")
 DEFAULT_OUT = os.path.expanduser(
     "~/research_notes/historical_election_sim_data/harness_cache/sources")
 
@@ -452,8 +454,7 @@ def fetch_json(url, cache_dir):
                 return None, None
             print(f"  [http {e.code}] giving up {url[:100]}", file=sys.stderr)
             return None, None
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError,
-                __import__('http.client').client.HTTPException) as e:
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError, http.client.HTTPException) as e:
             print(f"  [err {type(e).__name__}] backoff {delay}s {url[:100]}", file=sys.stderr)
             time.sleep(delay)
             delay = min(delay * 2, 300)
@@ -474,7 +475,7 @@ def search(q, y, state, cache_dir, c=20, facets=False):
         total = (body.get("pagination") or {}).get("of")
         res = body.get("results") or []
         for f in body.get("facets") or []:
-            if f.get("field") in ("location_state",) or "location_state" in str(f.get("type", "")):
+            if f.get("field") == "location_state" or "location_state" in str(f.get("type", "")):
                 for it in f.get("filters", []):
                     fac[it.get("title", "").lower()] = it.get("count", 0)
     LOG.append(dict(ts=ts, q=q, state=state or "—", total=total, returned=len(res)))
@@ -543,14 +544,13 @@ STRAY = re.compile(r"^[\|■•»«\*\^_~`ijI!l1;:,\.'\"]{1,2}$")
 def clean_tokens(toks):
     """Light cleaning: drop stray margin chars silently; collapse runs of garbage
     tokens to [OCR illegible]. Returns (tokens, changed_with_brackets)."""
-    out, changed, garbage = [], False, 0
-    for i, w in enumerate(toks):
+    out, changed = [], False
+    for w in toks:
         if STRAY.match(w) and w.lower() not in ("i", "a"):
             continue
         letters = sum(ch.isalpha() for ch in w)
         bad = len(w) >= 3 and letters / len(w) < 0.5 and not re.match(r"^[\$\d,\.%-]+$", w)
         if bad:
-            garbage += 1
             if not out or out[-1] != "[OCR illegible]":
                 out.append("[OCR illegible]")
                 changed = True
@@ -575,15 +575,11 @@ PRED_RX = re.compile(r"\b(electoral votes?|will carry|carry the state|majority o
 
 
 def kw_list(topic):
-    label, desc, queries, extra = topic
+    """Search and extra keywords, cut to 7 letters so they match as word prefixes."""
+    _, _, queries, extra = topic
     stop = {"the", "of", "and", "to", "in", "for", "by", "a", "on", "with", "out", "is"}
-    kws = set()
-    for q in queries:
-        for w in re.split(r"[\s\-]+", q.lower()):
-            if w and w not in stop and len(w) > 2:
-                kws.add(w[:7] if len(w) > 7 else w)
-    for w in extra:
-        kws.add(w.lower()[:7] if len(w) > 7 else w.lower())
+    kws = {w[:7] for q in queries for w in re.split(r"[\s\-]+", q.lower()) if w and w not in stop and len(w) > 2}
+    kws.update(w.lower()[:7] for w in extra)
     return sorted(kws)
 
 
@@ -616,7 +612,7 @@ def best_window(toks, kws, W=125):
             if re.search(r"[\.\?!]['\"]?$", toks[j - 1]):
                 e = j
                 break
-    return s, e, pref[e] - pref[s] if e <= len(toks) else best
+    return s, e, pref[e] - pref[s]
 
 
 def cand_regex(y):
@@ -652,6 +648,61 @@ def first(v):
     return v
 
 
+def select(cands, topics, target):
+    """Up to `target` items: per topic, round-robin across the least-covered regions (candidate
+    mentions only once half the topic's quota is filled), then the leftovers by score; at most
+    4 items per paper and no near-duplicates (shingle overlap > 0.3)."""
+    per_topic = math.ceil(target / len(topics))
+    chosen, paper_n = [], {}
+    reg_n = {r: 0 for r in REGIONS + ["unknown"]}
+
+    def ok(c):
+        if paper_n.get(c["lccn"], 0) >= 4:
+            return False
+        for o in chosen:
+            if o["lccn"] == c["lccn"] and o["date"] == c["date"] and o["page"] == c["page"]:
+                return False
+            a, b = c["_sh"], o["_sh"]
+            if a and b and len(a & b) / max(1, min(len(a), len(b))) > 0.3:
+                return False
+        return True
+
+    leftovers = []
+    for topic in topics:
+        pool = sorted([c for c in cands if c["topic"] == topic[0]], key=lambda c: -c["_score"])
+        got = 0
+        while got < per_topic and pool:
+            regs = sorted(REGIONS, key=lambda r: reg_n[r])
+            pick = None
+            for reg in regs:
+                for c in pool:
+                    if c["region"] == reg and ok(c) and not (c["mentions_candidates"] and got < per_topic // 2):
+                        pick = c
+                        break
+                if pick:
+                    break
+            if not pick:
+                for c in pool:
+                    if ok(c):
+                        pick = c
+                        break
+            if not pick:
+                break
+            pool.remove(pick)
+            chosen.append(pick)
+            paper_n[pick["lccn"]] = paper_n.get(pick["lccn"], 0) + 1
+            reg_n[pick["region"]] = reg_n.get(pick["region"], 0) + 1
+            got += 1
+        leftovers += pool
+    for c in sorted(leftovers, key=lambda c: -c["_score"]):
+        if len(chosen) >= target:
+            break
+        if ok(c):
+            chosen.append(c)
+            paper_n[c["lccn"]] = paper_n.get(c["lccn"], 0) + 1
+    return chosen
+
+
 def build_year(y, cache_dir, out_dir, target=88, verbose=True):
     cfg = Y[y]
     LOG.clear()
@@ -671,7 +722,7 @@ def build_year(y, cache_dir, out_dir, target=88, verbose=True):
         d = r.get("date")
         try:
             dd = dt.date.fromisoformat(d)
-        except Exception:
+        except (TypeError, ValueError):  # missing or malformed date
             rejected["date"] += 1
             return
         if not (start <= dd <= cutoff):
@@ -753,57 +804,7 @@ def build_year(y, cache_dir, out_dir, target=88, verbose=True):
             for r in rs[:6]:
                 consider(r, ti, queries[0])
 
-    # ---- selection
-    per_topic = math.ceil(target / len(topics))
-    chosen, paper_n = [], {}
-    reg_n = {r: 0 for r in REGIONS + ["unknown"]}
-
-    def ok(c):
-        if paper_n.get(c["lccn"], 0) >= 4:
-            return False
-        for o in chosen:
-            if o["lccn"] == c["lccn"] and o["date"] == c["date"] and o["page"] == c["page"]:
-                return False
-            a, b = c["_sh"], o["_sh"]
-            if a and b and len(a & b) / max(1, min(len(a), len(b))) > 0.3:
-                return False
-        return True
-
-    leftovers = []
-    for ti, topic in enumerate(topics):
-        pool = sorted([c for c in cands if c["topic"] == topic[0]], key=lambda c: -c["_score"])
-        got = 0
-        while got < per_topic and pool:
-            regs = sorted(REGIONS, key=lambda r: reg_n[r])
-            pick = None
-            for reg in regs:
-                for c in pool:
-                    if c["region"] == reg and ok(c) and not (c["mentions_candidates"] and got < per_topic // 2):
-                        pick = c
-                        break
-                if pick:
-                    break
-            if not pick:
-                for c in pool:
-                    if ok(c):
-                        pick = c
-                        break
-            if not pick:
-                break
-            pool.remove(pick)
-            chosen.append(pick)
-            paper_n[pick["lccn"]] = paper_n.get(pick["lccn"], 0) + 1
-            reg_n[pick["region"]] = reg_n.get(pick["region"], 0) + 1
-            got += 1
-        leftovers += pool
-    for c in sorted(leftovers, key=lambda c: -c["_score"]):
-        if len(chosen) >= target:
-            break
-        if ok(c):
-            chosen.append(c)
-            paper_n[c["lccn"]] = paper_n.get(c["lccn"], 0) + 1
-            reg_n[c["region"]] = reg_n.get(c["region"], 0) + 1
-
+    chosen = select(cands, topics, target)
     chosen.sort(key=lambda c: (c["topic_code"], c["date"], c["id"]))
     assert all(c["date"] <= cutoff.isoformat() for c in chosen)
     os.makedirs(out_dir, exist_ok=True)
@@ -838,7 +839,8 @@ def provenance_md(years, cache_dir):
         p = os.path.join(cache_dir, f"meta_{y}.json")
         if not os.path.exists(p):
             continue
-        m = json.load(open(p))
+        with open(p) as f:
+            m = json.load(f)
         ts = [q["ts"] for q in m["queries"] if q.get("ts")]
         out.append(f"\n### corpus_{y}.jsonl\n")
         out.append(f"- Election {m['election']}; cutoff {m['cutoff']}; search filter "

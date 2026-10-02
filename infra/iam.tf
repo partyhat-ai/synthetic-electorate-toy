@@ -86,9 +86,12 @@ resource "aws_iam_role" "deploy" {
       Effect    = "Allow"
       Principal = { Federated = data.aws_iam_openid_connect_provider.github.arn }
       Action    = "sts:AssumeRoleWithWebIdentity"
+      # Exact match, no wildcard: one repo, one branch (var.github_oidc_sub).
       Condition = {
-        StringEquals = { "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com" }
-        StringLike   = { "token.actions.githubusercontent.com:sub" = var.github_oidc_sub }
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+          "token.actions.githubusercontent.com:sub" = var.github_oidc_sub
+        }
       }
     }]
   })

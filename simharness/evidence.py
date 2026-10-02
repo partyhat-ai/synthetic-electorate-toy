@@ -24,7 +24,7 @@ anything dated after the context cutoff. It is used after the interviews:
 - **confidence**: a tier from high to very low ("extremely low"), with the
   reasons shown to the reader.
 
-Pre-registered what-ifs use evidence only to evaluate and grade confidence.
+Hand-written what-ifs use evidence only to evaluate and grade confidence.
 Their numbers follow METHOD.md.
 """
 from __future__ import annotations
@@ -462,7 +462,7 @@ def confidence(spec: dict, ev: dict | None, agree: dict | None, agent: dict | No
     kind = spec['kind']
     t = BASE_TIER.get(kind, 1)
     if generated and kind == 'franchise':
-        t = 2  # borrowed behaviour chosen by the compiler, not by the pre-registration
+        t = 2  # borrowed behaviour chosen by the compiler, not written by hand
     flags, reasons = [], []
     st = strength(ev) if ev is not None else {'level': 'not-researched'}
     plaus = spec.get('plausibility', 'documented')

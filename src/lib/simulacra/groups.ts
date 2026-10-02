@@ -6,6 +6,9 @@
 import type { Slice } from './schemas';
 
 export const GROUP_ORDER = ['men', 'women', 'south-white', 'black-south', 'immigrants'] as const;
+/** Each group is drawn as this many people, a row of dots (SliceRow; AbsentRow's rule spans as many). */
+export const DOTS = 50;
+const IN_ORDER: ReadonlySet<string> = new Set(GROUP_ORDER);
 
 export interface Absent {
   readonly key: string;
@@ -31,7 +34,7 @@ export function withAbsent(slices: readonly Slice[]): (Slice | Absent)[] {
     if (s) rows.push(s);
     else if (ABSENT[key]) rows.push({ key, ...ABSENT[key] });
   }
-  for (const s of slices) if (!(GROUP_ORDER as readonly string[]).includes(s.key)) rows.push(s);
+  for (const s of slices) if (!IN_ORDER.has(s.key)) rows.push(s);
   return rows;
 }
 

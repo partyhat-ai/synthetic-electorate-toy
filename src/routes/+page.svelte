@@ -14,7 +14,8 @@
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
   import AboutSources from '$lib/simulacra/AboutSources.svelte';
-  import { toBody } from '$lib/simulacra/actions';
+  import { findAccessKey } from '$lib/simulacra/accessKey';
+  import { tallest, toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
   import ElectionHeader from '$lib/simulacra/ElectionHeader.svelte';
@@ -24,8 +25,8 @@
   import Narrator from '$lib/simulacra/Narrator.svelte';
   import { hoverPlaces } from '$lib/simulacra/places';
   import AbsentRow from '$lib/simulacra/AbsentRow.svelte';
-  import { isAbsent, withAbsent } from '$lib/simulacra/groups';
-  import { ROBOT_YAW } from '$lib/robot/stage';
+  import { DOTS, GROUP_ORDER, isAbsent, withAbsent } from '$lib/simulacra/groups';
+  import { NARROW_ROBOT_YAW, ROBOT_YAW } from '$lib/robot/stage';
   import RobotStage, { STILLS } from '$lib/simulacra/RobotStage.svelte';
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { WhatIf } from '$lib/simulacra/schemas';
@@ -37,8 +38,10 @@
   import '$lib/simulacra/theme.css';
 
   const params = readParams(new URLSearchParams(location.search), import.meta.env.DEV);
+  // The typed what-ifs' access key: from a link's #key=, else kept for the tab.
+  const access = findAccessKey(location.hash, () => sessionStorage);
   const page = new PageState({
-    api: params.sample ? createSampleApi() : createSimulacraApi(apiOptionsFor(params.simapi)),
+    api: params.sample ? createSampleApi() : createSimulacraApi(apiOptionsFor(params.simapi, access.key)),
     year: params.year ?? OPENING_YEAR,
     replaceUrl: (url) => {
       try {
@@ -60,9 +63,7 @@
   // Phone-width and narrow desktop windows: the robot's resting turn differs there.
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
-  // The robot's resting turn, degrees: 43 on a narrow window, ROBOT_YAW (40) on a wide one.
-  const NARROW_YAW = 43;
-  const restYaw = $derived(narrow ? NARROW_YAW : ROBOT_YAW);
+  const restYaw = $derived(narrow ? NARROW_ROBOT_YAW : ROBOT_YAW);
   // Dragging the time bar: the robot holds still (no restaging) and the
   // election and the groups hold their height while each year loads, so
   // nothing jumps; the robot is placed once more on release.
@@ -71,6 +72,8 @@
   let groupsH = $state(0);
   let electionHold = $state(0);
   let groupsHold = $state(0);
+  // The tallest the groups have been at this width (.room).
+  let rowsMost = $state(0);
 
   const e = $derived(page.election);
   const B = $derived(e.candidates[1] ?? null);
@@ -85,8 +88,6 @@
   const baseSlices = $derived(new Map((page.sim?.slices ?? []).map((s) => [s.key, s])));
   const reached = $derived(new Set(page.selected.flatMap((k) => page.whatIfs.find((w) => w.key === k)?.slices ?? [])));
   const hasOthers = $derived(slices.some((s) => s.O > 0.005));
-  // The 3D robot is drawn at every width, in the slot below the what-if.
-  const stageMode = true;
 
   // The composer's chips and field, held from the last loaded year while a
   // scrubbed-to year is still loading.
@@ -175,6 +176,14 @@
     readSmall();
     small.addEventListener('change', readSmall);
     void tick().then(() => {
+      // The key leaves the address bar before the year is written into it.
+      if (access.hash !== null) {
+        try {
+          replaceState(`${location.pathname}${location.search}${access.hash}`, {});
+        } catch {
+          // router not ready
+        }
+      }
       page.urlReady = true;
       page.syncUrl();
       robot?.measureSoon();
@@ -198,7 +207,7 @@
 
 <div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
-    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
+    <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
       ontap={blast} {restYaw} />
     <header class="top">
@@ -227,7 +236,8 @@
       <ElectionHeader election={e} year={page.year} {rerun} {paints} {names} light={page.light} highlight={$hoverPlaces}
         hold={electionHold} bind:height={electionH} />
 
-      <section class="groups" aria-labelledby="sa-groups" bind:offsetHeight={groupsH} style:min-height={groupsHold ? `${groupsHold}px` : null}>
+      <section class="groups" aria-labelledby="sa-groups" bind:offsetHeight={groupsH} style:min-height={groupsHold ? `${groupsHold}px` : null}
+        style:--groups={GROUP_ORDER.length} style:--strip-aspect={DOTS}>
         <div class="groups-head">
           <h2 id="sa-groups">Who voted</h2>
           {#if page.sim?.slices.length}<ul class="legend" aria-label="Key">
@@ -236,8 +246,10 @@
             {#if hasOthers}<li><span class="key fill" style:background={colors.O}></span>{names.O}</li>{/if}
             <li><span class="key ring"></span>Stayed home</li>
             <li><span class="key dot"></span>Couldn’t vote</li>
-          </ul>{/if}
+          </ul>{:else}<ul class="legend" aria-hidden="true"></ul>{/if}
         </div>
+        <div class="room" style:--most={rowsMost ? `${rowsMost}px` : null}>
+        <div use:tallest={(h) => (rowsMost = h)}>
         {#if page.sim?.slices.length}
           <div class="rows">
             {#key page.editEpoch}
@@ -257,8 +269,8 @@
             {#each [0, 1, 2] as i (i)}
               <div class="ghost-row">
                 <span class="ghost-label"></span>
-                <svg viewBox="0 0 500 10" preserveAspectRatio="xMinYMid meet">
-                  {#each Array(50) as _, j (j)}<circle cx={j * 10 + 5} cy="5" r="3.9" />{/each}
+                <svg viewBox="0 0 {DOTS * 10} 10" preserveAspectRatio="xMinYMid meet">
+                  {#each Array(DOTS) as _, j (j)}<circle cx={j * 10 + 5} cy="5" r="3.9" />{/each}
                 </svg>
                 <span class="ghost-val"></span>
               </div>
@@ -268,9 +280,11 @@
             <p class="groups-note">The voter groups come from the simulation server.</p>
           {/if}
         {/if}
+        </div>
+        </div>
       </section>
 
-      <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} stage={stageMode} {robotShown}
+      <Narrator bind:this={narrator} bind:slot={slotEl} bind:revealing {page} {names} {robotShown}
         still={STILLS[page.view === 'whatif' ? 'rerun' : 'history']} chips={composer.chips} closed={composer.closed} onaction={act}
         caption={describe(page.year)} />
     </main>
@@ -318,9 +332,27 @@
   }
 
   /* ── Who voted ── */
-  /* Zero jitter while scrubbing: the chart reserves its tallest year (five
-     rows; 293px across all 60 years at 1440px). */
-  .groups { min-height: 293px; }
+  /* Nothing under Who voted moves with the year: its rows keep the room the
+     most a year needs, worked out from the rows' own metrics (theme.css):
+     --groups rows (GROUP_ORDER) with one-line names, --two-line-names of
+     them on two. Three is the most any year has: 1972 at a wide window; on a
+     phone "citizens" is set small (GroupLabel) and one wraps at most, so
+     three leaves room to spare there. A year that outgrows the room keeps
+     the tallest seen at this width (--most), so it moves things once, not
+     every time. */
+  .groups {
+    container-type: inline-size;   /* 100cqw: the rows' width */
+    --two-line-names: 3;
+    --strip: 0px;                  /* the dots sit beside the name */
+    --name-lh: calc(var(--name-size) * var(--name-leading));
+    --who: calc(var(--name-lh) + var(--who-gap) + var(--note-size) * var(--note-leading));
+    --row: max(var(--row-min), calc(2 * var(--row-pad-y) + var(--who) + var(--strip)));
+    --row-2: max(var(--row-min), calc(2 * var(--row-pad-y) + var(--who) + var(--name-lh) + var(--strip)));
+  }
+  .room {
+    --reserve: calc((var(--groups) - var(--two-line-names)) * var(--row) + var(--two-line-names) * var(--row-2) + (var(--groups) - 1) * var(--rows-gap));
+    min-height: max(var(--reserve), var(--most, 0px));
+  }
   /* History / Your year: the hub's Content / Chat control
      (MainView .hub-segmented-control), metrics and all. */
   .seg {
@@ -378,12 +410,12 @@
   .scrubbing :global(*) { transition: none !important; animation: none !important; }
   .groups-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 0 10px 8px; }
   h2 { margin: 0; font-size: 17px; font-weight: 600; }
-  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; font-size: 12px; color: rgba(0, 0, 0, 0.6); }
+  .legend { --line-gap: 4px; display: flex; flex-wrap: wrap; gap: var(--line-gap) 14px; margin: 0; padding: 0; list-style: none; font-size: var(--note-size); line-height: var(--note-leading); color: rgba(0, 0, 0, 0.6); }
   .legend li { display: inline-flex; align-items: center; gap: 6px; }
   .key { width: 9px; height: 9px; border-radius: 999px; flex: none; }
   .key.ring { box-sizing: border-box; border: 1.3px solid rgba(0, 0, 0, 0.45); }
   .key.dot { width: 4px; height: 4px; margin: 0 2.5px; background: rgba(0, 0, 0, 0.25); }
-  .rows { display: flex; flex-direction: column; gap: 2px; }
+  .rows { display: flex; flex-direction: column; gap: var(--rows-gap); }
   .ghost-row {
     display: grid;
     grid-template-columns: minmax(160px, 212px) minmax(0, 1fr) 124px;
@@ -406,27 +438,21 @@
        transparent elsewhere, so the robot shows through. A sideways drag
        over it turns the robot; vertical scrolling and pinch-zoom stay. */
     .main { padding: 0 16px; gap: 1px; position: relative; z-index: 4; touch-action: pan-y pinch-zoom; }
-    /* Phones: Who voted is one height every year (up to five groups, each
-       label up to two lines; the key up to two lines), so nothing below it
-       moves with the year. */
-    .legend { min-height: 33px; align-content: flex-start; }
-    /* Who voted holds its most: its heading and key stay put at the top, its
-       groups sit at the foot, so the last group always ends on the same line,
-       12px over the robot. A year with fewer or shorter groups changes only
-       the room between the key and the first group. Every year has five rows
-       (absent ones held, groups.ts), so the most is measured: 409px, 1980 at
-       360px, over all 60 years. */
-    .groups { display: flex; flex-direction: column; justify-content: flex-start; min-height: 410px; }
+    /* Phones: the key keeps room for two lines (and keeps it while the
+       groups load), so the heading and the groups under it stay put. Every
+       year has five rows here (absent ones held, groups.ts). */
+    .legend { min-height: calc(2 * var(--note-size) * var(--note-leading) + var(--line-gap)); align-content: flex-start; }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
   }
-  /* The narrowest phones wrap labels and counts further (1856 at 320px: 371px). */
-  @media (max-width: 359px) {
-    .groups { min-height: calc(78px + 384px); }
+  /* ≤700px: each group's dots sit under its name (SliceRow), as tall as
+     the rows are wide over --strip-aspect. */
+  @media (max-width: 700px) {
+    .groups { --strip: calc(var(--strip-gap) + (100cqw - 2 * var(--row-pad-x)) / var(--strip-aspect)); }
   }
-  /* 701-760px: each group's dots sit beside its name (SliceRow), so five
-     groups are shorter (266px at most, over all 60 years). */
-  @media (min-width: 701px) and (max-width: 760px) {
-    .groups { min-height: calc(var(--groups-head, 78px) + 266px); }
+  /* The narrowest phones wrap names and their lines further: at 320px the
+     most is four extra lines of names and one of notes (2008). */
+  @media (max-width: 359px) {
+    .groups { --two-line-names: 5; }
   }
 </style>

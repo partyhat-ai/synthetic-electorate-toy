@@ -10,6 +10,12 @@ export const STAGE_SIZE = { width: 200, height: 260 } as const;
 
 /** The robot's resting turn, degrees. */
 export const ROBOT_YAW = 40;
+/**
+ * Its resting turn on a narrow window, where it stands above the what-if
+ * rather than beside it: a design choice, found by eye. WhatIf.svelte's
+ * narrow --figure-* lengths were measured at this turn.
+ */
+export const NARROW_ROBOT_YAW = 43;
 /** It turns ±this many degrees from the first election to the last. */
 export const YAW_SWAY = 8;
 /** How quickly the renderer eases toward a new yaw, per second. */

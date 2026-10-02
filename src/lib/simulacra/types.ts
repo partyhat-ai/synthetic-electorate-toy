@@ -1,7 +1,8 @@
 // Small view types shared by the page and its components.
+import type { Bucket } from './schemas';
 
-/** Where a vote lands on screen: the winner (A), the runner-up (B), or everyone else (O). */
-export type Bucket = 'A' | 'B' | 'O';
+/** Where a vote lands on screen: the winner (A), the runner-up (B), or everyone else (O) (schemas.ts). */
+export type { Bucket };
 
 /** A fill per bucket, authored for the current mode (palette.ts paint). */
 export type Colors = Readonly<Record<Bucket, string>>;

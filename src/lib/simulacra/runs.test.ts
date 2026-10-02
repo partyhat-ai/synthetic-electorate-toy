@@ -68,6 +68,15 @@ describe('pollRun', () => {
     expect(api.ids).toHaveLength(3);
   });
 
+  test('a rate-limited answer keeps polling, less often', async () => {
+    const clock = fakeClock();
+    const limited: Outcome<RunStatus> = { kind: 'error', reason: 'limited', message: 'Too many requests.', status: 429 };
+    const api = fakeRun([limited, done()]);
+    const end = await pollRun(api, 'r1', { ...clock, startedAt: 0, current: () => true });
+    expect(end.kind).toBe('done');
+    expect(clock.waits).toEqual([POLL_MS, POLL_MODELLING_MS]);
+  });
+
   test('a failed run and an error both end it, with the reason', async () => {
     const clock = fakeClock();
     const failed = await pollRun(fakeRun([ok({ status: 'failed', error: 'Stopped.' })]), 'r1', {

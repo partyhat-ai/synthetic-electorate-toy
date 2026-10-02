@@ -3,7 +3,10 @@
 // a load balancer needs and the local server doesn't:
 //   - GET /healthz: 200 "ok", no dependencies, registered before the app so a
 //     broken bundle or router can't fail the ALB health check;
-//   - trust proxy 1 (the request comes through Vercel's proxy, then the ALB);
+//   - trust proxy TRUST_PROXY_HOPS (default 2: the request comes through
+//     Vercel's proxy, then the ALB), so req.ip is the visitor's address for
+//     the per-IP rate limits. A request sent to the ALB directly can forge
+//     X-Forwarded-For; the dollar caps hang on access keys, not IPs;
 //   - SIGTERM: stop accepting, let in-flight requests finish, exit. A running
 //     worker is killed with the container; its queue item stays un-done and is
 //     retried by the next worker.
@@ -13,7 +16,7 @@ import { createApp } from './app';
 const port = Number(process.env.PORT || 8080);
 const app = express();
 app.disable('x-powered-by');
-app.set('trust proxy', 1);
+app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS || 2));
 app.get('/healthz', (_req, res) => {
   res.set('Cache-Control', 'no-store').type('text/plain').send('ok');
 });

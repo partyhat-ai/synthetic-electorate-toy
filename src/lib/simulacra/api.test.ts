@@ -1,13 +1,5 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
-import { createSimulacraApi, type Fetch } from './api';
-import { BundleSchema } from './schemas';
-
-const ROOT = fileURLToPath(new URL('../../..', import.meta.url));
-const FIXTURE = join(ROOT, 'tests', 'fixtures', 'bundle.example.json');
-const BUNDLES = join(ROOT, 'serve', 'bundles');
+import { createSimulacraApi, type Fetch, LIMITED_MESSAGE } from './api';
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -164,27 +156,42 @@ describe('createSimulacraApi', () => {
     expect(failed.kind === 'ok' && failed.value.status === 'failed' && failed.value.error).toContain('not been computed');
   });
 
-  test('401 asks for sign-in', async () => {
-    const { fetch } = fakeFetch(() => json({ error: 'no' }, 401));
-    const out = await createSimulacraApi({ fetch }).election(1912);
-    expect(out.kind === 'error' && out.reason).toBe('auth');
-  });
-});
-
-describe('BundleSchema', () => {
-  test('parses the shared bundle example (tests/fixtures/bundle.example.json)', () => {
-    const raw: unknown = JSON.parse(readFileSync(FIXTURE, 'utf8'));
-    const parsed = BundleSchema.safeParse(raw);
-    expect(parsed.error?.issues ?? []).toEqual([]);
-    // Published bundles write State.flipped as 0 / 1: parsed, it is a boolean.
-    const flips = Object.values(parsed.data?.runs ?? {}).flatMap((r) => r.states.map((s) => s.flipped));
-    expect(flips.length).toBeGreaterThan(0);
-    expect(new Set(flips.map((f) => typeof f))).toEqual(new Set(['boolean']));
+  test('401 and 403 are ordinary failures', async () => {
+    for (const status of [401, 403]) {
+      const { fetch } = fakeFetch(() => json({ error: 'no' }, status));
+      const out = await createSimulacraApi({ fetch }).election(1912);
+      expect(out.kind === 'error' && [out.reason, out.status]).toEqual(['failed', status]);
+    }
   });
 
-  const files = existsSync(BUNDLES) ? readdirSync(BUNDLES).filter((f) => /^\d{4}\.json$/.test(f)) : [];
-  test.skipIf(files.length === 0)('parses every served bundle (skips when serve/bundles is absent)', () => {
-    const bad = files.filter((f) => !BundleSchema.safeParse(JSON.parse(readFileSync(join(BUNDLES, f), 'utf8'))).success);
-    expect(bad).toEqual([]);
+  test('429 is limited, with a message to wait', async () => {
+    const { fetch } = fakeFetch((url) => (url.endsWith('/runs') ? json({ error: 'slow down' }, 429) : json(ELECTION)));
+    const out = await createSimulacraApi({ fetch }).startRun(1912, { text: 'taft out' });
+    expect(out).toEqual({ kind: 'error', reason: 'limited', message: LIMITED_MESSAGE, status: 429 });
+  });
+
+  test('the access key goes with POST /runs only, as a bearer token', async () => {
+    const accessKey = 'abcdefghij0123456789';
+    const { fetch, calls } = fakeFetch((url) => {
+      if (url.endsWith('/runs')) return json({ id: 'r1' });
+      if (url.endsWith('/cancel')) return json({ ok: true });
+      return url.includes('/voters/') ? json({ name: 'A', line: 'b', quote: 'c', history: 'A', now: 'A' }) : json(ELECTION);
+    });
+    const api = createSimulacraApi({ fetch, accessKey });
+    await api.election(1912);
+    await api.startRun(1912, { text: 'taft out' });
+    await api.stopRun('r1');
+    await api.voter(1912, 'women');
+    const auth = calls.map((c) => [c.url.replace('/api/simulacra', ''), new Headers(c.init?.headers).get('Authorization')]);
+    expect(auth).toEqual([
+      ['/manifest', null],
+      ['/elections/1912', null],
+      ['/runs', `Bearer ${accessKey}`],
+      ['/runs/r1/cancel', null],
+      ['/elections/1912/voters/women', null],
+    ]);
+    const { fetch: plain, calls: unkeyed } = fakeFetch(() => json({ id: 'r1' }));
+    await createSimulacraApi({ fetch: plain }).startRun(1912);
+    expect(new Headers(unkeyed[0]?.init?.headers).has('Authorization')).toBe(false);
   });
 });

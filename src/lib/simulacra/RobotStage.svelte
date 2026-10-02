@@ -32,8 +32,6 @@
   interface Props {
     /** The WhatIf slot the robot stands in. */
     spot: HTMLElement | null;
-    /** A browser tab wide enough to draw the robot. */
-    stageMode: boolean;
     /** The time bar is being dragged: the robot holds still. */
     scrubbing: boolean;
     year: number;
@@ -48,7 +46,7 @@
     /** Its resting turn, degrees, which the time bar sways around (stage.ts ROBOT_YAW). */
     restYaw?: number;
   }
-  let { spot, stageMode, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), ontap, restYaw = ROBOT_YAW }: Props = $props();
+  let { spot, scrubbing, year, paint, walking, observe = null, shown = $bindable(false), ontap, restYaw = ROBOT_YAW }: Props = $props();
 
   const SETTLE_MS = 150;
   let host = $state<HTMLElement | null>(null);
@@ -147,7 +145,7 @@
     measureFrame = 0;
     // Dragging the time bar: no restaging; it's placed once more on release.
     if (scrubbing && box) return;
-    if (!stageMode || !spot) {
+    if (!spot) {
       box = null;
       return;
     }
@@ -173,7 +171,6 @@
   }
 
   $effect(() => {
-    void stageMode;
     void spot;
     untrack(measureSoon);
   });
@@ -213,7 +210,7 @@
 <svelte:window onresize={measureSoon} onpointerdown={robotDown} onpointermove={robotMove} onpointerup={robotUp} onpointercancel={robotUp} onclickcapture={robotClick} />
 
 <div class="robot-host" class:ready={robotReady && robotShown} bind:this={host} aria-hidden="true">
-  <RobotFrame bind:this={frame} {stage} visible={stageMode && !!stage} {walking} {paint} {onRobot} />
+  <RobotFrame bind:this={frame} {stage} visible={!!stage} {walking} {paint} {onRobot} />
 </div>
 
 <style>

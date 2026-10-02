@@ -8,6 +8,7 @@ import json
 import pickle
 import random
 import time
+from types import SimpleNamespace
 
 import numpy as np
 
@@ -618,7 +619,10 @@ class Run(Publisher):
         from . import benchmarks  # validation stage: the held-out Corder–Wolbrecht turnout
         cw = benchmarks.corder_wolbrecht_any_year()
         cw = cw[(cw.year == self.year) & cw.state.isin(states)].set_index('state')
-        if len(cw):
+        if len(cw) and not backbone.cw_held_out(self.year, d.get('method')):
+            res['corder_wolbrecht_skipped'] = ('not held out: this year\'s women\'s-turnout prior draws on '
+                                               f'Corder–Wolbrecht knots {backbone.CW_PRIOR_KNOTS} (DISCLOSURES A11)')
+        elif len(cw):
             # Corder–Wolbrecht's denominator: every adult 21+ of the sex, non-citizens included (EVAL.md N1).
             w = fit.world
             female = (fit.cells.sex == 'F').to_numpy()
@@ -709,7 +713,7 @@ class Run(Publisher):
         out_slices, seen = {}, {}
         for r in reqs:
             a = by_agent[r['meta']['agent']]
-            sl = serialize.slice_of(type('R', (), {'group': a['group'], 'south': a['state'] in agentlayer.SOUTH, 'sex': a['sex']}))
+            sl = serialize.slice_of(SimpleNamespace(group=a['group'], south=a['state'] in agentlayer.SOUTH, sex=a['sex']))
             out_slices[sl] = out_slices.get(sl, 0) + (r['meta']['kind'] == 'control')
             k = ('control', sl) if r['meta']['kind'] == 'control' else (r['meta']['arm'], None) if r['meta']['kind'] == 'cf' else None
             if k and seen.get(k, 0) < samples:
@@ -737,7 +741,7 @@ class Run(Publisher):
     def evaluate(self):
         from . import benchmarks
         if self.year != 1920:
-            raise SystemExit('evaluate: the pre-registered checks are 1920\'s; every other year is checked by '
+            raise SystemExit('evaluate: the validation checks are 1920\'s; every other year is checked by '
                              '`run verify` (reproduction, and Corder–Wolbrecht where it exists).')
         fit = self.fit()
         states, sidx = self.state_index(fit)

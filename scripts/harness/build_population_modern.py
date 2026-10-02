@@ -5,8 +5,7 @@ other_native, naturalized, noncitizen}, in the long format of build_population.
     python3 scripts/harness/build_population_modern.py 2000 [--extract N]   # one year
     python3 scripts/harness/build_population_modern.py all                  # every year in BUILDERS
 
-(build_population.py imports BUILDERS from here too, but it writes adults_<year>_...;
-this module's own CLI writes the adults18_ files.)
+(Only this CLI writes these tables: build_population.py is 21+ and stops at 1970.)
 
 Sources by year (all NHGIS, state level):
   1980  STF2b NTB8B sex x age, iterated all / white not Spanish / Black not Spanish (100%);
@@ -27,28 +26,21 @@ Every row's `note` says "tabulated" or what was [I]-estimated.
 """
 import argparse
 import re
-import sys
 from pathlib import Path
 
 import pandas as pd
 
-HERE = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from simharness.config import CACHE  # noqa: E402
-from simharness.geo import CODE_OF  # noqa: E402
-from build_population import COLS, NHGIS_URL  # noqa: E402
+from nhgis_common import CACHE, NHGIS_DIR, STATE_CODE, frame, row
 
-NHGIS = CACHE / 'population/nhgis'
 EXTRACT = None  # set by CLI or found automatically
 
 
 def src() -> Path:
     global EXTRACT
     if EXTRACT is None:
-        reqs = sorted(NHGIS.glob('extract_request_*_modern.json'), key=lambda p: int(p.name.split('_')[2]))
+        reqs = sorted(NHGIS_DIR.glob('extract_request_*_modern.json'), key=lambda p: int(p.name.split('_')[2]))
         EXTRACT = int(reqs[-1].name.split('_')[2])
-    d = NHGIS / f'extract_{EXTRACT}'
+    d = NHGIS_DIR / f'extract_{EXTRACT}'
     return next(p for p in d.iterdir() if p.is_dir() and p.name.endswith('_csv'))
 
 
@@ -79,9 +71,8 @@ def read(ds: str) -> tuple:
     codes, descs = list(raw.iloc[0]), list(raw.iloc[1])
     d = raw.iloc[2:].copy()
     d.columns = codes
-    code = {k.casefold(): v for k, v in CODE_OF.items()}
-    d = d[d.STATE.str.casefold().isin(code)].copy()
-    d['state'] = d.STATE.str.casefold().map(code)
+    d = d[d.STATE.str.casefold().isin(STATE_CODE)].copy()
+    d['state'] = d.STATE.str.casefold().map(STATE_CODE)
     d = d.set_index('state')
     desc = {c: str(x) for c, x in zip(codes, descs)}
     ctx = {'GISJOIN', 'YEAR', 'STATE', 'STATEA', 'AREANAME', 'NAME_E', 'NAME_M', 'GEOID', 'STUSAB', 'REGIONA', 'DIVISIONA',
@@ -115,28 +106,19 @@ def is_adult(label: str) -> bool:
     raise ValueError(f'no age in {label!r}')
 
 
-def adults(d, desc, table, *pats):
-    cs = [c for c in cols(desc, *pats, table=table) if is_adult(desc[c])]
-    assert cs, (table, pats)
-    return d[cs].sum(axis=1)
+LABEL = {'white_nh_native': 'White alone/White, not Hispanic, native-born',
+         'black_nh_native': 'Black alone/Black, not Hispanic, native-born',
+         'other_native': 'Native-born, all other (Hispanic any race, Asian, AIAN, other, multiracial)',
+         'naturalized': 'Foreign-born, naturalized citizen', 'noncitizen': 'Foreign-born, not a citizen'}
 
 
 def emit(year, parts: dict, tables: dict, notes: dict):
     """parts: {(sex, group): Series by state}"""
-    labels = {'white_nh_native': 'White alone/White, not Hispanic, native-born',
-              'black_nh_native': 'Black alone/Black, not Hispanic, native-born',
-              'other_native': 'Native-born, all other (Hispanic any race, Asian, AIAN, other, multiracial)',
-              'naturalized': 'Foreign-born, naturalized citizen', 'noncitizen': 'Foreign-born, not a citizen'}
-    out = []
-    for (sex, g), s in parts.items():
-        for st, v in s.items():
-            out.append({'year': year, 'state': st, 'sex': sex, 'group': g, 'race_as_recorded': labels[g].split(',')[0],
-                        'label_as_recorded': labels[g], 'count': round(float(v), 1), 'vintage_mode': 'truth',
-                        'note': notes.get(g, 'tabulated'), 'source_table': tables[g], 'source_url': NHGIS_URL, 'page': ''})
-    df = pd.DataFrame(out, columns=COLS)
+    df = frame([row(year, st, sex, g, LABEL[g].split(',')[0], LABEL[g], round(float(v), 1), notes.get(g, 'tabulated'),
+                    tables[g]) for (sex, g), s in parts.items() for st, v in s.items()])
     assert df.state.nunique() == 51, df.state.nunique()
     assert (df['count'] >= 0).all(), df[df['count'] < 0]
-    return df.sort_values(['state', 'sex', 'group']).reset_index(drop=True)
+    return df
 
 
 def check(year, df, indep: pd.Series, what: str):
@@ -187,12 +169,6 @@ def adult_share_1990():
     nat18, nc18 = g(r'^18 years and over', 'Naturalized'), g(r'^18 years and over', 'Not a citizen')
     nat, nc = nat18 + g(r'^Under 18', 'Naturalized'), nc18 + g(r'^Under 18', 'Not a citizen')
     return nat18 / nat, nc18 / nc, nat18, nc18, g(r'^18 years and over', r'Native$')
-
-
-LABEL = {'white_nh_native': 'White alone/White, not Hispanic, native-born',
-         'black_nh_native': 'Black alone/Black, not Hispanic, native-born',
-         'other_native': 'Native-born, all other (Hispanic any race, Asian, AIAN, other, multiracial)',
-         'naturalized': 'Foreign-born, naturalized citizen', 'noncitizen': 'Foreign-born, not a citizen'}
 
 
 def assemble(year, by_sex, tables, notes):

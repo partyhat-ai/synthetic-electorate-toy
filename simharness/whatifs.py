@@ -182,7 +182,7 @@ REGISTRY = {
         'detail': 'Tennessee votes the suffrage amendment down, so women can vote for president only where their own state already let them.',
         'assumption': 'Women in states without their own presidential suffrage can\'t vote. Everyone else turns out and chooses exactly as in 1920; men\'s votes don\'t change.',
         'borrowed': None,
-        'research_questions': ['How did women vote and turn out in their first presidential elections in 1920, by state and group (e.g. Corder and Wolbrecht)?',
+        'research_questions': ['How did women vote and turn out in their first presidential elections in 1920, by state and group?',
                                'In states where women already voted for president before 1920, did their votes change the result or the parties\' shares?'],
     },
     'fifteenth': {
@@ -230,7 +230,7 @@ def for_year(keys, year: int) -> list:
 
 
 # Compiled what-ifs (harness/whatifs/*.json, exploratory) join the registry
-# after the pre-registered ones, never replacing them.
+# after the hand-written ones, never replacing them.
 from .scenario import load_generated  # noqa: E402
 
 load_generated(REGISTRY)

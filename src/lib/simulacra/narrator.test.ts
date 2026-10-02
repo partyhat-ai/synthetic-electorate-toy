@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
+import { LIMITED_MESSAGE } from './api';
 import { type SayInput, say, sourcesOf, traceOf } from './narrator';
 import { type Bundle, BundleSchema, type RunResult } from './schemas';
 import { electionFor, type ShownRun } from './state';
@@ -107,11 +108,14 @@ const BASE: SayInput = {
 };
 
 describe('say', () => {
-  test('the server first: connecting, then no service', () => {
+  test('the server first: connecting, no service, too many requests', () => {
     expect(say({ ...BASE, server: 'connecting' })).toEqual({ text: 'Getting 1920’s voters ready.', busy: true });
     const none = say({ ...BASE, server: 'unsupported' });
     expect(none.text).toBe('This server has no simulation service yet, so I can’t rerun elections here.');
     expect(none.actions?.map((a) => a.key)).toEqual(['sample', 'retry']);
+    const limited = say({ ...BASE, server: 'limited' });
+    expect(limited.text).toBe(LIMITED_MESSAGE);
+    expect(limited.actions?.map((a) => a.key)).toEqual(['retry']);
   });
 
   test('the greeting, a tapped suggestion, then a rerun coming out step by step', () => {

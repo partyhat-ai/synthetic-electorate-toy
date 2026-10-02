@@ -33,10 +33,15 @@
         { "name": "SIMULACRA_AUTORUN", "value": "configs/live-1920.json" },
         { "name": "SIMULACRA_PYTHON", "value": "/opt/venv/bin/python" },
         { "name": "SIMULACRA_BUNDLES", "value": "/app/serve/bundles" },
-        { "name": "SIMHARNESS_CACHE", "value": "/state/cache" }
+        { "name": "SIMHARNESS_CACHE", "value": "/state/cache" },
+        { "name": "SIMULACRA_KEY_DAILY_USD", "value": "100" },
+        { "name": "SIMULACRA_TOTAL_USD", "value": "150" },
+        { "name": "SIMULACRA_RETAIN_DAYS", "value": "7" },
+        { "name": "TRUST_PROXY_HOPS", "value": "2" }
       ],
       "secrets": [
-        { "name": "ANTHROPIC_API_KEY", "valueFrom": "${secret_arn}:ANTHROPIC_API_KEY::" }
+        { "name": "ANTHROPIC_API_KEY", "valueFrom": "${secret_arn}:ANTHROPIC_API_KEY::" },
+        { "name": "SIMULACRA_ACCESS_KEYS", "valueFrom": "${secret_arn}:SIMULACRA_ACCESS_KEYS::" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",

@@ -495,6 +495,10 @@ def carry_forward(base: Fit, inp: Inputs, year: int, seed: int) -> Fit:
 WOMEN_TURNOUT = [(1789, -1.3, 0.4), (1916, -1.3, 0.4), (1920, -1.3, 0.3), (1928, -1.0, 0.3), (1940, -0.7, 0.25),
                  (1952, -0.45, 0.2), (1964, -0.24, 0.1), (1972, -0.09, 0.08), (1980, 0.0, 0.08), (1992, 0.09, 0.06),
                  (2008, 0.18, 0.06), (2024, 0.16, 0.06)]       # against men: C–W 2016; ANES; CPS P20
+# The WOMEN_TURNOUT knots taken from Corder–Wolbrecht (2016). A general_fit year
+# whose prior interpolates from one of them can't be scored against
+# Corder–Wolbrecht as held out: that would check the prior against its own source.
+CW_PRIOR_KNOTS = (1928, 1940)
 NAT_TURNOUT = [(1789, -0.3, 0.3), (2024, -0.3, 0.25)]          # Merriam–Gosnell 1924; CPS naturalized vs native
 ALIEN_TURNOUT = [(1789, -0.6, 0.4), (2024, -0.6, 0.4)]         # declarant aliens where legal (to 1926)
 OTHER_TURNOUT = [(1789, -0.3, 0.4), (2024, -0.3, 0.4)]
@@ -535,6 +539,19 @@ def prior_at(table, year):
     """(mean, sd) of a knot table at `year`."""
     ys = np.array([k[0] for k in table], float)
     return float(np.interp(year, ys, [k[1] for k in table])), float(np.interp(year, ys, [k[2] for k in table]))
+
+
+def cw_held_out(year: int, method: str | None) -> bool:
+    """Whether Corder–Wolbrecht is held out from this year's fit: always, except a
+    general_fit year whose women's-turnout prior uses a CW_PRIOR_KNOTS knot."""
+    if method != 'general_fit':
+        return True
+    ys = [k[0] for k in WOMEN_TURNOUT]
+    if year in ys:
+        return year not in CW_PRIOR_KNOTS
+    lo = max((y for y in ys if y < year), default=None)
+    hi = min((y for y in ys if y > year), default=None)
+    return not ({lo, hi} & set(CW_PRIOR_KNOTS))
 
 
 def _draw_normal(rng, table, year, D):

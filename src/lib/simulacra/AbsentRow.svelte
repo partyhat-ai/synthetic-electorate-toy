@@ -4,11 +4,11 @@
   // its name, why it's missing, and a faint dashed rule where SliceRow's dots
   // go. Laid out as SliceRow's head, so it's as tall; nothing to tap or drag.
   import GroupLabel from './GroupLabel.svelte';
-  import type { Absent } from './groups';
+  import { type Absent, DOTS } from './groups';
 
   let { absent }: { absent: Absent } = $props();
 
-  const N = 50; // = SliceRow's dots, so the rule spans the same width
+  const N = DOTS;
 </script>
 
 <div class="row" role="group" aria-label="{absent.label}: {absent.why}">
@@ -29,14 +29,14 @@
   .head {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    row-gap: 8px;
+    row-gap: var(--strip-gap);
     align-items: center;
-    min-height: 42px;
-    padding: 3px 10px;
+    min-height: var(--row-min);
+    padding: var(--row-pad-y) var(--row-pad-x);
   }
-  .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .label { font-size: 14px; font-weight: 600; line-height: 1.25; color: rgba(0, 0, 0, 0.45); }
-  .cap { font-size: 12px; color: rgba(0, 0, 0, 0.45); }
+  .who { display: flex; flex-direction: column; gap: var(--who-gap); min-width: 0; }
+  .label { font-size: var(--name-size); font-weight: 600; line-height: var(--name-leading); color: rgba(0, 0, 0, 0.45); }
+  .cap { font-size: var(--note-size); line-height: var(--note-leading); color: rgba(0, 0, 0, 0.45); }
   .strip { width: 100%; height: auto; display: block; overflow: visible; }
   .strip line { stroke: rgba(0, 0, 0, 0.18); stroke-width: 1.2; stroke-dasharray: 4 6; stroke-linecap: round; }
   /* 701-760px: SliceRow sets its dots beside the name; so does this. */

@@ -8,6 +8,7 @@
   import type { SliceEdit } from './api';
   import { fmtCompact } from './format';
   import GroupLabel from './GroupLabel.svelte';
+  import { DOTS } from './groups';
   import type { Slice } from './schemas';
   import type { Colors, Names } from './types';
 
@@ -43,7 +44,7 @@
     onedit,
   }: Props = $props();
 
-  const N = 50;
+  const N = DOTS;
   /** Left to right: A, O, home, barred, B. */
   const KINDS = ['A', 'O', 'home', 'barred', 'B'] as const;
   type Kind5 = (typeof KINDS)[number];
@@ -218,8 +219,8 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    min-height: 42px;
-    padding: 3px 10px;
+    min-height: var(--row-min);
+    padding: var(--row-pad-y) var(--row-pad-x);
     border: none;
     border-radius: 12px;
     background: transparent;
@@ -230,9 +231,9 @@
   }
   .head:hover { background: rgba(0, 0, 0, 0.04); }
   .head:focus-visible { outline: 2px solid #3876b7; outline-offset: 1px; }
-  .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .label { font-size: 14px; font-weight: 600; line-height: 1.25; }
-  .cap { font-size: 12px; color: rgba(0, 0, 0, 0.55); font-variant-numeric: tabular-nums; }
+  .who { display: flex; flex-direction: column; gap: var(--who-gap); min-width: 0; }
+  .label { font-size: var(--name-size); font-weight: 600; line-height: var(--name-leading); }
+  .cap { font-size: var(--note-size); line-height: var(--note-leading); color: rgba(0, 0, 0, 0.55); font-variant-numeric: tabular-nums; }
   .strip { width: 100%; height: auto; display: block; overflow: visible; }
   /* Tall enough to grab: the dots' band, padded. */
   .strip.editable { cursor: ew-resize; touch-action: pan-y; padding: 8px 0; margin: -8px 0; box-sizing: content-box; }
@@ -249,7 +250,7 @@
   .main { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .was { font-size: 12px; color: rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; white-space: nowrap; }
   @media (max-width: 700px) {
-    .head { grid-template-columns: minmax(0, 1fr) auto; row-gap: 8px; }
+    .head { grid-template-columns: minmax(0, 1fr) auto; row-gap: var(--strip-gap); }
     .strip { grid-column: 1 / -1; grid-row: 2; }
     .row.lit::before { left: -6px; }
   }

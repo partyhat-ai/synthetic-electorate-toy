@@ -5,6 +5,11 @@
 Every number below is copied from `runs/1920-bcbd86b43f/validation.json`,
 `analysis.json` and `published/1920.json`.
 
+This is not the run the server publishes. `serve/bundles/1920.json` comes
+from a later run (its `runId`), with typed what-ifs added, 100 draws, two
+Haiku 4.5 interviews in each of six cohorts, and no `validation.json`. The
+scores below are the prototype's and haven't been rerun.
+
 ## Summary
 
 - **Reproduction is exact.** Every one of 400 draws reproduces each state's
@@ -14,7 +19,7 @@ Every number below is copied from `runs/1920-bcbd86b43f/validation.json`,
   - turnout RMSE 2.9 points (persistence 16.5);
   - Spearman 0.92;
   - Brier 0.052 (uniform swing 0.069).
-- **It fails two pre-registered backbone checks:**
+- **It fails two backbone checks:**
   - **B5.** It calls North Carolina for Harding.
   - **N1.** Its women's-turnout intervals are too narrow and run high in CT,
     MA and NY.
@@ -34,7 +39,7 @@ Every number below is copied from `runs/1920-bcbd86b43f/validation.json`,
   returns can't identify it. It swings the `fifteenth` result from 416 to 449
   Harding electoral votes (see "The biggest uncertainty" below).
 
-## What-if results (published bundle)
+## What-if results (the prototype's bundle)
 
 Harding is A; Cox is B. Ranges are the central 80% of Harding's electoral
 votes across 400 draws.
@@ -72,7 +77,7 @@ Verdicts as the robot says them:
 - **`league`** moves every group toward Cox. The simulated voters lose a
   reason to vote against the administration's party. Nothing flips.
 
-## Pre-registered checks
+## Validation checks
 
 | ID | Check | Value | Threshold | Result |
 |---|---|---|---|---|
@@ -124,7 +129,7 @@ denominator):
   - Blinding does not hide 1920 from a current model, and no current model
     will be clean for 1920.
   - Every quote is therefore flagged `memorizationExposed: true`, and cohort
-    bias uses the national bias (pre-registered rule).
+    bias uses the national bias (the rule in `paired.py`).
 - **Label swap (L2).** In all 39 usable pairs, the agent followed the platform
   to its new label. Answers track positions, not letters.
 - **De-blinding in the voice.** 98 of 386 voter answers (25%) name a party
@@ -183,7 +188,7 @@ denominator):
   - Cohort effects run from −0.24 (naturalized men in the Northeast) to +0.13
     (Southern white men).
   - The shrinkage weights are 0.33–0.43, because four or five agents per
-    cohort is small against the pre-registered pseudo-count of 8. Every
+    cohort is small against the shrinkage pseudo-count of 8. Every
     cohort's effect is therefore pulled strongly toward its region.
 - **Cross-checks on the franchise what-ifs.** These are not applied.
   - In `fifteenth`, Black Southern agents who could now register raised their
@@ -201,7 +206,7 @@ denominator):
   logit (region intercepts, 1916 lag). That runs against the documented
   history, and it is carried by six border states with larger Black shares
   and smaller swings.
-- **What the published run uses.** The pre-registered prior, N(1.5, 1),
+- **What the published run uses.** The prior, N(1.5, 1),
   updated by that regression, gives a median of 0.50 (80% interval −0.70 to
   1.68).
 - **The sensitivity**, same seed:

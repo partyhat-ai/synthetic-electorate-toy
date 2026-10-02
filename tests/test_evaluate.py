@@ -1,31 +1,11 @@
-"""Benchmark isolation and the evaluate-stage checks (EVAL.md)."""
-import re
-from pathlib import Path
+"""The evaluate-stage checks (EVAL.md)."""
 from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
 
-import simharness
 from simharness import evaluate
 from simharness.stats import expit, logit
-
-PKG = Path(simharness.__file__).resolve().parent
-
-
-def test_benchmarks_isolated():
-    """Only evaluate-stage code may read held-out benchmarks: no other module
-    imports benchmarks.py or opens a path under benchmarks/."""
-    bad = re.compile(r"import\s+benchmarks|from\s+\.\s+import\s+[^\n]*\bbenchmarks\b|['\"]benchmarks/")
-    for f in PKG.glob('*.py'):
-        if f.name == 'benchmarks.py':
-            continue
-        hits = [l.strip() for l in f.read_text().splitlines() if bad.search(l)]
-        if f.name == 'pipeline.py':
-            # inside Run.verify (Corder–Wolbrecht) and Run.evaluate only
-            assert [h.split('#')[0].strip() for h in hits] == ['from . import benchmarks'] * 2, hits
-        else:
-            assert not hits, (f.name, hits)
 
 
 def _holdout_world():

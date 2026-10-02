@@ -1,11 +1,12 @@
 <script lang="ts">
   // Where you talk to the harness: it stands at the left (the page frames the
-  // 3D robot into the slot; a face stands in where the robot isn't drawn),
+  // 3D robot into the slot; a still of it stands in until the robot draws),
   // says what it's doing in its bubble, and takes a what-if — a suggestion
   // tapped, or your own words — and reruns the election with it. The
   // bubble's working is WhatIfWorking; the chips, field and Rerun are
   // WhatIfComposer.
   import { onDestroy, untrack } from 'svelte';
+  import { STAGE_SIZE } from '$lib/robot/stage';
   import Places from './Places.svelte';
   import { hoverPlaces } from './places';
   import type { WhatIf } from './schemas';
@@ -15,12 +16,7 @@
 
   interface Props {
     name?: string;
-    /** The harness's face, for where no robot is drawn. */
-    face?: string;
-    faceStyle?: string;
-    /** Reserve room for the drawn robot… */
-    stage?: boolean;
-    /** …and it's there. */
+    /** The live robot is drawn in the slot. */
     robotShown?: boolean;
     /** A still of the robot, shown in the slot until the live robot draws. */
     still?: Still | null;
@@ -56,9 +52,6 @@
   }
   let {
     name = 'Harness',
-    face = '',
-    faceStyle = '',
-    stage = false,
     robotShown = false,
     still = null,
     slot = $bindable(null),
@@ -96,6 +89,8 @@
   // it goes; once it's at the folded height it drops back into the flow, where
   // the room kept for it is exactly that height, so nothing jumps.
   const CLOSE_MS = 240; // = .clip's max-height transition
+  // The clip's line height when it reads as `normal`, px.
+  const LINE_PX = 21;
 
   let clipEl = $state<HTMLElement | null>(null);
   let bubbleEl = $state<HTMLElement | null>(null);
@@ -106,6 +101,8 @@
   let moreBelow = $state(false);
   /** The folded bubble's height, kept while it's opened. */
   let holdH = $state(0);
+  /** CLAMP lines, px: the folded bubble's most (.clip), and the room a narrow window keeps for it (.hold). */
+  let lim = $state(CLAMP * LINE_PX);
   let tall = $state(false);
   let ro: ResizeObserver | null = null;
   let closeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -120,8 +117,8 @@
   }
   function measure() {
     if (!clipEl) return;
-    const lh = Number.parseFloat(getComputedStyle(clipEl).lineHeight) || 21;
-    clipEl.style.setProperty('--lim', `${Math.round(lh * CLAMP)}px`);
+    const lh = Number.parseFloat(getComputedStyle(clipEl).lineHeight) || LINE_PX;
+    lim = Math.round(lh * CLAMP);
     clipEl.style.setProperty('--full', `${clipEl.scrollHeight}px`);
     over = clipEl.scrollHeight > lh * CLAMP + 2;
     // Folded, it's the HUD's peek: the newest (the answer, or the step in
@@ -206,20 +203,18 @@
   });
 </script>
 
-<section class="whatif" class:stage aria-label="What if">
+<section class="whatif" aria-label="What if" style:--stage-w="{STAGE_SIZE.width}px">
   <!-- The robot stands over this spot (drawn by the page's overlay, which
        lets clicks through): pressing it is talking to it. -->
   <button type="button" class="bot" bind:this={slot} aria-label="Election Sim Harness" title="Election Sim Harness"
     disabled={closed || running} onclick={() => input?.focus()}>
-    {#if stage && still}
+    {#if still}
       <img class="still" class:gone={robotShown} src={still.src} alt="" draggable="false" decoding="async" fetchpriority="high"
         style:left="calc(50% + {still.dx}px)" style:bottom="{still.db}px" style:width="{still.w}px" />
-    {:else if !robotShown && face}
-      <span class="face"><img src={face} alt="" style={faceStyle} draggable="false" /></span>
     {/if}
   </button>
   <div class="talk">
-    <div class="hold" class:lifted={opened} style:height={opened ? `${holdH}px` : null}>
+    <div class="hold" class:lifted={opened} style:height={opened ? `${holdH}px` : null} style:--lim="{lim}px">
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div class="bubble" class:busy={message.busy} class:over={canMore} class:clamped={over} class:opened class:closing class:tall role="status" aria-live="polite" onclick={toggleOpen} bind:this={bubbleEl} use:sized>
@@ -257,18 +252,20 @@
 </section>
 
 <style>
+  /* Room for the robot to stand in, feet on the field's baseline. */
   .whatif {
     margin-top: -10px;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
-    align-items: start;
+    grid-template-columns: 168px minmax(0, 1fr);
+    align-items: end;
     gap: 12px;
+    min-height: 220px;
   }
-  /* Room for the robot to stand in, feet on the field's baseline. */
-  .whatif.stage { grid-template-columns: 168px minmax(0, 1fr); align-items: end; min-height: 220px; }
+  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
   .bot {
     position: relative;
-    height: 44px;
+    align-self: start;
+    height: 220px;
     padding: 0;
     border: none;
     border-radius: 16px;
@@ -287,27 +284,10 @@
   .bot:focus:not(:focus-visible) { outline: none; }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
-  /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
-  .stage .bot { height: 220px; align-self: start; }
-  .face {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 44px;
-    height: 44px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: #111716;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
-  }
-  /* The face is a photo: under the Rerun view's invert, turned back. */
-  :global(.sa.dark) .face img { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
-  .stage .face { top: auto; bottom: 64px; left: 50%; width: 88px; height: 88px; transform: translateX(-50%); }
   /* The still: under the live robot, faded out once it draws. */
   .still { position: absolute; height: auto; max-width: none; pointer-events: none; transition: opacity 0.18s ease; }   /* = the page's .robot-host fade */
   .still.gone { opacity: 0; }
   :global(.sa.dark) .still { filter: invert(1) hue-rotate(180deg) saturate(66.7%); }
-  .face img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
   /* The what-if section in HIG light mode, after iOS Messages: the robot's
      bubble is an incoming message, the what-ifs and field are Messages'
      white capsules and hairlines, and the one accent is iMessage blue
@@ -327,13 +307,21 @@
     --fill: #f2f2f7;             /* systemGray6: chips at rest, hovers */
     --fill-press: #e5e5ea;       /* systemGray5: press */
     --tint: #007aff;
+    /* Metrics, read by the pieces too. */
+    --control-h: 36px;           /* a chip, Rerun, and the field inside its hairline */
+    --hairline: 1px;             /* the field's ring */
+    --compose-gap: 8px;          /* the chips over the field */
+    --bubble-pad-top: 10px;
+    --bubble-pad-bottom: 11px;
+    --more-gap: 8px;             /* More / Less under the bubble's text */
+    --more-size: 12px;
+    --more-leading: 1.2;
   }
-  .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-  /* On the stage the talk column fills the robot's height: the bubble pins to
-     the top and the composer to the floor, so a year with more chips or a
-     longer line never moves either while the time bar is scrubbed; a long
-     bubble grows the column downward, like any message. */
-  .stage .talk { align-self: stretch; }
+  /* The talk column fills the robot's height: the bubble pins to the top and
+     the composer to the floor, so a year with more chips or a longer line
+     never moves either while the time bar is scrubbed; a long bubble grows
+     the column downward, like any message. */
+  .talk { display: flex; flex-direction: column; gap: 12px; min-width: 0; align-self: stretch; }
   .composer-room, .year-pill { display: none; }
   /* Narrow windows (phones, or a narrow desktop window): the what-if takes
      the full width and the robot stands above it. Every part of the what-if
@@ -341,11 +329,19 @@
      message. Opened, the bubble grows over the chips and field. */
   @media (max-width: 760px) {
     /* Narrow: Who voted, then the robot, then the bubble, the chips and the
-       field, top to bottom; the robot 12px under the last group and 12px over
-       the bubble, whatever the screen. Its visible top is 42px under its slot's
-       top and its toes 15px under the slot's floor (measured at its 43deg
-       rest; the feet anchor sits 6px over the floor, the toes reach lower). */
-    .whatif.stage {
+       field, top to bottom; the robot --robot-gap under the last group and
+       over the bubble, whatever the screen. The robot's figure doesn't fill
+       its slot: --figure-head is how far under the slot's top its head reads,
+       seen from the last group's dots, and --figure-toes how far past the
+       slot's floor its toes reach, seen from the bubble. Both were measured
+       on screen at its narrow rest (stage.ts NARROW_ROBOT_YAW); re-measure
+       them if the model, its framing (RobotStage STILLS) or that turn
+       changes. The slot is the robot's width (STAGE_SIZE) by --slot-h. */
+    .whatif {
+      --robot-gap: 12px;
+      --figure-head: 50px;
+      --figure-toes: 8px;
+      --slot-h: 236px;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -357,18 +353,19 @@
       /* The robot stands over this area too: no tap highlight on it. */
       -webkit-tap-highlight-color: transparent;
     }
-    /* 12px under the last group's dots, measured on screen (its dots draw
-       past its box, the robot's head starts well inside its slot). */
-    .stage .bot { width: 200px; height: 236px; margin: -38px 0 0; align-self: center; }
-    /* 12px under the toes, measured on screen (they reach under the slot's floor). */
-    .talk { position: relative; z-index: 1; min-width: 0; margin-top: 20px; }
-    /* The bubble's room is its folded most and it sits at the room's top, just
-       under the robot, so the robot's 12px holds for any message; a shorter one
-       leaves the room under it, so the chips and field never move. Opened, it
-       grows down over them. */
-    .hold { min-height: 190px; justify-content: flex-start; }
+    .bot { width: var(--stage-w); height: var(--slot-h); margin: calc(var(--robot-gap) - var(--figure-head)) 0 0; align-self: center; }
+    .talk { position: relative; z-index: 1; min-width: 0; margin-top: calc(var(--robot-gap) + var(--figure-toes)); }
+    /* The bubble's room is its folded most (CLAMP lines and More) and it sits
+       at the room's top, just under the robot, so the robot's gap holds for
+       any message; a shorter one leaves the room under it, so the chips and
+       field never move. Opened, it grows down over them. */
+    .hold {
+      min-height: calc(var(--bubble-pad-top) + var(--lim) + var(--more-gap) + var(--more-size) * var(--more-leading) + var(--bubble-pad-bottom));
+      justify-content: flex-start;
+    }
     .hold.lifted .bubble { top: 0; bottom: auto; }
-    .composer-room { display: block; height: 82px; }
+    /* As tall as the chips and the field (WhatIfComposer). */
+    .composer-room { display: block; height: calc(2 * var(--control-h) + 2 * var(--hairline) + var(--compose-gap)); }
     /* The time bar's tooltip (TimeBar .tip, same size, padding and look),
        solid under the opening message instead of floating over the bar.
        It fits in the bubble's room, so nothing moves when it goes. */
@@ -404,7 +401,7 @@
     position: relative;
     align-self: stretch;
     margin-bottom: 5px;
-    padding: 10px 16px 11px;
+    padding: var(--bubble-pad-top) 16px var(--bubble-pad-bottom);
     border-radius: 20px;
     background: var(--bubble);
     color: var(--label);
@@ -453,7 +450,7 @@
   .clip.below { --fb: var(--band); }
   /* Less: back to the folded height, still lifted, on the same ease. */
   .bubble.closing .clip { transition: max-height 0.24s cubic-bezier(0.4, 0, 0.2, 1); max-height: var(--lim); overflow: hidden; -webkit-mask-image: linear-gradient(to top, #000 55%, transparent); mask-image: linear-gradient(to top, #000 55%, transparent); }
-  .more { display: block; margin: 8px 0 0; padding: 0; border: none; background: none; font: inherit; font-size: 12px; font-weight: 500; line-height: 1.2; color: var(--tint); cursor: pointer; }
+  .more { display: block; margin: var(--more-gap) 0 0; padding: 0; border: none; background: none; font: inherit; font-size: var(--more-size); font-weight: 500; line-height: var(--more-leading); color: var(--tint); cursor: pointer; }
   .more:hover { opacity: 0.7; }
   .more:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; border-radius: 4px; }
   .lines { animation: float-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2); }

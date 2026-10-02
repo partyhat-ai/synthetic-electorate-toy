@@ -1,7 +1,7 @@
 """Held-out benchmarks. Only the validation stages (Run.evaluate, and
 Run.verify's Corder–Wolbrecht comparison) import this module; the backbone,
 the agents and the publisher never do (checked by test_benchmarks_isolated in
-tests/test_prereg.py, which greps the package).
+tests/test_isolation.py, which parses every module and script).
 """
 from __future__ import annotations
 

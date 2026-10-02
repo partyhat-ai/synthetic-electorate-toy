@@ -25,14 +25,12 @@ from __future__ import annotations
 
 import re
 import sys
-import warnings
 from io import StringIO
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-warnings.filterwarnings('ignore')
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))  # the repo root
 from simharness.config import CACHE  # noqa: E402
@@ -119,7 +117,7 @@ def _num(x):
 
 def _state_code(name: str):
     n = re.sub(r'\[.*?\]|[†‡*§#^]|\(.*?\)', '', str(name)).strip()
-    n = n.replace('D.C.', 'District of Columbia').replace('Washington, D.C.', 'District of Columbia')
+    n = n.replace('D.C.', 'District of Columbia')
     if n in CODE_OF:
         return CODE_OF[n]
     if n in ('Washington DC', 'Washington, District of Columbia', 'District of Columbia'):
@@ -251,7 +249,7 @@ def main():
                              'ev_dem': 0, 'ev_other': 0, 'ev_total': 0, 'chosen_by': 'none', 'source': TAB_SRC,
                              'note': 'not yet readmitted: no electors'})
             continue
-        ev = dict(ev_rep=int(x.rev or 0) if pd.notna(x.rev) else 0, ev_dem=int(x.dev) if pd.notna(x.dev) else 0,
+        ev = dict(ev_rep=int(x.rev) if pd.notna(x.rev) else 0, ev_dem=int(x.dev) if pd.notna(x.dev) else 0,
                   ev_other=int(x.oev) if pd.notna(x.oev) else 0)
         if (y, s) in EV_FIX:
             ev = dict(zip(('ev_rep', 'ev_dem', 'ev_other'), EV_FIX[(y, s)]))
@@ -285,8 +283,9 @@ def main():
             raise SystemExit(f'no counts for {y} {s}')
         if not ok_aa:
             report.append({'year': y, 'state': s, 'aa_off_pp': None if pd.isna(off) else round(off, 2), 'used': src[:40]})
-        # A blank cell in the named third's column: not on that state's ballot.
-        third = (0.0 if pd.isna(x.wp_third) else x.wp_third) if y in THIRD else np.nan
+        third = np.nan
+        if y in THIRD:  # a blank cell in the named third's column: not on that state's ballot
+            third = 0.0 if pd.isna(x.wp_third) else x.wp_third
         tot = max(tot, rep + dem)  # 1868 MO: county total 9 short of R + D
         rows.append({'year': y, 'state': s, 'rep': rep, 'dem': dem, 'total': tot, 'third': third, **ev,
                      'chosen_by': 'popular', 'source': src, 'note': note})

@@ -21,7 +21,9 @@ Read `VALIDITY.md` for what the system can and cannot claim.
 | `simharness/` | The simulation harness (Python): backbone, interviews, what-ifs, evaluation |
 | `tests/` | Harness tests (pytest). Page and server tests sit next to their code (vitest) |
 | `configs/`, `profiles/`, `whatifs/` | Run configs, per-election profiles, compiled what-ifs and their evidence |
-| `METHOD.md`, `EVAL.md` | How the backbone works, and the 1920 results, failures included |
+| `METHOD.md`, `EVAL.md` | How the backbone works, and the 1920 prototype's results, failures included |
+| `VALIDITY.md`, `DISCLOSURES.md` | What the system can claim, and the log of every known flaw |
+| `docs/harness/README.md` | Running the harness: stages, typed what-ifs, interview runs |
 
 ## Run it
 
@@ -31,7 +33,9 @@ pnpm serve          # API on :8787
 pnpm dev            # page on :5173, proxies /api to :8787
 ```
 
-`?sample=1` runs the page on an invented stand-in model, with no server.
+`?sample=1` runs the page on an invented stand-in model, with no server, and
+`?year=1896` opens a given year. `pnpm tsx scripts/model-check.ts` prints the
+stand-in model's outcome for every story what-if.
 
 ## Checks
 

@@ -13,6 +13,7 @@
 import type { z } from 'zod';
 import {
   CancelledSchema,
+  type Edits,
   type ElectionResponse,
   ElectionResponseSchema,
   ManifestSchema,
@@ -30,8 +31,8 @@ export type * from './schemas';
 export type ErrorReason =
   /** No answer: the network, or a read that timed out. */
   | 'offline'
-  /** 401 / 403. */
-  | 'auth'
+  /** 429: too many requests from here; try again later. */
+  | 'limited'
   /** A 404 after the service has answered before. */
   | 'missing'
   /** Any other non-2xx. */
@@ -46,8 +47,7 @@ export type Outcome<T> =
   | { readonly kind: 'unsupported'; readonly message: string };
 
 /** Fractions of a group's adults moved by hand (the page's dragged dots); each change sums to 0. */
-export type SliceEdit = Partial<Record<'A' | 'B' | 'O' | 'home' | 'barred', number>>;
-export type Edits = Readonly<Record<string, SliceEdit>>;
+export type SliceEdit = Edits[string];
 
 export interface RunAsk {
   /** What-if keys, as the election lists them. */
@@ -82,10 +82,17 @@ export interface ApiOptions {
   readonly base?: string;
   /** How long a call waits for an answer, ms. */
   readonly timeoutMs?: number;
+  /**
+   * The key for typed what-ifs (accessKey.ts): sent with POST /runs only, as
+   * `Authorization: Bearer <key>`. Without one the server answers new words
+   * with `unknown` and says why (`unknownWhy`).
+   */
+  readonly accessKey?: string;
 }
 
 export const DEFAULT_BASE = '/api/simulacra';
 export const DEFAULT_TIMEOUT_MS = 20_000;
+export const LIMITED_MESSAGE = 'Too many requests just now. Try again in a few minutes.';
 
 const failed = (reason: ErrorReason, message: string, status = 0): Outcome<never> => ({
   kind: 'error',
@@ -95,7 +102,7 @@ const failed = (reason: ErrorReason, message: string, status = 0): Outcome<never
 });
 
 function statusError(status: number): Outcome<never> {
-  if (status === 401 || status === 403) return failed('auth', 'Sign in to rerun elections.', status);
+  if (status === 429) return failed('limited', LIMITED_MESSAGE, status);
   return failed('failed', `The simulation server answered ${status}.`, status);
 }
 
@@ -126,7 +133,8 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
     }
   }
 
-  async function call<S extends z.ZodType>(path: string, schema: S, body?: unknown): Promise<Outcome<z.output<S>>> {
+  /** `keyed`: the call carries the access key, when there is one. */
+  async function call<S extends z.ZodType>(path: string, schema: S, body?: unknown, keyed = false): Promise<Outcome<z.output<S>>> {
     const write = body !== undefined;
     const abort = new AbortController();
     let timedOut = false;
@@ -134,8 +142,10 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
       timedOut = true;
       abort.abort();
     }, timeoutMs);
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (keyed && options.accessKey) headers.Authorization = `Bearer ${options.accessKey}`;
     const init: RequestInit = write
-      ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: abort.signal }
+      ? { method: 'POST', headers, body: JSON.stringify(body), signal: abort.signal }
       : { signal: abort.signal };
     let res: Response;
     let json: unknown;
@@ -181,7 +191,7 @@ export function createSimulacraApi(options: ApiOptions = {}): SimulacraApi {
       return out;
     },
     startRun: (year, { whatIfs = [], text = '', edits = {} } = {}) =>
-      call('/runs', StartedRunSchema, { year, whatIfs, text, edits }),
+      call('/runs', StartedRunSchema, { year, whatIfs, text, edits }, true),
     run: (runId) => call(`/runs/${id(runId)}`, RunStatusSchema),
     stopRun: async (runId) => {
       const out = await call(`/runs/${id(runId)}/cancel`, CancelledSchema, {});

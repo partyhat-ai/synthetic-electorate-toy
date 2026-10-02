@@ -1,4 +1,4 @@
-"""The voice layer's model calls, behind one interface with four backends.
+"""The voice layer's model calls, behind one interface with three backends.
 
 - anthropic        one Messages API call per request (Anthropic Python SDK >= 1.0)
 - anthropic-batch  the Message Batches API: half price, asynchronous; the
@@ -6,8 +6,6 @@
 - transcript       writes requests to a JSONL file and reads answers from
                    another, so any external runner can answer them (the
                    prototype used Claude Code subagents this way; see EVAL.md)
-- mock             deterministic answers for pipeline tests only; results
-                   carrying a mock answer are never serialized for the page
 
 Every request is a dict: {id, model, system, user, schema, meta}. Every answer
 is {id, model, backend, ok, data, usage, raw, error}.
@@ -270,28 +268,6 @@ def merge_answers(folder: Path, requests: list[dict]) -> dict:
     return {'merged': len(good), 'rejected': bad, 'missing': sorted(set(by_id) - set(good))}
 
 
-class MockBackend(Backend):
-    """Deterministic stand-in answers keyed on the request id. Tests only."""
-    name = 'mock'
-
-    def run(self, requests):
-        out = []
-        for r in requests:
-            h = int(hashlib.sha256(r['id'].encode()).hexdigest(), 16)
-            rng = random.Random(h)
-            kind = r['meta'].get('kind')
-            if kind == 'probe':
-                data = {'year': 1920, 'label_names': {}, 'winner_label': '', 'winner_name': '', 'confidence': 10}
-            else:
-                labels = r['meta'].get('labels', ['K', 'M'])
-                a = rng.randint(20, 80)
-                data = {'able_to_vote': 'yes', 'p_vote': rng.randint(30, 95), 'choice': rng.choice(labels),
-                        'p_choice': {labels[0]: a, labels[1]: 100 - a, 'other': 0}, 'confidence': 50,
-                        'reason': 'mock', 'quote': 'mock', 'sources_used': []}
-            out.append({'id': r['id'], 'model': r['model'], 'backend': self.name, 'ok': True, 'data': data, 'usage': {}})
-        return out
-
-
 def backend(name: str, folder: Path | None = None, effort: str = 'low', max_tokens: int = 4000) -> Backend:
     if name == 'anthropic':
         return AnthropicBackend(effort=effort, max_tokens=max_tokens)
@@ -299,15 +275,13 @@ def backend(name: str, folder: Path | None = None, effort: str = 'low', max_toke
         return AnthropicBatchBackend(effort=effort, max_tokens=max_tokens)
     if name == 'transcript':
         return TranscriptBackend(folder)
-    if name == 'mock':
-        return MockBackend()
     raise ValueError(name)
 
 
 # ── Answer cache: an identical request is the same instrument ──
 # Keyed on model, system, user and schema (never on meta, run or prompt-version
 # labels), so a run that adds one what-if pays only for its new briefs. Only
-# live API answers are cached; transcript (subagent) and mock answers never are.
+# live API answers are cached; transcript (subagent) answers never are.
 
 def request_key(r: dict) -> str:
     # A request's own effort is part of the instrument; requests without one keep their old keys.
@@ -363,13 +337,38 @@ class AnswerCache:
 # ── Spend ledger: every paid call, for the record (sessions-report) ──
 
 LEDGER = ROOT / 'sessions/spend.jsonl'
+# Who the spend is for: the access key's name while the intake worker models
+# that key's text (intake.process_queue), else None. The caps read it.
+SPEND_WHO: str | None = None
 
 
 def record_spend(stage: str, dollars: float, run: str = '', note: str = ''):
     if dollars <= 0:
         return
     LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    now = time.gmtime()
     with open(LEDGER, 'a') as f:
-        f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%S'), 'day': time.strftime('%Y-%m-%d'),
-                            'stage': stage, 'dollars': round(dollars, 5), 'run': run, 'note': note}) + '\n')
+        f.write(json.dumps({'ts': time.strftime('%Y-%m-%dT%H:%M:%SZ', now), 'day': time.strftime('%Y-%m-%d', now),
+                            'stage': stage, 'dollars': round(dollars, 5), 'run': run, 'note': note, 'who': SPEND_WHO}) + '\n')
+
+
+def spent(day: str | None = None, ledger: Path = LEDGER) -> tuple[float, dict[str, float]]:
+    """(every dollar recorded against an access key, ever: the intake's all-time total;
+    the dollars each key's name recorded on `day`, UTC, default today).
+    Lines without a key (before keys, or a run started by hand) count toward neither.
+    serve/guard.ts reads the ledger the same way before it queues text."""
+    day = day or time.strftime('%Y-%m-%d', time.gmtime())
+    total, today = 0.0, {}
+    for line in ledger.read_text().splitlines() if ledger.exists() else []:
+        try:
+            r = json.loads(line)
+            d = float(r['dollars'])
+        except (ValueError, KeyError, TypeError):
+            continue
+        if not r.get('who'):
+            continue
+        total += d
+        if r.get('day') == day:
+            today[r['who']] = today.get(r['who'], 0.0) + d
+    return total, today
 

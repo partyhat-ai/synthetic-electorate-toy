@@ -1,7 +1,7 @@
 // The page's state, the pure parts: what the URL asks for, what a rerun of a
 // year would send (askOf), whether there's anything new to run, and the
 // types the page keeps per year. The reactive holder is state.svelte.ts.
-import type { ApiOptions, Edits, SliceEdit } from './api';
+import type { ApiOptions, Edits, ErrorReason, SliceEdit } from './api';
 import { ELECTION_YEARS } from './geo';
 import { type Election, electionOf, FEATURED } from './history';
 import type { RunResult, Slice, WhatIf } from './schemas';
@@ -10,7 +10,28 @@ import type { RunResult, Slice, WhatIf } from './schemas';
 export type View = 'history' | 'whatif';
 
 /** Where the simulation service stands: no answer yet, answering, or why not. */
-export type Server = 'connecting' | 'online' | 'offline' | 'unsupported' | 'auth';
+export type Server = 'connecting' | 'online' | 'offline' | 'unsupported' | 'limited';
+
+/**
+ * Where the service stands after a year's voters failed to load: unreachable
+ * is offline; too many requests is `limited` until it has answered (then the
+ * year's own message says so); any other answer leaves it as it was, except
+ * that a first load that never got a usable answer counts as offline.
+ */
+export function serverAfter(now: Server, reason: ErrorReason): Server {
+  switch (reason) {
+    case 'offline':
+      return 'offline';
+    case 'limited':
+      return now === 'online' ? now : 'limited';
+    case 'missing':
+    case 'failed':
+    case 'malformed':
+      return now === 'connecting' ? 'offline' : now;
+    default:
+      return reason satisfies never;
+  }
+}
 
 /** A year's groups and what-ifs, as the server sent them. */
 export interface Sim {
@@ -52,8 +73,11 @@ export function readParams(params: URLSearchParams, dev: boolean): UrlParams {
   };
 }
 
-/** What the API is pointed at: ?simapi=<url> reads <url>/api/simulacra. */
-export const apiOptionsFor = (simapi: string | null): ApiOptions => (simapi ? { base: `${simapi}/api/simulacra` } : {});
+/** What the API is pointed at (?simapi=<url> reads <url>/api/simulacra), and the access key it sends (accessKey.ts). */
+export const apiOptionsFor = (simapi: string | null, accessKey: string | null = null): ApiOptions => ({
+  ...(simapi ? { base: `${simapi}/api/simulacra` } : {}),
+  ...(accessKey ? { accessKey } : {}),
+});
 
 /** A featured year at random, other than `not`. */
 export function randomStory(not?: number, random: () => number = Math.random): number {

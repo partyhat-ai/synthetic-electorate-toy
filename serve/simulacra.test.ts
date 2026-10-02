@@ -1,5 +1,5 @@
 // The real router and app, in process, over real HTTP, reading the real bundles in serve/bundles/.
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -8,7 +8,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { createApp } from './app';
 import { Bundle } from './bundle';
-import { IMMUTABLE, SHORT_CACHE, type SimulacraOptions } from './simulacra';
+import { parseKeyRing } from './guard';
+import { DEFAULT_LIMITS, IMMUTABLE, NEEDS_KEY, OVER_KEY_CAP, OVER_TOTAL_CAP, SHORT_CACHE, type SimulacraOptions } from './simulacra';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const scratch = mkdtempSync(path.join(tmpdir(), 'simulacra-test-'));
@@ -18,7 +19,11 @@ const options: SimulacraOptions = {
   devLog: false,
   autorun: null,
   python: 'python3',
-  root: ROOT
+  root: ROOT,
+  keys: parseKeyRing(undefined),
+  caps: { perKeyDaily: 100, total: 150 },
+  retainDays: 7,
+  limits: DEFAULT_LIMITS
 };
 
 let server: Server;
@@ -137,5 +142,103 @@ describe('/api/simulacra', () => {
     const b = Bundle.parse(raw);
     expect(Object.keys(b.runs)).toContain('');
     expect(Object.keys(b.tables).sort()).toEqual(Object.keys(b.runs).sort());
+  });
+});
+
+// The intake path: SIMULACRA_LOG on, an access key, today's spend, per-IP limits.
+describe('/api/simulacra intake guard', () => {
+  const KEY = 'k'.repeat(32);
+  const sessions = path.join(scratch, 'intake-sessions');
+  const today = new Date().toISOString().slice(0, 10);
+  let guarded: Server;
+  let url = '';
+
+  beforeAll(async () => {
+    mkdirSync(sessions, { recursive: true });
+    const old = new Date(Date.now() - 30 * 86_400_000).toISOString();
+    writeFileSync(path.join(sessions, 'requests.jsonl'), `${JSON.stringify({ ts: old, text: 'a month ago' })}\n${JSON.stringify({ ts: new Date().toISOString(), text: 'today' })}\n`);
+    writeFileSync(path.join(sessions, 'spend.jsonl'), `${JSON.stringify({ ts: new Date().toISOString(), day: today, dollars: 25, who: 'spent' })}\n`);
+    const opts: SimulacraOptions = {
+      ...options,
+      sessions,
+      devLog: true,
+      keys: parseKeyRing(JSON.stringify({ ana: KEY, spent: 's'.repeat(32) })),
+      caps: { perKeyDaily: 20, total: 150 },
+      limits: { ...DEFAULT_LIMITS, intake: { max: 2, windowMs: 60_000 } }
+    };
+    guarded = createApp({ simulacra: opts, build: path.join(scratch, 'none') }).listen(0);
+    await new Promise<void>((resolve) => guarded.once('listening', resolve));
+    // SAFETY: listen(0) on a TCP port always reports an AddressInfo, never a pipe name.
+    url = `http://127.0.0.1:${(guarded.address() as AddressInfo).port}/api/simulacra`;
+  });
+
+  afterAll(async () => {
+    await new Promise<void>((resolve) => guarded.close(() => resolve()));
+  });
+
+  const Unknown = z.looseObject({ unknown: z.string().nullable(), unknownWhy: z.string().optional(), queued: z.unknown().optional() });
+
+  async function ask(text: string, key?: string): Promise<{ status: number; result: z.infer<typeof Unknown> | null }> {
+    const posted = await fetch(`${url}/runs`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...(key ? { authorization: `Bearer ${key}` } : {}) },
+      body: JSON.stringify({ year: 1920, text })
+    });
+    if (posted.status !== 200) return { status: posted.status, result: null };
+    const { id } = RunId.parse(await posted.json());
+    const got = z.object({ result: Unknown }).parse(await (await fetch(`${url}/runs/${id}`)).json());
+    return { status: 200, result: got.result };
+  }
+
+  const queue = (): string[] => {
+    try {
+      return readFileSync(path.join(sessions, 'queue.jsonl'), 'utf8').split('\n').filter(Boolean);
+    } catch {
+      return [];
+    }
+  };
+
+  it('drops session lines older than the retention at startup', () => {
+    const lines = readFileSync(path.join(sessions, 'requests.jsonl'), 'utf8');
+    expect(lines).not.toContain('a month ago');
+    expect(lines).toContain('today');
+  });
+
+  it('queues nothing without a valid key, and says why', async () => {
+    for (const key of [undefined, 'x'.repeat(32), `${KEY}x`]) {
+      const r = await ask('the moon votes', key);
+      expect(r.result?.unknown).toBe('the moon votes');
+      expect(r.result?.unknownWhy).toBe(NEEDS_KEY);
+    }
+    expect(queue()).toEqual([]);
+  });
+
+  it("queues with a valid key, under the key's name", async () => {
+    const r = await ask('the moon votes', KEY);
+    expect(r.result?.queued).toBeDefined();
+    expect(queue().map((l) => JSON.parse(l))).toEqual([expect.objectContaining({ text: 'the moon votes', who: 'ana' })]);
+  });
+
+  it('queues nothing for a key over its daily cap', async () => {
+    const r = await ask('mars votes', 's'.repeat(32));
+    expect(r.result?.unknownWhy).toBe(OVER_KEY_CAP);
+    expect(queue()).toHaveLength(1);
+  });
+
+  it('limits how often one IP may queue', async () => {
+    expect((await ask('venus votes', KEY)).status).toBe(200);
+    expect((await ask('jupiter votes', KEY)).status).toBe(429);
+  });
+
+  it('queues nothing for any key once the all-time total is spent', async () => {
+    const yesterday = new Date(Date.now() - 86_400_000).toISOString();
+    appendFileSync(path.join(sessions, 'spend.jsonl'), `${JSON.stringify({ ts: yesterday, day: yesterday.slice(0, 10), dollars: 125, who: 'old' })}\n`);
+    const r = await ask('saturn votes', KEY);
+    expect(r.result?.unknownWhy).toBe(OVER_TOTAL_CAP);
+  });
+
+  it('answers a year outside any election without caching it', async () => {
+    const res = await fetch(`${url}/elections/123456`);
+    expect(await res.json()).toEqual({ slices: [], whatIfs: [], simulated: false });
   });
 });

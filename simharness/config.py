@@ -34,12 +34,12 @@ class AgentConfig:
     per_cohort: int = 6               # agents per agent cohort
     paraphrases: int = 3              # control and counterfactual paraphrases
     effort: str = 'low'               # output_config.effort for the voice layer
-    backend: str = 'anthropic'        # anthropic | anthropic-batch | transcript | mock
+    backend: str = 'anthropic'        # anthropic | anthropic-batch | transcript
     max_cohorts: int = 40             # cost cap; the merge rule folds the smallest
     arms: list | None = None          # subset of control, cf, swap, probe; None sends all
     only_cohorts: list | None = None  # cohort keys to interview; None interviews all
     max_tokens: int = 4000            # per-request output ceiling (also the estimate's worst case)
-    # Compiled what-ifs only; the defaults leave pre-registered runs as they were (D33):
+    # Compiled what-ifs only; the defaults leave hand-written what-ifs' runs as they were (D33):
     replace_barred: bool = False      # someone who can't vote in either world takes no interview slot
     focus_cohorts: int = 0            # extra cohorts the staging pass names as the change's decisive groups
     escalate_model: str | None = None  # re-ask, on this model, anyone whose answer didn't take the change as true

@@ -1,5 +1,8 @@
 """NHGIS extract → population/adults_<year>_by_state_nhgis.csv in the harness's
-long format (the columns of adults_1920_by_state.csv), one census at a time.
+long format (the columns of adults_1920_by_state.csv), one census at a time,
+1790–1970. The 1920 and 1930 builder is here; the other censuses come from
+build_population_republic (1790–1860), _early (1870–1910) and _mid (1940–1970).
+The 1980+ tables are 18+ and only build_population_modern.py writes them.
 
     python3 scripts/harness/build_population.py 1930            # writes the table
     python3 scripts/harness/build_population.py 1920 --check    # compares with the hand-keyed 1920 table
@@ -8,40 +11,20 @@ Every row says how it was made in `note`: "tabulated" (straight from a census
 table) or an [I]-tagged estimate (and from what).
 """
 import argparse
-import sys
-from pathlib import Path
 
 import pandas as pd
 
-HERE = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(HERE))
-from simharness.config import CACHE  # noqa: E402
-from simharness.geo import CODE_OF  # noqa: E402
-
-SRC = CACHE / 'population/nhgis/extract_1/nhgis0001_csv'
-COLS = ['year', 'state', 'sex', 'group', 'race_as_recorded', 'label_as_recorded', 'count', 'vintage_mode', 'note',
-        'source_table', 'source_url', 'page']
-NHGIS_URL = 'https://www.nhgis.org'
+import build_population_early
+import build_population_mid
+import build_population_republic
+from nhgis_common import CACHE, COLS, STATE_CODE, assert_close, hand_vs_nhgis, load, off_cells, print_worst, rows
 
 
 def read(ds: str) -> pd.DataFrame:
-    f = next(SRC.glob(f'nhgis0001_{ds}_*_state.csv'))
-    d = pd.read_csv(f, encoding='latin-1', skiprows=[1])  # row 2 repeats the headers as descriptions
-    code = {k.casefold(): v for k, v in CODE_OF.items()}  # NHGIS writes "District Of Columbia"
-    d = d[d.STATE.str.casefold().isin(code)].copy()
-    d['state'] = d.STATE.str.casefold().map(code)
+    d = load(ds)
+    d = d[d.STATE.str.casefold().isin(STATE_CODE)].copy()
+    d['state'] = d.STATE.str.casefold().map(STATE_CODE)
     return d.set_index('state')
-
-
-def rows(year, d, spec, table, note='tabulated'):
-    """spec: [(column, sex, group, label)]"""
-    out = []
-    for st, r in d.iterrows():
-        for col, sex, group, label in spec:
-            out.append({'year': year, 'state': st, 'sex': sex, 'group': group, 'race_as_recorded': label.split(':')[0],
-                        'label_as_recorded': label, 'count': float(r[col]), 'vintage_mode': 'truth', 'note': note,
-                        'source_table': table, 'source_url': NHGIS_URL, 'page': ''})
-    return out
 
 
 def year_1920_1930(year: int) -> pd.DataFrame:
@@ -62,8 +45,7 @@ def year_1920_1930(year: int) -> pd.DataFrame:
         for sex, (nn, nf, fb, ng, ot), (wn, wf, b, o) in (('M', rn['M'], ('BDD001', 'BDD003', 'BDL003', 'BDL005')),
                                                           ('F', rn['F'], ('BDD002', 'BDD004', 'BDL004', 'BDL006'))):
             for mine, theirs in (((nn, nf), (wn,)), ((fb,), (wf,)), ((ng,), (b,)), ((ot,), (o,))):
-                gap = (d[list(mine)].sum(axis=1) - x[list(theirs)].sum(axis=1)).abs().max()
-                assert gap < 1, f'1930 {sex}: {mine} vs {theirs} differ by {gap}'
+                assert_close(d[list(mine)].sum(axis=1), x[list(theirs)].sum(axis=1), f'1930 {sex}: {mine} vs {theirs}')
         cz = {'M': ['BDR001', 'BDR002', 'BDR003', 'BDR004'], 'F': ['BDR005', 'BDR006', 'BDR007', 'BDR008']}
         t_rn, t_cz = 'NHGIS 1930_cPAE NT10', 'NHGIS 1930_cPAE NT12'
     out = []
@@ -78,28 +60,20 @@ def year_1920_1930(year: int) -> pd.DataFrame:
                               (fp, sex, 'foreign_white_first_papers', 'White: Foreign-born, first papers'),
                               (al, sex, 'foreign_white_alien', 'White: Foreign-born, alien'),
                               (unk, sex, 'foreign_white_unknown', 'White: Foreign-born, citizenship unknown')], t_cz)
-        gap = (d[fb] - d[[nat, fp, al, unk]].sum(axis=1)).abs().max()
-        assert gap < 1, f'{year} {sex}: foreign-born total and citizenship split differ by {gap}'
+        assert_close(d[fb], d[[nat, fp, al, unk]].sum(axis=1), f'{year} {sex}: foreign-born total vs citizenship split')
     return pd.DataFrame(out, columns=COLS)
 
 
-BUILDERS = {1920: year_1920_1930, 1930: year_1920_1930}
+BUILDERS = {**build_population_republic.BUILDERS, **build_population_early.BUILDERS,
+            1920: year_1920_1930, 1930: year_1920_1930, **build_population_mid.BUILDERS}
 
 
 def check_1920(nh: pd.DataFrame):
-    from simharness.data import GROUP_MAP
-    hand = pd.read_csv(CACHE / 'population/adults_1920_by_state.csv')
-    hand = hand[hand.group != 'TOTAL']
-    agg = lambda x: x.assign(g=x.group.map(lambda g: GROUP_MAP.get(g, g))).groupby(['state', 'sex', 'g'])['count'].sum()  # noqa: E731
-    a, b = agg(hand), agg(nh)
-    j = pd.concat([a.rename('hand'), b.rename('nhgis')], axis=1).fillna(0)
-    j['diff'] = j.nhgis - j.hand
-    j['rel'] = j['diff'] / j.hand.clip(lower=1)
-    bad = j[(j['diff'].abs() > 50) & (j.rel.abs() > 0.005)]
+    j = hand_vs_nhgis(pd.read_csv(CACHE / 'population/adults_1920_by_state.csv'), nh).fillna(0)
+    bad = off_cells(j)
     print(f'cells {len(j)}; total hand {j.hand.sum():,.0f} vs nhgis {j.nhgis.sum():,.0f}; '
           f'cells off by >50 and >0.5%: {len(bad)}')
-    if len(bad):
-        print(bad.sort_values('diff', key=abs, ascending=False).head(15).to_string())
+    print_worst(bad)
 
 
 if __name__ == '__main__':
@@ -107,15 +81,9 @@ if __name__ == '__main__':
     ap.add_argument('year', type=int)
     ap.add_argument('--check', action='store_true')
     a = ap.parse_args()
-    # Other censuses live in sibling modules (each exports BUILDERS), imported
-    # here so they can import read/rows/COLS from this module.
-    import importlib
-    for m in ('build_population_early', 'build_population_mid', 'build_population_modern', 'build_population_republic'):
-        try:
-            BUILDERS.update(importlib.import_module(m).BUILDERS)
-        except ModuleNotFoundError as e:
-            if e.name != m:
-                raise
+    if a.year not in BUILDERS:
+        ap.error(f'no 21+ builder for {a.year}' + (' (1980 on: build_population_modern.py writes the 18+ tables)'
+                                                   if a.year >= 1980 else ''))
     df = BUILDERS[a.year](a.year)
     if a.check and a.year == 1920:
         check_1920(df)

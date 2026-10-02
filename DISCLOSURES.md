@@ -66,7 +66,7 @@ changed a result's direction or its pass/fail status:
 - the Black Southern choice rule.
 
 **Next:** freeze the model code by hash in the run manifest, and require a
-pre-registered amendment before any backbone change.
+written, logged amendment before any backbone change.
 
 **A3 · Medium · open · `EVAL.md` N1**
 N1's denominator was realigned after the first result: citizens → all adults
@@ -100,7 +100,7 @@ this model".
 The "pass" (0 of 66 flagged) comes from a regex. No person read the 66
 reasons. Don't cite it as an audit until someone has.
 
-**A7 · Low · fixed · `NOTE-FOR-UI-FROM-HARNESS.md`**
+**A7 · Low · fixed · the harness's note to the UI (since removed)**
 The first draft of the UI note showed invented example numbers ("fails 2 of
 17 checks", "318–352") that looked like results. They were replaced with the
 real figures.
@@ -132,6 +132,33 @@ The isolation test allows benchmark imports in exactly two places in
 
 **Next:** decide whether verify should see the benchmark at all, or move that
 check into evaluate.
+
+**A11 · Medium · fixed · `backbone.CW_PRIOR_KNOTS`, `Run.verify`**
+The women's-turnout prior for `general_fit` years has knots at 1928
+(−1.0 ± 0.3) and 1940 (−0.7 ± 0.25) taken from Corder–Wolbrecht (2016), and
+`Run.verify` scored any year's women's turnout against the Corder–Wolbrecht
+file as a held-out benchmark. For 1928–1948, whose prior interpolates from
+those knots, that comparison would check the prior against its own source.
+It never ran: the benchmark file holds 1920 and 1924 only. But nothing
+stopped it, and the docs called the comparison held out. `verify` now
+refuses it for any year where `backbone.cw_held_out` is false (a
+`general_fit` year interpolating from a Corder–Wolbrecht knot) and records
+`corder_wolbrecht_skipped` instead. 1920 (natural experiment) and 1924
+(carried forward) use no prior knots, so their comparisons stand, with N1's
+caveat in A3. The what-if research prompt no longer names Corder–Wolbrecht
+as a source to look for.
+
+**Next:** for a held-out women's-turnout check in 1928–1936, either take the
+knots from another source or score against a source the prior doesn't use.
+
+**A12 · Medium · fixed · `tests/test_isolation.py`**
+`test_benchmarks_isolated` was a regex over each module's lines. It missed
+`from .benchmarks import x`, `simharness.benchmarks`, `importlib`, a path
+built as `CACHE / 'benchmarks' / f`, and anything in `scripts/`. It now
+parses every module and script (`ast`), allows the benchmark only inside
+`Run.verify` and `Run.evaluate`, refuses dynamic imports and listings of the
+cache root, scans config and profile JSON for benchmark paths, and is itself
+tested against each known bypass.
 
 ---
 
@@ -183,7 +210,7 @@ information, but they read as period names.
 **B8 · Medium · open · franchise**
 Non-citizens who had declared their intent are treated as barred
 everywhere. No dataset we found codes which states still let them vote in
-1920. HANDOFF-SIMULATION says several did until 1926. The all-years
+1920. HANDOFF-SIMULATION (the original repo's, not ported) says several did until 1926. The all-years
 franchise file now codes IN, MO, TX and AR as still letting declarant
 aliens vote in 1920, from unchecked memory of Keyssar A.12 (C25). The legacy
 1916–1924 files are left blank to keep those years byte-identical (G9), so
@@ -203,7 +230,8 @@ table interpolated between knots, and exact calibration to the state returns
 does the rest. The priors are not updated from the data. A fit's values are
 in `fit.diagnostics['priors']`, and all are [I]:
 - **Women's turnout:** Corder–Wolbrecht to 1936, ANES 1952, CPS P20 and CAWP
-  from 1964. Before 1920, the 1920 gap with a wider sd.
+  from 1964. Before 1920, the 1920 gap with a wider sd. So Corder–Wolbrecht
+  is not held out for 1928–1948 (A11).
 - **Naturalized turnout:** Merriam–Gosnell and CPS. Declarant aliens and
   `other` have no source.
 - **Black Southern exclusion:** Foner and Kousser for 1868–1900, the 1920
@@ -651,7 +679,7 @@ supplied from memory.
 **Next:** flag quotes that contain inferred party names.
 
 **D6 · Medium · open · sample size**
-With 4–5 agents per cohort, the pre-registered shrinkage (pseudo-count 8)
+With 4–5 agents per cohort, the shrinkage (pseudo-count 8)
 pulls every cohort's effect 57–67% toward its region. Cohort differences
 are mostly unmeasured.
 
@@ -897,13 +925,15 @@ configs:
 - **Spread from who was drawn**: each cohort's draws are widened to at least
   the person-to-person spread of a mean of its n people, estimated from every
   pair in the run.
-Pre-registered what-ifs and runs are unchanged: every new behaviour is off in
-the config defaults and gated to compiled what-ifs. Costs: about $1–2 per
+Hand-written what-ifs and their runs are unchanged: every new behaviour is off
+in the config defaults and gated to compiled what-ifs. Costs: about $1–2 per
 typed what-if instead of about $0.50. The same day every dollar ceiling was
 removed: the daily cap (SIMULACRA_DAILY_DOLLARS), the per-what-if cap
 (`whatif_dollars`) and the interview caps (`max_dollars`, `max_requests`).
 Every paid call is still priced first and recorded in sessions/spend.jsonl,
-and a stage costing over 1.5x its estimate still stops.
+and a stage costing over 1.5x its estimate still stops. Caps later returned for
+the live intake: $100 per access key per day and $150 in all
+(docs/DEPLOY.md, Spend).
 
 **D34 · High · fixed (compiler c4) · a typed what-if silently replaced**
 "America loses WW2", typed into 1940, was compiled as "Britain Falls, America
@@ -961,7 +991,7 @@ that knows the outcome (D2).
 **E5 · by design · compiled what-ifs (`harness/whatifs/*.json`)**
 A typed what-if's facts, ballot line and assumption are written by a model
 (`scenario.py`, compiler c1/c2). They are checked for nominee and party
-names, and are exploratory, never pre-registered. Post-hoc edits:
+names, and are exploratory. Post-hoc edits:
 - **`charlie-chaplin-runs`**: the positions carried "(documented)" and
   "(inferred…)" notes, which voters saw in the brief. The notes were
   stripped, "Would likely speak for" became "Speaks for", and the
@@ -998,20 +1028,20 @@ Two code fixes:
 
 ## F. Product and copy
 
-**F1 · Medium · open · `sample.js` (the UI's file)**
+**F1 · Medium · open · `sampleEras.ts` (the sample model)**
 The `no-19th` detail, "fifteen states that already let them", counts only
 full-suffrage states. Twenty-seven states had given women the presidential
-vote. Flagged in the UI note; not edited.
+vote. Not edited.
 
-**F2 · Medium · open · `sample.js` women slice**
+**F2 · Medium · open · the sample model's women slice**
 It treats Georgia and Mississippi women as voting in 1920.
 
-**F3 · Medium · open · `stories.js` / `HANDOFF-SIMULATION.md`**
+**F3 · Medium · open · `stories.ts` / HANDOFF-SIMULATION (the original repo's, not ported)**
 HANDOFF-SIMULATION lists story facts that are still unverified: 1800, 1860,
 1876, 1896, 1912, 1948 ("bubbles in a bar of soap"), 1960, 1968, 2000 and
 2016. This harness didn't check them.
 
-**F4 · Low · open · `history.js`**
+**F4 · Low · open · `history.ts`**
 Its known approximations are listed in HANDOFF-SIMULATION: split
 delegations, 1836, 1872, 1864, faithless electors. The totals aren't yet
 checked against NARA for every year. For 1920, 404–127 matches NARA.
@@ -1082,16 +1112,17 @@ The backbone was refitted after the agent answers existed. The cohort bias
 (A1) and shrinkage use the final backbone, not the one in place when the
 requests were planned.
 
-**G3 · Low · open · environment**
-The installed Anthropic SDK is 0.46, which predates `output_config`. The API
-backends need `anthropic>=1.0`. They are written but untested against the
-live API.
+**G3 · Low · fixed · environment**
+The installed Anthropic SDK was 0.46, which predates `output_config`. The API
+backends need `anthropic>=1.0`, which the `llm` extra now requires
+(`pyproject.toml`). They have since run live, from the quick and rung 1 runs
+on.
 
 **G4 · Low · by design · answer cache (`llm.AnswerCache`)**
 Identical requests reuse earlier live answers across runs. A request is
 identical when it has the same model, system, user text and schema; meta,
 run id and prompt-version labels are ignored. So p4 requests whose text
-equals p3's reuse p3 answers. Transcript and mock answers are never cached.
+equals p3's reuse p3 answers. Transcript answers are never cached.
 Each answer records `cached_from`.
 
 **G5 · Medium · open · evidence reproducibility**
@@ -1102,7 +1133,10 @@ cited text and the notes. It is hashed into the run id. Re-researching
 
 **G6 · Low · open · spend ledger**
 `sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
-backfilled from runs' usage, and D15's $0.052 is estimated.
+backfilled from runs' usage, and D15's $0.052 is estimated. Since the intake
+caps, each line also records the access key's name (`who`) and its `ts` and
+`day` are UTC (earlier lines are local time), and the server drops a line's
+`note`, which holds the typed words, after 7 days.
 
 **G7 · Medium · open · generators outside the repo**
 The all-years profiles, configs and platform files were written by scratch
@@ -1130,6 +1164,18 @@ now includes `no-19th`. Each typed 1924 text misses the compile cache once
 (about $0.02); no brief changes. Legacy 1916–1924 data still goes through
 the untouched loaders.
 
+**G10 · Medium · open · which run is served (`intake.run_pipeline`)**
+A year can have many run folders (a code change makes a new one, G1; 1920
+has 23). The served bundle, `serve/bundles/<year>.json`, is whichever run
+published last: `run_pipeline` copies it over the previous one. Nothing
+records why a run is the served one, and nothing requires it to have been
+validated. 1920 serves `1920-1a2dcd24ad`, which has no `validation.json`;
+EVAL.md scores the prototype run `1920-bcbd86b43f`. `serve/bundles/RUN_ID`
+holds only the last run published for any year.
+
+**Next:** a registry of served runs (year, run id, date, why), and evaluate
+or verify the served run before it replaces the last one.
+
 ---
 
 ## H. Historical evidence
@@ -1142,7 +1188,7 @@ Research results are used only after the interviews:
   only.
 - **Confidence tier.**
 
-Pre-registered what-ifs are never blended; their numbers follow
+Hand-written what-ifs are never blended; their numbers follow
 METHOD.md.
 
 **H2 · Medium · open · source grading**
@@ -1240,3 +1286,7 @@ after seeing the first three results, and nothing calibrates them.
 | D34 | Compiler c4: what-ifs modelled as asked (impossible timing gets its own world, graded fantastical); reinterpretations said first; substitutes never take the reader's words. |
 | D35 | Focus slots round-robin, unvotable cohorts skipped; belief check asks an unstated consequence; audit counts passing slips (staging w2). |
 | D36 | Live configs: interviews on Sonnet 5.5 at medium effort (was Haiku), escalations on Opus 5.5; fast mode (2x price) on every Opus call. Every year's controls are re-asked once on the new model. |
+| A11 | `verify` won't score Corder–Wolbrecht as held out where the women's-turnout prior uses its knots (1928–1948); it never had, since the file holds 1920 and 1924 only. |
+| A12 | `test_benchmarks_isolated` parses modules and scripts instead of grepping lines; each known bypass is tested. |
+| G6 | Ledger lines carry `who` and UTC days; old lines lose `note`. |
+| G10 | Which run each year serves is the one published last; 1920 serves `1920-1a2dcd24ad`, which has no `validation.json`. |

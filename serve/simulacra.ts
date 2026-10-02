@@ -9,24 +9,31 @@
 //   - hand edits (the page's dragged dots) are applied to the point run's
 //     state × group table and re-tallied; an edited run carries no draws, and
 //     says so in `howIGotThis`.
-// Signed-out requests are allowed: the demo has to work without an account.
+// Reading is open to everyone: the demo has to work without an account. Every
+// client IP is rate limited (guard.ts).
 //
-// Dev only (SIMULACRA_LOG set; production never sets it):
+// With SIMULACRA_LOG set (production sets it, and SIMULACRA_AUTORUN):
 //   - every POST /runs appends one line to sessions/requests.jsonl
 //     (ts, year, text, whatIfs, matched, unknown, combo, exists; no IPs, no ids);
-//   - unmatched text is queued in sessions/queue.jsonl for
-//     `python -m simharness.run whatif --queue`, and the result says `queued`;
-//     with SIMULACRA_AUTORUN on, the run instead stays `running` (with the
-//     worker's `steps`) and finishes with the new what-if applied;
-//   - SIMULACRA_AUTORUN=<config path> starts that worker in the background
-//     from the repo root (one at a time; it keeps to its own dollar caps);
+//   - unmatched text from a request carrying an access key (SIMULACRA_ACCESS_KEYS)
+//     is queued in sessions/queue.jsonl, with the key's name, for
+//     `python -m simharness.run whatif --queue`, while spend is under the
+//     caps (guard.ts: per key per day, and in all); without a key, or over a
+//     cap, the run answers
+//     at once with `unknownWhy` saying why the text wasn't modelled;
+//   - a queued text holds its run `running` (with the worker's `steps`) when
+//     SIMULACRA_AUTORUN=<config path> starts that worker in the background from
+//     the repo root (one at a time); otherwise the result says `queued`;
+//   - session logs drop lines older than SIMULACRA_RETAIN_DAYS (default 7), and
+//     the spend ledger keeps old lines without their `note`, so visitors'
+//     words aren't kept for good;
 //   - a bundle file that changed on disk is reloaded, so a publish needs no restart.
 import { type ChildProcess, spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { appendFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import path from 'node:path';
-import express, { type ErrorRequestHandler, type Router } from 'express';
+import express, { type ErrorRequestHandler, type RequestHandler, type Router } from 'express';
 import type { z } from 'zod';
 import {
   Bundle,
@@ -44,6 +51,7 @@ import {
   type TableRow,
   type Told
 } from './bundle';
+import { type Caps, capLog, capsFromEnv, checkCaps, type KeyRing, type Limit, parseKeyRing, pruneJsonl, RateLimiter } from './guard';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 
@@ -60,7 +68,32 @@ export interface SimulacraOptions {
   python: string;
   /** The repo root: the worker runs `python -m simharness.run` from here. */
   root: string;
+  /** Access keys that may queue new text (SIMULACRA_ACCESS_KEYS). */
+  keys: KeyRing;
+  /** Dollar caps on the intake (SIMULACRA_KEY_DAILY_USD, SIMULACRA_TOTAL_USD). */
+  caps: Caps;
+  /** Days session logs keep a line (SIMULACRA_RETAIN_DAYS). */
+  retainDays: number;
+  /** Per-IP rate limits. */
+  limits: Limits;
 }
+
+export interface Limits {
+  /** Every request to the router. */
+  readonly any: Limit;
+  /** POST /runs. */
+  readonly runs: Limit;
+  /** POST /runs whose text would be queued (with a key). */
+  readonly intake: Limit;
+}
+
+const MINUTE = 60_000;
+// The page polls a run every 300 ms (1 s while a new what-if is modelled).
+export const DEFAULT_LIMITS: Limits = {
+  any: { max: 1200, windowMs: 10 * MINUTE },
+  runs: { max: 120, windowMs: 10 * MINUTE },
+  intake: { max: 10, windowMs: 60 * MINUTE }
+};
 
 export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraOptions {
   return {
@@ -69,7 +102,11 @@ export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraO
     devLog: Boolean(env.SIMULACRA_LOG),
     autorun: env.SIMULACRA_AUTORUN || null,
     python: env.SIMULACRA_PYTHON || path.join(homedir(), '.venvs/simharness/bin/python'),
-    root: ROOT
+    root: ROOT,
+    keys: parseKeyRing(env.SIMULACRA_ACCESS_KEYS),
+    caps: capsFromEnv(env),
+    retainDays: env.SIMULACRA_RETAIN_DAYS ? Number(env.SIMULACRA_RETAIN_DAYS) : 7,
+    limits: DEFAULT_LIMITS
   };
 }
 
@@ -87,6 +124,8 @@ interface Pending {
   text: string;
   keys: string[];
   edits: Edits;
+  /** The access key's name that queued the text. */
+  who: string;
 }
 
 type RunEntry =
@@ -102,6 +141,23 @@ type Totals = Record<PageKey, number>;
 
 const RUN_TTL_MS = 60 * 60 * 1000;
 const PENDING_MS = 10 * 60 * 1000;
+/** Runs held at once; past it the oldest go first. */
+const MAX_RUNS = 10_000;
+/** Queued texts one key may have waiting at once. */
+const MAX_PENDING_PER_KEY = 3;
+/** The worker's plain-text log is emptied past this (CloudWatch keeps a copy). */
+const MAX_WORKER_LOG_BYTES = 20 * 1024 * 1024;
+const SESSION_LOGS = ['requests.jsonl', 'queue.jsonl', 'queue-done.jsonl', 'queue-failed.jsonl'];
+/** The spend ledger outlives the retention, without the visitor's words in `note`. */
+const LEDGER_SCRUB = ['note'];
+/** Years a bundle can exist for; any other year is answered without touching the cache. */
+const FIRST_YEAR = 1789;
+const LAST_YEAR = 2100;
+
+export const NEEDS_KEY = 'Modelling a new what-if needs an access key.';
+export const OVER_KEY_CAP = 'You’ve used today’s budget for new what-ifs. Try again tomorrow.';
+export const OVER_TOTAL_CAP = 'The budget for new what-ifs is spent.';
+export const TOO_MANY_WAITING = 'You have three new what-ifs waiting already. Try again when one finishes.';
 const KEYS: readonly PageKey[] = ['A', 'B', 'O'];
 
 export const comboKey = (keys: readonly string[]): string => [...new Set(keys)].sort().join('+');
@@ -236,7 +292,7 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
   const mtimeOf = (file: string): number => (existsSync(file) ? statSync(file).mtimeMs : 0);
 
   function loadBundle(year: number): Bundle | null {
-    if (!Number.isInteger(year)) return null;
+    if (!Number.isInteger(year) || year < FIRST_YEAR || year > LAST_YEAR) return null;
     const file = path.join(opts.bundles, `${year}.json`);
     const cached = bundles.get(year);
     if (cached && (!opts.devLog || cached.mtime === mtimeOf(file))) return cached.bundle;
@@ -284,12 +340,58 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     worker = child;
   }
 
+  // Runs are added in creation order (an entry replaced in place keeps its
+  // slot), so the oldest are at the front: pruning stops at the first live one.
   function newRun(entry: RunEntry): string {
     const id = randomUUID();
     runs.set(id, entry);
-    for (const [k, r] of runs) if (Date.now() - r.created > RUN_TTL_MS) runs.delete(k);
+    for (const [k, r] of runs) {
+      if (Date.now() - r.created <= RUN_TTL_MS && runs.size <= MAX_RUNS) break;
+      runs.delete(k);
+    }
     return id;
   }
+
+  const pendingFor = (who: string): number => {
+    let n = 0;
+    for (const r of runs.values()) if (r.state === 'pending' && r.pending.who === who) n += 1;
+    return n;
+  };
+
+  // Session logs keep SIMULACRA_RETAIN_DAYS of lines. The worker appends to
+  // them, so they're rewritten only while no worker runs.
+  function prune(): void {
+    if (!opts.devLog || worker) return;
+    const maxAge = opts.retainDays * 24 * 60 * MINUTE;
+    for (const name of [...SESSION_LOGS, 'spend.jsonl']) {
+      try {
+        const scrub = name === 'spend.jsonl' ? LEDGER_SCRUB : undefined;
+        const n = pruneJsonl(path.join(opts.sessions, name), maxAge, Date.now(), scrub);
+        if (n) console.log(`simulacra: ${scrub ? 'scrubbed' : 'dropped'} ${n} lines older than ${opts.retainDays} days in ${name}`);
+      } catch (e) {
+        console.warn(`simulacra: pruning ${name} failed`, e instanceof Error ? e.message : e);
+      }
+    }
+    capLog(path.join(opts.sessions, 'intake.log'), MAX_WORKER_LOG_BYTES);
+  }
+  prune();
+  setInterval(prune, 60 * MINUTE).unref();
+
+  const limiters = {
+    any: new RateLimiter(opts.limits.any),
+    runs: new RateLimiter(opts.limits.runs),
+    intake: new RateLimiter(opts.limits.intake)
+  };
+  const limited = (res: express.Response, retryAfterS: number): void => {
+    res.set('Retry-After', String(retryAfterS)).status(429).json({ error: 'Too many requests just now. Try again in a few minutes.' });
+  };
+  const rateLimit =
+    (which: keyof typeof limiters): RequestHandler =>
+    (req, res, next) => {
+      const a = limiters[which].admit(req.ip ?? 'unknown');
+      if (a.ok) next();
+      else limited(res, a.retryAfterS);
+    };
 
   // Where the worker is with a pending run's text.
   function settle(r: Extract<RunEntry, { state: 'pending' }>): Settled {
@@ -330,6 +432,7 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
   }
 
   const router = express.Router();
+  router.use(rateLimit('any'));
   router.use(express.json({ limit: '64kb' }));
 
   // Every published year and the run its bundle came from. The page reads it
@@ -358,7 +461,7 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     res.json({ ...b.election, simulated: true, runId: b.runId });
   });
 
-  router.post('/runs', (req, res) => {
+  router.post('/runs', rateLimit('runs'), (req, res) => {
     const body = RunRequest.safeParse(req.body ?? {});
     if (!body.success) {
       res.status(400).json({ error: 'bad request', issues: body.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`) });
@@ -375,21 +478,35 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     const read = readText(b, text);
     const keys = [...chosen, ...read.keys];
     const done = compute(b, keys, edits, read.unknown);
-    let queued = false;
+    let queued: string | null = null;
+    // Why unknown words weren't queued, when they weren't.
+    let unknownWhy: string | null = null;
     if (opts.devLog) {
       const ts = new Date().toISOString();
       appendLine('requests.jsonl', { ts, year, text, whatIfs, matched: read.keys, unknown: read.unknown, combo: comboKey(keys), exists: Boolean(done) });
       if (read.unknown) {
-        appendLine('queue.jsonl', { ts, year, text: read.unknown });
-        queued = true;
-        startWorker();
+        const who = opts.keys.identify(req.get('authorization'));
+        const cap = who ? checkCaps(path.join(opts.sessions, 'spend.jsonl'), who, opts.caps) : null;
+        if (!who) unknownWhy = NEEDS_KEY;
+        else if (cap?.kind === 'over') unknownWhy = cap.which === 'total' ? OVER_TOTAL_CAP : OVER_KEY_CAP;
+        else if (pendingFor(who) >= MAX_PENDING_PER_KEY) unknownWhy = TOO_MANY_WAITING;
+        else {
+          const a = limiters.intake.admit(req.ip ?? 'unknown');
+          if (!a.ok) {
+            limited(res, a.retryAfterS);
+            return;
+          }
+          appendLine('queue.jsonl', { ts, year, text: read.unknown, who });
+          queued = who;
+          startWorker();
+        }
       }
     }
-    // Dev with the worker on: new words hold the run open (GET reports the
+    // With the worker on, new words hold the run open (GET reports the
     // worker's steps) until they are compiled, researched, interviewed and
     // published; then the run finishes with the new what-if applied.
     if (queued && read.unknown && opts.autorun) {
-      const pending = { text: read.unknown, keys: chosen, edits };
+      const pending = { text: read.unknown, keys: chosen, edits, who: queued };
       res.json({ id: newRun({ state: 'pending', year, created: Date.now(), pending }) });
       return;
     }
@@ -397,8 +514,9 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
       res.status(422).json({ error: 'That combination has not been computed.' });
       return;
     }
-    const result: RunResult =
-      queued && read.unknown ? { ...done.result, queued: { text: read.unknown, worker: Boolean(worker) } } : done.result;
+    let result: RunResult = done.result;
+    if (queued && read.unknown) result = { ...result, queued: { text: read.unknown, worker: Boolean(worker) } };
+    else if (unknownWhy) result = { ...result, unknownWhy };
     res.json({ id: newRun({ state: 'done', year, created: Date.now(), key: done.key, result }) });
   });
 

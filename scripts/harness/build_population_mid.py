@@ -1,5 +1,5 @@
 """NHGIS 1940–1970 → population tables (21+ and 18+), long format like
-adults_1920_by_state.csv. Plugs into build_population.py via BUILDERS (21+).
+adults_1920_by_state.csv. build_population.py uses BUILDERS (21+).
 
     python3 scripts/harness/build_population.py 1950           # 21+ only, via the shared entry point
     python3 scripts/harness/build_population_mid.py            # 21+ and 18+ for 1940 1950 1960 1970
@@ -24,18 +24,14 @@ import sys
 import numpy as np
 import pandas as pd
 
-from build_population import COLS, NHGIS_URL, SRC  # noqa: F401  (also puts HERE on sys.path)
-from simharness.config import CACHE
-from simharness.geo import CODE_OF
+from nhgis_common import CACHE, STATE_CODE, assert_close, frame, load, row
 
 TERR = {'alaska': 'AK', 'alaska territory': 'AK', 'hawaii': 'HI', 'hawaii territory': 'HI'}
 
 
 def read(ds: str, territories: bool) -> pd.DataFrame:
-    f = next(SRC.glob(f'nhgis0001_{ds}_*_state.csv'))
-    d = pd.read_csv(f, encoding='latin-1', skiprows=[1])
-    code = {k.casefold(): v for k, v in CODE_OF.items()}
-    code = {k: v for k, v in code.items() if v not in ('AK', 'HI')}  # geo may or may not list them yet
+    d = load(ds)
+    code = {k: v for k, v in STATE_CODE.items() if v not in ('AK', 'HI')}  # geo may or may not list them yet
     if territories:
         code.update(TERR)
     d = d[d.STATE.str.casefold().isin(code)].copy()
@@ -48,25 +44,14 @@ def cols(prefix, a, b):
     return [f'{prefix}{i:03d}' for i in range(a, b + 1)]
 
 
-def close(a, b, what, tol=1.0):
-    gap = (pd.Series(a) - pd.Series(b)).abs().dropna()
-    assert gap.max() < tol, f'{what}: off by {gap.max()} ({gap.idxmax()})'
-
-
 def tab(label, table, note='tabulated'):
     return {'label': label, 'table': table, 'note': note}
 
 
 def emit(year, cells):
     """cells: {(sex, group): (Series by state, meta)} → long DataFrame."""
-    out = []
-    for (sex, group), (s, m) in cells.items():
-        for st, v in s.dropna().items():
-            out.append({'year': year, 'state': st, 'sex': sex, 'group': group,
-                        'race_as_recorded': m['label'].split(':')[0], 'label_as_recorded': m['label'],
-                        'count': round(float(v), 1), 'vintage_mode': 'truth', 'note': m['note'],
-                        'source_table': m['table'], 'source_url': NHGIS_URL, 'page': ''})
-    return pd.DataFrame(out, columns=COLS).sort_values(['state', 'sex', 'group'], kind='stable').reset_index(drop=True)
+    return frame([row(year, st, sex, group, m['label'].split(':')[0], m['label'], round(float(v), 1), m['note'], m['table'])
+                  for (sex, group), (s, m) in cells.items() for st, v in s.dropna().items()])
 
 
 # ---------------------------------------------------------------- 1940 (complete)
@@ -77,12 +62,12 @@ def y1940():
     for s, i in sx.items():
         wh, ng, ot = a[f'BV300{1+i}'], a[f'BV300{3+i}'], a[f'BV300{5+i}']
         nw, fw = a[f'BVV00{1+i}'], a[f'BVV00{3+i}']
-        close(nw + fw, wh, f'1940 {s} white nativity vs NT7 white')
-        close(wh + ng + ot, b[f'BYU00{1+i}'], f'1940 {s} NT7 races vs cPHAE NT8 total')
+        assert_close(nw + fw, wh, f'1940 {s} white nativity vs NT7 white')
+        assert_close(wh + ng + ot, b[f'BYU00{1+i}'], f'1940 {s} NT7 races vs cPHAE NT8 total')
         fbw = b[cols('BWN', 1 + 4 * i, 4 + 4 * i)].sum(axis=1)
-        close(fbw, fw, f'1940 {s} cPHAE NT12 citizenship vs cAge NT10 foreign-born white')
+        assert_close(fbw, fw, f'1940 {s} cPHAE NT12 citizenship vs cAge NT10 foreign-born white')
         fb = b[cols('BV8', 1 + 3 * i, 3 + 3 * i)].sum(axis=1)
-        close(b[f'BY500{1+i}'] + fb, b[f'BYU00{1+i}'], f'1940 {s} native + foreign vs total')
+        assert_close(b[f'BY500{1+i}'] + fb, b[f'BYU00{1+i}'], f'1940 {s} native + foreign vs total')
     cells = {}
     for s, i in sx.items():
         t7, t10, t12 = 'NHGIS 1940_cAge NT7', 'NHGIS 1940_cAge NT10', 'NHGIS 1940_cPHAE NT12'
@@ -151,9 +136,9 @@ def ipf(seed, rows, colm, n=50):
 def y1950():
     a, b = read('ds83', True), read('ds84', True)
     a, b = a.drop('HI'), b.drop('HI')  # Hawaii Territory is blank in every 1950 table of the extract
-    close(a.B14001, b.B37001, '1950 NT6 vs cPHA NT8 21+')
-    close(b[['B4J001', 'B4J002']].sum(axis=1), b.B37001, '1950 nativity vs total 21+')
-    close(b[cols('B4K', 1, 3)].sum(axis=1), b.B4J002, '1950 citizenship vs foreign-born 21+')
+    assert_close(a.B14001, b.B37001, '1950 NT6 vs cPHA NT8 21+')
+    assert_close(b[['B4J001', 'B4J002']].sum(axis=1), b.B37001, '1950 nativity vs total 21+')
+    assert_close(b[cols('B4K', 1, 3)].sum(axis=1), b.B4J002, '1950 citizenship vs foreign-born 21+')
     band = {}
     for (race, s), o in ((('W', 'M'), 0), (('W', 'F'), 17), (('N', 'M'), 34), (('N', 'F'), 51)):
         x = a[cols('B1W', 1 + o, 17 + o)].fillna(0).to_numpy()

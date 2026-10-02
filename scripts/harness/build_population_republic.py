@@ -1,6 +1,7 @@
 """1790–1860 censuses → population/adults_<year>_by_state_nhgis.csv (same long
-format as build_population.py). Loaded by build_population.py through BUILDERS:
+format as build_population.py). build_population.py uses BUILDERS too:
 
+    python3 scripts/harness/build_population_republic.py [YEAR ...]   # default: every census 1790–1860
     python3 scripts/harness/build_population.py 1830
 
 Source: NHGIS extract made by scripts/harness/nhgis_extract_republic.py (state tables;
@@ -17,18 +18,10 @@ of a band [a, b] aged ≥21 is sum_{21..b} W^x / sum_{a..b} W^x.
 import sys
 from pathlib import Path
 
-import warnings as _w
 import pandas as pd
-_w.filterwarnings("ignore")
 
-HERE = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(HERE))
-from simharness.config import CACHE  # noqa: E402
-from simharness.geo import CODE_OF  # noqa: E402
+from nhgis_common import CACHE, NHGIS_DIR, STATE_CODE, frame, load, row
 
-COLS = ['year', 'state', 'sex', 'group', 'race_as_recorded', 'label_as_recorded', 'count', 'vintage_mode', 'note',
-        'source_table', 'source_url', 'page']
-NHGIS_URL = 'https://www.nhgis.org'
 W = 0.97
 # Territories / predecessor areas → the state they became (state code). Dakota is ambiguous → dropped.
 AREA = {'southwest territory': 'TN', 'northwest territory': 'OH', 'orleans territory': 'LA',
@@ -44,7 +37,7 @@ def adult_share(a: int, b: int) -> float:
 
 
 def src_dir() -> Path:
-    hits = sorted((CACHE / 'population/nhgis').glob('extract_*/nhgis*_csv/nhgis*_ds1_1790_state.csv'))
+    hits = sorted(NHGIS_DIR.glob('extract_*/nhgis*_csv/nhgis*_ds1_1790_state.csv'))
     if not hits:
         raise SystemExit('no 1790–1860 NHGIS extract: run scripts/harness/nhgis_extract_republic.py submit / wait N')
     return hits[-1].parent
@@ -55,31 +48,23 @@ def code_of(name: str):
     if n in AREA:
         return AREA[n]
     n = n.replace(' territory', '')
-    return {k.casefold(): v for k, v in CODE_OF.items()}.get(n)
+    return STATE_CODE.get(n)
 
 
 def read(ds: str) -> pd.DataFrame:
-    f = next(src_dir().glob(f'nhgis*_{ds}_*_state.csv'))
-    d = pd.read_csv(f, encoding='latin-1', skiprows=[1])
-    d['state'] = d.STATE.map(code_of)
-    d = d[d.state.notna()]
-    return d.set_index('state')
+    d = load(ds, src_dir(), 'nhgis*_{ds}_*_state.csv')
+    d.index = d.STATE.map(code_of).rename('state')  # not a new column: the 1850/1860 tables are too wide to insert into
+    return d[d.index.notna()]
 
 
-def table_of(year, ds_label):
-    return f'NHGIS {year}_{ds_label}'
+RACE = {'white': 'White', 'native_white': 'White', 'foreign_white_unknown': 'White', 'free_colored': 'Free colored',
+        'enslaved': 'Slave', 'other_races': 'Other'}
 
 
-def out_rows(year, cells, table):
+def emit(year, cells, table):
     """cells: {(state, sex, group): (count, note, label)}"""
-    race = {'white': 'White', 'native_white': 'White', 'foreign_white_unknown': 'White', 'free_colored': 'Free colored',
-            'enslaved': 'Slave', 'other_races': 'Other'}
-    out = []
-    for (st, sex, g), (c, note, label) in sorted(cells.items()):
-        out.append({'year': year, 'state': st, 'sex': sex, 'group': g, 'race_as_recorded': race[g],
-                    'label_as_recorded': label, 'count': round(float(c), 1), 'vintage_mode': 'truth', 'note': note,
-                    'source_table': table, 'source_url': NHGIS_URL, 'page': ''})
-    return pd.DataFrame(out, columns=COLS)
+    return frame([row(year, st, sex, g, RACE[g], label, round(float(c), 1), note, table)
+                  for (st, sex, g), (c, note, label) in cells.items()])
 
 
 # ---------------------------------------------------------------- per-census adult counts
@@ -161,7 +146,7 @@ def y1790(year=1790):
             res[(st, sex, 'white')] = (r[col] * k, f'[I] white {sex} 16+ ({col}{", NHGIS-estimated" if sex == "F" else ""}) × {src} 21+/16+ ratio ({k:.3f})',
                                        f'White {"males" if sex == "M" else "females (estimated)"} 16 and over')
     res.update(colored_from_totals(1790, d, 'AAQ001', 'AAQ002', rat, nat))
-    return out_rows(1790, res, 'NHGIS 1790_cPop NT4, NT6')
+    return emit(1790, res, 'NHGIS 1790_cPop NT4, NT6')
 
 
 def y1800_1810(year):
@@ -169,14 +154,14 @@ def y1800_1810(year):
     rat, nat = colored_ratios()
     free_col, slave_col = {1800: ('AAY001', 'AAY002'), 1810: ('AA7001', 'AA7002')}[year]
     res.update(colored_from_totals(year, d, free_col, slave_col, rat, nat))
-    return out_rows(year, res, f'NHGIS {year}_cPop NT5, NT6')
+    return emit(year, res, f'NHGIS {year}_cPop NT5, NT6')
 
 
 def y1820(year=1820):
     _, res = white_1800_1820(1820)
     _, col = colored_1820()
     res.update(col)
-    return out_rows(1820, res, 'NHGIS 1820_cPop NT4A, NT4B, NT7')
+    return emit(1820, res, 'NHGIS 1820_cPop NT4A, NT4B, NT7')
 
 
 def y1830_1840(year):
@@ -197,7 +182,7 @@ def y1830_1840(year):
                 res[(st, sex, g)] = (fc * c(2) + sum(c(i) for i in range(3, 7)),
                                      f'[I] 21+ = {fc:.3f}×(10–23) + 24+', f'{g} {sex} 10–23 and 24+ bands')
     t = {1830: 'NHGIS 1830_cPop NT4, NT5', 1840: 'NHGIS 1840_cPopX NT4, NT5'}[year]
-    return out_rows(year, res, t)
+    return emit(year, res, t)
 
 
 def adults_1850_1860(year):
@@ -255,7 +240,7 @@ def y1850_1860(year):
                                                    'citizenship not tabulated', f'Foreign-born white {sex}')
         out[(st, sex, 'native_white')] = (wa - fa, f'[I] white 21+ ({v[1][4:]}) less foreign-born adults; birthplace-unknown counted native',
                                           f'Native white {sex} (residual)')
-    return out_rows(year, out, t)
+    return emit(year, out, t)
 
 
 def build(year: int) -> pd.DataFrame:

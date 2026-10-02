@@ -8,7 +8,7 @@ Stages (each writes into runs/<run id>/ and can be rerun alone):
              agents.escalate_model, audit those
   analyze    paired effects, leakage probes, label swap, bias, audit, quotes
   publish    every what-if combination → the page's result shape + bundle
-  evaluate   pre-registered checks → validation.json (+ EVAL table rows); 1920 only
+  evaluate   validation checks → validation.json (+ EVAL table rows); 1920 only
   verify     any year: the unchanged rerun reproduces every state's R/D/O (R1), plus
              Corder–Wolbrecht where it exists
   dryrun     free: backbone (if needed) → verify → plan, with brief samples and counts

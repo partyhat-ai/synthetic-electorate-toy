@@ -14,7 +14,7 @@ change of one of five kinds, each with generic mechanics:
               in O (other), and publish applies the effect there.
 
 A compiled what-if is written to `harness/whatifs/<key>.json` (the spec,
-exploratory, never pre-registered) with its evidence in
+exploratory) with its evidence in
 `harness/whatifs/evidence/<key>.json`. Both are hashed into a run's id.
 `load_generated` merges the specs into `whatifs.REGISTRY` at import.
 

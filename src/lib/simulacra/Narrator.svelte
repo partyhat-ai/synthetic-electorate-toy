@@ -15,8 +15,6 @@
   interface Props {
     page: PageState;
     names: Names;
-    /** A browser tab wide enough to draw the robot in the slot. */
-    stage: boolean;
     /** The live robot is drawn and settled. */
     robotShown: boolean;
     still: Still;
@@ -34,7 +32,6 @@
   let {
     page,
     names,
-    stage,
     robotShown,
     still,
     slot = $bindable(null),
@@ -45,11 +42,8 @@
     caption = '',
   }: Props = $props();
 
-  // The ChatPro harness's face, cropped as the robot overlay crops it: where
-  // no robot is drawn (narrow windows, before WebGL loads).
+  // The robot's name, for the what-if field's label.
   const NAME = 'ChatPro';
-  const FACE = '/harness-faces/atlas-09.png?v=5';
-  const FACE_STYLE = 'transform: scale(1.213) translate(0%, 4%)';
 
   // Steps shown so far; Infinity once they're all out.
   let reveal = $state(Infinity);
@@ -98,9 +92,6 @@
 
 <WhatIf
   name={NAME}
-  face={FACE}
-  faceStyle={FACE_STYLE}
-  {stage}
   {robotShown}
   bind:slot
   {still}

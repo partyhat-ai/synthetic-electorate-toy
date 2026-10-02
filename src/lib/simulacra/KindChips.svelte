@@ -108,7 +108,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 36px;
+    height: var(--control-h);
     padding: 0 14px 0 12px;
     border: none;
     border-radius: 999px;

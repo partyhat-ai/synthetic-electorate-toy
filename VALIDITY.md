@@ -6,7 +6,7 @@ This document takes stock of the Simulacra Americana harness:
 - what can and can't be known about whether those claims hold;
 - what would make them stronger.
 
-It was written after the work that made typed what-ifs, historical evidence and 1924 run end to end. It complements:
+It was written after the work that made typed what-ifs, historical evidence and 1924 run end to end; all 60 elections have since been built (§3). It complements:
 - `METHOD.md`: how the model works;
 - `EVAL.md`: the 1920 prototype's scores;
 - `DISCLOSURES.md`: the running log of every known flaw.
@@ -44,6 +44,7 @@ It is built from four kinds of input:
 - **A source of identification for group differences:** what lets the model tell how groups differed.
   - **1920:** the 1916 → 1920 natural experiment. Women could already vote for president in some states in 1916 and not in others.
   - **1924:** carries 1920's structure forward (C14).
+  - **Every other year:** none. Group differences are era priors from the literature, not estimated from the year's data (B10).
 
 **Exact reproduction.** Every draw is calibrated so that the unchanged world reproduces each state's certified votes, to within half a vote:
 - 1920: worst error 0.32 votes, 404–127 in every draw;
@@ -57,7 +58,7 @@ Everything a what-if changes is therefore measured from the real result. The dra
 
 Invented people are drawn from documented groups, in proportion to real counts. Each gets a brief dated the day before the election. The brief contains:
 - **Circumstances:** age, place, household economy, eligibility under their state's rules.
-- **News:** two to four dated newspaper excerpts. This exists for 1920 only (C15).
+- **News:** two to four dated newspaper excerpts, in 1920 and in the other years the corpus build reached (C15, C30).
 - **A blinded ballot:** neutral letters in a random order, each with a neutral description and three platform planks paraphrased from the parties' own texts.
 
 Each person answers twice:
@@ -99,13 +100,13 @@ The evidence never enters a voter's brief.
 | **Profile** (names, descriptors, labels, day) | Names restored on output | The blinded ballot | Names masked in compiled facts |
 | **Platforms** | None | Ballot planks | Planks dropped or added |
 | **Dated newspaper corpus** | None | What each person has lately read | Contradicted items removed |
-| **Benchmarks** (Corder–Wolbrecht, held-out states) | Scoring only, never fitting | Scoring only | None |
+| **Benchmarks** (Corder–Wolbrecht, held-out states) | Scoring only, never fitting; but two women's-turnout prior knots (1928, 1940) come from Corder–Wolbrecht's book, so it isn't scored as held out for 1928–1948 (DISCLOSURES A11) | Scoring only | None |
 | **Historical evidence** (per what-if) | A weak prior; the confidence tier | Never shown | Agreement and reasons |
 
 A year's data quality sets its confidence ceiling:
 - **1920:** has a natural experiment, its own census, a newspaper corpus and held-out checks.
 - **1924:** borrows its structure and has no newspapers.
-- **1932 onward:** will start a tier lower again, until each has its own identification and checks.
+- **Every other year:** runs on era priors, with no identification of its own, no held-out checks beyond reproduction, and newspapers only where the corpus build reached (C30).
 
 ---
 
@@ -175,7 +176,7 @@ They reduce or measure the bias; none removes it.
 
 1. **Paired differences.** A bias common to both answers (leaning toward Harding because the model knows he won) largely cancels. Interactions between knowledge and the change do not.
 2. **The statistical layer carries the counts.** Vote totals, turnout and exact reproduction use no model answers. Interviews only supply shifts.
-3. **Shrinkage by interview–record gap.** A group whose control answers stray from the calibrated record has its shift pulled toward its region's average (pre-registered, `paired.py`).
+3. **Shrinkage by interview–record gap.** A group whose control answers stray from the calibrated record has its shift pulled toward its region's average (`paired.py`).
 4. **Blinding.** Letters instead of names, neutral descriptors, and corpus items that name a candidate excluded. Partial at best (D9).
 5. **Manipulation check (p5).** For news about one nominee, each answer states which candidate the news concerns. Misreaders are dropped, counted and flagged; half or more forces "extremely low" (D21).
 6. **Label swap (L2).** Platforms trade labels and the order flips; choices should follow the platform, not the label.
@@ -183,7 +184,7 @@ They reduce or measure the bias; none removes it.
 
 ### 5.5 What this means for backtests
 
-- **Statistical-layer backtests are clean.** Fitting the population model on 1916 and predicting 1920 involves no language model. The remaining risk is choices made by people who know history, and pre-registration handles that.
+- **Statistical-layer backtests are clean.** Fitting the population model on 1916 and predicting 1920 involves no language model. The remaining risk is choices made by people who know history (§9.5).
 - **Interview-layer backtests on events before the model's training cutoff are not clean.** Running "women can vote" through the 1916 world, the model already knows about a third of women voted in 1920. A good score could be memory, not modelling.
 
 So the interview layer cannot be validated on most of American history with today's models. It can be tested in other ways (§7).
@@ -271,7 +272,7 @@ Clean statistics on a biased record give clean-looking bias.
 
 ### 9.3 Tests that can't be contaminated
 
-1. **Prospective, pre-registered forecasts.** Before a future election, primary or known upcoming change, register a prediction made by the full pipeline, then score it afterwards. This is the gold standard.
+1. **Prospective forecasts.** Before a future election, primary or known upcoming change, commit a prediction made by the full pipeline, then score it afterwards. This is the gold standard.
 2. **Elections after a model's training cutoff.** For 2024, run the interviews with a model whose training ended before November 2024 (the research notes cite some Llama models). It would be weaker, but clean.
 3. **Period-only language models (research).** Train or fine-tune only on text dated before the event (e.g. Chronicling America to 1920).
    - **Limits.** Fine-tuning a modern model doesn't erase what it knows; training from scratch on period text gives a much weaker model.
@@ -280,7 +281,7 @@ Clean statistics on a biased record give clean-looking bias.
 ### 9.4 Reduce bias where it's known
 
 1. **Less sameness.**
-   - More people per group: the current 2 is far below the pre-registered 4–6.
+   - More people per group: the served 1920 run interviews 2, against the prototype's 4 and the config default of 6.
    - Several models: Sonnet, Opus, Haiku and a non-Anthropic model.
    - Persona detail from IPUMS microdata (occupation, literacy, home ownership) instead of imputed economy.
    - Measure group spread (A2) on every run.
@@ -294,7 +295,7 @@ Clean statistics on a biased record give clean-looking bias.
 
 ### 9.5 Process
 
-1. **Pre-register each new year** (starting with 1932) before its data is opened: held-out states, counties and benchmarks, metrics and thresholds.
+1. **Commit each year's held-out sets before scoring it:** held-out states, counties and benchmarks, metrics and thresholds, so the history shows they were set before the results were seen. No year has this record today (G8).
 2. **Calibrate the confidence tiers** against the backtests and planted-truth tests, then freeze the rules. Until then, keep calling them uncalibrated (H4).
 3. **Keep the working modes separate.** Shipping fixes fast and validation runs are different activities. Validation is run deliberately, once, on locked sets, and is never re-run until it passes.
 4. **Keep logging.** Every post-hoc change goes in `DISCLOSURES.md`.
@@ -306,7 +307,7 @@ Clean statistics on a biased record give clean-looking bias.
 | 1 | Planted-truth test | The only direct answer to "is it reasoning or remembering?" | A few dollars; a day |
 | 2 | Cue-shift test on the 1920 interviews | Cheap; quantifies memory against brief | Under $1 |
 | 3 | Held-out counties, 1920 and 1924 | Strongest test of the statistical layer | Free (NHGIS); a day |
-| 4 | Pre-registration template per year, then 1932 | Keeps every new year honest from the start | An hour |
+| 4 | A committed held-out set and thresholds per year | Makes later checks count as unseen | An hour |
 | 5 | Backbone backtest 1916 → 1920 | Clean test of what-if machinery | Free |
 | 6 | Confidence-tier calibration | Turns hand-written rules into measured ones | Follows 1, 3 and 5 |
 | 7 | More people and models per group | Reduces sameness | Scales with budget |

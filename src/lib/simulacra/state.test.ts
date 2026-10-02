@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import type { Outcome, SimulacraApi } from './api';
 import type { ElectionResponse } from './schemas';
-import { addEdit, apiOptionsFor, askOf, isDirty, randomStory, readParams, toggled, urlForYear } from './state';
+import { addEdit, apiOptionsFor, askOf, isDirty, randomStory, readParams, serverAfter, toggled, urlForYear } from './state';
 import { PageState } from './state.svelte';
 
 describe('askOf', () => {
@@ -54,8 +54,18 @@ describe('the pure parts', () => {
     expect(p('simapi=http://localhost:8787', false).simapi).toBeNull();
     expect(apiOptionsFor('http://localhost:8787')).toEqual({ base: 'http://localhost:8787/api/simulacra' });
     expect(apiOptionsFor(null)).toEqual({});
+    expect(apiOptionsFor(null, 'k'.repeat(16))).toEqual({ accessKey: 'k'.repeat(16) });
     expect(urlForYear('http://x.test/?sample=1&year=1896', 1896)).toBeNull();
     expect(urlForYear('http://x.test/?sample=1', 1912)).toBe('http://x.test/?sample=1&year=1912');
+  });
+
+  test('serverAfter: offline is offline; too many requests is limited until the service has answered; others stay', () => {
+    expect(serverAfter('online', 'offline')).toBe('offline');
+    expect(serverAfter('connecting', 'limited')).toBe('limited');
+    expect(serverAfter('online', 'limited')).toBe('online');
+    expect(serverAfter('connecting', 'failed')).toBe('offline');
+    expect(serverAfter('online', 'malformed')).toBe('online');
+    expect(serverAfter('limited', 'missing')).toBe('limited');
   });
 
   test('randomStory never repeats the year it leaves', () => {

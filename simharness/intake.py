@@ -26,9 +26,15 @@ and each decides whether the interviews measure the change at all. The live
 configs run them on Opus at high effort; the per-voter interviews stay on the
 bulk model, with only the answers that fail a check re-asked on a stronger one.
 
-Money: every stage is priced before it is sent and recorded after; there is no
-dollar ceiling (since removed). A stage whose actual cost exceeds 1.5×
-its typical estimate stops the pipeline and says so.
+Money: every stage is priced before it is sent and recorded after, with the
+access key's name (llm.SPEND_WHO). Queued text is modelled only while spend is
+under both caps: KEY_DAILY_USD per access key per UTC day
+(SIMULACRA_KEY_DAILY_USD) and TOTAL_USD across every key, all time
+(SIMULACRA_TOTAL_USD).
+The router checks the same caps before it queues; the worker checks again
+before each text, and a text's Budget stops at the first stage that crosses
+what is left. A stage whose actual cost exceeds 1.5× its typical estimate
+also stops the pipeline and says so.
 """
 from __future__ import annotations
 
@@ -51,6 +57,9 @@ FAILED = SESSIONS / 'queue-failed.jsonl'
 LOCK = SESSIONS / 'intake.lock'
 SERVE_BUNDLES = ROOT / 'serve/bundles'
 STATUS = SESSIONS / 'intake-status.json'
+KEY_DAILY_USD = float(os.environ.get('SIMULACRA_KEY_DAILY_USD') or 100)
+TOTAL_USD = float(os.environ.get('SIMULACRA_TOTAL_USD') or 150)
+OVER_CAP = 'The budget for new what-ifs is spent.'
 
 
 class Progress:
@@ -83,16 +92,18 @@ class Progress:
 
 
 class Budget:
-    """What a typed what-if has spent, stage by stage (no ceiling)."""
+    """What a typed what-if has spent, stage by stage, and the most it may (None: no ceiling)."""
 
-    def __init__(self):
-        self.spent, self.lines = 0.0, []
+    def __init__(self, ceiling: float | None = None):
+        self.spent, self.lines, self.ceiling = 0.0, [], ceiling
 
     def add(self, dollars: float, stage: str, typical: float | None = None, note: str = '', record: bool = True):
         self.spent += dollars
         self.lines.append({'stage': stage, 'dollars': round(dollars, 4), 'typical': typical})
         if record:
             llm.record_spend(stage, dollars, note=note)
+        if self.ceiling is not None and self.spent >= self.ceiling:
+            raise SystemExit(OVER_CAP)
         if typical and dollars > 0.01 and dollars > 1.5 * typical:
             raise SystemExit(f'STOP: {stage} cost ${dollars:.4f}, more than 1.5x its ${typical:.4f} estimate. '
                              'Everything so far is saved; check the call before going on.')
@@ -291,10 +302,21 @@ def report(year: int, key: str) -> dict:
                          for e in r.get('evidence', [])]}
 
 
-def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
+def left_for(who: str | None, ledger: Path | None = None, key_cap: float | None = None, total_cap: float | None = None) -> float:
+    """Dollars `who` may still spend: the smaller of what's left of the all-time
+    total and of the key's cap for today (UTC). No key, nothing."""
+    if not who:
+        return 0.0
+    total, today = llm.spent(ledger=ledger or llm.LEDGER)
+    left = min((TOTAL_USD if total_cap is None else total_cap) - total,
+               (KEY_DAILY_USD if key_cap is None else key_cap) - today.get(who, 0.0))
+    return max(left, 0.0)
+
+
+def whatif(text: str, config_path: str | Path, refresh: bool = False, ceiling: float | None = None) -> dict:
     config_path = Path(config_path)
     cfg = RunConfig.load(config_path)
-    budget = Budget()
+    budget = Budget(ceiling)
     progress = Progress(text)
     progress.step('Turning your words into a change I can model.')
     raw = compile_text(text, cfg, budget)
@@ -337,7 +359,7 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
 
 
 def research_config(config_path: str | Path, refresh: bool = False, only: str | None = None, again: bool = False) -> dict:
-    """Evidence for every what-if in a config that lacks it (pre-registered ones included: there it grades confidence only)."""
+    """Evidence for every what-if in a config that lacks it (hand-written ones included: there it grades confidence only)."""
     cfg = RunConfig.load(config_path)
     keys = [k for k in cfg.what_ifs if not only or k == only]
     budget = Budget()
@@ -376,7 +398,7 @@ def _config_for(year: int, fallback: Path | None = None) -> Path | None:
 
 def process_queue(config_path: str | Path, limit: int = 3) -> list[dict]:
     """Model up to `limit` distinct queued (year, text) pairs, oldest first, within the caps.
-    Each is modelled in its own year's live config."""
+    Each is modelled in its own year's live config, its spend recorded against the key that queued it."""
     SESSIONS.mkdir(exist_ok=True)
     if LOCK.exists() and _pid_alive(int(LOCK.read_text().strip() or 0)):
         return [{'status': 'busy', 'pid': LOCK.read_text().strip()}]
@@ -387,21 +409,27 @@ def process_queue(config_path: str | Path, limit: int = 3) -> list[dict]:
             if l.strip():
                 x = json.loads(l)
                 done.add((x.get('year', 1920), x['text']))
-        pending = []
+        pending, who = [], {}
         for l in QUEUE.read_text().splitlines() if QUEUE.exists() else []:
             if l.strip():
                 q = json.loads(l)
                 key = (int(q.get('year') or 1920), _norm(q['text']))
                 if key not in done and key not in pending:
                     pending.append(key)
+                    who[key] = q.get('who')
         results = []
         for year, t in pending[:limit]:
             cfg_path = _config_for(year, Path(config_path))
+            llm.SPEND_WHO = who[(year, t)]
+            left = left_for(llm.SPEND_WHO)
             try:
-                if cfg_path is None:
+                if left <= 0:
+                    # Settled, not retried: later budget isn't spent on text nobody is waiting for.
+                    r = {'status': 'over-cap', 'why': OVER_CAP}
+                elif cfg_path is None:
                     r = {'status': 'not-modelable', 'why': f'I haven’t simulated {year} yet.'}
                 else:
-                    r = whatif(t, cfg_path)
+                    r = whatif(t, cfg_path, ceiling=left)
             except (SystemExit, Exception) as e:
                 # A cap or cost stop, or a bug: the text stays queued (not in DONE),
                 # and the waiting page is told why (FAILED, read by the router).
@@ -411,9 +439,10 @@ def process_queue(config_path: str | Path, limit: int = 3) -> list[dict]:
                 results.append(r)
                 break
             with open(DONE, 'a') as f:
-                f.write(json.dumps({'text': t, 'year': year, 'ts': dt.datetime.now().isoformat(timespec='seconds'), 'status': r['status'],
-                                    'key': r.get('key'), 'why': r.get('why'), 'dollars': r.get('dollars')}) + '\n')
+                f.write(json.dumps({'text': t, 'year': year, 'ts': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+                                    'status': r['status'], 'key': r.get('key'), 'why': r.get('why'), 'dollars': r.get('dollars')}) + '\n')
             results.append({'text': t, **r})
         return results
     finally:
+        llm.SPEND_WHO = None
         LOCK.unlink(missing_ok=True)

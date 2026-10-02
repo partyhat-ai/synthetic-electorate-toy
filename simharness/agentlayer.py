@@ -274,6 +274,8 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
     no_popular = set(getattr(inp, 'no_popular', None) or ())
     this_year = [wk for wk in cfg.what_ifs if wk in registry and registry[wk]['facts'] is not None
                  and year in (registry[wk].get('years') or [registry[wk].get('year', 1920)])]
+    facts_failed: set[str] = set()
+
     def can_vote_somewhere(a: dict) -> bool:
         """D33: whether this person can vote in the world as it was or in some what-if's world."""
         describe_agent(a, fr, year, inp)
@@ -282,7 +284,11 @@ def build_requests(cfg, cohorts: dict, extras: dict, inp, registry: dict) -> tup
         for wk in this_year:
             try:
                 e = registry[wk]['facts'](a, inp, year=year).get('eligibility')
-            except Exception:
+            except Exception as err:  # a compiled what-if's facts; one failing mustn't stop the draw
+                if wk not in facts_failed:
+                    facts_failed.add(wk)
+                    print(f'plan: {wk} facts failed for {a.get("state")}/{a.get("group")} ({err!r}); '
+                          'its world is ignored when deciding who can vote', flush=True)
                 continue
             if e and not world.barred(e):
                 return True

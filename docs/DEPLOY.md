@@ -13,7 +13,7 @@ simulacraamericana.com, www (Vercel DNS)
        └─ rewrite /api/simulacra/:path* → https://api.simulacraamericana.com/api/simulacra/:path*
 api.     CNAME → ALB (ACM) → ECS service simulacra-api (1 task, ARM64; Node + Python worker)
                               EFS /state: bundles, sessions, runs, whatifs, configs, cache
-                              Secrets Manager simulacra/prod: ANTHROPIC_API_KEY
+                              Secrets Manager simulacra/prod: ANTHROPIC_API_KEY, SIMULACRA_ACCESS_KEYS
 assets.  CNAME → CloudFront (ACM, OAC) → private S3 simulacra-americana-assets
 private S3 simulacra-americana-data: cache/, seed/, backups/
 ```
@@ -28,6 +28,7 @@ doesn't manage.
 
 Several things assume a single process:
 - Run state is an in-process `Map`.
+- The per-IP rate limits are counted in process.
 - The worker lock (`sessions/intake.lock`) is a PID file, and PIDs aren't
   unique across containers.
 - Each process runs one worker.
@@ -69,7 +70,9 @@ Each step marked ⛔ needs Cameron's yes.
    `<ecr>/simulacra-api:<sha>`, either locally (`docker buildx build
    --platform linux/arm64 --push`) or from the workflow's build step.
 6. Put the secret value, which never goes through Terraform:
-   `aws secretsmanager put-secret-value --secret-id simulacra/prod --secret-string '{"ANTHROPIC_API_KEY":"…"}'`.
+   `aws secretsmanager put-secret-value --secret-id simulacra/prod --secret-string '{"ANTHROPIC_API_KEY":"…","SIMULACRA_ACCESS_KEYS":"{}"}'`.
+   Both fields must exist or the task can't start; `"{}"` means no one can
+   queue new text yet (see "Access keys").
    Terraform creates the empty secret in step 7. If you want the value in
    place before the task first starts, run
    `terraform apply -target=aws_secretsmanager_secret.prod` first.
@@ -100,10 +103,14 @@ Each step marked ⛔ needs Cameron's yes.
 ## CI setup
 
 1. Create `partyhat-ai/synthetic-voters-toy` and push.
-2. The deploy role trusts `var.github_oidc_sub`. For this org the claim
-   carries numeric ids (`repo:partyhat-ai@44511702/<repo>@<repoId>:*`). The
-   documented `repo:owner/name:*` silently never matches. Read the real claim
-   from a test run, put it in `infra/terraform.tfvars`, and apply.
+2. The deploy role trusts exactly one `sub`, `var.github_oidc_sub`: this
+   repo's main branch. For this org the claim carries numeric ids, so it is
+   `repo:partyhat-ai@44511702/synthetic-voters-toy@1400481223:ref:refs/heads/main`;
+   the documented `repo:owner/name:...` silently never matches. The prefix
+   comes from `gh api repos/partyhat-ai/synthetic-voters-toy/actions/oidc/customization/sub`.
+   The variable refuses a wildcard. A workflow on any other branch, a tag, a
+   pull request or an environment gets a different `sub` and can't assume
+   the role.
 3. Set the repo variables from Terraform's outputs:
    ```
    gh variable set AWS_DEPLOY_ROLE_ARN -b "$(terraform -chdir=infra output -raw deploy_role_arn)"
@@ -111,14 +118,21 @@ Each step marked ⛔ needs Cameron's yes.
    ```
 4. A `workflow_dispatch` workflow can only be dispatched once its file is on
    the default branch.
+5. Merges are squash-only (repo settings: merge commits and rebase merges
+   off). Branch protection and rulesets need GitHub Team or Pro for a private
+   repo, and this org is on the free plan, so nothing yet stops a direct push
+   to main or a merge with CI red. The deploy gate below holds regardless:
+   only a main SHA with a green CI run ships.
 
 ## Deploying
 
 **API** (manual only; a merge never ships):
 ```
-gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy -f confirm=DEPLOY
+gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy --ref main -f confirm=DEPLOY
 ```
 The workflow:
+- refuses any ref but main, and any SHA without a successful CI push run
+  (`ci.yml`) for that exact commit;
 - renders the task definition from `infra/taskdef.json.tftpl` and fails if
   any variable, required env var or secret is missing;
 - builds on an ARM runner and tags the image with the full commit SHA;
@@ -187,7 +201,12 @@ must show that credit.
 ## Rotating the Anthropic key
 
 1. Create a new key in the Anthropic console.
-2. `aws secretsmanager put-secret-value --secret-id simulacra/prod --secret-string '{"ANTHROPIC_API_KEY":"<new>"}'`.
+2. Replace the one field, keeping `SIMULACRA_ACCESS_KEYS`:
+   ```
+   cur=$(aws secretsmanager get-secret-value --secret-id simulacra/prod --query SecretString --output text)
+   aws secretsmanager put-secret-value --secret-id simulacra/prod \
+     --secret-string "$(jq -c --arg k "<new>" '.ANTHROPIC_API_KEY=$k' <<<"$cur")"
+   ```
 3. Force a new deployment so the task picks up the key:
    `aws ecs update-service --cluster simulacra --service simulacra-api --force-new-deployment`.
    This brings a few seconds of 503s, and it kills a running worker, whose
@@ -195,13 +214,60 @@ must show that credit.
 4. Revoke the old key once the new task is healthy.
 5. Move the console usage alert to the new key.
 
+## Access keys
+
+Reading is open: every year, every precomputed what-if and every combination
+of them is free to serve. Only text the page doesn't recognise costs money
+(compile, web research, staging, interviews), and the API queues it only for
+a request carrying an access key (`Authorization: Bearer <key>`). Without
+one, the page answers at once that a new what-if needs a key.
+
+Keys live in the secret's `SIMULACRA_ACCESS_KEYS` field: a JSON object, as a
+string, of name → key. Names are lowercase (`[a-z0-9_-]`, up to 40); keys
+are 24–128 characters of `[A-Za-z0-9_-]`. The name is what the spend ledger
+records. To add one:
+```
+key=$(openssl rand -base64 36 | tr '+/' '-_' | tr -d '=')
+cur=$(aws secretsmanager get-secret-value --secret-id simulacra/prod --query SecretString --output text)
+aws secretsmanager put-secret-value --secret-id simulacra/prod --secret-string "$(
+  jq -c --arg name "<name>" --arg key "$key" \
+    '.SIMULACRA_ACCESS_KEYS = ((.SIMULACRA_ACCESS_KEYS // "{}" | fromjson) + {($name): $key} | tojson)' <<<"$cur")"
+aws ecs update-service --cluster simulacra --service simulacra-api --force-new-deployment
+echo "https://simulacraamericana.com/#key=$key"
+```
+The link sets the key for that browser tab (the page keeps it in
+`sessionStorage` and drops it from the address bar; a fragment never reaches
+a server log). To revoke a key, delete its name the same way and redeploy.
+
 ## Spend
 
-What-ifs aren't capped, by decision; this is visibility, not a limit. The
-worker prices every stage before sending it and records it in
-`/state/sessions/spend.jsonl`. To read it, run a one-off task, or download
-the latest AWS Backup recovery point. Typed text goes to
-`sessions/requests.jsonl`, which is accepted as-is.
+The intake is capped from the ledger the worker writes
+(`/state/sessions/spend.jsonl`, every stage priced before it is sent and
+recorded after, with the key's name):
+- $100 per access key per UTC day (`SIMULACRA_KEY_DAILY_USD`);
+- $150 across every key, all time (`SIMULACRA_TOTAL_USD`). It counts only
+  ledger lines with a key's name, so it started at $0 when keys did; spend
+  from before keys, or from a run started by hand, doesn't count. Once it is
+  reached, no key can queue new text until the cap is raised (edit
+  `infra/taskdef.json.tftpl` and deploy).
+
+The API checks both before it queues text, and the worker checks again before
+each text and stops a text at the first stage that crosses what is left, so a
+cap can be overshot by at most one stage. Text that reaches the worker over a
+cap is settled, not retried later. Per IP (`serve/simulacra.ts`,
+`DEFAULT_LIMITS`): 1,200 requests per 10 minutes, 120 runs per 10 minutes,
+and 10 queued texts an hour; one key may have 3 texts waiting at once. The
+rate limits read the visitor's address from `X-Forwarded-For` two proxies
+deep (`TRUST_PROXY_HOPS`: Vercel, then the ALB). A request sent to the ALB
+directly can forge that header, which is why the money hangs on keys, not
+IPs.
+
+Session logs (`requests.jsonl` and the queue files) keep 7 days of lines
+(`SIMULACRA_RETAIN_DAYS`), pruned at start and hourly while no worker runs.
+`spend.jsonl` keeps every line, but drops a line's `note` (the visitor's
+words) after the same 7 days. The worker's `intake.log` is emptied past 20 MB (CloudWatch keeps its
+copy). To read them, run a one-off task, or download the latest AWS Backup
+recovery point.
 
 AWS can't see Anthropic spend. Set a usage alert on the production key in the
 Anthropic console.
@@ -243,7 +309,6 @@ All alarms go to SNS `simulacra-alarms`, which emails cam@partyhat.ai:
 | S3, ECR, logs, alarms, Secrets Manager | | $3–5 |
 | **AWS total** | | **≈ $75–80** |
 | Vercel | Hobby is $0, but its terms exclude commercial use; Pro is $20 per member | $0–20 |
-| Anthropic | $0.74–$1.91 per new typed what-if. Repeats and precomputed combinations are free | 10 a day ≈ $220–575; 100 a day ≈ $2.2k–5.7k |
+| Anthropic | $0.74–$1.91 per new typed what-if, from access-key holders only. Repeats and precomputed combinations are free | $150 in all, by the all-time cap, until it is raised |
 
-The Anthropic line dominates. It has no cap, by decision (§1.2 of the deploy
-prompt).
+The Anthropic line dominates. The caps above bound it.

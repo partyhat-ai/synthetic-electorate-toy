@@ -39,8 +39,12 @@ variable "monthly_budget_usd" {
 }
 
 variable "github_oidc_sub" {
-  description = "The deploy role's trusted OIDC sub, with the org's numeric ids: repo:partyhat-ai@44511702/<repo>@<repoId>:*. Read the real claim from a test run; repo:owner/name:* silently never matches."
+  description = "The deploy role's trusted OIDC sub, matched exactly: repo:partyhat-ai@44511702/<repo>@<repoId>:ref:refs/heads/main. Read the prefix from GET repos/<owner>/<repo>/actions/oidc/customization/sub; repo:owner/name:... silently never matches."
   type        = string
+  validation {
+    condition     = !strcontains(var.github_oidc_sub, "*") && endswith(var.github_oidc_sub, ":ref:refs/heads/main")
+    error_message = "github_oidc_sub must name main exactly (…:ref:refs/heads/main), with no wildcard."
+  }
 }
 
 variable "cors_origins" {

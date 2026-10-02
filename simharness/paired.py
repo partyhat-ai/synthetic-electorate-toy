@@ -17,7 +17,7 @@ the control's distance from the calibrated backbone:
 
     b_k = logit(R2 | control) − logit(r_k backbone)
 
-and the effect is shrunk by the pre-registered rule (METHOD.md, shrinkage).
+and the effect is shrunk by the fixed rule in METHOD.md (shrinkage).
 """
 from __future__ import annotations
 
@@ -25,8 +25,8 @@ import numpy as np
 
 from .stats import logit
 
-N0 = 8.0          # pre-registered pseudo-count
-BIAS_SCALE = 1.0  # pre-registered logit scale for bias shrinkage
+N0 = 8.0          # shrinkage pseudo-count
+BIAS_SCALE = 1.0  # logit scale for bias shrinkage
 
 
 def normalize(ans: dict, label_to_party: dict) -> dict | None:
@@ -121,7 +121,7 @@ def effects(pairs: dict, backbone_r2: dict, region_of: dict, draws: int, rng: np
             exposed: set | None = None, weights: dict | None = None, floor: bool = False) -> dict:
     """pairs: {cohort: [(control_row, cf_row, paraphrase, model), ...]}.
     floor: widen each cohort's draws to the sampling spread of who was interviewed (D33;
-    compiled what-ifs only, so pre-registered numbers are unchanged).
+    compiled what-ifs only, so hand-written what-ifs' numbers are unchanged).
 
     Returns {'cohorts': {k: {...point estimates, bias, weight, draws: {dt, dr, do: [draws]}}},
              'national': {...}, 'regions': {...}}.

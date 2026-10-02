@@ -49,8 +49,9 @@ export interface PollOptions {
 }
 
 /**
- * Polls run `id` until it ends. An indeterminate answer keeps polling; an
- * error ends it; past GIVE_UP_MS it gives up, with the reason.
+ * Polls run `id` until it ends. An indeterminate answer keeps polling, and
+ * so does a rate-limited one (less often); any other error ends it; past
+ * GIVE_UP_MS it gives up, with the reason.
  */
 export async function pollRun(api: Pick<SimulacraApi, 'run'>, id: string, o: PollOptions): Promise<PollEnd> {
   let wait = POLL_MS;
@@ -81,6 +82,12 @@ export async function pollRun(api: Pick<SimulacraApi, 'run'>, id: string, o: Pol
         wait = POLL_MS;
         break;
       case 'error':
+        // Too many requests: the run goes on on the server; ask less often.
+        if (out.reason === 'limited') {
+          wait = POLL_MODELLING_MS;
+          break;
+        }
+        return { kind: 'failed', message: out.message || 'Lost track of the rerun.' };
       case 'unsupported':
         return { kind: 'failed', message: out.message || 'Lost track of the rerun.' };
       default:

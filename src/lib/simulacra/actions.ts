@@ -14,3 +14,32 @@ export const toBody: Action<HTMLElement> = (node) => {
     },
   };
 };
+
+/**
+ * Reports the tallest the element has been since the window last changed
+ * width (each change starts over), as it resizes.
+ */
+export const tallest: Action<HTMLElement, (px: number) => void> = (node, report) => {
+  let onHeight = report;
+  let width = innerWidth;
+  let most = 0;
+  const ro = new ResizeObserver(() => {
+    if (innerWidth !== width) {
+      width = innerWidth;
+      most = 0;
+    }
+    const h = node.offsetHeight;
+    if (h <= most) return;
+    most = h;
+    onHeight(most);
+  });
+  ro.observe(node);
+  return {
+    update(next) {
+      onHeight = next;
+    },
+    destroy() {
+      ro.disconnect();
+    },
+  };
+};

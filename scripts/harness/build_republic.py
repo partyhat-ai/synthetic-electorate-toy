@@ -27,7 +27,6 @@ import re
 import sys
 import urllib.parse
 import urllib.request
-import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -37,10 +36,8 @@ sys.path.insert(0, str(HERE))
 from simharness.config import CACHE  # noqa: E402
 from simharness.geo import CODE_OF  # noqa: E402
 
-warnings.filterwarnings('ignore')
 RAW = CACHE / 'labels/raw/wikipedia_1789_1864'
 YEARS = list(range(1789, 1793, 3)) + list(range(1796, 1865, 4))  # 1789, 1792, 1796 … 1864
-WP = 'https://en.wikipedia.org/wiki/{}_United_States_presidential_election'
 CODE = {k.casefold(): v for k, v in CODE_OF.items()}
 
 
@@ -158,14 +155,18 @@ def popular(t, slotmap):
     for j, (g, sub) in enumerate(cols):
         gl = g.lower()
         slot = next((s for k, s in slotmap if k.lower() in gl), None)
-        if slot is None and any(k in gl for k in ('total',)):
+        if slot is None and 'total' in gl:
             slot = 'TOT'
         if slot is None:
             continue
         sl = sub.lower()
-        kind = 'ev' if ('elector' in sl or 'e.v' in sl) else 'v' if (sl in ('#', 'votes', 'no.', 'votes cast', 'total') or (slot == 'TOT' and 'unnamed' not in sl)) else None
-        if kind:
-            groups.setdefault((slot, kind), []).append(j)
+        if 'elector' in sl or 'e.v' in sl:
+            kind = 'ev'
+        elif sl in ('#', 'votes', 'no.', 'votes cast', 'total') or (slot == 'TOT' and 'unnamed' not in sl):
+            kind = 'v'
+        else:
+            continue
+        groups.setdefault((slot, kind), []).append(j)
     out = {}
     has_at_large = {state_of(r.iloc[0]) for _, r in t.iterrows() if state_of(r.iloc[0]) and not is_district(r.iloc[0])}
     for _, r in t.iterrows():
@@ -252,7 +253,6 @@ EVTAB = {
     1808: (9, [('Madison', 'D'), ('Pinckney', 'R'), ('Clinton', 'O')], 1),
     1812: (14, [('Madison', 'D'), ('DeWitt Clinton', 'R')], 1),
 }
-# Electors appointed per state in years read from the popular table (state EV column = column 1).
 
 
 def returns() -> pd.DataFrame:
@@ -261,18 +261,15 @@ def returns() -> pd.DataFrame:
         ts = tables(y)
         ti, smap = POP[y]
         pop = popular(ts[ti], smap)
-        # EVs and the state roster
         if y in EVTAB:
             ei, emap, ecol = EVTAB[y]
             evs = ev_by_candidate(ts[ei], emap, ecol)
-        else:
+        else:  # slot EVs from the popular table; electors appointed = column 1, summed over district rows
             evs = {}
-            t = ts[ti]
-            for _, r in t.iterrows():
+            for _, r in ts[ti].iterrows():
                 st = state_of(r.iloc[0])
                 if st:
                     n, _, _ = cell(r.iloc[1])
-                    e, _ = evs.get(st, ({'R': 0, 'D': 0, 'O': 0}, 0))
                     p = pop.get(st, {})
                     evs[st] = ({'R': p.get('ev_rep', 0), 'D': p.get('ev_dem', 0), 'O': p.get('ev_other', 0)},
                                evs.get(st, (None, 0))[1] + (n or 0))

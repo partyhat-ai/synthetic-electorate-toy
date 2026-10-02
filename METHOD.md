@@ -5,7 +5,10 @@ This covers the harness behind `/api/simulacra`.
 - **This document:** every assumption, data source, equation and limitation,
   plus the confidence tier for each kind of what-if.
 - **`EVAL.md`:** what the 1920 prototype got right and wrong.
-- **`BUDGET.md`:** cost.
+- **`DISCLOSURES.md`:** every known flaw, by ID.
+
+Sections A–F describe 1920, the year the method was built on. B.4 says how
+the other 59 elections are fitted.
 
 Tags follow the research package:
 - **[V]** verified by download or fetched page
@@ -31,7 +34,7 @@ voice.**
 
 This matches what Aaru describes publicly: population and aggregate models
 that are not language models, with LLMs as the reasoning and voice layer. It
-goes further in three places:
+goes further in two places:
 - held-out tests with pass/fail thresholds
 - error bars on every result
 
@@ -49,7 +52,7 @@ certified returns 1916, 1920 ──► backbone (turnout, choice; exact calibrat
                                    ▼
                   draws → states, EV, ranges, "wins in n of D draws"
                                    ▼
-                  api.js result shape (+ additive fields) ◄── quotes (selected, grounded, cited)
+                  the bundle's result shape (serialize.py) ◄── quotes (selected, grounded, cited)
 ```
 
 ## A. Population
@@ -244,13 +247,18 @@ returns against census makeup, post-stratified exactly.
     change or labelled as an assumption.
   - Draws carry the uncertainty.
 
-### B.4 Later eras (designed, not built)
+### B.4 Other years
 
-- **1936–1947: MRP on Gallup and Roper.** The Berinsky–Schickler
-  cleaned files are a benchmark only in strict mode.
-- **1948 onward: MRP on ANES.** From 1964, CPS turnout by group. Always
-  post-stratified exactly to certified state returns.
-- **Before 1936: ecological inference** (this document).
+- **1924** carries 1920's fit forward (`backbone.carry_forward`): 1920's
+  per-cell turnout, δ, β_B and Black Southern exclusion, one turnout shift
+  per state, and the same exact calibration (DISCLOSURES C13–C16).
+- **Every year outside 1916–1924** is fitted by `backbone.general_fit`. It
+  has no natural experiment: each group's turnout gap and partisan tilt is an
+  era prior from the literature [I], not updated from the data, and exact
+  calibration to the state returns does the rest (DISCLOSURES B10–B13).
+- **Not built:** MRP on Gallup and Roper (1936–47) and on ANES and CPS (1948
+  on), post-stratified exactly to certified state returns. The surveys would
+  replace the priors for those years.
 
 ## C. The agents
 
@@ -440,7 +448,12 @@ Failures are published in `result.validation`, in `EVAL.md` and here (§G).
 |---|---|---|---|
 | Franchise (who can vote) | High | Census counts; certified returns; one named borrowed group | The borrowed group's behaviour (T4, C2), i.e. `fifteenth` rests on β_B, whose prior dominates. `no-19th` rests on the women's-turnout split (N1 tests it). |
 | Population (who lives where) | Medium | Census counts moved between states; reapportionment (Huntington–Hill for the 1940s on; Webster, as used in 1911, for 1910s-style counts) | How movers would vote where they arrive. Not in the 1920 prototype. |
-| Issue (what people cared about) | Low | Agent paired differences, shrunk by bias | Everything in C.5. In 1920, memorization. |
+| Issue (what people cared about), event, or candidate (who is on the ballot) | Low | Agent paired differences, shrunk by bias | Everything in C.5. In 1920, memorization. |
+
+These are the base tiers by kind (`evidence.BASE_TIER`). Each what-if's tier
+is then adjusted by `evidence.confidence` for plausibility, evidence,
+agreement with the record, interview stability and the number of
+interviews, down to "very low" (DISCLOSURES H4).
 
 ## H. Known limitations (read before citing)
 
@@ -470,7 +483,7 @@ Failures are published in `result.validation`, in `EVAL.md` and here (§G).
    `EVAL.md` (deviation 10) says which. The production path is
    `anthropic-batch`, and the agent-layer numbers should be rerun there
    before they are cited.
+8. **The household economy is imputed** until the IPUMS full count is pulled.
 9. **β_B**, how Black voters split, is barely identified from state returns.
    It moves the `fifteenth` result from 416 to 449 Harding electoral votes
    (EVAL.md).
-8. **The household economy is imputed** until the IPUMS full count is pulled.

@@ -1,6 +1,10 @@
 // What the robot says (the Narrator's pure parts): a finished rerun's steps
 // (traceOf), what it drew on (sourcesOf), and the one line for the page's
-// state right now (say), in the order docs/handoff-ui.md lists.
+// state right now (say). say() checks, first match wins: the simulation
+// service, an unopposed year, a rerun working or failed, the year's voters
+// failed or loading, a tapped suggestion, a picked group, typed words, a rerun's steps
+// coming out, then its verdict, history, or the greeting.
+import { LIMITED_MESSAGE } from './api';
 import type { Election } from './history';
 import type { ActiveRun } from './runs';
 import type { Choice, Kind, RunResult, Slice, Step, Voter, WhatIf } from './schemas';
@@ -232,24 +236,37 @@ function verdict(res: ShownRun, sample: boolean): Message {
   };
 }
 
+/** What the robot says about the simulation service, or null once it's answering. */
+function aboutServer(server: Server, y: number): Message | null {
+  const noService = (text: string): Message => ({
+    text,
+    detail: 'The elections themselves are all here. Sample data shows how a rerun works.',
+    actions: [
+      { key: 'sample', label: 'Use Sample Data', primary: true },
+      { key: 'retry', label: 'Try Again' },
+    ],
+  });
+  switch (server) {
+    case 'connecting':
+      return { text: `Getting ${y}’s voters ready.`, busy: true };
+    case 'unsupported':
+      return noService('This server has no simulation service yet, so I can’t rerun elections here.');
+    case 'offline':
+      return noService('I can’t reach the simulation server, so I can’t rerun elections yet.');
+    case 'limited':
+      return { text: LIMITED_MESSAGE, actions: [{ key: 'retry', label: 'Try Again' }] };
+    case 'online':
+      return null;
+    default:
+      return server satisfies never;
+  }
+}
+
 /** What the robot says now. */
 export function say(i: SayInput): Message {
   const { year: y, sim: s, result: res, showing: show, names: nm } = i;
-  if (i.server === 'connecting') return { text: `Getting ${y}’s voters ready.`, busy: true };
-  if (i.server === 'unsupported' || i.server === 'offline') {
-    return {
-      text:
-        i.server === 'unsupported'
-          ? 'This server has no simulation service yet, so I can’t rerun elections here.'
-          : 'I can’t reach the simulation server, so I can’t rerun elections yet.',
-      detail: 'The elections themselves are all here. Sample data shows how a rerun works.',
-      actions: [
-        { key: 'sample', label: 'Use Sample Data', primary: true },
-        { key: 'retry', label: 'Try Again' },
-      ],
-    };
-  }
-  if (i.server === 'auth') return { text: 'Sign in to rerun elections.', actions: [{ key: 'retry', label: 'Try Again' }] };
+  const server = aboutServer(i.server, y);
+  if (server) return server;
   if (i.election.unopposed) {
     return {
       text: `${i.election.candidates[0].name} ran unopposed in ${y}, so there’s nothing to rerun.`,

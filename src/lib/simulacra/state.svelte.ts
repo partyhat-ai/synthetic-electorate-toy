@@ -15,6 +15,7 @@ import {
   electionFor,
   isDirty,
   type Server,
+  serverAfter,
   type ShownRun,
   type Sim,
   toggled,
@@ -131,8 +132,7 @@ export class PageState {
         this.server = 'unsupported';
         break;
       case 'error':
-        if (out.reason === 'offline' || out.reason === 'auth') this.server = out.reason;
-        else if (this.server === 'connecting') this.server = 'offline';
+        this.server = serverAfter(this.server, out.reason);
         break;
       case 'indeterminate':
         if (this.server === 'connecting') this.server = 'offline';

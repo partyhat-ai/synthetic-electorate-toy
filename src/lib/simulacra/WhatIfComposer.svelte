@@ -4,7 +4,7 @@
   // is Rerun's); your own what-if, the field and Rerun, on the row beneath.
   import { Square } from 'lucide-svelte';
   import KindChips from './KindChips.svelte';
-  import type { WhatIf } from './schemas';
+  import { RUN_LIMITS, type WhatIf } from './schemas';
 
   interface Props {
     /** The harness's name, for the field's label. */
@@ -62,6 +62,7 @@
       bind:value
       type="text"
       placeholder="What if…"
+      maxlength={RUN_LIMITS.text}
       aria-label="Tell {name} what to change"
       autocomplete="off"
       enterkeyhint="go"
@@ -81,9 +82,8 @@
 <style>
   /* The suggestions above, the field and Rerun beneath: both rows the
      column's full width, so the chip row ends at Rerun's right edge. */
-  .compose { display: flex; flex-direction: column; align-items: stretch; gap: 8px; min-width: 0; }
-  /* On the stage the composer pins to the column's floor (WhatIf.svelte). */
-  :global(.whatif.stage) .compose { margin-top: auto; }
+  /* The composer pins to the column's floor (WhatIf .talk). */
+  .compose { display: flex; flex-direction: column; align-items: stretch; gap: var(--compose-gap); min-width: 0; margin-top: auto; }
   .ask { display: flex; align-items: center; gap: 8px; min-width: 0; }
   /* The field: Messages' entry capsule — white, an opaqueSeparator
      hairline, a blue caret — whose ring turns the tint while typing (the
@@ -91,9 +91,9 @@
   input {
     flex: 1;
     min-width: 0;
-    height: 36px;
+    height: var(--control-h);
     padding: 0 14px;
-    border: 1px solid var(--separator);
+    border: var(--hairline) solid var(--separator);
     border-radius: 999px;
     background: #fff;
     color: var(--label);
@@ -110,7 +110,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 36px;
+    height: var(--control-h);
     padding: 0 18px;
     border: none;
     border-radius: 999px;
@@ -136,7 +136,7 @@
   .run.rest:active:not(:disabled) { background: var(--fill-press); }
   /* Reset: a plain text button in the tint. */
   .reset {
-    height: 36px;
+    height: var(--control-h);
     padding: 0 10px;
     border: none;
     background: transparent;

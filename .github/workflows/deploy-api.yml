@@ -7,8 +7,11 @@ name: Deploy API
 # one, so an env var or secret can't silently drop (the auth server lost
 # ALLOW_LEGACY_INTERNAL_KEY that way after a rollback).
 #
-# MANUAL ONLY. A merge never ships.
-#   gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy -f confirm=DEPLOY
+# MANUAL ONLY. A merge never ships. Only main ships, and only a SHA whose CI
+# run succeeded: the deploy role trusts main's OIDC subject alone
+# (infra/terraform.tfvars), and the first steps refuse any other ref or a SHA
+# without a green CI run.
+#   gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy --ref main -f confirm=DEPLOY
 # First image only (stand-up, before the ECS service exists):
 #   ... -f confirm=DEPLOY -f image_only=true
 #
@@ -42,6 +45,7 @@ env:
 permissions:
   id-token: write   # OIDC
   contents: read
+  actions: read     # the CI run for the SHA being shipped
 
 jobs:
   deploy:
@@ -55,6 +59,27 @@ jobs:
             echo "::error::Refusing to deploy: pass -f confirm=DEPLOY to roll production."
             exit 1
           fi
+
+      - name: Require main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Refusing to deploy $GITHUB_REF: only main ships (run with --ref main)."
+            exit 1
+          fi
+
+      - name: Require green CI on this SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # The CI workflow's push run for exactly this commit, finished and successful.
+          ok=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$GITHUB_SHA&event=push&status=success&per_page=1" \
+            --jq '.total_count')
+          if [ "$ok" -lt 1 ]; then
+            echo "::error::CI has not passed on $GITHUB_SHA. Wait for it (or fix it), then deploy again."
+            exit 1
+          fi
+          echo "CI passed on $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/checkout@v4
 
@@ -79,8 +104,9 @@ jobs:
           c = td['containerDefinitions'][0]
           env = {e['name'] for e in c['environment']}
           sec = {s['name'] for s in c['secrets']}
-          required_env = {'NODE_ENV', 'PORT', 'SIMULACRA_LOG', 'SIMULACRA_AUTORUN', 'SIMULACRA_PYTHON', 'SIMULACRA_BUNDLES', 'SIMHARNESS_CACHE'}
-          required_sec = {'ANTHROPIC_API_KEY'}
+          required_env = {'NODE_ENV', 'PORT', 'SIMULACRA_LOG', 'SIMULACRA_AUTORUN', 'SIMULACRA_PYTHON', 'SIMULACRA_BUNDLES', 'SIMHARNESS_CACHE',
+                          'SIMULACRA_KEY_DAILY_USD', 'SIMULACRA_TOTAL_USD', 'SIMULACRA_RETAIN_DAYS', 'TRUST_PROXY_HOPS'}
+          required_sec = {'ANTHROPIC_API_KEY', 'SIMULACRA_ACCESS_KEYS'}
           if required_env - env or required_sec - sec:
               sys.exit(f'::error::task def lacks env {sorted(required_env - env)} / secrets {sorted(required_sec - sec)}')
           if env & sec:

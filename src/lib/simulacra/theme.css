@@ -14,6 +14,21 @@
   background: #e5e5e5;
   color: #000;
 }
+/* Who voted's row metrics. SliceRow and AbsentRow are laid out with them,
+   and the page works out the room Who voted keeps (+page.svelte .room) from
+   the same values, so a change here moves both. */
+.sa {
+  --row-min: 42px;             /* a row's least height */
+  --row-pad-y: 3px;
+  --row-pad-x: 10px;
+  --rows-gap: 2px;
+  --name-size: 14px;           /* a group's name */
+  --name-leading: 1.25;
+  --note-size: 12px;           /* the line under it, and the key */
+  --note-leading: 1.21;        /* Geist's own (normal) */
+  --who-gap: 2px;              /* between the name and its line */
+  --strip-gap: 8px;            /* over the dots, set under the name (≤700px) */
+}
 /* Rerun: the app's dark mode, the same invert #invert-wrapper applies. */
 /* On the toolbar and content, not .sa: the robot's layer (true colour)
    sits beside them. The background is #e5e5e5 as the invert renders it.
