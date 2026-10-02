@@ -12,6 +12,7 @@
   // reruns: runs.ts; what the robot says: Narrator; the robot: RobotStage.
   import { onDestroy, onMount, tick, untrack } from 'svelte';
   import { replaceState } from '$app/navigation';
+  import AboutSources from '$lib/simulacra/AboutSources.svelte';
   import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
@@ -194,9 +195,8 @@
         <InfoPopover label="About Simulacra Americana" align="end">
           <p><strong>Simulacra Americana</strong> reruns American presidential elections with one fact changed.</p>
           <p>Every election opens as it happened. The simulation server rebuilds who could vote from census records and lets synthetic voters decide, so a rerun can change who votes, where they live or what they care about.</p>
-          <p>Changing who could vote is the most reliable; changing what people cared about, the least.</p>
           {#if page.api.sample}<p>Sample data: the voter groups, what-ifs and reruns here are invented to show how it works. The elections are real.</p>{/if}
-          <p class="fine">Portraits from Wikimedia Commons.</p>
+          <AboutSources />
         </InfoPopover>
       </span>
     </header>
@@ -281,9 +281,6 @@
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
   }
-  .trail :global(.pop p) { margin: 0 0 8px; }
-  .trail :global(.pop p:last-child) { margin-bottom: 0; }
-  .trail :global(.pop .fine) { font-size: 11px; color: rgba(0, 0, 0, 0.5); }
   .main {
     max-width: 800px;
     margin: 0 auto;

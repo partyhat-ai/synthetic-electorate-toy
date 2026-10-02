@@ -64,7 +64,7 @@ All under `src/lib/simulacra/` unless noted.
 | What-if chips | `KindChips.svelte` |
 | The bubble's message type, kind labels, step splitting | `whatif.ts` |
 | Time bar (slider, ‹ ›, shuffle) | `TimeBar.svelte` |
-| ⓘ About popover | `InfoPopover.svelte` |
+| ⓘ About popover (on `<body>`, above everything) and its cited sources | `InfoPopover.svelte`, `AboutSources.svelte` |
 | Places in text that light the map | `Places.svelte`, `places.ts` |
 | Colours (dark-mode authoring, each era's party hues, the "Other" grey) | `palette.ts` |
 | Elections as they happened | `history.ts` (owned by the simulation side) |

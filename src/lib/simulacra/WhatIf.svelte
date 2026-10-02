@@ -221,7 +221,7 @@
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div class="bubble" class:busy={message.busy} class:over={canMore} class:clamped={over} class:opened class:closing class:tall role="status" aria-live="polite" onclick={toggleOpen} bind:this={bubbleEl} use:sized>
       <div class="clip" class:above={moreAbove} class:below={moreBelow} bind:this={clipEl} use:clampable onscroll={edges}>
-      <WhatIfWorking {message} {whatIfs} {working} {opened} />
+      <WhatIfWorking {message} {whatIfs} {working} {opened} onfold={() => requestAnimationFrame(() => { measure(); edges(); })} />
       {#key msgKey}<div class="lines">
       {#if message.quote}
         <blockquote>“<Places text={message.quote} />”</blockquote>
