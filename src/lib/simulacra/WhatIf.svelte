@@ -270,6 +270,16 @@
     background: transparent;
     cursor: pointer;
   }
+  /* Tapping or clicking the robot is talking to it, not selecting it: no
+     tap highlight, no selection or callout on a long press, no focus ring
+     from a pointer (the keyboard's stays, below). */
+  .bot {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .bot:focus:not(:focus-visible) { outline: none; }
   .bot:disabled { cursor: default; }
   .bot:focus-visible { outline: 2px solid #3876b7; outline-offset: 2px; }
   /* The robot keeps its spot: a tall bubble grows the talk column downward, never moves the bot. */
@@ -339,6 +349,8 @@
       margin-top: 26px;
       /* A horizontal drag on the robot turns it; a vertical one scrolls. */
       touch-action: pan-y pinch-zoom;
+      /* The robot stands over this area too: no tap highlight on it. */
+      -webkit-tap-highlight-color: transparent;
     }
     .whatif.stage > .talk, .whatif.stage > .bot { grid-area: stack; }
     .talk { position: relative; z-index: 1; min-width: 0; transform: translateY(var(--ui-y, 0px)); }
@@ -355,13 +367,13 @@
      from the slot's bottom, over the page above. The bubble's column is the
      container its sections query (the bubble itself shrinks to fit, so it
      can't be one): 472px = 440px of text + its padding. */
-  .hold { position: relative; container-type: inline-size; display: flex; flex-direction: column; align-items: flex-start; max-width: 58ch; width: 100%; }
-  .hold.lifted .bubble { position: absolute; left: 0; bottom: 5px; z-index: 2; margin-bottom: 0; }
+  .hold { position: relative; container-type: inline-size; display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
+  .hold.lifted .bubble { position: absolute; left: 0; right: 0; bottom: 5px; z-index: 2; margin-bottom: 0; }
   /* The robot's bubble: Messages' shape and tail, flat (no shadow). */
+  /* Always the column's full width, however short the message. */
   .bubble {
     position: relative;
-    align-self: flex-start;
-    max-width: 58ch;
+    align-self: stretch;
     margin-bottom: 5px;
     padding: 10px 16px 11px;
     border-radius: 20px;
