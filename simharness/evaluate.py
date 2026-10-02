@@ -8,7 +8,7 @@ from __future__ import annotations
 import numpy as np
 
 from .geo import SOUTH
-from .stats import bayes_ols, expit, logit, rmse, spearman
+from .stats import bayes_ols, brier, expit, logit, rmse, spearman
 
 
 def check(id_, name, value, threshold, ok, note=''):
@@ -32,7 +32,7 @@ def r1_reproduction(fit, inp, state_votes) -> dict:
 
 
 def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
-    """B2, B3 and B5: predict held-out states from training states only."""
+    """B1–B5: predict held-out states from training states only."""
     rng = np.random.default_rng(seed + 7)
     dg = fit.diagnostics
     states = dg['states']
@@ -87,7 +87,20 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
         pred[d] = rd16[H] + Xh @ b[0] + rng.normal(0, sig[0], len(H))
     share_hat = expit(np.median(pred, axis=0)) * 100
     actual = expit(rd20[H]) * 100
+    # Baselines
+    w = (ret.R20 + ret.D20).to_numpy()
+    persist = expit(rd16[H]) * 100
+    swing = np.average((rd20 - rd16)[Tr], weights=w[Tr])
+    uniform = expit(rd16[H] + swing) * 100
+    us_sd = float(np.std((rd20 - rd16)[Tr] - swing, ddof=1))
+    # Demographic regression (no lag)
+    comp = composition(fit, states)
+    Xd = np.column_stack([np.ones(len(states)), south, comp['black'], comp['foreign'], comp['new_women']])
+    bd, *_ = np.linalg.lstsq(Xd[Tr], rd20[Tr], rcond=None)
+    demo = expit(Xd[H] @ bd) * 100
 
+    p_win = (pred > 0).mean(axis=0)
+    p_us = 1 - _norm_cdf(-(rd16[H] + swing) / us_sd)
     won = (rd20[H] > 0).astype(float)
     ev = inp.ev.loc[holdout_states].to_numpy()
     ev_pred = float(np.sum(ev * (share_hat > 50)))
@@ -95,19 +108,42 @@ def holdout(fit, inp, holdout_states: list, draws: int, seed: int) -> dict:
     close = [s for s, a in zip(holdout_states, actual) if abs(a - 50) * 2 < 5]
     ev_tol = float(min(inp.ev.loc[close])) if close else 0.0
 
+    b1 = rmse(share_hat, actual)
     b2 = rmse(np.median(turn_hat[:, H], axis=0) * 100, np.median(turn_act[:, H], axis=0) * 100)
     b2p = rmse(turn_persist[H] * 100, np.median(turn_act[:, H], axis=0) * 100)
-    rows = [{'state': s, 'actual': round(float(a), 2), 'backbone': round(float(p), 2),
+    rows = [{'state': s, 'actual': round(float(a), 2), 'backbone': round(float(p), 2), 'persistence': round(float(q), 2),
+             'uniform_swing': round(float(u), 2), 'demographic': round(float(g), 2), 'p_R_win': round(float(pw), 3),
              'turnout_actual': round(float(np.median(turn_act[:, i]) * 100), 1),
              'turnout_backbone': round(float(np.median(turn_hat[:, i]) * 100), 1),
              'turnout_persistence': round(float(turn_persist[i] * 100), 1)}
-            for s, a, p, i in zip(holdout_states, actual, share_hat, H)]
+            for s, a, p, q, u, g, pw, i in zip(holdout_states, actual, share_hat, persist, uniform, demo, p_win, H)]
     checks = [
+        check('B1', 'Holdout two-party RMSE (points)', {'backbone': round(b1, 2), 'uniform_swing': round(rmse(uniform, actual), 2),
+              'persistence': round(rmse(persist, actual), 2), 'demographic': round(rmse(demo, actual), 2)},
+              'backbone ≤ uniform swing and ≤ persistence', b1 <= rmse(uniform, actual) and b1 <= rmse(persist, actual)),
         check('B2', 'Holdout turnout RMSE (points of adults 21+)', {'backbone': round(b2, 2), 'persistence': round(b2p, 2)},
               'backbone ≤ persistence', b2 <= b2p),
         check('B3', 'Holdout Spearman ρ, two-party share', round(spearman(share_hat, actual), 3), '≥ 0.8',
               spearman(share_hat, actual) >= 0.8),
+        check('B4', 'Holdout Brier score, state winner', {'backbone': round(brier(p_win, won), 4), 'uniform_swing': round(brier(p_us, won), 4)},
+              'backbone ≤ uniform swing', brier(p_win, won) <= brier(p_us, won)),
         check('B5', 'Holdout electoral-vote error (Harding)', abs(ev_pred - ev_act), f'≤ {ev_tol:g}',
               abs(ev_pred - ev_act) <= ev_tol, f'predicted {ev_pred:g}, actual {ev_act:g}; states decided by < 5 points: {close or "none"}'),
     ]
     return {'checks': checks, 'rows': rows}
+
+
+def _norm_cdf(x):
+    from scipy.stats import norm
+    return norm.cdf(x)
+
+
+def composition(fit, states) -> dict:
+    c = fit.cells
+    a = c.groupby('state').adults20.sum()
+    blk = c[c.group == 'black'].groupby('state').adults20.sum().reindex(states, fill_value=0) / a.reindex(states)
+    fb = c[c.group.str.startswith('foreign')].groupby('state').adults20.sum().reindex(states, fill_value=0) / a.reindex(states)
+    nw = c[(c.sex == 'F') & (c.group != 'foreign_white_alien')].groupby('state').adults20.sum().reindex(states, fill_value=0) / a.reindex(states)
+    old = fit.diagnostics['old_states']
+    nw = nw.where(~nw.index.isin(old), 0.0)
+    return {'black': blk.to_numpy(), 'foreign': fb.to_numpy(), 'new_women': nw.to_numpy()}

@@ -209,6 +209,9 @@ For draw d, "adults" means legally eligible adults.
   - The region intercepts were added after the first fit, whose single
     intercept let border-state swings stand in for race (β_B = −1.5; EVAL.md,
     deviation 3).
+  - Posterior median 0.50 (80% interval −0.70 to 1.68). The state returns
+    barely identify it, and it is the prototype's largest uncertainty (EVAL.md
+    reports the sensitivity).
 - **C3: calibration.** Per state, a Republican intercept and an "other"
   intercept are solved by iterative scaling. Each state's R, D and other votes
   then match the certified returns to within 1e-7 of the vote.

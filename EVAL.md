@@ -7,11 +7,40 @@ Every number below is copied from the run's `validation.json`.
 
 ## Summary
 
+- **Reproduction is exact.** Every one of 400 draws reproduces each state's
+  certified R, D and other vote to within 0.33 votes. Every draw gives 404–127.
+- **The backbone beats its baselines on held-out states:**
+  - two-party RMSE 7.6 points (uniform swing 8.7, persistence 17.4);
+  - turnout RMSE 2.9 points (persistence 16.5);
+  - Spearman 0.92;
+  - Brier 0.052 (uniform swing 0.069).
+- **It fails two pre-registered backbone checks:**
+  - **B5.** It calls North Carolina for Harding.
+  - **N1.** Its women's-turnout intervals are too narrow and run high in CT,
+    MA and NY.
 - **The 19th Amendment placebo passes.** In Georgia and Mississippi, where
   women couldn't register in time, the implied women's turnout is 2.1% and
   3.5%, near zero as it should be.
+- **The agent checks (N3, L1, L2, A1–A4) are not run:** there are no agent
+  answers yet.
+- **The biggest uncertainty is β_B**, how Black voters split. The state
+  returns can't identify it (see "The biggest uncertainty" below).
 
 ## Pre-registered checks
+
+| ID | Check | Value | Threshold | Result |
+|---|---|---|---|---|
+| R1 | Unchanged rerun reproduces every state | max error 0.33 votes; EV 404–127 in 400/400 draws | ≤ 1 vote; exact EV | **Pass** |
+| B1 | Holdout two-party RMSE | backbone 7.55; uniform swing 8.68; persistence 17.41; demographic 7.62 | ≤ uniform swing and persistence | **Pass** |
+| B2 | Holdout turnout RMSE | backbone 2.92; persistence 16.46 | ≤ persistence | **Pass** (after a bug fix: see deviation 1) |
+| B3 | Holdout Spearman | 0.923 | ≥ 0.8 | **Pass** |
+| B4 | Holdout Brier | backbone 0.052; uniform swing 0.069 | ≤ uniform swing | **Pass** |
+| B5 | Holdout EV error | 12 (predicted 160, actual 148; NC called for Harding: 55.1% predicted, 43.3% actual) | ≤ 0 (no holdout state was decided by < 5 points) | **Fail** |
+| N1 | Women's turnout vs Corder–Wolbrecht | MAE 3.3 points; 3 of 5 inside the 90% interval | MAE ≤ 8 and ≥ 70% inside | **Fail** (coverage 60%) |
+| N2 | Placebo, GA and MS | GA 2.1% (−1.8 to 5.5); MS 3.5% (−0.2 to 6.3) | within ±5 points of 0 | **Pass** |
+
+**Score:** 6 passed, 2 failed (B5, N1). N3, L1, L2 and A1–A4 wait for the
+agent layer.
 
 ### N1 detail
 
@@ -34,6 +63,29 @@ denominator):
   fix is to estimate κ with regional variation, with county returns: the
   Corder–Wolbrecht approach.
 
+## The biggest uncertainty: how Black voters split
+
+- **The data can't pin β_B.** Across the 37 states outside the South, a
+  Goodman regression puts Black voters' shift toward Harding at −3.4 ± 1.9
+  logit (region intercepts, 1916 lag). That runs against the documented
+  history, and it is carried by six border states with larger Black shares
+  and smaller swings.
+- **What the backbone uses.** The pre-registered prior, N(1.5, 1), updated by
+  that regression, gives a median of 0.50 (80% interval −0.70 to 1.68).
+- **The sensitivity**, same seed:
+
+| β_B from | Black voters outside the South, Harding share |
+|---|---|
+| Prior updated by Goodman (used) | 73% (48–88%) |
+| Prior only, N(1.5, 1) | 88% (67–96%) |
+
+- **Which is closer to history?** The prior-only row encodes the
+  documented loyalty of Black voters to the Republican party before 1932. The
+  used row lets the confounded regression pull it down.
+- **What would settle it:** county returns against county composition (NHGIS,
+  needs registration), or a documented estimate of Black voters' choice in
+  1920 from the literature (not found by the research agents).
+
 ## Deviations from the plan, in order
 
 Each change was made after seeing the output it fixes. Each is listed with
@@ -53,7 +105,8 @@ its effect. None changes a threshold.
 3. **β_B specification.**
    - The first fit's Goodman regression (intercept, lag) gave β_B = −1.5
      after the prior, driven by region.
-   - Changed to region intercepts.
+   - Changed to region intercepts: 0.50 after the prior.
+   - The sensitivity table above covers the choice.
 4. **Black Southern turnout.** The first fit clipped a negative Goodman
    estimate to 0 in every draw. Changed to the regression posterior truncated
    to [0, white rate], which is Goodman with Duncan–Davis bounds: median 9%
