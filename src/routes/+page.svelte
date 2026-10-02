@@ -64,64 +64,9 @@
   const SMALL = '(max-width: 760px)';
   let narrow = $state(window.matchMedia(SMALL).matches);
   const revisit = $derived(REVISIT_ON_DESKTOP && narrow);
-  // On a narrow window, where the what-if group and the robot sit, each
-  // nudged up or down from its place (WhatIf.svelte), px. ?tune=1 shows a
-  // slider for each, kept in this browser; Reset returns to the defaults.
-  const UI_Y = 0;
-  const BOT_Y = 0;
-  // …and the robot's resting turn there, degrees (a wide window: ROBOT_YAW, 40).
+  // The robot's resting turn, degrees: 43 on a narrow window, ROBOT_YAW (40) on a wide one.
   const NARROW_YAW = 43;
-  const TUNE_MIN = -2000;
-  const TUNE_MAX = 800;
-  const tuning = new URLSearchParams(location.search).has('tune');
-  function readTune(key: string, fallback: number): number {
-    try {
-      const raw = localStorage.getItem(`sa-tune-${key}`);
-      const v = raw === null ? Number.NaN : Number(raw);
-      return Number.isFinite(v) ? Math.min(TUNE_MAX, Math.max(TUNE_MIN, v)) : fallback;
-    } catch {
-      return fallback;
-    }
-  }
-  let uiY = $state(tuning ? readTune('ui', UI_Y) : UI_Y);
-  let botY = $state(tuning ? readTune('bot', BOT_Y) : BOT_Y);
-  // ?tune=1 also overrides the robot's resting turn (at any width); NaN: the default.
-  function readYaw(): number {
-    try {
-      const raw = localStorage.getItem('sa-tune-yaw');
-      const v = raw === null ? Number.NaN : Number(raw);
-      return Number.isFinite(v) ? Math.min(180, Math.max(-180, v)) : Number.NaN;
-    } catch {
-      return Number.NaN;
-    }
-  }
-  let yawTune = $state(tuning ? readYaw() : Number.NaN);
-  const defaultYaw = $derived(narrow ? NARROW_YAW : ROBOT_YAW);
-  const restYaw = $derived(Number.isFinite(yawTune) ? yawTune : defaultYaw);
-  $effect(() => {
-    const y = yawTune;
-    if (!tuning) return;
-    try {
-      if (Number.isFinite(y)) localStorage.setItem('sa-tune-yaw', String(y));
-      else localStorage.removeItem('sa-tune-yaw');
-    } catch {
-      // private window: the slider still works for this visit
-    }
-  });
-  $effect(() => {
-    const ui = uiY;
-    const bot = botY;
-    if (tuning) {
-      try {
-        localStorage.setItem('sa-tune-ui', String(ui));
-        localStorage.setItem('sa-tune-bot', String(bot));
-      } catch {
-        // private window: the sliders still work for this visit
-      }
-    }
-    // The robot stands on its slot: measure it where it moved to.
-    untrack(() => robot?.measureSoon());
-  });
+  const restYaw = $derived(narrow ? NARROW_YAW : ROBOT_YAW);
   // Dragging the time bar: the robot holds still (no restaging) and the
   // election and the groups hold their height while each year loads, so
   // nothing jumps; the robot is placed once more on release.
@@ -259,8 +204,7 @@
 {#if revisit}
   <RevisitOnDesktop />
 {:else}
-<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}
-  style:--ui-y="{uiY}px" style:--bot-y="{botY}px">
+<div class="sa" class:scrubbing class:dark={!page.light} onscroll={() => robot?.measureSoon()}>
   <div class="page">
     <RobotStage bind:this={robot} bind:shown={robotShown} spot={slotEl} {stageMode} {scrubbing} year={page.year}
       paint={page.view === 'whatif' ? 'rerun' : 'history'} walking={page.running || revealing} observe={mainEl}
@@ -341,21 +285,6 @@
   </div>
 </div>
 
-{/if}
-
-{#if tuning}
-  <div class="tune" role="group" aria-label="Positions">
-    {#if narrow}
-      <label>What-if <span>{uiY}</span>
-        <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={uiY} /></label>
-      <label>Robot <span>{botY}</span>
-        <input type="range" min={TUNE_MIN} max={TUNE_MAX} step="2" bind:value={botY} /></label>
-    {/if}
-    <label>Yaw <span>{restYaw}°{Number.isFinite(yawTune) ? '' : ' (default)'}</span>
-      <input type="range" min="-180" max="180" step="1" value={restYaw}
-        oninput={(e) => (yawTune = Number(e.currentTarget.value))} /></label>
-    <button type="button" onclick={() => { uiY = UI_Y; botY = BOT_Y; yawTune = Number.NaN; }}>Reset</button>
-  </div>
 {/if}
 
 <!-- Its own block: toBody moves it, so it must not be the edge of the one above. -->
@@ -482,28 +411,6 @@
   .ghost circle { fill: rgba(0, 0, 0, 0.08); }
   .groups-note { margin: 6px 10px 0; font-size: 13px; color: rgba(0, 0, 0, 0.5); }
 
-  /* ?tune=1 on a phone: the two position sliders, pinned under the toolbar. */
-  .tune {
-    position: fixed;
-    top: 56px;
-    left: 12px;
-    right: 12px;
-    z-index: 30;
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-    font-size: 12px;
-    color: #000;
-  }
-  .tune label { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
-  .tune span { font-weight: 400; font-variant-numeric: tabular-nums; color: rgba(0, 0, 0, 0.6); }
-  .tune input { width: 100%; }
-  .tune button { height: 30px; padding: 0 10px; border: none; border-radius: 999px; background: #f2f2f7; font: inherit; }
-
   @media (max-width: 760px) {
     /* Phones: no wordmark; its cell stays, so the switch stays centred. */
     .brand { visibility: hidden; }
@@ -512,9 +419,6 @@
        transparent elsewhere, so the robot shows through. A sideways drag
        over it turns the robot; vertical scrolling and pinch-zoom stay. */
     .main { padding: 0 16px; gap: 1px; position: relative; z-index: 4; touch-action: pan-y pinch-zoom; }
-    /* 84px = the time bar (68) + the side padding (16); plus the what-if's
-       nudge, so its foot clears the bar by the same 16px as its sides. */
-    .page { padding-bottom: calc(84px + var(--ui-y, 0px)); }
     /* Phones: Who voted is one height every year (up to five groups, each
        label up to two lines; the key up to two lines), so nothing below it
        moves with the year. */

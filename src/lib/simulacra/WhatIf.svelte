@@ -335,15 +335,10 @@
      bubble grows the column downward, like any message. */
   .stage .talk { align-self: stretch; }
   .composer-room, .year-pill { display: none; }
-  /* Narrow windows (phones, or a narrow desktop window): the robot stands
-     behind a full-width what-if instead of beside it. Both share one grid
-     cell: the what-if on top, the robot centred with its feet 23px above the
-     what-if's bottom, behind the chips and field, then nudged by the page's
-     --ui-y / --bot-y (defaults +10 / -168; ?tune=1 shows sliders for them).
-     Every part of the what-if that varies holds its most, so neither moves
-     with the year or the message: the bubble's room is its folded most
-     (CLAMP lines, padding and More) and it sits on the chips; an unopposed
-     year keeps the chips' room. Opened, the bubble lifts over the page. */
+  /* Narrow windows (phones, or a narrow desktop window): the what-if takes
+     the full width and the robot stands above it. Every part of the what-if
+     that varies holds its most, so nothing moves with the year or the
+     message. Opened, the bubble grows over the chips and field. */
   @media (max-width: 760px) {
     /* Narrow: Who voted, then the robot, then the bubble, the chips and the
        field, top to bottom; the robot 12px under the last group and 12px over
@@ -364,9 +359,9 @@
     }
     /* 12px under the last group's dots, measured on screen (its dots draw
        past its box, the robot's head starts well inside its slot). */
-    .stage .bot { width: 200px; height: 236px; margin: -38px 0 0; align-self: center; transform: translateY(var(--bot-y, 0px)); }
+    .stage .bot { width: 200px; height: 236px; margin: -38px 0 0; align-self: center; }
     /* 12px under the toes, measured on screen (they reach under the slot's floor). */
-    .talk { position: relative; z-index: 1; min-width: 0; margin-top: 20px; transform: translateY(var(--ui-y, 0px)); }
+    .talk { position: relative; z-index: 1; min-width: 0; margin-top: 20px; }
     /* The bubble's room is its folded most and it sits at the room's top, just
        under the robot, so the robot's 12px holds for any message; a shorter one
        leaves the room under it, so the chips and field never move. Opened, it
@@ -393,7 +388,7 @@
     }
     /* A newline in the bubble's aside breaks here (a wide window reads it as a space). */
     .aside { white-space: pre-line; }
-    /* The tail pointed at the robot beside the bubble; it stands behind now. */
+    /* The tail pointed at the robot beside the bubble; it stands above now. */
     .bubble::after { display: none; }
   }
   /* Opened (More), the bubble leaves the flow: its slot keeps the folded
