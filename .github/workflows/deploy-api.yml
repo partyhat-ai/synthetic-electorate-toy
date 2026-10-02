@@ -1,0 +1,139 @@
+name: Deploy API
+
+# Builds the API image and rolls the ECS service behind
+# api.simulacraamericana.com. Mirrors the Partyhat auth server's deploy-aws.yml,
+# with one deliberate difference: the task definition is RENDERED from
+# infra/taskdef.json.tftpl on every deploy, never derived from the running
+# one, so an env var or secret can't silently drop (the auth server lost
+# ALLOW_LEGACY_INTERNAL_KEY that way after a rollback).
+#
+# MANUAL ONLY. A merge never ships.
+#   gh workflow run "Deploy API" -R partyhat-ai/synthetic-voters-toy -f confirm=DEPLOY
+#
+# Repo variables (from `terraform output`, docs/DEPLOY.md "CI setup"):
+#   AWS_DEPLOY_ROLE_ARN  deploy_role_arn
+#   TASKDEF_VARS         taskdef_vars, as JSON
+# No long-lived AWS keys live in GitHub.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type DEPLOY to roll production
+        required: true
+        default: ''
+
+concurrency:
+  group: api-deploy
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPO: 735776117779.dkr.ecr.us-east-1.amazonaws.com/simulacra-api
+  CLUSTER: simulacra
+  SERVICE: simulacra-api
+  API: https://api.simulacraamericana.com
+
+permissions:
+  id-token: write   # OIDC
+  contents: read
+
+jobs:
+  deploy:
+    # ARM64 native: the task runs on Graviton, and numpy/pandas/scipy install
+    # from ARM wheels instead of building under QEMU.
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Require explicit confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "DEPLOY" ]; then
+            echo "::error::Refusing to deploy: pass -f confirm=DEPLOY to roll production."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: Render the task definition (fails on any missing variable)
+        env:
+          TASKDEF_VARS: ${{ vars.TASKDEF_VARS }}
+        run: |
+          set -euo pipefail
+          python3 - "${ECR_REPO}:${GITHUB_SHA}" <<'PY'
+          import json, os, re, sys
+          raw = os.environ.get('TASKDEF_VARS') or ''
+          if not raw:
+              sys.exit('::error::repo variable TASKDEF_VARS is not set')
+          v = json.loads(raw)
+          v['image'] = sys.argv[1]
+          tpl = open('infra/taskdef.json.tftpl').read()
+          names = set(re.findall(r'\$\{(\w+)\}', tpl))
+          missing = sorted(n for n in names if not str(v.get(n, '')).strip())
+          if missing:
+              sys.exit(f'::error::TASKDEF_VARS is missing {missing}')
+          td = json.loads(re.sub(r'\$\{(\w+)\}', lambda m: str(v[m.group(1)]), tpl))
+          c = td['containerDefinitions'][0]
+          env = {e['name'] for e in c['environment']}
+          sec = {s['name'] for s in c['secrets']}
+          required_env = {'NODE_ENV', 'PORT', 'SIMULACRA_LOG', 'SIMULACRA_AUTORUN', 'SIMULACRA_PYTHON', 'SIMULACRA_BUNDLES', 'SIMHARNESS_CACHE'}
+          required_sec = {'ANTHROPIC_API_KEY'}
+          if required_env - env or required_sec - sec:
+              sys.exit(f'::error::task def lacks env {sorted(required_env - env)} / secrets {sorted(required_sec - sec)}')
+          if env & sec:
+              sys.exit(f'::error::{sorted(env & sec)} in both environment and secrets (ECS rejects it)')
+          json.dump(td, open('td.json', 'w'))
+          print('rendered', td['family'], c['image'])
+          PY
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: ${{ env.ECR_REPO }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.ECR_REPO }}:buildcache
+          cache-to: type=registry,ref=${{ env.ECR_REPO }}:buildcache,mode=max,image-manifest=true
+          provenance: false
+
+      - name: Register the task definition and roll the service
+        run: |
+          set -euo pipefail
+          ARN=$(aws ecs register-task-definition --cli-input-json file://td.json \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
+          aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" \
+            --task-definition "$ARN" >/dev/null
+          echo "rolled $SERVICE -> $ARN" >> "$GITHUB_STEP_SUMMARY"
+          # One task, stopped before its replacement starts. The circuit
+          # breaker rolls back a revision that never gets healthy; then the
+          # service is stable on the OLD revision, so check which one runs.
+          aws ecs wait services-stable --cluster "$CLUSTER" --services "$SERVICE"
+          RUNNING=$(aws ecs describe-services --cluster "$CLUSTER" --services "$SERVICE" \
+            --query 'services[0].deployments[?status==`PRIMARY`].taskDefinition | [0]' --output text)
+          if [ "$RUNNING" != "$ARN" ]; then
+            echo "::error::The new revision did not take; the circuit breaker rolled back to $RUNNING"
+            exit 1
+          fi
+
+      - name: Verify through the load balancer
+        run: |
+          set -euo pipefail
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$API/healthz")
+          echo "healthz: $code" >> "$GITHUB_STEP_SUMMARY"
+          test "$code" = "200"
+          curl -sf "$API/api/simulacra/elections/1920" | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)
+          assert d.get("simulated") is True, "1920 is not simulated"
+          assert len(d.get("slices") or []) > 0, "1920 has no slices"
+          print("1920: simulated, %d slices" % len(d["slices"]))
+          ' | tee -a "$GITHUB_STEP_SUMMARY"
