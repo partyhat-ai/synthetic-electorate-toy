@@ -398,6 +398,8 @@
   .groups-note { margin: 6px 10px 0; font-size: 13px; color: rgba(0, 0, 0, 0.5); }
 
   @media (max-width: 760px) {
+    /* Phones: no wordmark; its cell stays, so the switch stays centred. */
+    .brand { visibility: hidden; }
     .main { padding: 0 16px; gap: 28px; }
     .ghost-row { grid-template-columns: minmax(0, 1fr) auto; }
     .ghost-row svg { grid-column: 1 / -1; }
