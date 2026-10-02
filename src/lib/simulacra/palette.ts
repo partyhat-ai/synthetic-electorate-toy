@@ -61,7 +61,7 @@ export function onPaint(hue: Hue | undefined, light: boolean): string {
   return black === light ? '#000000' : '#ffffff';
 }
 
-/** The party families that own a hue somewhere on the timeline. */
+/** The party families that own a hue somewhere on the timeline (history.ts). */
 export type Family =
   | 'federalist'
   | 'democratic-republican'
