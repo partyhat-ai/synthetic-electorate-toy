@@ -24,16 +24,16 @@
   import { createSampleApi } from '$lib/simulacra/sample';
   import type { Choice, Kind, Slice, WhatIf } from '$lib/simulacra/schemas';
   import SliceRow from '$lib/simulacra/SliceRow.svelte';
-  import { randomStory, readParams, type ShownRun } from '$lib/simulacra/state';
+  import { apiOptionsFor, randomStory, readParams, type ShownRun } from '$lib/simulacra/state';
   import { PageState } from '$lib/simulacra/state.svelte';
   import TimeBar from '$lib/simulacra/TimeBar.svelte';
   import type { Names } from '$lib/simulacra/types';
   import WhatIfSection from '$lib/simulacra/WhatIf.svelte';
   import type { Message } from '$lib/simulacra/whatif';
 
-  const params = readParams(new URLSearchParams(location.search));
+  const params = readParams(new URLSearchParams(location.search), import.meta.env.DEV);
   const page = new PageState({
-    api: params.sample ? createSampleApi() : createSimulacraApi(),
+    api: params.sample ? createSampleApi() : createSimulacraApi(apiOptionsFor(params.simapi)),
     year: params.year ?? randomStory(),
     replaceUrl: (url) => {
       try {
@@ -411,7 +411,7 @@
 
       <WhatIfSection name={NAME} face={FACE} faceStyle={FACE_STYLE} stage={stageMode} {robotShown} bind:slot={slotEl} bind:input={inputEl}
         {message} whatIfs={composer.chips} selected={page.selected} slice={page.openSlice} bind:value={page.typed}
-        running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0 || !!page.edits}
+        running={page.running} canRun={page.canRun} canReset={!!page.result || page.selected.length > 0 || !!page.edits.get(page.year)}
         ran={page.result?.ran ?? []} dirty={page.dirty} closed={composer.closed}
         ontoggle={(key) => page.toggle(key)} onrun={() => page.rerunNow()} onstop={() => page.stop()} onreset={() => page.reset()} onaction={act} />
     </main>

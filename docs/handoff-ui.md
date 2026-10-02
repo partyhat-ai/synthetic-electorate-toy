@@ -82,9 +82,10 @@ is the callback's argument.
 - `InfoPopover`: its content is the `children` snippet.
 
 Every simulation call (`api.ts`, and `sample.ts` with the same shape)
-returns the parsed answer or throws a `SimError` with a `reason`:
-`offline`, `auth`, `missing`, `unsupported` (no simulation service),
-`failed` or `malformed`.
+returns an `Outcome`: `ok` with the parsed value, `error` (with a `reason`:
+`offline`, `auth`, `missing`, `failed`, `malformed`), `indeterminate` (a
+POST timed out after it may have landed: poll, don't resubmit), or
+`unsupported` (no simulation service). Nothing throws.
 
 ## The layout contract: one screen at 1440×900
 

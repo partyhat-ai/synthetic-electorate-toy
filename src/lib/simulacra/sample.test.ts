@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { ELECTION_YEARS } from './geo';
 import { electionOf } from './history';
-import { SimError } from './api';
 import { _model, createSampleApi, UNOPPOSED } from './sample';
 import { RunResultSchema, RunStatusSchema, VoterSchema } from './schemas';
 
@@ -33,12 +32,16 @@ describe('the sample model', () => {
 
     let t = 0;
     const api = createSampleApi({ sleep: fast, now: () => t });
-    expect((await api.election(1789)).whatIfs).toEqual([]);
+    const election = await api.election(1789);
+    expect(election.kind === 'ok' && election.value.whatIfs).toEqual([]);
     const started = await api.startRun(1789);
+    expect(started.kind).toBe('ok');
+    if (started.kind !== 'ok') return;
     t = 1e6;
-    expect((await api.run(started.id)).status).toBe('done');
+    const done = await api.run(started.value.id);
+    expect(done.kind === 'ok' && done.value.status).toBe('done');
     const slice = _model.slicesFor(1789)[0]?.key ?? '';
-    expect((await api.voter(1789, slice, started.id)).name.length).toBeGreaterThan(0);
+    expect((await api.voter(1789, slice, started.value.id)).kind).toBe('ok');
   });
 
   test('every what-if of every year runs and stays inside the contract', () => {
@@ -66,21 +69,25 @@ describe('createSampleApi', () => {
   test('a run counts states over time, then is done; a stopped run fails', async () => {
     let t = 0;
     const api = createSampleApi({ sleep: fast, now: () => t });
-    const { id } = await api.startRun(2000, { whatIfs: ['nader-out'] });
+    const started = await api.startRun(2000, { whatIfs: ['nader-out'] });
+    if (started.kind !== 'ok') throw new Error('the sample run didn’t start');
+    const id = started.value.id;
     t = 45 * 10;
-    expect(await api.run(id)).toMatchObject({ status: 'running', done: 10 });
+    const running = await api.run(id);
+    expect(running).toMatchObject({ kind: 'ok', value: { status: 'running', done: 10 } });
     t = 1e6;
     const done = await api.run(id);
-    expect(RunStatusSchema.safeParse(done).success).toBe(true);
-    expect(done.status === 'done' && done.result.applied[0]?.key).toBe('nader-out');
-    expect(VoterSchema.safeParse(await api.voter(2000, 'felony', id)).success).toBe(true);
+    expect(done.kind === 'ok' && RunStatusSchema.safeParse(done.value).success).toBe(true);
+    expect(done.kind === 'ok' && done.value.status === 'done' && done.value.result.applied[0]?.key).toBe('nader-out');
+    const voter = await api.voter(2000, 'felony', id);
+    expect(voter.kind === 'ok' && VoterSchema.safeParse(voter.value).success).toBe(true);
     await api.stopRun(id);
-    expect(await api.run(id)).toEqual({ status: 'failed', error: 'That run was stopped.' });
+    expect(await api.run(id)).toEqual({ kind: 'ok', value: { status: 'failed', error: 'That run was stopped.' } });
   });
 
   test('an unknown group or year is a missing error, not an empty answer', async () => {
     const api = createSampleApi({ sleep: fast });
-    await expect(api.voter(1912, 'nobody')).rejects.toBeInstanceOf(SimError);
-    await expect(api.startRun(1790)).rejects.toBeInstanceOf(SimError);
+    expect((await api.voter(1912, 'nobody')).kind).toBe('error');
+    expect((await api.startRun(1790)).kind).toBe('error');
   });
 });

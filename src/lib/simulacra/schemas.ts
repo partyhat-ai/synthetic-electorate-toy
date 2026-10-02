@@ -3,7 +3,7 @@
 // Candidate keys follow history.ts: A is the winner, B the runner-up, O
 // everyone else.
 //
-// GET  /elections/:year → ElectionResponse { slices, whatIfs }
+// GET  /elections/:year → ElectionResponse { slices, whatIfs, simulated }
 // POST /runs { year, whatIfs: [key], text, edits } → StartedRun { id }
 // GET  /runs/:id → RunStatus (running | done with a RunResult | failed)
 // POST /runs/:id/cancel → { ok }
@@ -30,6 +30,7 @@ export const SliceSchema = z.object({
   A: z.number(),
   B: z.number(),
   O: z.number(),
+  source: z.string().optional(),
 });
 export type Slice = z.infer<typeof SliceSchema>;
 
@@ -40,17 +41,23 @@ export const WhatIfSchema = z.object({
   detail: z.string(),
   /** The groups it reaches. */
   slices: z.array(z.string()).default([]),
+  assumption: z.string().optional(),
+  confidenceTier: z.string().optional(),
+  evidence: z.string().optional(),
+  exploratory: z.boolean().optional(),
 });
 export type WhatIf = z.infer<typeof WhatIfSchema>;
 
-/** GET /elections/:year. */
+/** GET /elections/:year. A year without a simulation answers empty lists and `simulated: false`. */
 export const ElectionResponseSchema = z.object({
   slices: z.array(SliceSchema),
   whatIfs: z.array(WhatIfSchema),
+  simulated: z.boolean().optional(),
 });
 export type ElectionResponse = z.infer<typeof ElectionResponseSchema>;
 
 const EvSchema = z.object({ A: z.number(), B: z.number(), O: z.number() });
+const PairSchema = z.tuple([z.number(), z.number()]);
 
 export const StateResultSchema = z.object({
   code: z.string(),
@@ -59,6 +66,8 @@ export const StateResultSchema = z.object({
   // Bundles write 0 / 1; the sample writes a boolean.
   flipped: z.union([z.boolean(), z.number()]).transform((v) => v !== false && v !== 0),
   margin: z.number(),
+  marginRange: PairSchema.optional(),
+  pFlip: z.number().optional(),
 });
 export type StateResult = z.infer<typeof StateResultSchema>;
 
@@ -77,6 +86,15 @@ export const RunResultSchema = z.object({
   applied: z.array(AppliedSchema),
   /** The part of the typed text the server couldn't use. */
   unknown: z.string().nullable(),
+  confidenceTier: z.string().optional(),
+  confidenceFlags: z.array(z.string()).optional(),
+  confidenceReasons: z.array(z.string()).optional(),
+  range: z.object({ A: PairSchema, B: PairSchema, O: PairSchema }).optional(),
+  drawsWon: z.record(z.string(), z.number()).optional(),
+  popular: EvSchema.optional(),
+  assumptions: z.array(z.string()).optional(),
+  mode: z.string().optional(),
+  runId: z.string().optional(),
 });
 export type RunResult = z.infer<typeof RunResultSchema>;
 
@@ -106,6 +124,7 @@ export const VoterSchema = z.object({
   quote: z.string(),
   history: ChoiceSchema,
   now: ChoiceSchema,
+  cohort: z.string().optional(),
 });
 export type Voter = z.infer<typeof VoterSchema>;
 
