@@ -15,6 +15,7 @@
   import type { RobotAnchors, RobotStage } from '$lib/robot/messages';
   import RobotFrame from '$lib/robot/RobotFrame.svelte';
   import { type Nudge, nudgeToSlot, sameStage, stageInSlot, yawForYear } from '$lib/robot/stage';
+  import { toBody } from '$lib/simulacra/actions';
   import { createSimulacraApi } from '$lib/simulacra/api';
   import { ELECTION_YEARS } from '$lib/simulacra/geo';
   import ElectionHeader from '$lib/simulacra/ElectionHeader.svelte';
@@ -416,11 +417,11 @@
         ontoggle={(key) => page.toggle(key)} onrun={() => page.rerunNow()} onstop={() => page.stop()} onreset={() => page.reset()} onaction={act} />
     </main>
   </div>
+</div>
 
-  <div class="timebar">
-    <TimeBar years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
-      onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} />
-  </div>
+<div class="timebar" class:dark={!page.light} use:toBody>
+  <TimeBar years={ELECTION_YEARS} value={page.year} featured={FEATURED} {describe}
+    onchange={(y) => page.setYear(y)} onshuffle={() => page.setYear(randomStory(page.year))} />
 </div>
 
 <style>
@@ -555,7 +556,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10;
+    z-index: 30;                 /* over the robot's frame (20) */
     padding-bottom: env(safe-area-inset-bottom);
     /* Frosted glass: the page's grey, translucent over a blur, a top hairline. */
     background: rgba(229, 229, 229, 0.82);
@@ -563,6 +564,8 @@
     backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.14);
   }
+  /* Dark mode: the page's invert here too (the bar sits on <body>, outside .sa). */
+  .timebar.dark { filter: invert(1) hue-rotate(180deg) saturate(1.5); }
 
   @media (max-width: 760px) {
     .main { padding: 0 16px; gap: 28px; }
