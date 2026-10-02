@@ -105,8 +105,10 @@ How a typed what-if is modelled:
    `confidenceTier`, `confidenceFlags` and `confidenceReasons`, and as a
    sentence in the summary.
 
-With `SIMULACRA_LOG=1`, the server (`pnpm serve`) logs requests to `sessions/` and queues unknown text
-for `run whatif --queue`.
+With `SIMULACRA_LOG=1`, the server (`pnpm serve`) logs requests to `sessions/`, queues unknown text,
+and reloads a changed bundle without a restart. `SIMULACRA_AUTORUN=configs/live-1920.json`
+also starts the queue worker as text arrives (`SIMULACRA_PYTHON` picks the interpreter;
+it runs from the repo root).
 
 The `ask` stage depends on the backend:
 - **`anthropic` or `anthropic-batch`:** needs `pip install -e '.[llm]'`

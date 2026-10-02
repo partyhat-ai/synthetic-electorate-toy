@@ -193,6 +193,7 @@ export const RunResultSchema = z.object({
   told: z.record(z.string(), ToldSchema).optional(),
   reading: z.array(ReadingSchema).optional(),
   interview: InterviewSchema.optional(),
+  queued: z.object({ text: z.string(), worker: z.boolean() }).optional(),
   mode: z.string().optional(),
   runId: z.string().optional(),
 });
@@ -207,6 +208,8 @@ export const RunStatusSchema = z.discriminatedUnion('status', [
     status: z.literal('running'),
     done: z.number(),
     total: z.number(),
+    /** New words being modelled on the server: its working so far. */
+    steps: z.array(StepSchema).optional(),
   }),
   z.object({ status: z.literal('done'), done: z.number(), total: z.number(), result: RunResultSchema }),
   z.object({ status: z.literal('failed'), error: z.string().nullable() }),

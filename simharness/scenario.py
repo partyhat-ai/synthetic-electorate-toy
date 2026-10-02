@@ -38,7 +38,7 @@ from .geo import REGIONS, SOUTH
 
 WHATIFS_DIR = ROOT / 'whatifs'
 EVIDENCE_DIR = WHATIFS_DIR / 'evidence'
-COMPILER_VERSION = 'c1'
+COMPILER_VERSION = 'c2'  # c2: drop_topics only for contradicted topics (DISCLOSURES D17)
 
 KINDS = ['franchise', 'population', 'issue', 'event', 'candidate']
 GROUPS = ['native_white', 'foreign_white_naturalized', 'foreign_white_alien', 'black']
@@ -68,7 +68,7 @@ Write:
 - facts: one to three sentences stating the change as settled fact in the world on the context date, dated on or before it, in plain, neutral wording of the period. Never phrase it as a hypothesis ("what if", "imagine", "suppose", "would have"). Never name Harding, Cox, Coolidge, Franklin Roosevelt, Debs, Christensen or Wilson, and never write "Republican", "Democrat", "Democratic" or "G.O.P.". Call the Republicans "{R_DESC}" and the Democrats "{D_DESC}"; call Wilson "the President".
 - candidate (kind candidate only): the person's name as known in 1920; descriptor: a neutral one-line identity on the context date; positions: up to three neutral, dated paraphrases of stances the person actually held or voiced by the context date (positions_source "documented"), or plausible ones when nothing is on record (positions_source "inferred"). Each position is a plain statement of the stance as voters would read it on the ballot, with no notes, brackets, hedges or "would likely". Never quote a real person or put words in their mouth. eligibility_note: if the Constitution would bar the person from the office (under 35, not a natural-born citizen, fewer than 14 years resident), say so in one sentence; otherwise "".
 - reach: the sexes, groups and regions the change touches directly. Empty lists mean everyone.
-- drop_topics: dated newspaper topics the change would contradict or crowd out of the news, from: {json.dumps(TOPICS)}.
+- drop_topics: dated newspaper topics the settled facts would make false, from: {json.dumps(TOPICS)}. Only those: never drop a topic because the change would crowd it out of the news. Usually this list is empty.
 - drop_planks: platform plank topics the change would remove, from {PLANK_TOPICS}. add_planks: a plank a party would add, in a neutral paraphrase.
 - plausibility: "documented" (it nearly happened, or it did in some form), "within-reach" (plausible in 1920), "a-stretch" (possible only with large changes), "fantastical" (impossible in 1920). anachronism: true if it needs things that didn't exist in 1920; say what in anachronism_note.
 - label: a Title Case name of three to six words. detail: one sentence a reader sees. assumption: the modelling assumption, plainly.

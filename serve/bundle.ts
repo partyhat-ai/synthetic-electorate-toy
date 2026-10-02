@@ -107,3 +107,27 @@ export const RunRequest = z.object({
   edits: Edits.default({})
 });
 export type RunRequest = z.infer<typeof RunRequest>;
+
+// ── Session files the intake worker writes (dev only) ──
+
+export const QueueDone = z.looseObject({
+  text: z.string(),
+  year: z.number().nullish(),
+  status: z.string(),
+  key: z.string().nullish(),
+  why: z.string().nullish()
+});
+export type QueueDone = z.infer<typeof QueueDone>;
+
+export const QueueFailed = z.looseObject({
+  text: z.string(),
+  year: z.number().nullish(),
+  at: z.number(),
+  why: z.string().nullish()
+});
+export type QueueFailed = z.infer<typeof QueueFailed>;
+
+export const Step = z.object({ text: z.string(), state: z.string() });
+export type Step = z.infer<typeof Step>;
+
+export const IntakeStatus = z.looseObject({ text: z.string().nullable(), steps: z.array(Step) });

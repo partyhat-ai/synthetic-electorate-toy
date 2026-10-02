@@ -368,14 +368,15 @@ The five 1920 groups are a partition, but they carry small misfits:
   from the combined one.
 - The League verdict's "2.7 points" is measured in the point draw only.
 
-**E5 · by design · compiled what-ifs (`whatifs/*.json`)**
+**E5 · by design · compiled what-ifs (`harness/whatifs/*.json`)**
 A typed what-if's facts, ballot line and assumption are written by a model
-(`scenario.py`, compiler c1). They are checked for nominee and party
+(`scenario.py`, compiler c1/c2). They are checked for nominee and party
 names, and are exploratory, never pre-registered. Post-hoc edits:
 - **`charlie-chaplin-runs`**: the positions carried "(documented)" and
   "(inferred…)" notes, which voters saw in the brief. The notes were
   stripped, "Would likely speak for" became "Speaks for", and the
   interviews were re-asked.
+- **`influenza-returns-in-october-1920`**: see D17.
 
 **E6 · by design · `charlie-chaplin-runs`**
 Chaplin was born in England and was not a citizen, so the Constitution
@@ -459,3 +460,10 @@ retried once.
 **G6 · Low · open · spend ledger**
 `sessions/spend.jsonl` started mid-day. The earlier sessions' $0.26 is
 backfilled from runs' usage.
+
+**D17 · Medium · fixed (c2), hand-edited · compiler dropped topics**
+The flu what-if's compile dropped T2 (League) and T3 (prices) as "crowded
+out". Its counterfactual brief then differed from the control by more than
+the change. The spec was edited by hand to drop nothing, and its 12
+interviews were re-asked. Compiler c2 drops only topics that the settled
+facts make false.

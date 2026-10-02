@@ -29,7 +29,7 @@ export type ShownRun = RunResult & {
   readonly trace: readonly string[];
   /** The page's state right after it ran (askOf), so Rerun with nothing changed just shows it. */
   readonly ask: string;
-  /** The what-ifs it ran. */
+  /** The what-ifs it applied that the year lists. */
   readonly ran: readonly string[];
 };
 

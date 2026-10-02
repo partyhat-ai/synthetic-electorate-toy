@@ -147,8 +147,9 @@ details.
 Everything is still additive, and nothing in your files was edited.
 
 **New what-ifs arrive by name.** Typed text the router couldn't match is
-compiled offline into a new what-if (for example `charlie-chaplin-runs`). It
-then shows up in `election.whatIfs` and `words` like any other. Kinds now include `candidate`, alongside
+compiled offline into a new what-if (for example `charlie-chaplin-runs` or
+`influenza-returns-in-october-1920`). It then shows up in `election.whatIfs`
+and `words` like any other. Kinds now include `candidate`, alongside
 `franchise`, `population` and `issue`; a `candidate` what-if's votes are in
 `O`.
 
@@ -170,7 +171,7 @@ then shows up in `election.whatIfs` and `words` like any other. Kinds now includ
 | `confidenceFlags` | Short codes: `fantastical`, `anachronism`, `far-from-record`, `no-evidence`, `weak-evidence`, `contradicts-record`, `unstable-interviews`, `few-interviews`, `model-knows-outcome`, `positions-inferred`, `ineligible-candidate`, `exploratory`, `not-researched` |
 | `confidenceReasons` | One sentence each, reader-facing |
 | `evidence[]` | Per applied what-if: `{ whatIf, strength, summary, agreement, agreementDetail, findings: [{ claim, when, match, tier, sources: [{ title, url, tier }] }], caveats }`. `agreement` is `corroborated`, `consistent`, `contradicted` or `untested`. |
-| `queued` | Dev only: `{ text }` when the unknown text was queued for offline modelling |
+| `queued` | Dev only: `{ text, worker }` when the unknown text was queued for offline modelling |
 
 **Already visible with no page change.**
 - A `very-low` run's `summary` ends with "Extremely low confidence." plus

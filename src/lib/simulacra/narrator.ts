@@ -194,6 +194,13 @@ function running(y: number, r: ActiveRun): Message {
   const steps: Step[] = [];
   if (r.text) steps.push({ text: `Reading “${r.text}”.`, state: 'done' });
   if (r.labels.length) steps.push({ text: `Applying ${r.labels.join(', ')}.`, state: 'done' });
+  if (r.steps?.length) {
+    return {
+      text: 'That’s new to me, so I’m modelling it. This will take a minute.',
+      steps: [...steps.slice(r.text ? 1 : 0), ...r.steps],
+      busy: true,
+    };
+  }
   steps.push({ text: r.total ? `Rerunning ${y}: ${r.done} of ${r.total} states counted.` : `Rerunning ${y}.`, state: 'doing' });
   return { text: `Rerunning ${y}…`, steps, busy: true };
 }

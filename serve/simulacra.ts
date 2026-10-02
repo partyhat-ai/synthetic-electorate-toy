@@ -15,48 +15,89 @@
 //   - every POST /runs appends one line to sessions/requests.jsonl
 //     (ts, year, text, whatIfs, matched, unknown, combo, exists; no IPs, no ids);
 //   - unmatched text is queued in sessions/queue.jsonl for
-//     `python -m simharness.run whatif --queue`, and the result says `queued`.
+//     `python -m simharness.run whatif --queue`, and the result says `queued`;
+//     with SIMULACRA_AUTORUN on, the run instead stays `running` (with the
+//     worker's `steps`) and finishes with the new what-if applied;
+//   - SIMULACRA_AUTORUN=<config path> starts that worker in the background
+//     from the repo root (one at a time; it keeps to its own dollar caps);
+//   - a bundle file that changed on disk is reloaded, so a publish needs no restart.
+import { type ChildProcess, spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { appendFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
+import { homedir } from 'node:os';
 import path from 'node:path';
 import express, { type ErrorRequestHandler, type Router } from 'express';
-import { Bundle, type Edits, FIELDS, type Field, type PageKey, type Result, RunRequest, type Slice, type TableRow } from './bundle';
+import type { z } from 'zod';
+import {
+  Bundle,
+  type Edits,
+  FIELDS,
+  type Field,
+  IntakeStatus,
+  type PageKey,
+  QueueDone,
+  QueueFailed,
+  type Result,
+  RunRequest,
+  type Slice,
+  type Step,
+  type TableRow
+} from './bundle';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 
 export interface SimulacraOptions {
   /** Folder of `<year>.json` bundles. */
   bundles: string;
-  /** Where dev logs and the queue live. */
+  /** Where dev logs, the queue and the worker's status live. */
   sessions: string;
   /** Dev logging and queueing (SIMULACRA_LOG). */
   devLog: boolean;
+  /** Config path for the background intake worker (SIMULACRA_AUTORUN), relative to `root`. */
+  autorun: string | null;
+  /** Python with the harness installed (SIMULACRA_PYTHON). */
+  python: string;
+  /** The repo root: the worker runs `python -m simharness.run` from here. */
+  root: string;
 }
 
 export function optionsFromEnv(env: NodeJS.ProcessEnv = process.env): SimulacraOptions {
   return {
     bundles: env.SIMULACRA_BUNDLES || path.join(ROOT, 'serve', 'bundles'),
     sessions: path.join(ROOT, 'sessions'),
-    devLog: Boolean(env.SIMULACRA_LOG)
+    devLog: Boolean(env.SIMULACRA_LOG),
+    autorun: env.SIMULACRA_AUTORUN || null,
+    python: env.SIMULACRA_PYTHON || path.join(homedir(), '.venvs/simharness/bin/python'),
+    root: ROOT
   };
 }
 
 /** The result the page receives: a bundle result plus the interviews behind it. */
 export type RunResult = Result & {
   interview?: { questions: string[] | undefined; byWhatIf: { whatIf: string; answers: unknown[] }[] };
-  queued?: { text: string };
+  queued?: { text: string; worker: boolean };
+  unknownWhy?: string;
 };
 
-interface RunEntry {
-  year: number;
-  created: number;
-  key: string;
-  result: RunResult;
+interface Pending {
+  text: string;
+  keys: string[];
+  edits: Edits;
 }
+
+type RunEntry =
+  | { state: 'done'; year: number; created: number; key: string; result: RunResult }
+  | { state: 'pending'; year: number; created: number; pending: Pending };
+
+type Settled =
+  | { status: 'running'; steps: Step[] }
+  | { status: 'failed'; error: string }
+  | { status: 'done'; key: string; result: RunResult };
 
 type Totals = Record<PageKey, number>;
 
 const RUN_TTL_MS = 60 * 60 * 1000;
+const PENDING_MS = 10 * 60 * 1000;
 const KEYS: readonly PageKey[] = ['A', 'B', 'O'];
 
 export const comboKey = (keys: readonly string[]): string => [...new Set(keys)].sort().join('+');
@@ -148,22 +189,48 @@ export function compute(
   };
 }
 
+const norm = (t: string): string => t.toLowerCase().split(/\s+/).filter(Boolean).join(' ');
+
+function readJsonl<T>(file: string, schema: z.ZodType<T>): T[] {
+  let text: string;
+  try {
+    text = readFileSync(file, 'utf8');
+  } catch {
+    return [];
+  }
+  return text
+    .split('\n')
+    .filter(Boolean)
+    .flatMap((line) => {
+      try {
+        const parsed = schema.safeParse(JSON.parse(line));
+        return parsed.success ? [parsed.data] : [];
+      } catch {
+        return [];
+      }
+    });
+}
+
 export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv()): Router {
-  const bundles = new Map<number, Bundle | null>();
+  const bundles = new Map<number, { bundle: Bundle | null; mtime: number }>();
   const runs = new Map<string, RunEntry>();
+  let worker: ChildProcess | null = null;
+  let queuedWhileBusy = false;
+
+  const mtimeOf = (file: string): number => (existsSync(file) ? statSync(file).mtimeMs : 0);
 
   function loadBundle(year: number): Bundle | null {
     if (!Number.isInteger(year)) return null;
-    const cached = bundles.get(year);
-    if (cached !== undefined) return cached;
     const file = path.join(opts.bundles, `${year}.json`);
+    const cached = bundles.get(year);
+    if (cached && (!opts.devLog || cached.mtime === mtimeOf(file))) return cached.bundle;
     let bundle: Bundle | null = null;
     if (existsSync(file)) {
       const parsed = Bundle.safeParse(JSON.parse(readFileSync(file, 'utf8')));
       if (parsed.success) bundle = parsed.data;
       else console.warn(`simulacra: ${file} doesn't fit the bundle contract`, parsed.error.issues.slice(0, 3));
     }
-    bundles.set(year, bundle);
+    bundles.set(year, { bundle, mtime: mtimeOf(file) });
     return bundle;
   }
 
@@ -176,11 +243,74 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
     }
   }
 
+  function startWorker(): void {
+    if (!opts.autorun) return;
+    if (worker) {
+      queuedWhileBusy = true;
+      return;
+    }
+    queuedWhileBusy = false;
+    mkdirSync(opts.sessions, { recursive: true });
+    const child = spawn(opts.python, ['-m', 'simharness.run', 'whatif', '--queue', '--limit', '5', '--config', opts.autorun], {
+      cwd: opts.root,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    const out = createWriteStream(path.join(opts.sessions, 'intake.log'), { flags: 'a' });
+    child.stdout?.pipe(out);
+    child.stderr?.pipe(out);
+    child.on('error', (e) => out.write(`simulacra: worker failed to start: ${e.message}\n`));
+    // Text typed while a worker ran is picked up by a fresh one (a worker that
+    // stopped on a cap leaves its text queued and isn't restarted by itself).
+    child.on('exit', () => {
+      worker = null;
+      if (queuedWhileBusy) startWorker();
+    });
+    worker = child;
+  }
+
   function newRun(entry: RunEntry): string {
     const id = randomUUID();
     runs.set(id, entry);
     for (const [k, r] of runs) if (Date.now() - r.created > RUN_TTL_MS) runs.delete(k);
     return id;
+  }
+
+  // Where the worker is with a pending run's text.
+  function settle(r: Extract<RunEntry, { state: 'pending' }>): Settled {
+    const t = norm(r.pending.text);
+    const sameYear = (x: { year?: number | null }): boolean => (x.year ?? 1920) === r.year;
+    const outcome = readJsonl(path.join(opts.sessions, 'queue-done.jsonl'), QueueDone)
+      .filter((x) => x.text === t && sameYear(x))
+      .pop();
+    const failed = readJsonl(path.join(opts.sessions, 'queue-failed.jsonl'), QueueFailed)
+      .filter((x) => x.text === t && sameYear(x) && x.at * 1000 >= r.created)
+      .pop();
+    const b = loadBundle(r.year);
+    if (outcome && (outcome.status === 'modelled' || outcome.status === 'keyword') && outcome.key && b) {
+      const done =
+        compute(b, [...new Set([...r.pending.keys, outcome.key])], r.pending.edits, null) ??
+        compute(b, [outcome.key], r.pending.edits, null);
+      if (done) return { status: 'done', key: done.key, result: done.result };
+      return { status: 'failed', error: 'The new what-if was modelled, but not in this combination. Try it on its own.' };
+    }
+    const stopped = outcome ?? failed;
+    if (stopped) {
+      // Not modellable, or the worker stopped: the run finishes unchanged, saying why.
+      const done = b ? compute(b, r.pending.keys, r.pending.edits, r.pending.text) : null;
+      const why = stopped.why ?? '';
+      if (!done) return { status: 'failed', error: why || 'Couldn’t model that.' };
+      return { status: 'done', key: done.key, result: { ...done.result, unknownWhy: why } };
+    }
+    if (Date.now() - r.created > PENDING_MS) return { status: 'failed', error: 'Modelling that took too long. Try again in a minute.' };
+    if (!worker) startWorker();
+    let steps: Step[] = [{ text: 'Waiting for the what-ifs typed before this one.', state: 'doing' }];
+    try {
+      const st = IntakeStatus.safeParse(JSON.parse(readFileSync(path.join(opts.sessions, 'intake-status.json'), 'utf8')));
+      if (st.success && st.data.text === t) steps = st.data.steps;
+    } catch {
+      // not started
+    }
+    return { status: 'running', steps: [{ text: `Reading “${r.pending.text}”: it’s new to me.`, state: 'done' }, ...steps] };
   }
 
   const router = express.Router();
@@ -221,14 +351,24 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
       if (read.unknown) {
         appendLine('queue.jsonl', { ts, year, text: read.unknown });
         queued = true;
+        startWorker();
       }
+    }
+    // Dev with the worker on: new words hold the run open (GET reports the
+    // worker's steps) until they are compiled, researched, interviewed and
+    // published; then the run finishes with the new what-if applied.
+    if (queued && read.unknown && opts.autorun) {
+      const pending = { text: read.unknown, keys: chosen, edits };
+      res.json({ id: newRun({ state: 'pending', year, created: Date.now(), pending }) });
+      return;
     }
     if (!done) {
       res.status(422).json({ error: 'That combination has not been computed.' });
       return;
     }
-    const result: RunResult = queued && read.unknown ? { ...done.result, queued: { text: read.unknown } } : done.result;
-    res.json({ id: newRun({ year, created: Date.now(), key: done.key, result }) });
+    const result: RunResult =
+      queued && read.unknown ? { ...done.result, queued: { text: read.unknown, worker: Boolean(worker) } } : done.result;
+    res.json({ id: newRun({ state: 'done', year, created: Date.now(), key: done.key, result }) });
   });
 
   router.get('/runs/:id', (req, res) => {
@@ -237,8 +377,25 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
       res.status(404).json({ error: 'no such run' });
       return;
     }
-    const count = r.result.states.length;
-    res.json({ status: 'done', done: count, total: count, error: null, result: r.result });
+    let result: RunResult;
+    if (r.state === 'pending') {
+      const s = settle(r);
+      if (s.status === 'running') {
+        res.json({ status: 'running', done: 0, total: 0, error: null, steps: s.steps });
+        return;
+      }
+      if (s.status === 'failed') {
+        runs.delete(req.params.id);
+        res.json({ status: 'failed', error: s.error });
+        return;
+      }
+      runs.set(req.params.id, { state: 'done', year: r.year, created: r.created, key: s.key, result: s.result });
+      result = s.result;
+    } else {
+      result = r.result;
+    }
+    const count = result.states.length;
+    res.json({ status: 'done', done: count, total: count, error: null, result });
   });
 
   router.post('/runs/:id/cancel', (req, res) => {
@@ -253,7 +410,7 @@ export function createSimulacraRouter(opts: SimulacraOptions = optionsFromEnv())
       return;
     }
     const run = typeof req.query.run === 'string' ? runs.get(req.query.run) : undefined;
-    const key = run?.key ?? '';
+    const key = run?.state === 'done' ? run.key : '';
     const voter = b.voters[key]?.[req.params.slice] ?? b.voters['']?.[req.params.slice];
     if (!voter) {
       res.status(404).json({ error: 'no voter for this group' });

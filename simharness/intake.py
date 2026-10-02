@@ -42,6 +42,36 @@ DONE = SESSIONS / 'queue-done.jsonl'
 FAILED = SESSIONS / 'queue-failed.jsonl'
 LOCK = SESSIONS / 'intake.lock'
 SERVE_BUNDLES = ROOT / 'serve/bundles'
+STATUS = SESSIONS / 'intake-status.json'
+
+
+class Progress:
+    """What the worker is doing, for the router to show while the page waits
+    (sessions/intake-status.json: {text, steps: [{text, state}], ts})."""
+
+    def __init__(self, text: str | None):
+        self.text, self.steps = (_norm(text) if text else None), []
+
+    def step(self, label: str):
+        if not self.text:
+            return
+        for s in self.steps:
+            s['state'] = 'done'
+        self.steps.append({'text': label, 'state': 'doing'})
+        self._write()
+
+    def finish(self):
+        for s in self.steps:
+            s['state'] = 'done'
+        self._write()
+
+    def _write(self):
+        if not self.text:
+            return
+        SESSIONS.mkdir(exist_ok=True)
+        tmp = STATUS.with_suffix('.tmp')
+        tmp.write_text(json.dumps({'text': self.text, 'steps': self.steps, 'ts': dt.datetime.now().isoformat(timespec='seconds')}))
+        tmp.replace(STATUS)
 
 
 class Budget:
@@ -170,16 +200,20 @@ def _add_to_config(config_path: Path, key: str):
         config_path.write_text(json.dumps(raw, indent=2) + '\n')
 
 
-def run_pipeline(config_path: Path, budget: Budget, publish_only: bool = False) -> dict:
+def run_pipeline(config_path: Path, budget: Budget, publish_only: bool = False, progress: Progress | None = None) -> dict:
     from .run import Run
+    progress = progress or Progress(None)
     run = Run(RunConfig.load(config_path))
     if not publish_only:
         if not (run.dir / 'fit.pkl').exists():
             run.backbone()
         run.plan()
+        progress.step(f'Interviewing voters in your {run.cfg.election}, with the real one as a control.')
         asked = run.ask(cap=max(0.0, budget.cap - budget.spent))
         budget.add(asked['dollars'], 'ask', None, record=False)  # ask records its own spend
+        progress.step('Comparing the interviews with the historical record.')
         run.analyze()
+    progress.step(f'Rerunning the {run.cfg.election} election 100 times.')
     run.publish()
     SERVE_BUNDLES.mkdir(parents=True, exist_ok=True)
     src = run.dir / 'published' / f'{run.cfg.election}.json'
@@ -200,25 +234,34 @@ def whatif(text: str, config_path: str | Path, refresh: bool = False) -> dict:
     config_path = Path(config_path)
     cfg = RunConfig.load(config_path)
     budget = Budget(cfg.research.whatif_dollars)
+    progress = Progress(text)
+    progress.step('Turning your words into a change I can model.')
     raw = compile_text(text, cfg, budget)
     if not raw['modelable']:
+        progress.finish()
         return {'status': 'not-modelable', 'why': raw['why_not'], 'dollars': round(budget.spent, 4)}
     if raw['same_as'] in REGISTRY:
         key = raw['same_as']
         scenario.add_words(key, raw['words'] + [text.lower().strip()[:80]])
         in_config = key in cfg.what_ifs
         _add_to_config(config_path, key)
-        out = run_pipeline(config_path, budget, publish_only=in_config)
+        progress.step(f'That’s {REGISTRY[key]["label"]}, which I’ve modelled already.')
+        out = run_pipeline(config_path, budget, publish_only=in_config, progress=progress)
+        progress.finish()
         return {'status': 'keyword', 'key': key, **out, 'dollars': round(budget.spent, 4), 'costs': budget.lines,
                 'report': report(cfg.election, key)}
     spec = scenario.finalize(raw, text, REGISTRY, cfg.research.compile_model)
+    progress.step(f'Setting the scene: autumn {cfg.election}…')
     ev = research(spec, cfg, budget, refresh)
+    n = len(ev.get('findings', []))
+    progress.step(f'Clarifying historical context: {n or "no"} finding{"" if n == 1 else "s"}.')
     if spec['kind'] == 'candidate' and spec['candidate']['positions_source'] != 'documented':
         documented_positions(spec, ev, cfg.context_cutoff)
     scenario.save_spec(spec)
     REGISTRY[spec['key']] = scenario.bind(spec)
     _add_to_config(config_path, spec['key'])
-    out = run_pipeline(config_path, budget)
+    out = run_pipeline(config_path, budget, progress=progress)
+    progress.finish()
     return {'status': 'modelled', 'key': spec['key'], **out, 'dollars': round(budget.spent, 4), 'costs': budget.lines,
             'report': report(cfg.election, spec['key'])}
 
@@ -283,7 +326,7 @@ def process_queue(config_path: str | Path, limit: int = 3) -> list[dict]:
                     r = whatif(t, cfg_path)
             except (SystemExit, Exception) as e:
                 # A cap or cost stop, or a bug: the text stays queued (not in DONE),
-                # and why is logged (FAILED).
+                # and the waiting page is told why (FAILED, read by the router).
                 r = {'text': t, 'year': year, 'status': 'stopped' if isinstance(e, SystemExit) else 'error', 'why': str(e) or repr(e)}
                 with open(FAILED, 'a') as f:
                     f.write(json.dumps(r | {'at': time.time()}) + '\n')
